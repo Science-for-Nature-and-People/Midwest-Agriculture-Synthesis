@@ -12,14 +12,14 @@ library(readxl)
 setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
 
 #import dataframes
-Ref <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Reference")
+CC.div.Ref <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Reference")
 
-ExpD_Loc <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "ExpD_Location")
+CC.div.ExpD_Loc <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "ExpD_Location")
 
-CashCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CashCrop")
+CC.div.CashCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CashCrop")
 
-CoverCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CoverCrop")
+CC.div.CoverCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CoverCrop")
 
-Results <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Results")
+CC.div.Results <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Results")
 
 

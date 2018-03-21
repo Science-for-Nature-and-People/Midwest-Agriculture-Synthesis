@@ -1,14 +1,188 @@
 #Midwestern Ag Synthesis - SNAPP
-#Database Querying
+#Database Querying 2
+#March 2, 2018
 
-library (odbc)
-library(DBI)
+#libraries
+
 library(dplyr)
-library(dbplyr)
-library(RSQLite)
 library(readxl)
 library(tidyverse)
+library(ggplot2)
+library(maps)
+library(stringr)
+library(forcats)
 
+setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
+
+#import dataframes
+CC.div.Ref <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Reference")
+     
+CC.div.ExpD_Loc <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "ExpD_Location")
+
+CC.div.CashCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CashCrop")
+
+CC.div.CoverCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CoverCrop")
+
+CC.div.Results <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Results")
+
+#check keys
+CC.div.Ref %>% 
+  count(DOI) %>% 
+  filter(n > 1) #zero duplicates
+
+CC.div.ExpD_Loc %>% 
+  count(Paper_id, Loc_multi) %>% 
+  filter(n > 1) #zero duplicates
+
+CC.div.CashCrop %>% 
+  count(Paper_id, Duration) %>% 
+  filter(n > 1) #zero duplicates
+
+CC.div.CoverCrop %>% 
+  count(Paper_id, Duration, Year, Trt_id) %>% 
+  filter(n > 1) #zero duplicates
+
+CC.div.Results %>% 
+  count(Paper_id, Response_var, Trt_id1, Trt_id2, Trt1_interaction, Trt2_interaction) %>% 
+  filter(n > 1) #there isn't a unique key for this tibble
+
+#add surrogate key to tibble
+CC.div.Results$key = rownames(CC.div.Results)
+
+#use anti_join to check for mismatched primary-foreign keys between tibbles
+CC.div.Ref %>%
+  anti_join(CC.div.ExpD_Loc, by = "DOI") %>%
+  count(DOI, sort = TRUE)
+
+#inspect unique key
+CC.div.Results %>% 
+  count(key) %>% 
+  filter(n > 1) #zero duplicates
+
+#set key
+#key = "DOI" # not necessary, if you keep by = NULL then R automatically joins by columns with same name
+            #caution if column names are same but mean different things
+
+  #Group: Crop Production
+    #Ref.Loc <- left_join(CC.div.Ref, CC.div.ExpD_Loc, by = key)
+    Ref.Loc <- left_join(CC.div.Ref, CC.div.ExpD_Loc, by = NULL) #should return same key as above, joining, by = "DOI"
+    Ref.Loc.Cash <- left_join(Ref.Loc, CC.div.CashCrop, by = NULL)
+    Ref.Loc.Cash.Cover <- left_join(Ref.Loc.Cash, CC.div.CoverCrop, by = NULL)
+    Ref.Loc.Cash.Cover.Results <- left_join(Ref.Loc.Cash.Cover, CC.div.Results, by = c("Paper_id", "Duration"))
+   
+     
+    
+  #to match column keys with different names use by = c("a" = "b")
+    #this will be useful for joining covercrop to results tibble as "Trt_id" = "Trt1_id" or "Trt2_id"
+    
+    #draw map of us with coordinates for each research site
+    CC.div.ExpD_Loc %>%
+              ggplot(aes(Longitude, Latitude)) + #need to change lat/long info so it readily uploads into ggplot & maps
+              borders("state") +
+              geom_point() +
+              coord_quickmap()
+     
+    
+#number of observations for each response variable group
+    groups_RVs <- Ref.Loc.Cash.Cover.Results  %>%
+              count(Group_RV, sort = TRUE)
+              groups_RVs
+
+#number of observations for each response variable group
+    CC_max_diversity <- Ref.Loc.Cash.Cover.Results  %>%
+              count(CC_max_diversity, sort = TRUE)
+              CC_max_diversity
+              
+              
+#working with factors- library(forcats)
+    Ref.Loc.Cash.Cover.Results  %>%
+              count(Group_RV, sort = TRUE)
+    
+    ggplot(Ref.Loc.Cash.Cover.Results, aes(Group_RV)) +
+        geom_bar()
+    
+#grouping the results
+    RV_summary <- Ref.Loc.Cash.Cover.Results %>%
+  group_by(Response_var) %>%
+  summarise(
+    age = mean(age, na.rm = TRUE),
+    tvhours = mean(tvhours, na.rm = TRUE),
+    n = n()
+  )
+
+ggplot(relig_summary, aes(tvhours, relig)) + geom_point()
+              
+              
+#working with strings        
+
+df <- tibble(
+  word = words, 
+  i = seq_along(word)
+)
+Ref.Loc.Cash.Cover.Results = data.frame(Ref.Loc.Cash.Cover.Results)
+Ref.Loc.Cash.Cover.Results %>% 
+  filter(str_detect(Ref.Loc.Cash.Cover.Results$Group_RV, "x$"))
+              
+              
+              #to report NA for a string result              
+str_replace_na() 
+#Objects of length 0 are silently dropped. This is particularly useful in conjunction with if:
+
+#to report synthesis use this setup for paragraphs
+  name <- "Hadley"
+time_of_day <- "morning"
+birthday <- FALSE
+
+str_c(
+  "Good ", time_of_day, " ", name,
+  if (birthday) " and HAPPY BIRTHDAY",
+  "."
+)
+    
+
+    
+  #Filter out papers of interest
+    #based on Cover crop presence/absence...
+    #this will include only papers where "CoverCrop: CC_mixture" = fallow and single species
+    #must comb all rows associated with each paper and exclude papers that have CC mixture
+           
+    
+    Ref.Loc.Results %>% 
+  semi_join(top_dest)
+    
+    
+    
+         
+         #count number of unique DOIs for Crop Production
+           df %>% 
+               group_by (Group_RV) %>%
+                  summarise(count = n_distinct(DOI)) %>%
+                    arrange(CC.div.Ref.Loc.Results, Group_RV)
+           
+           df %>% 
+             filter(Group_RV=="Crop Production") %>%
+                summarize(n_distinct(DOI))
+           
+           CC.div.Ref.Loc.Results %>%
+              count(Group_RV == "Crop Production", DOI)
+                
+          
+           
+                    dplyr::distinct(CC.div.Ref.Loc.Results, Group_RV, DOI)
+               
+            
+     Crop.Production <- CC.div.Ref.Loc.Results[CC.div.Ref.Loc.Results$Group_RV == "Crop Production"]
+        
+     
+     
+#attempt to use SQL database     
+library (odbc)
+library(DBI)
+library(dbplyr)
+library(RSQLite)
+     
+     
+     
 #connect to database
 con <- dbConnect(odbc::odbc()
                   Driver = "SQL Server"
@@ -35,282 +209,3 @@ dbWriteTable(con, "Ref", Ref)
 
 dbListFields(con, "Ref")
 
-
-
-
-
-setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
-
-#import dataframes
-CC.div.Ref <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Reference")
-     
-CC.div.ExpD_Loc <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "ExpD_Location")
-
-CC.div.CashCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CashCrop")
-
-CC.div.CoverCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CoverCrop")
-
-CC.div.Results <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Results")
-
-
-
-#Query for number of unique papers 
-  #Group: Crop Production
-    CC.div.Ref.Loc <- full_join(CC.div.Ref, CC.div.ExpD_Loc, by = "DOI")
-     CC.div.Ref.Loc.Results <- full_join(CC.div.Ref.Loc, CC.div.Results, by = "Loc_id")
-        df = data.frame(CC.div.Ref.Loc.Results)
-         
-         #count number of unique DOIs for Crop Production
-           df %>% 
-               group_by (Group_RV) %>%
-                  summarise(count = n_distinct(DOI)) %>%
-                    arrange(CC.div.Ref.Loc.Results, Group_RV)
-           
-           df %>% 
-             filter(Group_RV=="Crop Production") %>%
-                summarize(n_distinct(DOI))
-           
-           CC.div.Ref.Loc.Results %>%
-              count(Group_RV == "Crop Production", DOI)
-                
-          
-           
-                    dplyr::distinct(CC.div.Ref.Loc.Results, Group_RV, DOI)
-               
-            
-     Crop.Production <- CC.div.Ref.Loc.Results[CC.div.Ref.Loc.Results$Group_RV == "Crop Production"]
-              
-#batch download pdfs for synthesis review
-#March 2, 2018
-
-library(devtools)
-install_github("swood-ecology/BibScan")
-library(BibScan)
-
-#log into to server with access to journal websites
-#download .bib file that includes DOIs for pdfs
-
-Infolder <- "C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview/Bib files_11.28.17/CC"
-Outfolder <- "C:/Users/LWA/Desktop/SNAPP_Wood_2017/PDFs/Cover crops"
-
-article_pdf_download(Infolder, Outfolder)       
-
-
-############################################################
-#' Batch download
-#'
-#' This function processes and batch downloads files
-#' @param infilepath  A character; path to target folder with input files
-#' @param outfilepath A character; path to folder for export files
-#' @param match       A file that provides titles to match; designed to be output of Colandr
-#' @keywords download
-#' @return
-#' @export files
-#' @examples
-#' article_pdf_download()
-
-article_pdf_download <- function(infilepath, outfilepath,match=NULL){
-# ===============================
-# PACKAGES
-# ===============================
-if(!'tidyverse' %in% installed.packages()) install.packages("tidyverse")
-if(!'crminer' %in% installed.packages()) install.packages("crminer")
-if(!'bibliometrix' %in% installed.packages()) install.packages("bibliometrix")
-
-library(bibliometrix) # For reading and analyzing ISI data
-library(tidyverse)    # For data manipulation
-library(crminer)      # For getting links from DOI
-
-# ===============================
-# CONSTANTS
-# ===============================
-
-
-# Create the main output directory
-output_dir <- file.path(outfilepath, 'pdf_output')
-# Check if pdf_output directory exists
-dir.create(output_dir, showWarnings = FALSE)
-
-# PDF subdirectory
-pdf_output_dir <- file.path(output_dir, 'pdfs')
-# Check if pdf_output_dir directory exists
-dir.create(pdf_output_dir, showWarnings = FALSE)
-
-# Non-PDF files subdirectory
-nopdf_output_dir <- file.path(output_dir, 'non-pdfs')
-# Check if pdf_output_dir directory exists
-dir.create(nopdf_output_dir, showWarnings = FALSE)
-
-# ===============================
-# MAIN
-# ===============================
-
-# Read .bib files
-## Combine all the bib files. The user needs only add the file to the directory full of bib files
-filepath_list <- as.list(file.path(infilepath, dir(infilepath)))
-file_list <- convert2df(do.call(readFiles, filepath_list))
-
-if(is.null(match) == F){
-  # Read sorted list from Colandr
-  papers <- read_csv(file.path(match))
-
-  # Match titles from Colandr to DOIs from .bib
-  matched <- title_to_doi(papers,data_dir)
-}
-else if (is.null(match) == T){
-  matched <- file_list
-}
-
-## STEP 1: ORGANIZE LINKS
-message('===============================\nORGANIZING LINKS\n===============================')
-# Select attributes of interest and clean the author field
-my_df <- tibble(Name=paste(gsub(";.*$", "", matched$AU),matched$PY,matched$SO),
-                DOI=matched$DI)
-
-# Create tibble that reports information to the user
-report <- my_df
-
-# Print percent of papers with DOI
-perc = suppressWarnings((nrow(filter(my_df, !is.na(DOI)))/nrow(my_df)))
-suppressWarnings(perc %>%
-                   "*"(100) %>%
-                   round(digits=1) %>%
-                   paste0("%") %>%
-                   message(" of references contained a DOI"))
-rm(perc)
-
-# Add column to data frame describing if row is NA
-report$DOI_exists <- ifelse(is.na(report$DOI), 'No DOI', 'DOI exists')
-
-# Remove links with NAs
-my_df <- filter(my_df, !is.na(DOI))
-
-# Collect links
-my_df$links <- sapply(my_df$DOI, crm_links)
-
-# Count number of references that found no link
-perc = 1-(nrow(my_df[lapply(my_df$links, length) == 0,])/nrow(my_df))
-suppressWarnings(perc %>%
-                   "*"(100) %>%
-                   round(digits=1) %>%
-                   paste0("%") %>%
-                   message(" of references with a DOI returned a URL link"))
-rm(perc)
-
-# Add to report document which reference didn't have URL
-my_df$length <- lapply(my_df$links, length)
-my_df$URL_found <- ifelse(my_df$length > 0, 'URL found', 'URL not found')
-report <- left_join(report,my_df) %>%
-  select(Name,DOI,DOI_exists,URL_found)
-my_df <- select(my_df,Name,DOI,links)
-
-# Remove references with no URL
-my_df <- my_df[lapply(my_df$links, length) > 0,]
-
-# Elsevier links require a separate download process, so we distinguish them here
-for (i in 1:length(my_df$links)) {
-  if (grepl('elsevier',my_df$links[[i]][[1]])) { # checking for string 'elsevier' in link
-    my_df$elsevier[i] <- TRUE
-  } else {
-    my_df$elsevier[i] <- FALSE
-  }
-}
-
-# Simplify list of links into single link for each DOI
-for (i in 1:dim(my_df)[1]) {
-  if (my_df$elsevier[i]) { # if it's from elsevier, we want to get the xml link
-    link <- my_df$links[[i]]$xml$xml
-  } else if ('pdf' %in% names(my_df$links[[i]])) { # otherwise, we prefer the 'pdf' link type
-    link <- my_df$links[[i]]$pdf$pdf
-  } else if ('unspecified' %in% names(my_df$links[[i]])) { # our last preference is the 'unspecified' link type
-    link <- my_df$links[[i]]$unspecified$unspecified
-  } else { # we don't handle links of type 'html' or 'plain', because they almost never provide pdf download; moreover, we only want xml links from elsevier because we only handle those
-    link <- NA
-  }
-  my_df$download_link[i] <- as.character(link)
-}
-
-# Merge final download link into report document
-report <- left_join(report,my_df) %>%
-  select(Name,DOI,DOI_exists,URL_found,download_link)
-
-
-## STEP 2: DOWNLOAD PDFS FROM LINKS
-message('===============================\nDOWNLOADING PDFS FROM LINKS\n===============================')
-
-# elsevier_pdf_download() is called repeatedly via a loop that iterates through the rows of the dataframe
-for (i in 1:nrow(my_df)) {
-  url <- my_df$download_link[i]
-  my_df$path[i] <- paste0(file.path(pdf_output_dir, my_df$Name[i]), '.pdf')
-  if (my_df$elsevier[i]) {
-
-    my_df$downloaded <- tryCatch(elsevier_pdf_download(url, my_df$path[i]),
-                                 error=function(cond) {
-                                   message(cond)
-                                   return(0)
-                                 },
-                                 finally = message(paste("\nProcessed URL:", url)))
-  } else {
-    # DOWNLOADING OTHER LINKS
-    my_df$downloaded[i] <- tryCatch(download.file(url, my_df$path[i]),
-                                    error=function(cond) {
-                                      message(cond)
-                                      return(0)
-                                    },
-                                    finally = message(paste("\nProcessed URL:", url)))
-  }
-  message('[', i, '/', dim(my_df)[1], ']')
-}
-
-message('===============================\nPDFS DOWNLOADED\n===============================')
-
-## STEP 3: POST-PROCESSING
-# distinguish real pdf files from other files (mainly html webpages)
-for (i in 1:dim(my_df)[1]) {
-  if (file.exists(my_df$path[i])) {
-    my_df$downloaded[i] <- TRUE
-    my_df$is_pdf[i] <- is_binary(my_df$path[i])
-  } else {
-    my_df$downloaded[i] <- FALSE
-    my_df$is_pdf[i] <- FALSE
-  }
-}
-# Add the flags for downloaded and PDF to the data frame
-my_df$downloaded <- as.logical(my_df$downloaded)
-my_df$is_pdf <- as.logical(my_df$is_pdf)
-
-# Extract some statistics
-download_success <- sum(my_df$downloaded) # out of 5759 acquired links, 4604 produced downloaded files
-unique_files <- length(unique(my_df$path[my_df$downloaded])) # out of 4604 downloaded files, 4539 are unique
-unique_pdfs <- length(unique(my_df$path[my_df$downloaded & my_df$is_pdf])) # out of 4539 unique downloaded files, 4057 are binary files (PDFs)
-message(sprintf("Over the %i acquired links, %i PDFs were succesfully downloaded", nrow(my_df), unique_pdfs))
-
-# Extract the files info that were not PDFs
-non_pdf_paths <- unique(my_df$path[my_df$downloaded & !my_df$is_pdf]) # For investigative purposes, here are the paths for the non-PDF files (482) that were downloaded
-
-## Move the non-pdf files to a specific directory
-# Create the destination list
-html_paths <- file.path(nopdf_output_dir,
-                        paste0(basename(file_path_sans_ext(non_pdf_paths)),
-                               ".html")
-)
-# Move the files
-file.rename(from = non_pdf_paths, to = html_paths)
-
-## Fix the double dot before file extension
-pdf_files <- dir(pdf_output_dir, full.names = TRUE)
-pdf_fixed <- gsub("\\.\\.pdf","\\.pdf",pdf_files)
-file.rename(from = pdf_files , to = pdf_fixed)
-
-# output information regarding the download processs to csv
-summary_path <- file.path(output_dir, 'summary.csv')
-write.csv(select(my_df, -links), file = summary_path, row.names = F)
-
-message('\n Details of the PDF retrieval process have been stored in ', summary_path, '\n')
-
-}
-
-
-              
-              
-              

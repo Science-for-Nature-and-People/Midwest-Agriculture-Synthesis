@@ -75,20 +75,81 @@ CC.div.Results %>%
   #to match column keys with different names use by = c("a" = "b")
     #this will be useful for joining covercrop to results tibble as "Trt_id" = "Trt1_id" or "Trt2_id"
     
-    #draw map of us with coordinates for each research site
-    CC.div.ExpD_Loc %>%
-              ggplot(aes(Longitude, Latitude)) + #need to change lat/long info so it readily uploads into ggplot & maps
-              borders("state") +
-              geom_point() +
-              coord_quickmap()
+    
      
     
 #number of observations for each response variable group
     groups_RVs <- Ref.Loc.Cash.Cover.Results  %>%
               count(Group_RV, sort = TRUE)
               groups_RVs
+  
+    #filter tibble for Group_Rv = Soil
+      Soil_RVs <- filter(Ref.Loc.Cash.Cover.Results, Group_RV == "Soil")   
+      
+    #itemized list of unique soil metrics (Response_var)
+      (uniqueSoils <- unique(Soil_RVs$Response_var))
+      
+    
+      # add column ("metric") that combines simliar response_var groups 
+      soil_om <-  filter(Soil_RVs, Response_var == c("SOC loss in root zone (0-75 cm)",
+                                                          "water-extractable organic carbon (0-5 cm)",
+                                                          "soil organic carbon in topsoil",
+                                                          "total carbon stock"
+                                                          ))
+      soil_om <-   mutate(soil_om,
+                        metric = "soil_organic_matter")
+      
+      soil_erosion <-  filter(Soil_RVs, Response_var == c("soil loss", "water aggregate stability"))
+      soil_erosion <-   mutate(soil_erosion,
+                        metric = "erosion_aggregation")
+      
+      soil_nutrients <-  filter(Soil_RVs, Response_var == c("soil nitrate (N-NO3)",
+                                                    "plant available phosphorous (P)",
+                                                    "soil ammonium (N-NH4)"
+                                                    ))
+      soil_nutrients <-  mutate(soil_nutrients,
+                        metric = "soil_nutrients")
 
-#number of observations for each response variable group
+      
+      soil_ghg <-  filter(Soil_RVs, Response_var == c("N2O emissions when cover crop present",
+                                              "denitrification",
+                                              "N2O emissions over entire year"
+                                              ))
+      soil_ghg <-  mutate(soil_ghg,
+                        metric = "soil_ghg")
+    
+            #filter by cover crop diversity level (single or mixture)
+             #single species
+              ss_soil_om  <-  filter(soil_om, CC_max_diversity == "single")
+              ss_soil_erosion <-  filter(soil_erosion, CC_max_diversity == "single")
+              ss_soil_nutrients  <-  filter(soil_nutrients, CC_max_diversity == "single")
+              ss_soil_ghg  <-  filter(soil_ghg, CC_max_diversity == "single")
+              
+            #mixture of species
+              mix_soil_om  <-  filter(soil_om, CC_max_diversity == "mixture")  
+              mix_soil_erosion <-  filter(soil_erosion, CC_max_diversity == "mixture")
+              mix_soil_nutrients  <-  filter(soil_nutrients, CC_max_diversity == "mixture")
+              mix_soil_ghg  <-  filter(soil_ghg, CC_max_diversity == "mixture")
+
+
+  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+  #number of observations for each response variable group
     CC_max_diversity <- Ref.Loc.Cash.Cover.Results  %>%
               count(CC_max_diversity, sort = TRUE)
               CC_max_diversity
@@ -124,9 +185,10 @@ Ref.Loc.Cash.Cover.Results %>%
   filter(str_detect(Ref.Loc.Cash.Cover.Results$Group_RV, "x$"))
               
               
-              #to report NA for a string result              
+#to report NA for a string result              
 str_replace_na() 
 #Objects of length 0 are silently dropped. This is particularly useful in conjunction with if:
+
 
 #to report synthesis use this setup for paragraphs
   name <- "Hadley"
@@ -173,7 +235,15 @@ str_c(
             
      Crop.Production <- CC.div.Ref.Loc.Results[CC.div.Ref.Loc.Results$Group_RV == "Crop Production"]
         
-     
+#draw map of us with coordinates for each research site
+    CC.div.ExpD_Loc %>%
+              ggplot(aes(Longitude, Latitude)) + #need to change lat/long info so it readily uploads into ggplot & maps
+              borders("state") +
+              geom_point() +
+              coord_quickmap() 
+    
+    
+    
      
 #attempt to use SQL database     
 library (odbc)

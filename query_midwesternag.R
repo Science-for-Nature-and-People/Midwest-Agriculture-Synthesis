@@ -131,10 +131,44 @@ CC.div.Results %>%
               mix_soil_nutrients  <-  filter(soil_nutrients, CC_max_diversity == "mixture")
               mix_soil_ghg  <-  filter(soil_ghg, CC_max_diversity == "mixture")
 
-
+# number of unique studies for each metric
+  #within CC_max_diversity = single species
+      (unique(ss_soil_om$Paper_id))
+       (unique(ss_soil_erosion$Paper_id))
+       (unique(ss_soil_nutrients$Paper_id))
+       (unique(ss_soil_ghg$Paper_id))       
+              
+  #within CC_max_diversity = mixture
+      (unique(mix_soil_om$Paper_id))      
+      (unique(mix_soil_erosion$Paper_id))
+      (unique(mix_soil_nutrients$Paper_id))
+      (unique(mix_soil_ghg$Paper_id))
   
         
-        
+ ###############################################Summary of results#########################
+
+## Experiments with Cover crop mixtures
+      ## Metric = GHGs
+          ## 2 studies
+              
+    #create abridged table with pertinent information
+    # Directionality of results (+/0/-)
+          Mix_soil_GHG_report <-     Loc_multi.x
+              city
+              State
+              Exp_design
+              Exp_arrangement
+              reps
+              Cash_species
+              Trt_id
+              CC_soilprep:Termination_timing
+              Response_var:Trt_id2description
+              
+              
+        mix_soil_ghg
+
+
+    
         
         
         

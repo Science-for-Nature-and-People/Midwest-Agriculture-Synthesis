@@ -170,18 +170,23 @@ CC.div.Results %>%
               (citations_alpha <- sort(citations, decreasing = FALSE) )
       
 
-#to report synthesis use this setup for paragraphs
-  name <- "Hadley"
-time_of_day <- "morning"
-birthday <- FALSE
-
-str_c(
-  "Good ", time_of_day, " ", name,
-  if (birthday) " and HAPPY BIRTHDAY",
-  "."
-)
+#For each unique study within a group, create paragraph with the following information
+      colnames(mix_soil_om)
+  
+      (intro <- str_c("A ", mix_soil_om$Exp_design, ", ", mix_soil_om$Exp_arrangement, " study  with ", 
+                    mix_soil_om$Reps, " replications was conducted from ",
+                    mix_soil_om$Year_start, " to ", (mix_soil_om$Year_start + mix_soil_om$Years_num),
+                     " in ", mix_soil_om$City, ", ", mix_soil_om$State, 
+                    " investigating the effects of ", mix_soil_om$Trtmt_main,
+                    " and ", mix_soil_om$Trtmt_splitA, #if NA need to exclude
+                    " and ", mix_soil_om$Trtmt_splitB, #if NA need to exclude
+                    " in a ", mix_soil_om$Cash_species, " system",
+                    " (", mix_soil_om$Authors, ", ", mix_soil_om$PubYear, "). " ))
+      (results_abbrev <- str_c("They found ", ) )
+        #need abridged dataframe for each unique paper to synthesize across
+      
               
-              
+    
               
   ## Experiments with Cover crop mixtures
       ## Metric = GHGs

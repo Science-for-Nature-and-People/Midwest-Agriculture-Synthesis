@@ -1,22 +1,23 @@
 #Midwestern Ag Synthesis - SNAPP
 #Database Querying 2
-#March 2, 2018
+#March 2, 2018 
 
 #libraries
 
-library(dplyr)
-library(readxl)
-library(tidyverse)
-library(ggplot2)
-library(maps)
-library(stringr)
-library(forcats)
+library("dplyr", lib.loc="~/R/win-library/3.4")
+library("readxl", lib.loc="~/R/win-library/3.4")
+library("tidyverse", lib.loc="~/R/win-library/3.4")
+library("ggplot2", lib.loc="~/R/win-library/3.4")
+library("maps", lib.loc="~/R/win-library/3.4")
+library("stringr", lib.loc="~/R/win-library/3.4")
+library("stringi", lib.loc="~/R/win-library/3.4")
+library("forcats", lib.loc="~/R/win-library/3.4")
 
 setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
 
 #import dataframes
 CC.div.Ref <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Reference")
-     
+
 CC.div.ExpD_Loc <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "ExpD_Location")
 
 CC.div.CashCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CashCrop")
@@ -147,7 +148,42 @@ CC.div.Results %>%
         
  ###############################################Summary of results#########################
 
-## Experiments with Cover crop mixtures
+#working with strings        
+    #Citations
+      #Build from smallest dataset first [Ref.Loc]
+            colnames(Ref.Loc)  
+              # Citation order = Authors, (PubYear). Title. Journal, Volume, Issue, Pages. DOI
+             
+              df = Ref.Loc #set dataframe to work with
+              str_c(df$Authors, " (", df$PubYear, "). ", df$Title, ". ", df$Journal, ", ", df$Volume, ": ",  df$Pages, ". ", df$DOI) 
+                  #need to add issue # <- " (", df$Issue, ") " ...need workaround for pubs with no Issue number (NA). 
+                    #When these are included in citation creation entire script goes to "NA"
+                  #need to italize Journal name <- preferably italize entire column
+              
+              
+        #limit these to unique citations only...utilize 'unique'
+              df = distinct(mix_soil_om, DOI, .keep_all=TRUE)
+ 
+        #create citations only for the papers included in this specific analysis      
+              citations <- str_c(df$Authors, " (", df$PubYear, "). ", df$Title, ". ", df$Journal, ", ", df$Volume, ": ",  df$Pages, ". ", df$DOI) 
+          #alphabetize output
+              (citations_alpha <- sort(citations, decreasing = FALSE) )
+      
+
+#to report synthesis use this setup for paragraphs
+  name <- "Hadley"
+time_of_day <- "morning"
+birthday <- FALSE
+
+str_c(
+  "Good ", time_of_day, " ", name,
+  if (birthday) " and HAPPY BIRTHDAY",
+  "."
+)
+              
+              
+              
+  ## Experiments with Cover crop mixtures
       ## Metric = GHGs
           ## 2 studies
               
@@ -171,7 +207,13 @@ CC.div.Results %>%
     
         
         
-        
+  df <- tibble(
+  word = words, 
+  i = seq_along(word)
+)
+Ref.Loc.Cash.Cover.Results = data.frame(Ref.Loc.Cash.Cover.Results)
+Ref.Loc.Cash.Cover.Results %>% 
+  filter(str_detect(Ref.Loc.Cash.Cover.Results$Group_RV, "x$"))      
         
         
         
@@ -208,32 +250,7 @@ CC.div.Results %>%
 ggplot(relig_summary, aes(tvhours, relig)) + geom_point()
               
               
-#working with strings        
 
-df <- tibble(
-  word = words, 
-  i = seq_along(word)
-)
-Ref.Loc.Cash.Cover.Results = data.frame(Ref.Loc.Cash.Cover.Results)
-Ref.Loc.Cash.Cover.Results %>% 
-  filter(str_detect(Ref.Loc.Cash.Cover.Results$Group_RV, "x$"))
-              
-              
-#to report NA for a string result              
-str_replace_na() 
-#Objects of length 0 are silently dropped. This is particularly useful in conjunction with if:
-
-
-#to report synthesis use this setup for paragraphs
-  name <- "Hadley"
-time_of_day <- "morning"
-birthday <- FALSE
-
-str_c(
-  "Good ", time_of_day, " ", name,
-  if (birthday) " and HAPPY BIRTHDAY",
-  "."
-)
     
 
     

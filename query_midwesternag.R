@@ -71,7 +71,7 @@ CC.div.Results %>%
     Ref.Loc.Cash.Cover <- left_join(Ref.Loc.Cash, CC.div.CoverCrop, by = NULL)
     Ref.Loc.Cash.Cover.Results <- left_join(Ref.Loc.Cash.Cover, CC.div.Results, by = c("Paper_id", "Duration"))
    
-     
+    #test <- filter(Ref.Loc.Cash.Cover.Results, Paper_id == 3)
     
   #to match column keys with different names use by = c("a" = "b")
     #this will be useful for joining covercrop to results tibble as "Trt_id" = "Trt1_id" or "Trt2_id"
@@ -86,18 +86,24 @@ CC.div.Results %>%
   
     #filter tibble for Group_Rv = Soil
       Soil_RVs <- filter(Ref.Loc.Cash.Cover.Results, Group_RV == "Soil")   
+          #test2 <- filter(Soil_RVs, Paper_id == 3)
+
       
     #itemized list of unique soil metrics (Response_var)
       (uniqueSoils <- unique(Soil_RVs$Response_var))
       
     
       # add column ("metric") that combines simliar response_var groups 
-      soil_om <-  filter(Soil_RVs, Response_var == c("SOC loss in root zone (0-75 cm)",
-                                                          "water-extractable OC_05",
-                                                          "water-extractable OC_520",
+      soil_om <-  filter(Soil_RVs, Response_var == c("SOClossroots_075",
+                                                          "waterextractableOC_05",
+                                                          "waterextractableOC_520",
                                                           "soil organic carbon in topsoil",
                                                           "total carbon stock"
                                                           ))
+               ###### #test3 <- filter(soil_om, Paper_id == 3) #all the data for paper_id == 3 is not coming through
+                      #test4 <- filter(Soil_RVs, Response_var == "waterextractableOC_05") 
+
+      
       soil_om <-   mutate(soil_om,
                         metric = "soil_organic_matter")
       
@@ -199,128 +205,29 @@ CC.div.Results %>%
             Paper_id, Loc_multi.x, Soil_type , Annual_precip, Field_history,Plot_width,
             Plot_length, Trtmt_levels:Trtmt_splitB_levels, Cash_tillage:Cash_genetics,
             Trt_id: Loc_multi.y, Group_RV:Authors_comments)
+   
          
-        
-  df <- tibble(
-  word = words, 
-  i = seq_along(word)
-)
-Ref.Loc.Cash.Cover.Results_3 = filter(Ref.Loc.Cash.Cover.Results, Paper_id == 3)
-Ref.Loc.Cash.Cover.Results %>% 
-  filter(str_detect(Ref.Loc.Cash.Cover.Results$Group_RV, "x$"))      
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-  #number of observations for each response variable group
-    CC_max_diversity <- Ref.Loc.Cash.Cover.Results  %>%
-              count(CC_max_diversity, sort = TRUE)
-              CC_max_diversity
-              
-              
-#working with factors- library(forcats)
-    Ref.Loc.Cash.Cover.Results  %>%
-              count(Group_RV, sort = TRUE)
-    
-    ggplot(Ref.Loc.Cash.Cover.Results, aes(Group_RV)) +
-        geom_bar()
-    
-#grouping the results
-    RV_summary <- Ref.Loc.Cash.Cover.Results %>%
-  group_by(Response_var) %>%
-  summarise(
-    age = mean(age, na.rm = TRUE),
-    tvhours = mean(tvhours, na.rm = TRUE),
-    n = n()
-  )
-
-ggplot(relig_summary, aes(tvhours, relig)) + geom_point()
-              
-              
-
-    
-
-    
-  #Filter out papers of interest
-    #based on Cover crop presence/absence...
-    #this will include only papers where "CoverCrop: CC_mixture" = fallow and single species
-    #must comb all rows associated with each paper and exclude papers that have CC mixture
-           
-    
-    Ref.Loc.Results %>% 
-  semi_join(top_dest)
-    
-    
-    
          
-         #count number of unique DOIs for Crop Production
-           df %>% 
-               group_by (Group_RV) %>%
-                  summarise(count = n_distinct(DOI)) %>%
-                    arrange(CC.div.Ref.Loc.Results, Group_RV)
-           
-           df %>% 
-             filter(Group_RV=="Crop Production") %>%
-                summarize(n_distinct(DOI))
-           
-           CC.div.Ref.Loc.Results %>%
-              count(Group_RV == "Crop Production", DOI)
-                
-          
-           
-                    dplyr::distinct(CC.div.Ref.Loc.Results, Group_RV, DOI)
+         
+         
+         
+         
+         
+         
+         
+         
                
-            
-     Crop.Production <- CC.div.Ref.Loc.Results[CC.div.Ref.Loc.Results$Group_RV == "Crop Production"]
         
-#draw map of us with coordinates for each research site
-    CC.div.ExpD_Loc %>%
-              ggplot(aes(Longitude, Latitude)) + #need to change lat/long info so it readily uploads into ggplot & maps
-              borders("state") +
-              geom_point() +
-              coord_quickmap() 
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+  
     
-    
-     
-#attempt to use SQL database     
-library (odbc)
-library(DBI)
-library(dbplyr)
-library(RSQLite)
-     
-     
-     
-#connect to database
-con <- dbConnect(odbc::odbc()
-                  Driver = "SQL Server"
-                  Server = "local host"
-                  Database = "CCdiversity_Synthesis_Database_Atwood.xlsx"
-                  )
-
-
-
-
-#create empty database with no tables
-con = dbConnect(RSQLite::SQLite(), dbname = ":memory:")
-
-
-#inspect empty database
-dbListTables(con)
- 
-
-#load data into the database
-dbWriteTable(con, "Ref", Ref)
- 
-
-#inspect loaded dataframe
-
-dbListFields(con, "Ref")
-
+   

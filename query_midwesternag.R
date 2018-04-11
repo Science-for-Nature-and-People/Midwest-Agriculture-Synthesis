@@ -93,7 +93,8 @@ CC.div.Results %>%
     
       # add column ("metric") that combines simliar response_var groups 
       soil_om <-  filter(Soil_RVs, Response_var == c("SOC loss in root zone (0-75 cm)",
-                                                          "water-extractable organic carbon (0-5 cm)",
+                                                          "water-extractable OC_05",
+                                                          "water-extractable OC_520",
                                                           "soil organic carbon in topsoil",
                                                           "total carbon stock"
                                                           ))
@@ -194,29 +195,17 @@ CC.div.Results %>%
               
     #create abridged table with pertinent information
     # Directionality of results (+/0/-)
-          Mix_soil_GHG_report <-     Loc_multi.x
-              city
-              State
-              Exp_design
-              Exp_arrangement
-              reps
-              Cash_species
-              Trt_id
-              CC_soilprep:Termination_timing
-              Response_var:Trt_id2description
-              
-              
-        mix_soil_ghg
-
-
-    
-        
+         df.mix_soil_om_abridged <- select(mix_soil_om,
+            Paper_id, Loc_multi.x, Soil_type , Annual_precip, Field_history,Plot_width,
+            Plot_length, Trtmt_levels:Trtmt_splitB_levels, Cash_tillage:Cash_genetics,
+            Trt_id: Loc_multi.y, Group_RV:Authors_comments)
+         
         
   df <- tibble(
   word = words, 
   i = seq_along(word)
 )
-Ref.Loc.Cash.Cover.Results = data.frame(Ref.Loc.Cash.Cover.Results)
+Ref.Loc.Cash.Cover.Results_3 = filter(Ref.Loc.Cash.Cover.Results, Paper_id == 3)
 Ref.Loc.Cash.Cover.Results %>% 
   filter(str_detect(Ref.Loc.Cash.Cover.Results$Group_RV, "x$"))      
         

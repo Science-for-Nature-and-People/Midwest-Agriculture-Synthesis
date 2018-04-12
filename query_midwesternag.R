@@ -85,26 +85,27 @@ CC.div.Results %>%
               groups_RVs
   
     #filter tibble for Group_Rv = Soil
-      Soil_RVs <- filter(Ref.Loc.Cash.Cover.Results, Group_RV == "Soil")   
+      Soil_RVs <- filter(Ref.Loc.Cash.Cover.Results, Group_RV == "Soil")
           #test2 <- filter(Soil_RVs, Paper_id == 3)
-
+          #test3 <- filter(Soil_RVs, Response_var == "waterextractableOC_05") #returns 4
+          #test4 <- filter(Soil_RVs, Response_var == "waterextractableOC_520") #returns 4
       
     #itemized list of unique soil metrics (Response_var)
       (uniqueSoils <- unique(Soil_RVs$Response_var))
       
     
       # add column ("metric") that combines simliar response_var groups 
-      soil_om <-  filter(Soil_RVs, Response_var == c("SOClossroots_075",
+     soil_om <- Soil_RVs %>%  filter(Response_var %in% c("SOClossroots_075",
                                                           "waterextractableOC_05",
                                                           "waterextractableOC_520",
-                                                          "soil organic carbon in topsoil",
+                                                         "soil organic carbon in topsoil",
                                                           "total carbon stock"
                                                           ))
-               ###### #test3 <- filter(soil_om, Paper_id == 3) #all the data for paper_id == 3 is not coming through
-                      #test4 <- filter(Soil_RVs, Response_var == "waterextractableOC_05") 
-
+               ###### #test5 <- filter(soil_om, Response_var == "waterextractableOC_05") #all the data for paper_id == 3 is not coming through
+                      #test6 <- filter(Soil_RVs, Response_var == "waterextractableOC_520") 
       
-      soil_om <-   mutate(soil_om,
+      
+                         soil_om <-   mutate(soil_om,
                         metric = "soil_organic_matter")
       
       soil_erosion <-  filter(Soil_RVs, Response_var == c("soil loss", "water aggregate stability"))
@@ -202,11 +203,11 @@ CC.div.Results %>%
     #create abridged table with pertinent information
     # Directionality of results (+/0/-)
          df.mix_soil_om_abridged <- select(mix_soil_om,
-            Paper_id, Loc_multi.x, Soil_type , Annual_precip, Field_history,Plot_width,
-            Plot_length, Trtmt_levels:Trtmt_splitB_levels, Cash_tillage:Cash_genetics,
-            Trt_id: Loc_multi.y, Group_RV:Authors_comments)
+           c(Paper_id, Loc_multi.x, Soil_type , Annual_precip, Plot_width,
+            Plot_length, Cash_tillage:Cash_genetics,
+            Trt_id: Loc_multi.y, Group_RV:Authors_comments))
    
-         
+         #Trtmt_levels:Trtmt_splitB_levels, 
          
          
          

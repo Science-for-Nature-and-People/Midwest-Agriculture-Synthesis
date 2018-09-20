@@ -40,7 +40,7 @@ ExpD_Loc <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Ex
 CashCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CashCrop")
  
   #Details about treatments with particular attention to cover crops
-CoverCrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "CoverCrop")
+Treatment <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Treatment")
   
   #All cover crop related results f
 Results <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Results")
@@ -97,6 +97,11 @@ Results %>%
 
 ####Filtering Data Files###############################################################
 
+Results <- filter(Results, Review_id == "Cover crop") #Cover crop review only
+#Results <- filter(Results, Review_id == "Tillage") #Soil Management review only
+#Results <- filter(Results, Review_id == "Seed protection") #Seed & Seedling Protection review only
+#Results <- filter(Results, Review_id == "Fertilizer") #Fertilizer use review only
+
 ##############Add Metric Column and Groupings
 
 #Paper_ID & Duration are the two keys that work across all dataframes
@@ -128,17 +133,6 @@ Results %>%
    
       ####Soils####
       ##Soil Chemical Properties####
-      chem_carbon <-  c("soil organic carbon in topsoil",
-                  "soil organic carbon (0-75 cm)",
-                  "water extractable organic carbon (0-5 cm)",
-                  "water extractable organic carbon (5-20 cm)",
-                  "total carbon",
-                  "soil organic carbon (SOC) in fall following cover crop, 0-15cm",
-                  "soil organic carbon (SOC), spring sample",
-                  "soil organic carbon 0-30cm depth (spring)",
-                  "soil organic carbon",
-                  "organic carbon (0-15 cm)",
-                  "soil carbon concentration")
       
       chem_nitrate_spring <- c( "soil nitrate (NO3-N)",
                               "soil nitrate (NO3--N) preceeding maize",
@@ -252,7 +246,19 @@ Results %>%
       
             ##Soil Biological Properties####
 
-        biol_microbes <- c("microbial biomass",
+      biol_carbon <-  c("soil organic carbon in topsoil",
+                  "soil organic carbon (0-75 cm)",
+                  "water extractable organic carbon (0-5 cm)",
+                  "water extractable organic carbon (5-20 cm)",
+                  "total carbon",
+                  "soil organic carbon (SOC) in fall following cover crop, 0-15cm",
+                  "soil organic carbon (SOC), spring sample",
+                  "soil organic carbon 0-30cm depth (spring)",
+                  "soil organic carbon",
+                  "organic carbon (0-15 cm)",
+                  "soil carbon concentration")
+        
+      biol_microbes <- c("microbial biomass",
                           "microbial biomass nitrogen (MBN)"
                              )
       
@@ -465,7 +471,7 @@ Results %>%
               group_metric = case_when(
                 #Soils
                   #Chemical Properties
-                  Response_var %in% chem_carbon ~ "soil carbon (spring)",
+                  Response_var %in% biol_carbon ~ "soil carbon (spring)",
                   Response_var %in% chem_nitrate_spring ~ "soil nitrate (spring)",
                   Response_var %in% chem_nitrate_maize ~ "soil nitrate (maize)",
                   Response_var %in% chem_nitrate_soybean ~ "soil nitrate (soybean)",
@@ -529,6 +535,20 @@ Results %>%
       Results <- left_join(Results, metric_labels, by = c("key", "Response_var"))
           
 #############################################################################################
+      
+      
+      
+      #File with all results included from Cover Crop review
+      CC_ExpD <- left_join(Treatment, ExpD_Loc)
+      CC_Ref <- left_join(CC_ExpD, Ref)
+      CC_Cash <- left_join(CC_Ref, CashCrop) 
+       
+      CC_all <- left_join(CC_Cash, Results, by = "Paper_id", "Duration")
+      
+      # CCall_Cash$Year <- as.numeric(CCall_Cash$Year)  
+      
+      
+      write.csv(CC_all, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv")
 
 
     #Filter by CoverCrop:CC_max_diversity

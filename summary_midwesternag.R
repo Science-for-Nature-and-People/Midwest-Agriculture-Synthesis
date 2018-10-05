@@ -4,8 +4,6 @@
 library("dplyr", lib.loc="~/R/win-library/3.4")
 library("readxl", lib.loc="~/R/win-library/3.4")
 library("tidyverse", lib.loc="~/R/win-library/3.4")
-library("ggplot2", lib.loc="~/R/win-library/3.4")
-library("maps", lib.loc="~/R/win-library/3.4")
 library("stringr", lib.loc="~/R/win-library/3.4")
 library("stringi", lib.loc="~/R/win-library/3.4")
 library("forcats", lib.loc="~/R/win-library/3.4")
@@ -30,7 +28,7 @@ df <- arrange(df, Paper_id)
          
      df$citation <- df %>% 
                     str_glue_data( "{Paper_id} {Authors} ({PubYear}). {Title}. {Journal}, {Volume_issue}: {Pages}.{DOI}")                  
-(unique(df$citation))
+noquote(unique(df$citation))
               #need to add issue # <- " (", df$Issue, ") " ...need workaround for pubs with no Issue number (NA). 
               #When these are included in citation creation entire script goes to "NA"
                   #need to italize Journal name <- preferably italize entire column
@@ -48,12 +46,12 @@ df <- arrange(df, Paper_id)
                   
                 ###Create conditional statement for experimental design and experimental arrangement####
             
-                            Experiment_row <- df %>%
-                                            select(Exp_design, Exp_arrangement, key, Paper_id) %>%
-                                            mutate(
-                                            Exp_list_row = case_when(
-                                                  !is.na(Exp_arrangement)  ~ paste(Exp_arrangement, Exp_design),
-                                                  !is.na(Exp_design)  ~ paste(Exp_design)
+              Experiment_row <- df %>%
+                              select(Exp_design, Exp_arrangement, key, Paper_id) %>%
+                              mutate(
+                              Exp_list_row = case_when(
+                                    !is.na(Exp_arrangement)  ~ paste(Exp_arrangement, Exp_design),
+                                    !is.na(Exp_design)  ~ paste(Exp_design)
                                             )) 
               unique(Experiment_row$Exp_list_row)
                     
@@ -202,44 +200,138 @@ df <- arrange(df, Paper_id)
 unique(df$intro)  
 
 
-#####START HERE#############
 
-                    #need to add *and* before last city, state & treatment combo for each list
-                    #need to remove NA from list of treatments...possible create treatment list 
-                    #need to remove NA for Experiemtnal arrangements
+
+                   
 
       ##METHODS Statement
                   
-                #Describe cover crop treatments                        
+                 
+   #Describe cover crop treatments #####       
+                          #Create df with only rows describing cover crop treatments
+                            df_ccs <- df %>%
+                                filter(!is.na(CC_mixture) ) 
                  
                   # create df where only rows listing cover crops var. are listed
                   # List cover crops included in experiment with winter fallow first
                   
+                              
                               #create column with cover crop + variety
-                              df$CC_cultivar <- if_else(is.na(df$CC_type), paste(df$CC_mixture), paste(df$CC_mixture, df$CC_type, sep = " cv. "), missing = NULL)
+                              df_ccs$CC_cultivar <- if_else(is.na(df_ccs$CC_type), paste(df_ccs$CC_mixture), paste(df_ccs$CC_mixture, df_ccs$CC_type, sep = " cv. "), missing = NULL)
+                              
+                              #Add control indicator
+                              df_ccs$CC_cultivar <- if_else(df_ccs$CC_cultivar == "winter fallow", paste(df_ccs$CC_cultivar, "(control)", sep = " "), paste(df_ccs$CC_cultivar), missing = NULL)
+                              
+                              #unique(df_ccs$CC_cultivar)
                                 
-                                
-                  df_ccs <- df %>%
-                                filter(!is.na(CC_mixture) ) %>%
-                                group_by(Paper_id) %>%
-                                #arrange(CC_mixture) %>% #need to alter so that winter fallow is always listed last (?specify with ARRANGE?)
-                                summarise (CC_trts_list = paste(unique(CC_cultivar), collapse=", "))
-                                   
+      #List of Cover Crops without seeding rate information
+                  #df_ccs2 <- df_ccs %>%
+                   #             group_by(Paper_id) %>%
+                    #            #arrange(CC_mixture) %>% #need to alter so that winter fallow is always listed last (?specify with ARRANGE?)
+                     #           summarise (CC_trts_list = paste(unique(CC_cultivar), collapse=", ")) 
+                   #unique(df_ccs2$CC_trts_list)                
                   
                   #add CC Treatment list to main data frame
-                  df <- left_join(df, df_ccs, by="Paper_id")
+                  #df_ccs <- left_join(df_ccs, df_ccs2, by="Paper_id")
+                  
+                                    
                   
 
-      #NEXT planting details, seeding rates, soil preparation, terminatin type + description
+                    
+####How were the cover crop seeds planted?######
+                    #Plant implement: replace NAs with "planted"
+                          df_ccs$CC_plantimplement <- as.character(df_ccs$CC_plantimplement)
+                          df_ccs$CC_plantimplement2 <- if_else(is.na(df_ccs$CC_plantimplement), paste("planted"), df_ccs$CC_plantimplement) 
+                                unique(df_ccs$CC_plantimplement2)#view output
+                          
+                    #When were the cover crops planted?
+                    #Plant date: create conditional statment to add on/in/between to each cell based on how the date is recorded
+                                
+                            months2 <- c("August-September", "September-October", "October-November")
+                            month2 <- c("August", "September", "October", "November")
+                          
+                            CC_plantdate <- df_ccs %>%
+                                select(CC_plantdate, master_key, Paper_id, Duration) %>%
+                                mutate(
+                                  meth_CC_plantdate = case_when(
+                                                CC_plantdate %in% months2  ~ paste("between", CC_plantdate),
+                                                CC_plantdate %in% "fall"  ~ paste("in the", CC_plantdate),
+                                                CC_plantdate %in% month2  ~ paste("in", CC_plantdate),
+                                                TRUE ~ as.character(CC_plantdate)
+                                            )) 
+                            
+                            df_ccs <- left_join(df_ccs, CC_plantdate)
+                            
+                            #consolidate herbicide type information by Paper_id####
+                            #exclude rows with NA for herbicide type
+                            
+                             Herbicide_list <- df_ccs %>%
+                                                    select(Herbicide_type, master_key, Paper_id) %>%
+                                                    na.omit(Herbicide_type)
+                               
+                               
+                            
+                              Herbicide_list <- Herbicide_list %>%
+                                                  group_by(Paper_id) %>%
+                                                   mutate(
+                                                          Herb_list = case_when(
+                                                            #is.na(Herbicide_type) ~ paste("") %>%
+                                                            !is.na(Herbicide_type)  ~  paste(unique(Herbicide_type), collapse=", ")
+                                                          ) )
+                            
+                                    #unique(Herbicide_list$Herb_list)
+                  
+                            df_ccs <- left_join(df_ccs, Herbicide_list)
+                            
+          #Generate list of seeding rates with associated cover crop (e.g. rye @ 248 kg/ha, hairy vetch @ 124 kg/ha)
+           #Generate list of cover crops with associated seeding densities
+                            #add seeding rates
+                            Cult_seed_list <- df_ccs   %>%
+                                                          select(Paper_id, master_key, CC_cultivar, CC_seeddensity, CC_mixture) %>%
+                                                          #filter(!is.na(CC_mixture)) %>%
+                                                          mutate(
+                                                                  CC_cultivar2 = if_else(is.na(CC_seeddensity) | CC_cultivar == "winter fallow (control)", 
+                                                                                  paste(CC_cultivar), paste(CC_cultivar, "@", CC_seeddensity, sep=" " ), missing = NULL)) %>%
+                                                          group_by(Paper_id) %>%
+                                                          mutate(
+                                                                  Cult_seed_list = case_when(
+                                                                    !is.na(CC_cultivar2)  ~  paste(unique(CC_cultivar2), collapse=", ")
+                                                                  ))
+                                              
+                            #unique(Cult_seed_list$Cult_seed_list)
+                                
+                             df_ccs <- left_join(df_ccs, Cult_seed_list)
+                             
+           ##Describe plot sizes for each experiment####
+                  
+                  df_ccs$plot_size_m2 = as.numeric(df_ccs$Plot_width) * as.numeric(df_ccs$Plot_width)
+                  df_ccs$plot_size = ifelse(!is.na(df_ccs$plot_size_m2),paste(df_ccs$plot_size_m2, "sq m", sep = " "), paste("an undescribed size"))
+                  
+                    
+                  plotsizem2_list <- df_ccs %>%
+                                      group_by(Paper_id) %>% 
+                                      summarise (plots_list = paste(unique(plot_size), collapse=" or "))
+                    
+                  noquote(unique(plotsizem2_list))
+                  
+                  #Attach list of plot sizes to dataset
+                    df_ccs <- left_join(df_ccs, plotsizem2_list)
       
-    df$methods <- df %>%
-                  str_glue_data("{Paper_id} Plots received one of the following cover crop treatments: {CC_trts_list}.")
-    #(Cover crops were {CC_plantimplement} {CC_plantdate} at a seeding rate of {CC_seeddensity} and terminated {Termination_timing) with {Termination_type} )
-
-    unique(paste(df$intro, df$methods, sep = " "))
+    df_ccs$methods <- df_ccs %>%
+                  str_glue_data("{Paper_id} Plots received one of the following cover crop treatments: {Cult_seed_list}.
+                                  Cover crops were {CC_plantimplement2} on {CC_plantdate} and terminated with {Termination_type} on {Termination_timing}.
+                                  Plots were {plots_list}.")
+    
+    noquote(unique(df_ccs$methods))
     
     
-      (results_abbrev <- str_c("They found ", ) )
+    
+    
+    ######Results#####
+      #Continue adding results (short & long) to dataframe.
+    
+      results_abbrev <- str_c("They found", {df$Reviewers_results_short}, {df$Reviewers_results_long}, sep = " ")
+      unique(results_abbrev)
         #need abridged dataframe for each unique paper to synthesize across
       
               

@@ -46,7 +46,7 @@ Treatment <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "T
 Results <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", sheet = "Results")
     Results = filter(Results, !(Response_var == "cover crop leaf N content")) #set dataframe to work with - remove cover crop nitrogen input data (incomplete dataset)              
               #add surrogate key to Results
-              Results$key = rownames(Results)
+              Results$Res_key = rownames(Results)
 
   
 ###################################################################################################
@@ -539,18 +539,21 @@ Results <- filter(Results, Review_id == "Cover crop") #Cover crop review only
       
       
       #File with all results included from Cover Crop review
-      CC_ExpD <- left_join(Treatment, ExpD_Loc)
-      CC_Ref <- left_join(CC_ExpD, Ref)
-      CC_Cash <- left_join(CC_Ref, CashCrop) 
+      CC_Ref2 <- left_join(Ref, ExpD_Loc)
+      CC_Cash <- left_join(CC_Ref2, CashCrop)
+      CC_Trt <- left_join(CC_Cash, Treatment) 
        
-      CC_all <- left_join(CC_Cash, Results, by = "Paper_id", "Duration")
+      CC_all <- left_join(CC_Trt, Results)#, by = "Paper_id", "Duration")
       
       # CCall_Cash$Year <- as.numeric(CCall_Cash$Year)  
       
+      #add surrogate key to Results
+              CC_all$master_key = rownames(CC_all)
       
       write.csv(CC_all, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv")
 
-
+      
+      
     #Filter by CoverCrop:CC_max_diversity
 
       monocultures <- filter(CoverCrop, CC_max_diversity == "single")

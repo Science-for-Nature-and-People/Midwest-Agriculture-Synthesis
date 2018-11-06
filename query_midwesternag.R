@@ -109,13 +109,6 @@ Results %>%
 
 
 
-####Filtering Data Files###############################################################
-
-Results <-
-  filter(Results, Review_id == "Cover crop") #Cover crop review only
-#Results <- filter(Results, Review_id == "Tillage") #Soil Management review only
-#Results <- filter(Results, Review_id == "Seed protection") #Seed & Seedling Protection review only
-#Results <- filter(Results, Review_id == "Fertilizer") #Fertilizer use review only
 
 ##############Add Metric Column and Groupings
 
@@ -193,7 +186,7 @@ chem_nitrate_fall <-
 chem_ammonium_spring <- c(
   "ammonium (NH4-N)",
   "ammonium (NH4-N) in soil following cover crop",
-  "soil ammonium 0-30cm depth (spring)",
+  "soil ammonium 0-30 cm depth (spring)",
   "soil ammonium NH4 (0-15 cm)",
   "soil ammonium in spring (0-80 cm depth)"                                                                          
 )
@@ -246,7 +239,10 @@ phy_erosion <- c(
   "soil loss",
   "interrill erosion rate",
   "rill erosion rate",
-  "erodible fraction from the top 50 mm of soil (soil aggregates < 0.84 mm)"                                        
+  "erodible fraction from the top 50 mm of soil (soil aggregates < 0.84 mm)",
+  "sediment load following fall manure",
+  "sediment load following spring manure"
+
 )
 
 phy_compaction <- c(
@@ -282,8 +278,8 @@ phy_aggregates <- c(
 )
 
 phy_bulkdensity <- c(
-  "bulk density  (0-15 cm depth)",                                                                                            
-  "bulk density  (15-30 cm depth)",                                                                                           
+  "bulk density (0-15 cm depth)",                                                                                            
+  "bulk density (15-30 cm depth)",                                                                                           
   "bulk density 0-30 cm depth (spring)",
   "bulk density",
   "bulk density (0-10 cm depth)",                                                                                
@@ -491,7 +487,9 @@ invert_nonpredpest <-
     "total abundance of crickets (Gryllidae) on soil surface (pitfall traps in soybean)",
     "total abundance of hoverflies (Syrphidae) on aboveground tissue (sweep net in soybean)",
     "total abundance of Chalcid wasps (Chalcidoidae) on aboveground tissue (sweep net in soybean)",
-    "total abundance of parasitic flies (Tachinidae) on aboveground tissue (sweep net in soybean)"
+    "total abundance of parasitic flies (Tachinidae) on aboveground tissue (sweep net in soybean)",
+    "total abundance of invertebrates on aboveground plant tissue (sweep net in soybean)"
+
   )
 
 pathogen <- c(
@@ -593,13 +591,24 @@ runoff_nitrate <-
     "average NO3-N loss through subsurface drainage over 4 years (soybean)",
     "subsurface drainage nitrate (NO3-N) annual yields",
     "dissolved organic nitrogen (DON)",
-    "normalized NO3-N losses"
+    "normalized NO3-N losses",
+    "runoff quantity following fall manure",
+    "runoff quantity following spring manure",
+    "time to runoff following fall manure",
+    "time to runoff following spring manure"
+
   )
 
 runoff_phosphorous <-
   c(
-    "Subsurface drainage total reactive phosphorous (TRP) annual yields",
-    "Subsurface drainage total reactive phosphorous (TRP) annual flow weighted concentrations"
+    "subsurface drainage total reactive phosphorous (TRP) annual yields",
+    "Subsurface drainage total reactive phosphorous (TRP) annual flow weighted concentrations",
+    "subsurface drainage total reactive phosphorous (TRP) annual concentrations",
+    "reactive phosphorous load runoff following fall manure",
+    "reactive phosphorous load runoff following spring manure",
+    "total phosphorous load runoff following fall manure",
+    "total phosphorous load runoff following spring manure"
+
   )
 
 
@@ -655,7 +664,7 @@ metric_labels <- Results %>%
       Response_var %in% invert_preds_species ~ "invertebrate predators (species-level)",
       Response_var %in% invert_preds_comm ~ "invertebrate predators (community-level)",
       Response_var %in% invert_preds_activity ~ "invertebrate predators (activity)",
-      Response_var %in% invert_nonpredpest ~ "invertebrate non-predators & non-pests)",
+      Response_var %in% invert_nonpredpest ~ "invertebrate non-predators & non-pests",
       Response_var %in% pathogen ~ "plant pathogens",
       
       #Crop Production
@@ -692,7 +701,7 @@ Results <-
 missing <- Results[is.na(Results$group_metric),] #check to see if all rows have an assigned group_metric
 
 
-#File with all results included from Cover Crop review
+#File with all results included from Cover Crop review#####
 CC_Ref2 <- left_join(Ref, ExpD_Loc)
 CC_Cash <- left_join(CC_Ref2, CashCrop)
 CC_Trt <- left_join(CC_Cash, Treatment)
@@ -711,6 +720,18 @@ write.csv(CashCrop, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop
 write.csv(Treatment, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Trt.csv")
 write.csv(Results, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Results.csv")
 
+
+
+
+
+#######################################################################################################################
+####Filtering Data Files###############################################################
+
+Results <-
+  filter(Results, Review_id == "Cover crop") #Cover crop review only
+#Results <- filter(Results, Review_id == "Tillage") #Soil Management review only
+#Results <- filter(Results, Review_id == "Seed protection") #Seed & Seedling Protection review only
+#Results <- filter(Results, Review_id == "Fertilizer") #Fertilizer use review only
 
 
 #Filter by CoverCrop:CC_max_diversity
@@ -775,23 +796,6 @@ mono_Pest <-
 
 (uniqueWater <- unique(mono_Water$Response_var))
 
-##########################################################Begin here########################
-
-
-
-
-# number of unique studies for each metric
-#within CC_max_diversity = single species
-(unique(ss_soil_om$Paper_id))
-(unique(ss_soil_erosion$Paper_id))
-(unique(ss_soil_nutrients$Paper_id))
-(unique(ss_soil_ghg$Paper_id))
-
-#within CC_max_diversity = mixture
-(unique(mix_soil_om$Paper_id))
-(unique(mix_soil_erosion$Paper_id))
-(unique(mix_soil_nutrients$Paper_id))
-(unique(mix_soil_ghg$Paper_id))
 
 
 

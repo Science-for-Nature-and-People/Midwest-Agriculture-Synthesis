@@ -163,8 +163,10 @@ chem_nitrate_spring <- c(
   "nitrogen in macro organic matter (2 mm) following cover crop",
   "soil nitrate (NO3-N) post cover crop termination, pre cash crop planting (maize)",
   "soil nitrate (NO3-N) post winter cover crop, before planting cash crop",
-  "soil nitrate 0-30cm depth (spring)",
-  "soil nitrate NO3 (0-15 cm)"
+  "soil nitrate 0-30 cm depth (spring)",
+  "soil nitrate NO3 (0-15 cm)",
+  "soil nitrate in spring (0-80 cm depth)"                                                                           
+
 )
 
 chem_nitrate_maize <-
@@ -192,7 +194,8 @@ chem_ammonium_spring <- c(
   "ammonium (NH4-N)",
   "ammonium (NH4-N) in soil following cover crop",
   "soil ammonium 0-30cm depth (spring)",
-  "soil ammonium NH4 (0-15 cm)"
+  "soil ammonium NH4 (0-15 cm)",
+  "soil ammonium in spring (0-80 cm depth)"                                                                          
 )
 
 chem_totalN <- c(
@@ -203,14 +206,14 @@ chem_totalN <- c(
   "total (NO3+NH4)-N from soil profile (0-120 cm) in crop row",
   "total (NO3+NH4)-N from soil profile (0-120 cm) in crop interrow",
   "total nitrogen, spring sample",
-  "fraction of soil organic nitrogen mineralized in 30 days  (frozen before incubation)",
+  "fraction of soil organic nitrogen mineralized in 30 days (frozen before incubation)",
   "fraction of soil organic nitrogen mineralized in 30 days (not frozen before incubation)",
   "total soil nitrogen following cover crop (to 1 m depth)",
   "total soil nitrogen",
   "total inorganic nitrogen (TIN)",
   "total nitrogen (0-15 cm)",
   "total nitrogen",
-  "soil organic nitrogen 0-30cm depth (spring)",
+  "soil organic nitrogen 0-30 cm depth (spring)",
   "nitrate and ammonium (NO3-N + NH4-N) in soil following cover crop"
 )
 
@@ -219,10 +222,11 @@ chem_phosphorous <- c(
   "phosphorous removal",
   "phosphorous inputs",
   "phosphorous balance",
-  "Olsen phosphorous (Olsen P) concentration in Fall, 0-30cm",
+  "Olsen phosphorous (Olsen P) concentration in Fall, 0-30 cm",
   "Olsen phosphorous (Olsen P) concentration in Fall, 30-60 cm",
   "Olsen phosphorous (Olsen P) concentration in Fall, 60-90 cm",
-  "Olsen phosphorous (Olsen P) concentration in Spring, 0-60cm"
+  "Olsen phosphorous (Olsen P) concentration in Spring, 0-60 cm"
+
 )
 
 chem_potassium <- c(
@@ -232,32 +236,72 @@ chem_potassium <- c(
   "exchangable potassium (K)"
 )
 
-chem_acidity <- c("pH",
+chem_acidity <- c(
+  "pH",
   "pH (0-15 cm)")
 
 ##Soil Physical Properties####
 
-phy_erosion <- c("soil loss",
+phy_erosion <- c(
+  "soil loss",
   "interrill erosion rate",
-  "rill erosion rate")
+  "rill erosion rate",
+  "erodible fraction from the top 50 mm of soil (soil aggregates < 0.84 mm)"                                        
+)
 
-phy_structure <- c(
+phy_compaction <- c(
   "soil penetration resistance",
-  "bulk density",
-  "water aggregate stability",
   "soil penetration resistance (Spring)",
-  "soil penetration resistance (Fall)",
-  "air filled pore space",
-  "bulk density 0-30cm depth (spring)",
-  "volumetric air content",
-  "water filled poor space",
+  "soil penetration resistance (Fall)"
+)
+
+phy_pores <- c(
   "total pore spaces",
-  "mean weight diameter of water stable aggregates",
+  "air filled pore space",
+  "volumetric air content",
+  "water filled pore space",
   "pore tortuosity factor",
   "relative gas diffusion coefficient"
 )
 
-phys_watercontent <- c(
+phy_aggregates <- c(
+  "mean weight diameter of water stable aggregates",
+  "water aggregate stability",
+  "water stable aggregates in soybean",
+  "water stable aggregates in maize",                                                                                 
+  "water stable mean weight diameter (0-10 cm depth)",                                                                 
+  "water stable mean weight diameter (10-20 cm depth)",                                                                
+  "water stable mean weight diameter (20-40 cm depth)",                                                               
+  "water stable mean weight diameter (40-60 cm depth)",                                                                
+  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates < 0.42 mm)",               
+  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",
+  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)", 
+  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",  
+  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)", 
+  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates > 19.2 mm)"               
+)
+
+phy_bulkdensity <- c(
+  "bulk density  (0-15 cm depth)",                                                                                            
+  "bulk density  (15-30 cm depth)",                                                                                           
+  "bulk density 0-30 cm depth (spring)",
+  "bulk density",
+  "bulk density (0-10 cm depth)",                                                                                
+  "bulk density (10-20 cm depth)",                                                                               
+  "bulk density (20-40 cm depth)",                                                                               
+  "bulk density (40-60 cm depth)"
+)
+
+phy_texture <- c(
+  "percent sand  (0-15 cm depth)",                                                                                    
+  "percent sand  (15-30 cm depth)",                                                                                   
+  "percent silt  (0-15 cm depth)",                                                                                  
+  "percent silt  (15-30 cm depth)",                                                                                   
+  "percent clay  (0-15 cm depth)",                                                                                  
+  "percent clay  (15-30 cm depth)"                                                                                   
+)
+
+phy_watercontent <- c(
   "volumetric water content",
   "soil water content at cash crop emergence, 10 cm depth",
   "soil water content at cash crop emergence, 20 cm depth",
@@ -266,7 +310,16 @@ phys_watercontent <- c(
   "soil water storage  at cash crop emergence, 80 cm depth",
   "soil water storage before planting of cash crop, 80 cm depth",
   "gravimetric water content of soil",
-  "soil moisture"
+  "soil moisture",
+  "volumetric water saturation content (0-15 cm depth)",                                                              
+  "volumetric water saturation content (15-30 cm depth)",                                                             
+  "field capacity (0-15 cm)",                                                                                        
+  "field capacity (15-30 cm)",                                                                                        
+  "permanent wilting point (0-15 cm)",
+  "permanent wilting point (15-30 cm)",                                                                               
+  "plant available water (0-15 cm)",                                                                                  
+  "plant available water (15-30 cm)",                                                                                 
+  "soil water retention"                                                                                             
 )
 
 ##Soil Biological Properties####
@@ -279,21 +332,50 @@ biol_carbon <-  c(
   "total carbon",
   "soil organic carbon (SOC) in fall following cover crop, 0-15cm",
   "soil organic carbon (SOC), spring sample",
-  "soil organic carbon 0-30cm depth (spring)",
+  "soil organic carbon 0-30 cm depth (spring)",
   "soil organic carbon",
   "organic carbon (0-15 cm)",
-  "soil carbon concentration"
+  "soil carbon concentration",
+  "soil organic carbon in soybean (0-5 cm soil depth)",                                                               
+  "soil organic carbon in maize (0-5 cm soil depth)",                                                                 
+  "soil organic carbon in soybean (5-15 cm soil depth)",                                                              
+  "soil organic carbon (0-10 cm depth)",                                                                             
+  "soil organic carbon (10-20 cm depth)",                                                                             
+  "soil organic carbon (20-40 cm depth)",                                                                             
+  "soil organic carbon (40-60 cm depth)"                                                                             
 )
 
-biol_microbes <- c("microbial biomass",
-  "microbial biomass nitrogen (MBN)")
+biol_microbes <- c(
+  "microbial biomass",
+  "microbial biomass nitrogen (MBN)",
+  "enzyme activity in soybean (Hydrolysis of Fluroescein Diacetate)",                                                 
+  "enzyme activity in maize (Hydrolysis of Fluroescein Diacetate)"                                                   
+)
 
 biol_som <- c(
   "particulate organic carbon",
   "total POM",
   "particulate organic matter (fPOM) including macro orgnaic matter fractions",
   "particulate organic matter (oPOM)",
-  "soil organic matter"
+  "soil organic matter",
+  "soil organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                                      
+  "soil organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",                       
+  "soil organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",                        
+  "soil organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",                         
+  "soil organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",                        
+  "soil organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                                      
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                          
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",           
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",            
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",             
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",            
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                          
+  "total particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                         
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",          
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",           
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",            
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",           
+  "total particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)"                         
 )
 
 ##Soil Environmental Properties####
@@ -316,7 +398,7 @@ envir_N2O <- c(
 ####Pest Regulation####
 
 ## Weeds ####
-weeds_species <-
+weed_species <-
   c(
     "control of Palmer amaranth (21 days post planting)",
     "control of Palmer amaranth (at harvest)",
@@ -332,7 +414,7 @@ weeds_species <-
     "density of late season waterhemp"
   )
 
-weeds_community <- c(
+weed_community <- c(
   "weed biomass",
   "weed density",
   "total density of winter weeds in spring",
@@ -361,7 +443,8 @@ invert_pests_species <-
     "abundance of aphids (Aphis glycines) over time",
     "exposure of aphid population to predators",
     "density of Heterodera glycines eggs at harvest (maize)",
-    "density of Heterodera glycines eggs at harvest (soybean)"
+    "density of Heterodera glycines eggs at harvest (soybean)",
+    "soybean cyst nematode egg counts"
   )
 
 invert_preds_species <-
@@ -393,7 +476,7 @@ invert_preds_comm <-
     "total abundance of invertebrates on soil surface (pitfall traps in soybean)"
   )
 
-invert_pred_activity <-
+invert_preds_activity <-
   c("mean percent sentinel egg removal per 48 hours (3 sampling events)")
 
 invert_nonpredpest <-
@@ -410,55 +493,70 @@ invert_nonpredpest <-
     "total abundance of Chalcid wasps (Chalcidoidae) on aboveground tissue (sweep net in soybean)",
     "total abundance of parasitic flies (Tachinidae) on aboveground tissue (sweep net in soybean)"
   )
+
+pathogen <- c(
+  "soybean root rot (general)"                                                                                                                             
+)
+
+
 ####Crop Production####
 
 ## Yields ####
 
-yields_grain <- c(
-  "cash crop yield",
-  "soybean yield",
-  "maize yield",
-  "maize yield (grain)",
-  "soybean yield per 1.8 m row",
-  "soybean yield (years 5 & 6)",
-  "maize yield after soybean overseeded with cc (years 5 & 6)",
-  "maize yield (average over 4 years)",
-  "soybean yield (average over 4 years)",
-  "Harvest Index (corn)",
-  "grain biomass",
-  "grain yield (maize)",
-  "grain yield (soybean)",
-  "maize yield, weight of kernels"
+yields_grainsoy <- c(
+ "soybean grain yield per 1.8 m row",
+  "soybean grain yield (years 5 & 6)",
+  "soybean grain yield (7 year average)",                           
+  "soybean grain yield",
+  "soybean grain yield (4 year average)"
+)
+
+yields_grainmaize <- c(
+ "maize grain yield",
+  "maize grain yield after soybean overseeded with cc (years 5 & 6)",
+  "maize grain yield (4 year average)",
+  "maize grain yield, weight of kernels",
+  "maize grain yield (7 year average)" ,                            
+  "barren maize stalk",
+  "maize grain moisture content (4 year average)",             
+  "Harvest Index (maize)"
 )
 
 yields_biomass_abvgrd <- c(
   "maize silage dry matter yield",
-  "corn silage yield",
   "aboveground dry biomass (maize) at harvest",
   "plant height at maize reproductive stage 1",
   "plant height at maize reproductive stage 2",
   "plant height at maize reproductive stage 3",
   "plant height at maize reproductive stage 4",
   "plant height at maize reproductive stage 5",
-  "plant height at maize reproductive stage 6"
+  "plant height at maize reproductive stage 6",
+  "maize silage yield" ,                                       
+  "maize stover yield"                                        
 )
 
-yields_biomass_blwgrd <- c("root biomass (0-100 cm)")
+yields_biomass_blwgrd <- c("maize root biomass (0-100 cm)")
+
 ##Crop Nitrogen Content ####
 
 crop_N <- c(
-  "corn stalk nitrate",
-  "total aboveground N uptake (Maize)",
-  "total aboveground N uptake (Soybean)",
-  "maize silage dry matter N removal",
-  "grain nitrogen uptake",
-  "aboveground plant nitrogen uptake"
+  "maize stalk nitrate",
+  "total aboveground N uptake (maize)",
+  "total aboveground N uptake (soybean)",
+  "maize silage N removal",
+  "maize grain nitrogen uptake",
+  "aboveground plant nitrogen uptake",
+  "maize nitrogen uptake",                                     
+  "maize stover nitrogen uptake"                              
 )
 
 ##Crop seedling density####
 
-seedling_density <- c("cash crop density",
-  "cash crop population density (soybean)")
+seedling_density <- c(
+  "soybean stand count",                                       
+  "maize stand count (4 year average)",                   
+  "maize stand count"
+)
 
 ####Water Movement####
 
@@ -513,13 +611,15 @@ metric_labels <- Results %>%
   select(Response_var, Res_key) %>%
   mutate(
     group_metric = case_when(
+      
+      
       #Soils
       #Chemical Properties
-      Response_var %in% biol_carbon ~ "soil carbon (spring)",
+      
       Response_var %in% chem_nitrate_spring ~ "soil nitrate (spring)",
       Response_var %in% chem_nitrate_maize ~ "soil nitrate (maize)",
       Response_var %in% chem_nitrate_soybean ~ "soil nitrate (soybean)",
-      Response_var %in% chem_nitrate_fall ~ "soil nitrate(fall)",
+      Response_var %in% chem_nitrate_fall ~ "soil nitrate (fall)",
       Response_var %in% chem_ammonium_spring ~ "soil ammonium (spring)",
       Response_var %in% chem_totalN ~ "soil total nitrogen",
       Response_var %in% chem_phosphorous ~ "soil phosphorous",
@@ -528,10 +628,15 @@ metric_labels <- Results %>%
       
       #Physical Properties
       Response_var %in% phy_erosion ~ "soil erosion",
-      Response_var %in% phy_structure ~ "soil structure",
-      Response_var %in% phys_watercontent ~ "soil water content",
+      Response_var %in% phy_compaction ~ "soil compaction",
+      Response_var %in% phy_pores ~ "soil pores",
+      Response_var %in% phy_aggregates ~ "soil aggregates",
+      Response_var %in% phy_bulkdensity ~ "soil bulk density",
+      Response_var %in% phy_texture ~ "soil texture",
+      Response_var %in% phy_watercontent ~ "soil water content",
       
       #Biological Properties
+      Response_var %in% biol_carbon ~ "soil carbon",
       Response_var %in% biol_microbes ~ "soil microbial biomass",
       Response_var %in% biol_som ~ "soil organic matter",
       
@@ -542,19 +647,21 @@ metric_labels <- Results %>%
       
       #Pest Regulation
       #Weeds
-      Response_var %in% weeds_species ~ "weeds (species-level)",
-      Response_var %in% weeds_community ~ "weeds (community-level)",
+      Response_var %in% weed_species ~ "weeds (species-level)",
+      Response_var %in% weed_community ~ "weeds (community-level)",
       
       #Invertebrates
       Response_var %in% invert_pests_species ~ "invertebrate pests (species-level)",
       Response_var %in% invert_preds_species ~ "invertebrate predators (species-level)",
       Response_var %in% invert_preds_comm ~ "invertebrate predators (community-level)",
-      Response_var %in% invert_pred_activity ~ "invertebrate predators (activity)",
+      Response_var %in% invert_preds_activity ~ "invertebrate predators (activity)",
       Response_var %in% invert_nonpredpest ~ "invertebrate non-predators & non-pests)",
+      Response_var %in% pathogen ~ "plant pathogens",
       
       #Crop Production
       #Yields
-      Response_var %in% yields_grain ~ "grain yield",
+      Response_var %in% yields_grainsoy ~ "soybean grain yield",
+      Response_var %in% yields_grainmaize ~ "maize grain yield",
       Response_var %in% yields_biomass_abvgrd ~ "cash crop aboveground biomass",
       Response_var %in% yields_biomass_blwgrd ~ "cash crop belowground biomass",
       
@@ -582,6 +689,7 @@ Results <-
 
 #############################################################################################
 
+missing <- Results[is.na(Results$group_metric),] #check to see if all rows have an assigned group_metric
 
 
 #File with all results included from Cover Crop review

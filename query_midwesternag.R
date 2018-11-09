@@ -25,6 +25,7 @@ library("maps", lib.loc = "~/R/win-library/3.4")
 library("stringr", lib.loc = "~/R/win-library/3.4")
 library("stringi", lib.loc = "~/R/win-library/3.4")
 library("forcats", lib.loc = "~/R/win-library/3.4")
+library("plotrix", lib.loc = "~/R/win-library/3.4")
 
 setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
 
@@ -727,82 +728,88 @@ write.csv(Results, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_
 #######################################################################################################################
 ####Filtering Data Files###############################################################
 
-Results <-
-  filter(Results, Review_id == "Cover crop") #Cover crop review only
-#Results <- filter(Results, Review_id == "Tillage") #Soil Management review only
-#Results <- filter(Results, Review_id == "Seed protection") #Seed & Seedling Protection review only
-#Results <- filter(Results, Review_id == "Fertilizer") #Fertilizer use review only
 
+#import data
+covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv", header=TRUE, row.names = "X")
+  covercrops_refexp <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
+    covercrops_cashcrop <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
+      covercrops_trtmt <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Trt.csv", header=TRUE, row.names = "X")
+        covercrops_results <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Results.csv", header=TRUE, row.names = "X")
+    
+ df <- filter(covercrops_results,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
+  df <- filter(df, Group_finelevel != "none")
+        #df_results <- filter(covercrops_results,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
+        
+        df <- arrange(df, Paper_id)
+        df_results <- arrange(df_results, Paper_id)
+        df_refexp <- covercrops_refexp
+        df_trtmt <- covercrops_trtmt
 
-#Filter by CoverCrop:CC_max_diversity
+        
+#####Calculate Percent Change [(Trtmt-Control)/Control] for each row
+        df <- df %>%
+                mutate(per_change = ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)
+        df$per_change <- as.numeric(df$per_change)
+        
+        df$per_change2 <- as.numeric(if_else(df$per_change == 0, 0.000001, df$per_change ))
+        df$Paper_id <- as.factor(df$Paper_id)
+        
+        
+######Review: Cover crop####
+  ####Group_RV: Soil####
+        df_soil <- df %>%
+                    filter (Group_RV == "Soil")
+         
+        cc_soil_summary <- df_soil %>%
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
+                group_by(group_metric, Group_finelevel) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+        
+        write.csv(cc_soil_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Soil_Summary.csv")
 
-monocultures <-
-  filter(CoverCrop, CC_max_diversity == "single")
-mixtures <- filter(CoverCrop, CC_max_diversity == "mixture")
+        
+       
+        
+        
+  ####Group_RV: Pest Regulation####
+        df_pest <- df %>%
+                    filter (Group_RV == "Pest Regulation")      
+        
+       
+        cc_pest_summary <- df_pest %>%
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
+                group_by(group_metric, Group_finelevel) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+        
+        write.csv(cc_pest_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
 
-#Join data frames (must make mega dataframe so it can be later filtered based on response variables)
+        
+        
+  ####Group_RV: Crop Production####
+        df_yield <- df %>%
+                    filter (Group_RV == "Crop Production")      
+        
+       
+        cc_yield_summary <- df_yield %>%
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
+                group_by(group_metric, Group_finelevel) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+        
+        write.csv(cc_yield_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Yield_Summary.csv")
+   
+                    
+  ####Group_RV: Water####
+        df_water <- df %>%
+                    filter (Group_RV == "Water")      
+        
+       
+        cc_water_summary <- df_water %>%
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
+                group_by(group_metric, Group_finelevel) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+        
+        write.csv(cc_water_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Water_Summary.csv")
+         
+        
 
-mono_ExpD <- left_join(monocultures, ExpD_Loc)
-mono_Ref <- left_join(mono_ExpD, Ref)
-mono_Cash <- left_join(mono_Ref, CashCrop)
-mono_Cash$Year = as.numeric(mono_Cash$Year)
-
-#Master file for all monocultures = mono_all
-mono_all <-
-  left_join(mono_Cash, Results, by = "Paper_id", "Duration")
-write.csv(mono_all, file = "C:/Users/LWA/github/midwesternag_synthesis/monocultures_data.csv")
-
-
-mix_ExpD <- left_join(mixtures, ExpD_Loc)
-mix_Ref <- left_join(mix_ExpD, Ref)
-mix_Cash <- left_join(mix_Ref, CashCrop)
-mix_Cash$Year = as.numeric(mix_Cash$Year)
-
-#Master file for all mixtures = mix_all
-mix_all <-
-  left_join(mix_Cash, Results, by = "Paper_id", "Duration")
-write.csv(mix_all, file = "C:/Users/LWA/github/midwesternag_synthesis/mixtures_data.csv")
-
-
-#####Side note###
-#to match column keys with different names use by = c("a" = "b")
-#this will be useful for joining covercrop to results tibble as "Trt_id" = "Trt1_id" or "Trt2_id"
-
-#number of observations for each response variable
-groups_RVs <- mono_all  %>%
-  count(Group_RV, sort = TRUE)
-groups_RVs
-#1 Pest Regulation  3308
-#2 Soil             2402
-#3 Crop Production  2330
-#4 Water             213
-
-#filter tibble for Group_Rv = Soil
-mono_Soil <- filter(mono_Results, Group_RV == "Soil")
-mono_Production <-
-  filter(mono_Results, Group_RV == "Crop Production")
-mono_Water <- filter(mono_Results, Group_RV == "Water")
-mono_Pest <-
-  filter(mono_Results, Group_RV == "Pest Regulation")
-
-
-#Identify variables included in Soil grouping
-#itemized list of unique soil metrics (Response_var)
-(uniqueSoils <- unique(mono_Soil$Response_var))
-
-(uniquePestR <- unique(mono_Pest$Response_var))
-
-(uniqueProduction <- unique(mono_Production$Response_var))
-
-(uniqueWater <- unique(mono_Water$Response_var))
-
-
-
-
-
-
-
-
-
-
-
+   

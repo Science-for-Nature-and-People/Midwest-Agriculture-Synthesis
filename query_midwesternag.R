@@ -553,16 +553,21 @@ yields_biomass_blwgrd <- c("maize root biomass (0-100 cm)")
 
 ##Crop Nitrogen Content ####
 
-crop_N <- c(
+crop_N_maizestalk <- c(
   "maize stalk nitrate",
   "total aboveground N uptake (maize)",
-  "total aboveground N uptake (soybean)",
   "maize silage N removal",
-  "maize grain nitrogen uptake",
-  "aboveground plant nitrogen uptake",
-  "maize nitrogen uptake",                                     
   "maize stover nitrogen uptake" ,
-  "total nitrogen uptake by maize grain (3 year average)"
+  "total nitrogen uptake by maize stover (3 year average)",
+  "aboveground plant nitrogen uptake")
+  
+ crop_N_maizegrain <- c( 
+  "maize grain nitrogen uptake",
+  "maize nitrogen uptake",                                     
+  "total nitrogen uptake by maize grain (3 year average)")
+
+ crop_N_soybean <- c(  
+  "total aboveground N uptake (soybean)"
 )
 
 ##Crop seedling density####
@@ -679,8 +684,8 @@ metric_labels <- Results %>%
       #Invertebrates
       Response_var %in% invert_pests_species ~ "Pests (Individual Species)",
       Response_var %in% invert_preds_species ~ "Predators (Individual Species)",
-      Response_var %in% invert_preds_comm ~ "Predators Community Diversity",
-      Response_var %in% invert_preds_activity ~ "Predators Activity",
+      Response_var %in% invert_preds_comm ~ "Predator Community Diversity",
+      Response_var %in% invert_preds_activity ~ "Predator Activity",
       Response_var %in% invert_nonpredpest ~ "Non-predators & Non-pests",
       Response_var %in% pathogen ~ "Pathogens",
       
@@ -688,18 +693,20 @@ metric_labels <- Results %>%
       #Yields
       Response_var %in% yields_grainsoy ~ "Grain (Soybean)",
       Response_var %in% yields_grainmaize ~ "Grain (Maize)",
-      Response_var %in% yields_biomass_abvgrd ~ "Aboveground Biomass",
-      Response_var %in% yields_biomass_blwgrd ~ "Belowground biomass",
+      Response_var %in% yields_biomass_abvgrd ~ "Stover Biomass",
+      Response_var %in% yields_biomass_blwgrd ~ "Root biomass",
       
       #Crop Nitrogen Yields
-      Response_var %in% crop_N ~ "Nitrogen Content",
+      Response_var %in% crop_N_maizegrain ~ "Grain (Maize)",
+      Response_var %in% crop_N_maizestalk ~ "Stalk/Stover (Maize)",
+      Response_var %in% crop_N_soybean ~ "Grain (Soybean)",
       
       #Crop Seedling Density
       Response_var %in% seedling_density ~ "Seedling Density",
       
       #Water Movement
       #Drainage
-      Response_var %in% drainage ~ "Water Drainage",
+      Response_var %in% drainage ~ "Drainage",
       
       #Runoff
       Response_var %in% runoff_nitrate ~ "Nitrate",
@@ -763,7 +770,9 @@ metric_labels <- Results %>%
       Response_var %in% yields_biomass_blwgrd ~ "Yields",
       
       #Crop Nitrogen Yields
-      Response_var %in% crop_N ~ "Crop Nitrogen Uptake",
+      Response_var %in% crop_N_maizegrain ~ "Crop Nitrogen Uptake",
+      Response_var %in% crop_N_maizestalk ~ "Crop Nitrogen Uptake",
+      Response_var %in% crop_N_soybean ~ "Crop Nitrogen Uptake",
       
       #Crop Seedling Density
       Response_var %in% seedling_density ~ "Stand Count",
@@ -840,6 +849,7 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         df$per_change2 <- as.numeric(if_else(df$per_change == 0, 0.000001, df$per_change ))
         df$per_change2 <- as.numeric(if_else(df$per_change == Inf, 0.000001, df$per_change ))
         df$Paper_id <- as.factor(df$Paper_id)
+        df$main_group <- as.factor(df$main_group)
         
 ####Replace group_finelevel with a more descriptive description
     df <- df %>%
@@ -863,8 +873,8 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
                     filter (Group_RV == "Soil")
          
         cc_soil_summary <- df_soil %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
-                group_by(group_metric, Cover_crop_diversity) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity) %>%
                 summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
  #Explore data distribution
@@ -886,8 +896,8 @@ qplot(Response_var, per_change2, data=df_soil,  colour=Cover_crop_diversity) + t
         
        
         cc_pest_summary <- df_pest %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
-                group_by(group_metric, Cover_crop_diversity) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity) %>%
                 summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
      
@@ -907,8 +917,8 @@ qplot(Response_var, per_change2, data=df_pest,  colour=Cover_crop_diversity) + t
         
        
         cc_yield_summary <- df_yield %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
-                group_by(group_metric, Cover_crop_diversity) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity) %>%
                 summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
        
         qplot(Response_var, per_change2, data=df_yield,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
@@ -925,8 +935,8 @@ qplot(Response_var, per_change2, data=df_pest,  colour=Cover_crop_diversity) + t
         
        
         cc_water_summary <- df_water %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
-                group_by(group_metric, Cover_crop_diversity) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity) %>%
                 summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
         

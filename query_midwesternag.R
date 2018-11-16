@@ -115,7 +115,7 @@ Results %>%
 
 #Paper_ID & Duration are the two keys that work across all dataframes
 
-######Filter data based on response variable groupings [Crop Production, Soil, Water, Pest Regulation]
+######Filter data based on response variable groupings [Crop Production, Soil, Water, Pest Regulation]####
 
 
 #filter tibble for Group_Rv
@@ -135,6 +135,8 @@ CC_Pest <- filter(Results, Group_RV == "Pest Regulation")
 (uniqueProduction <- unique(CC_Production$Response_var))
 
 (uniqueWater <- unique(CC_Water$Response_var))
+
+
 
 
 
@@ -173,6 +175,7 @@ chem_nitrate_maize <-
     "soil nitrate nitrogen (NO3-N) concentration in Fall, 60-90 cm",
     "nitrate (NO3-N) at maize V6",
     "soil nitrate (NO3-N) early June (maize)"
+    
   )
 
 chem_nitrate_soybean <-
@@ -181,7 +184,8 @@ chem_nitrate_soybean <-
 chem_nitrate_fall <-
   c(
     "soil nitrate (NO3-N) post harvest (maize)",
-    "soil nitrate (NO3-N) post harvest (soybean)"
+    "soil nitrate (NO3-N) post harvest (soybean)",
+    "postharvest soil profile nitrate (0-90 cm)"
   )
 
 chem_ammonium_spring <- c(
@@ -208,7 +212,10 @@ chem_totalN <- c(
   "total nitrogen (0-15 cm)",
   "total nitrogen",
   "soil organic nitrogen 0-30 cm depth (spring)",
-  "nitrate and ammonium (NO3-N + NH4-N) in soil following cover crop"
+  "nitrate and ammonium (NO3-N + NH4-N) in soil following cover crop",
+  "soil inorganic nitrogen concentrations, after maize planting (0-3 in. depth)",
+  "soil inorganic nitrogen concentrations, after maize planting (3-6 in. depth)"
+  
 )
 
 chem_phosphorous <- c(
@@ -233,6 +240,7 @@ chem_potassium <- c(
 chem_acidity <- c(
   "pH",
   "pH (0-15 cm)")
+
 
 ##Soil Physical Properties####
 
@@ -316,7 +324,12 @@ phy_watercontent <- c(
   "permanent wilting point (15-30 cm)",                                                                               
   "plant available water (0-15 cm)",                                                                                  
   "plant available water (15-30 cm)",                                                                                 
-  "soil water retention"                                                                                             
+  "soil water retention", 
+  "soil water content, after maize planting (0-3 in. depth)",
+  "soil water content, after maize planting (3-6 in. depth)",
+  "soil water content, after maize planting (6-12 in. depth)",
+  "soil water content, after maize planting (12-24 in. depth)"
+  
 )
 
 ##Soil Biological Properties####
@@ -518,7 +531,8 @@ yields_grainmaize <- c(
   "maize grain yield (7 year average)" ,                            
   "barren maize stalk",
   "maize grain moisture content (4 year average)",             
-  "Harvest Index (maize)"
+  "Harvest Index (maize)",
+  "maize grain dry weight (3 year average)"
 )
 
 yields_biomass_abvgrd <- c(
@@ -531,7 +545,8 @@ yields_biomass_abvgrd <- c(
   "plant height at maize reproductive stage 5",
   "plant height at maize reproductive stage 6",
   "maize silage yield" ,                                       
-  "maize stover yield"                                        
+  "maize stover yield",
+  "maize stover dry weight (3 year average)"
 )
 
 yields_biomass_blwgrd <- c("maize root biomass (0-100 cm)")
@@ -546,7 +561,8 @@ crop_N <- c(
   "maize grain nitrogen uptake",
   "aboveground plant nitrogen uptake",
   "maize nitrogen uptake",                                     
-  "maize stover nitrogen uptake"                              
+  "maize stover nitrogen uptake" ,
+  "total nitrogen uptake by maize grain (3 year average)"
 )
 
 ##Crop seedling density####
@@ -614,7 +630,7 @@ runoff_phosphorous <-
 
 
 
-###Apply metric labels to dataframe####
+###Apply metric & grouping labels to dataframe####
 
 
 metric_labels <- Results %>%
@@ -626,71 +642,141 @@ metric_labels <- Results %>%
       #Soils
       #Chemical Properties
       
-      Response_var %in% chem_nitrate_spring ~ "soil nitrate (spring)",
-      Response_var %in% chem_nitrate_maize ~ "soil nitrate (maize)",
-      Response_var %in% chem_nitrate_soybean ~ "soil nitrate (soybean)",
-      Response_var %in% chem_nitrate_fall ~ "soil nitrate (fall)",
-      Response_var %in% chem_ammonium_spring ~ "soil ammonium (spring)",
-      Response_var %in% chem_totalN ~ "soil total nitrogen",
-      Response_var %in% chem_phosphorous ~ "soil phosphorous",
-      Response_var %in% chem_potassium ~ "soil postassium",
+      Response_var %in% chem_nitrate_spring ~ "Nitrate (Preplant)",
+      Response_var %in% chem_nitrate_maize ~ "Nitrate (Maize)",
+      Response_var %in% chem_nitrate_soybean ~ "Nitrate (Soybean)",
+      Response_var %in% chem_nitrate_fall ~ "Nitrate (Post Harvest)",
+      Response_var %in% chem_ammonium_spring ~ "Ammonium (Preplant)",
+      Response_var %in% chem_totalN ~ "Total Nitrogen",
+      Response_var %in% chem_phosphorous ~ "Phosphorous",
+      Response_var %in% chem_potassium ~ "Postassium",
       Response_var %in% chem_acidity ~ "pH",
       
       #Physical Properties
-      Response_var %in% phy_erosion ~ "soil erosion",
-      Response_var %in% phy_compaction ~ "soil compaction",
-      Response_var %in% phy_pores ~ "soil pores",
-      Response_var %in% phy_aggregates ~ "soil aggregates",
-      Response_var %in% phy_bulkdensity ~ "soil bulk density",
-      Response_var %in% phy_texture ~ "soil texture",
-      Response_var %in% phy_watercontent ~ "soil water content",
+      Response_var %in% phy_erosion ~ "Erosion",
+      Response_var %in% phy_compaction ~ "Compaction",
+      Response_var %in% phy_pores ~ "Soil Pores",
+      Response_var %in% phy_aggregates ~ "Soil Aggregates",
+      Response_var %in% phy_bulkdensity ~ "Soil Bulk Density",
+      Response_var %in% phy_texture ~ "Soil Texture",
+      Response_var %in% phy_watercontent ~ "Soil Water Content",
       
       #Biological Properties
-      Response_var %in% biol_carbon ~ "soil carbon",
-      Response_var %in% biol_microbes ~ "soil microbial biomass",
-      Response_var %in% biol_som ~ "soil organic matter",
+      Response_var %in% biol_carbon ~ "Soil Carbon",
+      Response_var %in% biol_microbes ~ "Microbial Biomass",
+      Response_var %in% biol_som ~ "Soil Organic Matter",
       
       #Environmental Properties
-      Response_var %in% envir_temp ~ "soil temperature",
-      Response_var %in% envir_CO2 ~ "carbon dioxide emissions",
-      Response_var %in% envir_N2O ~ "nitrous oxide emissions",
+      Response_var %in% envir_temp ~ "Soil Temperature",
+      Response_var %in% envir_CO2 ~ "Carbon Dioxide Emissions",
+      Response_var %in% envir_N2O ~ "Nitrous Oxide Emissions",
       
       #Pest Regulation
       #Weeds
-      Response_var %in% weed_species ~ "weeds (species-level)",
-      Response_var %in% weed_community ~ "weeds (community-level)",
+      Response_var %in% weed_species ~ "Individual Species",
+      Response_var %in% weed_community ~ "Community Diversity",
       
       #Invertebrates
-      Response_var %in% invert_pests_species ~ "invertebrate pests (species-level)",
-      Response_var %in% invert_preds_species ~ "invertebrate predators (species-level)",
-      Response_var %in% invert_preds_comm ~ "invertebrate predators (community-level)",
-      Response_var %in% invert_preds_activity ~ "invertebrate predators (activity)",
-      Response_var %in% invert_nonpredpest ~ "invertebrate non-predators & non-pests",
-      Response_var %in% pathogen ~ "plant pathogens",
+      Response_var %in% invert_pests_species ~ "Pests (Individual Species)",
+      Response_var %in% invert_preds_species ~ "Predators (Individual Species)",
+      Response_var %in% invert_preds_comm ~ "Predators Community Diversity",
+      Response_var %in% invert_preds_activity ~ "Predators Activity",
+      Response_var %in% invert_nonpredpest ~ "Non-predators & Non-pests",
+      Response_var %in% pathogen ~ "Pathogens",
       
       #Crop Production
       #Yields
-      Response_var %in% yields_grainsoy ~ "soybean grain yield",
-      Response_var %in% yields_grainmaize ~ "maize grain yield",
-      Response_var %in% yields_biomass_abvgrd ~ "cash crop aboveground biomass",
-      Response_var %in% yields_biomass_blwgrd ~ "cash crop belowground biomass",
+      Response_var %in% yields_grainsoy ~ "Grain (Soybean)",
+      Response_var %in% yields_grainmaize ~ "Grain (Maize)",
+      Response_var %in% yields_biomass_abvgrd ~ "Aboveground Biomass",
+      Response_var %in% yields_biomass_blwgrd ~ "Belowground biomass",
       
       #Crop Nitrogen Yields
-      Response_var %in% crop_N ~ "crop nitrogen content",
+      Response_var %in% crop_N ~ "Nitrogen Content",
       
       #Crop Seedling Density
-      Response_var %in% seedling_density ~ "crop seedling density",
+      Response_var %in% seedling_density ~ "Seedling Density",
       
       #Water Movement
       #Drainage
-      Response_var %in% drainage ~ "water drainage",
+      Response_var %in% drainage ~ "Water Drainage",
       
       #Runoff
-      Response_var %in% runoff_nitrate ~ "nitrate runoff",
-      Response_var %in% runoff_phosphorous ~ "phosphorous runoff"
+      Response_var %in% runoff_nitrate ~ "Nitrate",
+      Response_var %in% runoff_phosphorous ~ "Phosphorous"
       # TRUE                      ~  "other"
-    )
-  )
+                 ) ) %>%
+        mutate(
+        main_group = case_when(
+      
+      
+      #Soils
+      #Chemical Properties
+      
+      Response_var %in% chem_nitrate_spring ~ "Chemical",
+      Response_var %in% chem_nitrate_maize ~ "Chemical",
+      Response_var %in% chem_nitrate_soybean ~ "Chemical",
+      Response_var %in% chem_nitrate_fall ~ "Chemical",
+      Response_var %in% chem_ammonium_spring ~ "Chemical",
+      Response_var %in% chem_totalN ~ "Chemical",
+      Response_var %in% chem_phosphorous ~ "Chemical",
+      Response_var %in% chem_potassium ~ "Chemical",
+      Response_var %in% chem_acidity ~ "Chemical",
+      
+      #Physical Properties
+      Response_var %in% phy_erosion ~ "Physical",
+      Response_var %in% phy_compaction ~ "Physical",
+      Response_var %in% phy_pores ~ "Physical",
+      Response_var %in% phy_aggregates ~ "Physical",
+      Response_var %in% phy_bulkdensity ~ "Physical",
+      Response_var %in% phy_texture ~ "Physical",
+      Response_var %in% phy_watercontent ~ "Physical",
+      
+      #Biological Properties
+      Response_var %in% biol_carbon ~ "Biological",
+      Response_var %in% biol_microbes ~ "Biological",
+      Response_var %in% biol_som ~ "Biological",
+      
+      #Environmental Properties
+      Response_var %in% envir_temp ~ "Environmental",
+      Response_var %in% envir_CO2 ~ "Environmental",
+      Response_var %in% envir_N2O ~ "Environmental",
+      
+      #Pest Regulation
+      #Weeds
+      Response_var %in% weed_species ~ "Weeds",
+      Response_var %in% weed_community ~ "Weeds",
+      
+      #Invertebrates
+      Response_var %in% invert_pests_species ~ "Invertebrates",
+      Response_var %in% invert_preds_species ~ "Invertebrates",
+      Response_var %in% invert_preds_comm ~ "Invertebrates",
+      Response_var %in% invert_preds_activity ~ "Invertebrates",
+      Response_var %in% invert_nonpredpest ~ "Invertebrates",
+      Response_var %in% pathogen ~ "Pathogens",
+      
+      #Crop Production
+      #Yields
+      Response_var %in% yields_grainsoy ~ "Yields",
+      Response_var %in% yields_grainmaize ~ "Yields",
+      Response_var %in% yields_biomass_abvgrd ~ "Yields",
+      Response_var %in% yields_biomass_blwgrd ~ "Yields",
+      
+      #Crop Nitrogen Yields
+      Response_var %in% crop_N ~ "Crop Nitrogen Uptake",
+      
+      #Crop Seedling Density
+      Response_var %in% seedling_density ~ "Stand Count",
+      
+      #Water Movement
+      #Drainage
+      Response_var %in% drainage ~ "Drainage",
+      
+      #Runoff
+      Response_var %in% runoff_nitrate ~ "Runoff",
+      Response_var %in% runoff_phosphorous ~ "Runoff"
+      # TRUE                      ~  "other"
+  ))
 
 
 #Attach column to Results
@@ -741,7 +827,7 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         #df_results <- filter(covercrops_results,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
         
         df <- arrange(df, Paper_id)
-        df_results <- arrange(df_results, Paper_id)
+        df_results <- arrange(covercrops_results, Paper_id)
         df_refexp <- covercrops_refexp
         df_trtmt <- covercrops_trtmt
 
@@ -752,20 +838,43 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         df$per_change <- as.numeric(df$per_change)
         
         df$per_change2 <- as.numeric(if_else(df$per_change == 0, 0.000001, df$per_change ))
+        df$per_change2 <- as.numeric(if_else(df$per_change == Inf, 0.000001, df$per_change ))
         df$Paper_id <- as.factor(df$Paper_id)
         
-        
+####Replace group_finelevel with a more descriptive description
+    df <- df %>%
+                        mutate(
+                          Cover_crop_diversity = case_when(
+                            Group_finelevel %in% "mono" ~ "Monoculture", 
+                            Group_finelevel %in% "mix_2" ~ "Mixture (2 Spp.)",
+                            Group_finelevel %in% "mix_3" ~ "Mixture (3+ Spp.)"
+                        ))
+   df$Cover_crop_diversity <- as.factor( df$Cover_crop_diversity)
+          
+
+
+ 
+   
+   
+           
 ######Review: Cover crop####
   ####Group_RV: Soil####
         df_soil <- df %>%
                     filter (Group_RV == "Soil")
          
         cc_soil_summary <- df_soil %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
-                group_by(group_metric, Group_finelevel) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(group_metric, Cover_crop_diversity) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
-        write.csv(cc_soil_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Soil_Summary.csv")
+ #Explore data distribution
+   #look by Response_var
+       
+qplot(Response_var, per_change2, data=df_soil,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+
+   outliers <- filter(df_soil, per_change2 > 100)
+        
+            write.csv(cc_soil_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Soil_Summary.csv")
 
         
        
@@ -777,11 +886,18 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         
        
         cc_pest_summary <- df_pest %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
-                group_by(group_metric, Group_finelevel) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(group_metric, Cover_crop_diversity) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
-        write.csv(cc_pest_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
+     
+        #Explore data distribution
+   #look by Response_var
+       
+qplot(Response_var, per_change2, data=df_pest,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+      outliers <- filter(df_pest, per_change2 > 100)
+        
+         write.csv(cc_pest_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
 
         
         
@@ -791,10 +907,15 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         
        
         cc_yield_summary <- df_yield %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
-                group_by(group_metric, Group_finelevel) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(group_metric, Cover_crop_diversity) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+       
+        qplot(Response_var, per_change2, data=df_yield,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
+        outliers <- filter(df_yield, per_change2 > 100)
+  
+         
         write.csv(cc_yield_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Yield_Summary.csv")
    
                     
@@ -804,10 +925,15 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         
        
         cc_water_summary <- df_water %>%
-                select(Paper_id, Group_RV, group_metric, Group_finelevel, per_change2) %>%
-                group_by(group_metric, Group_finelevel) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id))
+                select(Paper_id, Group_RV, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                group_by(group_metric, Cover_crop_diversity) %>%
+                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
+        
+        qplot(Response_var, per_change2, data=df_water,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+        
+        outliers <- filter(df_water, per_change2 > 100)
+  
         write.csv(cc_water_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Water_Summary.csv")
          
         

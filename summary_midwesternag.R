@@ -1,12 +1,12 @@
 #####Summarize Results###################################################################
 #working with strings
 
-library("dplyr", lib.loc="~/R/win-library/3.4")
-library("readxl", lib.loc="~/R/win-library/3.4")
-library("tidyverse", lib.loc="~/R/win-library/3.4")
-library("stringr", lib.loc="~/R/win-library/3.4")
-library("stringi", lib.loc="~/R/win-library/3.4")
-library("forcats", lib.loc="~/R/win-library/3.4")
+library("dplyr", lib.loc="~/R/win-library/3.5")
+library("readxl", lib.loc="~/R/win-library/3.5")
+library("tidyverse", lib.loc="~/R/win-library/3.5")
+library("stringr", lib.loc="~/R/win-library/3.5")
+library("stringi", lib.loc="~/R/win-library/3.5")
+library("forcats", lib.loc="~/R/win-library/3.5")
 
 setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
 
@@ -103,11 +103,16 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
           )
         
         #Then create lists and rename column
+        countSpaces <- function(s) { sapply(gregexpr(" ", s), function(p) { sum(p>=0) } ) } #used to determine preceeding proposition
+        
         city_statelist <- df_refexp %>%
           group_by(Paper_id) %>%
           summarise (city_state_list = paste(unique(city_state), collapse =
               ", "))
         
+        farmnames <- c("University", "Station", "Research", "Center")
+        
+        city_statelist$city_state_list_prep <- if_else(str_view(df$city_state_list, farmnames, match = TRUE), str_glue_data("at {city_state_list}"), str_glue_data("in {city_state_list}" ))
         
         #ATtach list of city, states to dataset
         df_refexp <-

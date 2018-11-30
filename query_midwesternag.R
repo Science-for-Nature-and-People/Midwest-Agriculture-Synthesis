@@ -17,15 +17,14 @@ article_pdf_download(source1, output, screened)
 
 #libraries
 
-library("dplyr", lib.loc = "~/R/win-library/3.4")
-library("readxl", lib.loc = "~/R/win-library/3.4")
-library("tidyverse", lib.loc = "~/R/win-library/3.4")
-library("ggplot2", lib.loc = "~/R/win-library/3.4")
-library("maps", lib.loc = "~/R/win-library/3.4")
-library("stringr", lib.loc = "~/R/win-library/3.4")
-library("stringi", lib.loc = "~/R/win-library/3.4")
-library("forcats", lib.loc = "~/R/win-library/3.4")
-library("plotrix", lib.loc = "~/R/win-library/3.4")
+library("dplyr", lib.loc = "~/R/win-library/3.5")
+library("readxl", lib.loc = "~/R/win-library/3.5")
+library("tidyverse", lib.loc = "~/R/win-library/3.5")
+library("ggplot2", lib.loc = "~/R/win-library/3.5")
+library("stringr", lib.loc = "~/R/win-library/3.5")
+library("stringi", lib.loc = "~/R/win-library/3.5")
+library("forcats", lib.loc = "~/R/win-library/3.5")
+library("plotrix", lib.loc = "~/R/win-library/3.5")
 
 setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
 
@@ -408,84 +407,128 @@ envir_N2O <- c(
 ####Pest Regulation####
 
 ## Weeds ####
-weed_species <-
+weed_Palmeramaranth <-
   c(
     "control of Palmer amaranth (21 days post planting)",
     "control of Palmer amaranth (at harvest)",
     "density of Palmer amaranth (42 days post planting)",
-    "density of Palmer amaranth (at harvest)",
-    "control of common waterhemp (21 days post planting)",
-    "control of common waterhemp (at harvest)",
-    "control of giant foxtail (weeds)",
-    "control of common cocklebur (weeds)",
-    "density of Lamim spp. (Henbit and purple deadnettle) in spring",
-    "density of Lamim spp. (Henbit and purple deadnettle) after 5 years",
-    "density of early season waterhemp",
-    "density of late season waterhemp"
+    "density of Palmer amaranth (at harvest)"
   )
 
-weed_community <- c(
-  "weed biomass",
+ weed_foxtail <-
+  c(   
+    "control of giant foxtail (weeds)"
+  )
+ 
+ weed_cocklebur <-
+  c(   
+    "control of common cocklebur (weeds)"
+  )
+  
+  weed_deadnettle <-
+  c(   
+    "density of Lamim spp. (Henbit and purple deadnettle) in spring",
+    "density of Lamim spp. (Henbit and purple deadnettle) after 5 years"
+  )
+
+  weed_waterhemp <-
+  c(     
+    "density of early season waterhemp",
+    "density of late season waterhemp",
+    "control of common waterhemp (21 days post planting)",
+    "control of common waterhemp (at harvest)"
+  )
+
+
+weed_community_density <- c(
+  
   "weed density",
   "total density of winter weeds in spring",
   "total density of winter weeds after 5 years",
   "weed density after termination of cover crops",
-  "weed biomass after termination of cover crops",
   "density of winter annual weeds (before cash crop planting)",
   "density of late season summer annual weeds"
+)
+weed_community_biomass <- c(
+  
+"weed biomass",
+"weed biomass after termination of cover crops"
 )
 
 ## Invertebrates ####
 
-invert_pests_species <-
+invert_pests_SCN <-
   c(
     "density of soybean cyst nematode eggs in spring",
     "density of soybean cyst nematode eggs after 5 years",
-    "abundance adult seedcorn maggots per trap",
-    "seedcorn maggot damage on crops (Y-plants)",
-    "pest abundance in first year (1st larval instar)",
-    "pest abundance in first year (2nd larval instar)",
-    "pest abundance in first year (3rd larval instar)",
-    "pest abundance in first year (adult)",
-    "maize root damage from corn rootworm",
+     "soybean cyst nematode egg counts",
+    "density of Heterodera glycines eggs at harvest (maize)",
+    "density of Heterodera glycines eggs at harvest (soybean)")
+    
+invert_pests_Aglycines <-
+  c(
     "infestation rating of soybean fields with Aphis glycines (0 = 0 aphids/plant; 1 = 1-10 /plant; 2 = 11-100/plant; 3 = 101-1,000/plant; 4 = >1,000/plant)",
     "proportion of soybean plants infested with Aphis glycines per field (30 plants assessed / field)",
     "abundance of aphids (Aphis glycines) over time",
-    "exposure of aphid population to predators",
-    "density of Heterodera glycines eggs at harvest (maize)",
-    "density of Heterodera glycines eggs at harvest (soybean)",
-    "soybean cyst nematode egg counts"
-  )
+    "exposure of aphid population to predators")
+    
+invert_pests_seedcornmaggot <-
+  c( "abundance adult seedcorn maggots per trap")
+ 
+ invert_pests_cornrootworm <-
+  c("Western corn rootworm abundance in first year (1st larval instar)",
+    "Western corn rootworm abundance in first year (2nd larval instar)",
+    "Western corn rootworm abundance in first year (3rd larval instar)",
+    "Western corn rootworm abundance in first year (adult)"
+   )
 
-invert_preds_species <-
+ invert_pests_cornrootworm_damage <-
+  c("maize root damage from corn rootworm")
+ 
+
+  invert_pests_seedcornmaggot_damage <-
+  c(  "seedcorn maggot damage on crops (Y-plants)")
+
+invert_preds<-
   c(
     "total abundance of spiders (Araneae) on aboveground tissue (sweep net in soybean)",
     "total abundance of wolf spiders (Lycosidae) on soil surface (pitfall traps in maize)",
     "total abundance of wolf spiders (Lycosidae) on soil surface (pitfall traps in soybean)",
-    "total abundance of green lacewings (Chrysopidae)on aboveground tissue (sweep net in soybean)",
-    "total abundance of lady beetles (Coccinellidae) on aboveground tissue (sweep net in soybean)",
-    "total abundance of damsel bugs (Nabidae)on aboveground tissue (sweep net in soybean)",
     "total abundance of Harvestmen arachnids (Opiliones) on soil surface (pitfall traps in maize)",
+    "total abundance of lady beetles (Coccinellidae) on aboveground tissue (sweep net in soybean)",
+    "total abundance of green lacewings (Chrysopidae)on aboveground tissue (sweep net in soybean)",
+    "total abundance of damsel bugs (Nabidae)on aboveground tissue (sweep net in soybean)",
     "total abundance of Minute Pirate Bugs (Anthocoridae) on aboveground tissue (sweep net in soybean)"
   )
 
-invert_preds_comm <-
+invert_preds_soilcomm_abund<-
   c(
     "total species of predator taxa collected from soil surface",
     "total species of predator taxa collected from soil column",
-    "diversity of soil surface predators (Shannon's H)",
-    "diversity of predators in soil column (Shannon's H)",
-    "diversity of soil surface predators (Evenness J)",
-    "diversity of predators in soil column (Evenness J)",
-    "abundance of generalist foliage-foraging predators over times",
-    "mean predator abundance per vacuum sample",
-    "mean predator abundance per vacuum sample (five sampling events)",
-    "mean predator diversity (Simpson's 1-D) per vacuum sample (four sampling events)",
-    "total abundance of invertebrates  on aboveground plant tissue (sweep net in soybean)",
     "total abundance of invertebrates on soil surface (pitfall traps in maize)",
     "total abundance of invertebrates on soil surface (pitfall traps in soybean)"
   )
 
+invert_preds_soilcomm_div <-
+  c(
+    "diversity of soil surface predators (Shannon's H)",
+    "diversity of predators in soil column (Shannon's H)",
+    "diversity of soil surface predators (Evenness J)",
+    "diversity of predators in soil column (Evenness J)"
+  )
+
+invert_preds_vegcomm_abund <-
+  c("abundance of generalist foliage-foraging predators over times",
+    "mean predator abundance per vacuum sample",
+    "mean predator abundance per vacuum sample (five sampling events)",
+    "total abundance of invertebrates  on aboveground plant tissue (sweep net in soybean)"
+  )
+
+invert_preds_vegcomm_div <-
+  c(
+    "mean predator diversity (Simpson's 1-D) per vacuum sample (four sampling events)"
+    )
+    
 invert_preds_activity <-
   c("mean percent sentinel egg removal per 48 hours (3 sampling events)")
 
@@ -520,7 +563,8 @@ yields_grainsoy <- c(
   "soybean grain yield (years 5 & 6)",
   "soybean grain yield (7 year average)",                           
   "soybean grain yield",
-  "soybean grain yield (4 year average)"
+  "soybean grain yield (4 year average)",
+  "soybean yield (3 year average)"
 )
 
 yields_grainmaize <- c(
@@ -644,8 +688,8 @@ metric_labels <- Results %>%
     group_metric = case_when(
       
       
-      #Soils
-      #Chemical Properties
+      #Soils####
+      #Chemical Properties####
       
       Response_var %in% chem_nitrate_spring ~ "Nitrate (Preplant)",
       Response_var %in% chem_nitrate_maize ~ "Nitrate (Maize)",
@@ -657,7 +701,7 @@ metric_labels <- Results %>%
       Response_var %in% chem_potassium ~ "Postassium",
       Response_var %in% chem_acidity ~ "pH",
       
-      #Physical Properties
+      #Physical Properties####
       Response_var %in% phy_erosion ~ "Erosion",
       Response_var %in% phy_compaction ~ "Compaction",
       Response_var %in% phy_pores ~ "Soil Pores",
@@ -666,59 +710,83 @@ metric_labels <- Results %>%
       Response_var %in% phy_texture ~ "Soil Texture",
       Response_var %in% phy_watercontent ~ "Soil Water Content",
       
-      #Biological Properties
+      #Biological Properties####
       Response_var %in% biol_carbon ~ "Soil Carbon",
       Response_var %in% biol_microbes ~ "Microbial Biomass",
       Response_var %in% biol_som ~ "Soil Organic Matter",
       
-      #Environmental Properties
+      #Environmental Properties####
       Response_var %in% envir_temp ~ "Soil Temperature",
       Response_var %in% envir_CO2 ~ "Carbon Dioxide Emissions",
       Response_var %in% envir_N2O ~ "Nitrous Oxide Emissions",
       
-      #Pest Regulation
-      #Weeds
-      Response_var %in% weed_species ~ "Individual Species",
-      Response_var %in% weed_community ~ "Community Diversity",
+      #Pest Regulation####
+      #Weeds####
+      Response_var %in% weed_waterhemp ~ "Waterhemp",
+      Response_var %in% weed_deadnettle ~ "Deadnettle",
+      Response_var %in% weed_cocklebur ~ "Cocklebur",
+      Response_var %in% weed_foxtail ~ "Giant Foxtail",
+      Response_var %in% weed_Palmeramaranth ~ "Pigweed",
       
-      #Invertebrates
-      Response_var %in% invert_pests_species ~ "Pests (Individual Species)",
-      Response_var %in% invert_preds_species ~ "Predators (Individual Species)",
-      Response_var %in% invert_preds_comm ~ "Predator Community Diversity",
+      
+      Response_var %in% weed_community_biomass ~ "Aboveground growth of weed community",
+      Response_var %in% weed_community_density ~ "Weed community (abundance of weeds)",
+      
+      #Invertebrates####
+      Response_var %in% invert_pests_cornrootworm ~ "Pest: Corn Rootworm (# individuals)",
+      Response_var %in% invert_pests_seedcornmaggot ~ "Pest: Seedcorn Maggot (# individuals)",
+      Response_var %in% invert_pests_Aglycines ~ "Pest: Soybean Aphid (# individuals)",
+      Response_var %in% invert_pests_SCN ~ "Pest: Soybean Cyst Nematode (# individuals)",  
+      
+      Response_var %in% invert_pests_seedcornmaggot_damage ~ "Pest: Seedcorn Maggot (Damage to Crop)",
+      Response_var %in% invert_pests_cornrootworm_damage ~ "Pest: Corn Rootworm (Damage to Crop)",
+      
+      Response_var %in% invert_preds ~ "Predators (# individuals)",
+      
+      Response_var %in% invert_preds_vegcomm_div ~ "Predator Community inhabiting Foliage (Diversity)",
+      Response_var %in% invert_preds_vegcomm_abund ~ "Predator Community inhabiting Foliage (# individuals)",
+      Response_var %in% invert_preds_soilcomm_div ~ "Predator Community inhabiting Soils (Diversity)",
+      Response_var %in% invert_preds_soilcomm_abund ~ "Predator Community inhabiting Soils (# individuals)",
+      
       Response_var %in% invert_preds_activity ~ "Predator Activity",
       Response_var %in% invert_nonpredpest ~ "Non-predators & Non-pests",
       Response_var %in% pathogen ~ "Pathogens",
       
-      #Crop Production
-      #Yields
+      #Crop Production####
+      #Yields####
       Response_var %in% yields_grainsoy ~ "Grain (Soybean)",
       Response_var %in% yields_grainmaize ~ "Grain (Maize)",
       Response_var %in% yields_biomass_abvgrd ~ "Stover Biomass",
       Response_var %in% yields_biomass_blwgrd ~ "Root biomass",
       
-      #Crop Nitrogen Yields
+      #Crop Nitrogen Yields####
       Response_var %in% crop_N_maizegrain ~ "Grain (Maize)",
       Response_var %in% crop_N_maizestalk ~ "Stalk/Stover (Maize)",
       Response_var %in% crop_N_soybean ~ "Grain (Soybean)",
       
-      #Crop Seedling Density
+      #Crop Seedling Density####
       Response_var %in% seedling_density ~ "Seedling Density",
       
-      #Water Movement
-      #Drainage
+      
+      #Water Movement####
+      #Drainage####
       Response_var %in% drainage ~ "Drainage",
       
-      #Runoff
+      #Runoff####
       Response_var %in% runoff_nitrate ~ "Nitrate",
       Response_var %in% runoff_phosphorous ~ "Phosphorous"
       # TRUE                      ~  "other"
                  ) ) %>%
-        mutate(
+       
+  
+  #Create Main Groupings #####
+   mutate(
         main_group = case_when(
       
       
-      #Soils
-      #Chemical Properties
+          
+      #Soils####
+      #Chemical Properties####
       
       Response_var %in% chem_nitrate_spring ~ "Chemical",
       Response_var %in% chem_nitrate_maize ~ "Chemical",
@@ -730,7 +798,7 @@ metric_labels <- Results %>%
       Response_var %in% chem_potassium ~ "Chemical",
       Response_var %in% chem_acidity ~ "Chemical",
       
-      #Physical Properties
+      #Physical Properties####
       Response_var %in% phy_erosion ~ "Physical",
       Response_var %in% phy_compaction ~ "Physical",
       Response_var %in% phy_pores ~ "Physical",
@@ -739,49 +807,73 @@ metric_labels <- Results %>%
       Response_var %in% phy_texture ~ "Physical",
       Response_var %in% phy_watercontent ~ "Physical",
       
-      #Biological Properties
+      #Biological Properties####
       Response_var %in% biol_carbon ~ "Biological",
       Response_var %in% biol_microbes ~ "Biological",
       Response_var %in% biol_som ~ "Biological",
       
-      #Environmental Properties
+      #Environmental Properties####
       Response_var %in% envir_temp ~ "Environmental",
       Response_var %in% envir_CO2 ~ "Environmental",
       Response_var %in% envir_N2O ~ "Environmental",
       
-      #Pest Regulation
-      #Weeds
-      Response_var %in% weed_species ~ "Weeds",
-      Response_var %in% weed_community ~ "Weeds",
+          
+      #Pest Regulation####
+          
+      #Weeds####
+      Response_var %in% weed_waterhemp ~ "Weeds",
+      Response_var %in% weed_deadnettle ~ "Weeds",
+      Response_var %in% weed_cocklebur ~ "Weeds",
+      Response_var %in% weed_foxtail ~ "Weeds",
+      Response_var %in% weed_Palmeramaranth ~ "Weeds",
       
-      #Invertebrates
-      Response_var %in% invert_pests_species ~ "Invertebrates",
-      Response_var %in% invert_preds_species ~ "Invertebrates",
-      Response_var %in% invert_preds_comm ~ "Invertebrates",
+      
+      Response_var %in% weed_community_biomass ~ "Weeds",
+      Response_var %in% weed_community_density ~ "Weeds",
+      
+      #Invertebrates####
+      Response_var %in% invert_pests_cornrootworm ~ "Invertebrates",
+      Response_var %in% invert_pests_seedcornmaggot ~ "Invertebrates",
+      Response_var %in% invert_pests_Aglycines ~ "Invertebrates",
+      Response_var %in% invert_pests_SCN ~ "Invertebrates",  
+      
+      Response_var %in% invert_pests_seedcornmaggot_damage ~ "Invertebrates",
+      Response_var %in% invert_pests_cornrootworm_damage ~ "Invertebrates",
+      
+      Response_var %in% invert_preds ~ "Invertebrates",
+      
+      Response_var %in% invert_preds_vegcomm_div ~ "Invertebrates",
+      Response_var %in% invert_preds_vegcomm_abund ~ "Invertebrates",
+      Response_var %in% invert_preds_soilcomm_div ~ "Invertebrates",
+      Response_var %in% invert_preds_soilcomm_abund ~ "Invertebrates",
+      
       Response_var %in% invert_preds_activity ~ "Invertebrates",
       Response_var %in% invert_nonpredpest ~ "Invertebrates",
       Response_var %in% pathogen ~ "Pathogens",
+          
       
-      #Crop Production
-      #Yields
+      
+      #Crop Production####
+      #Yields####
       Response_var %in% yields_grainsoy ~ "Yields",
       Response_var %in% yields_grainmaize ~ "Yields",
       Response_var %in% yields_biomass_abvgrd ~ "Yields",
       Response_var %in% yields_biomass_blwgrd ~ "Yields",
       
-      #Crop Nitrogen Yields
+      #Crop Nitrogen Yields####
       Response_var %in% crop_N_maizegrain ~ "Crop Nitrogen Uptake",
       Response_var %in% crop_N_maizestalk ~ "Crop Nitrogen Uptake",
       Response_var %in% crop_N_soybean ~ "Crop Nitrogen Uptake",
       
-      #Crop Seedling Density
+      #Crop Seedling Density####
       Response_var %in% seedling_density ~ "Stand Count",
       
-      #Water Movement
-      #Drainage
+          
+      #Water Movement####
+      #Drainage####
       Response_var %in% drainage ~ "Drainage",
       
-      #Runoff
+      #Runoff####
       Response_var %in% runoff_nitrate ~ "Runoff",
       Response_var %in% runoff_phosphorous ~ "Runoff"
       # TRUE                      ~  "other"
@@ -831,9 +923,8 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
       covercrops_trtmt <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Trt.csv", header=TRUE, row.names = "X")
         covercrops_results <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Results.csv", header=TRUE, row.names = "X")
     
- df <- filter(covercrops_results,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
-  df <- filter(df, Group_finelevel != "none")
-        #df_results <- filter(covercrops_results,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
+#set dataframe to work with - only using comparisons to control (0), excluded groups, and means only (remove SEMs) 
+df <- filter(covercrops_results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_type == "mean", !is.na(Trt_id1value) & !is.na(Trt_id2value)) 
         
         df <- arrange(df, Paper_id)
         df_results <- arrange(covercrops_results, Paper_id)
@@ -842,12 +933,18 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
 
         
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
+        #df <- df %>%
+         #       mutate(per_change = ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)
+        #df$per_change <- as.numeric(df$per_change)
+        
         df <- df %>%
-                mutate(per_change = ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)
+              mutate( Trt_id1value_alt = if_else(Trt_id1value == 0, 0.000000001, Trt_id1value)) %>%      
+          mutate(per_change = ((Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt)*100)
         df$per_change <- as.numeric(df$per_change)
         
-        df$per_change2 <- as.numeric(if_else(df$per_change == 0, 0.000001, df$per_change ))
-        df$per_change2 <- as.numeric(if_else(df$per_change == Inf, 0.000001, df$per_change ))
+        
+        #df$per_change2 <- as.numeric(if_else(df$per_change == 0, 0.000001, df$per_change ))
+        df$per_change <- as.numeric(if_else(df$per_change == Inf, 0.000001, df$per_change ))
         df$Paper_id <- as.factor(df$Paper_id)
         df$main_group <- as.factor(df$main_group)
         
@@ -860,11 +957,31 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
                             Group_finelevel %in% "mix_3" ~ "Mixture (3+ Spp.)"
                         ))
    df$Cover_crop_diversity <- as.factor( df$Cover_crop_diversity)
-          
-
-
- 
    
+   
+##Monoculture Groupings ####
+   
+####Add broad groupings of monocultured cover crops
+   # Mismatches for descriptions of rotated monocultures of cover crops
+#levels(df$Trt_id2name)
+#str_view(df$Trt_id2name, "rye")
+   
+#nonlegume <- c("rye", "canola", "rapeseed", "radish", "triticale", "wheat", "oat", "mustard", "buckwheat", "barley")
+#legume <- c("hairy vetch", "vetch", "red clover", "white clover", "crimson clover", "alfalfa", "Austrian winter peas")
+
+#   df2 <- df %>%
+#             mutate(
+#                     monocultures = case_when(
+#                            Trt_id2name %in% str_match(Trt_id2name, nonlegume & legume) & 
+#                                      Cover_crop_diversity %in% "Monoculture" ~ "Rotation of Non-Legume & Legume", 
+#                            Trt_id2name %in% str_match(Trt_id2name, "rye") & Cover_crop_diversity %in% "Monoculture" ~ "Winter Rye", 
+#                            Trt_id2name %in% str_match(Trt_id2name, legume) &
+#                                      Cover_crop_diversity %in% "Monoculture" ~ "Legume", 
+#                            Cover_crop_diversity %in% "Monoculture" ~ "Non-Legume", 
+#                            TRUE ~ ""
+#                        ))
+ 
+#   rm(df2)
    
            
 ######Review: Cover crop####
@@ -873,21 +990,19 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
                     filter (Group_RV == "Soil")
          
         cc_soil_summary <- df_soil %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
  #Explore data distribution
    #look by Response_var
        
-qplot(Response_var, per_change2, data=df_soil,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-   outliers <- filter(df_soil, per_change2 > 100)
+   outliers <- filter(df_soil, per_change > 100)
         
             write.csv(cc_soil_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Soil_Summary.csv")
 
-        
-       
         
         
   ####Group_RV: Pest Regulation####
@@ -896,16 +1011,19 @@ qplot(Response_var, per_change2, data=df_soil,  colour=Cover_crop_diversity) + t
         
        
         cc_pest_summary <- df_pest %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
      
         #Explore data distribution
    #look by Response_var
-       
-qplot(Response_var, per_change2, data=df_pest,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-      outliers <- filter(df_pest, per_change2 > 100)
+  cc_pest_summary2 <- cc_pest_summary %>%
+                    filter(!is.na(per_change > 1000))
+                    
+  
+qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+      outliers <- filter(df_pest, per_change > 100)
         
          write.csv(cc_pest_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
 
@@ -917,13 +1035,13 @@ qplot(Response_var, per_change2, data=df_pest,  colour=Cover_crop_diversity) + t
         
        
         cc_yield_summary <- df_yield %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
        
-        qplot(Response_var, per_change2, data=df_yield,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+        qplot(Response_var, per_change, data=df_yield,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
-        outliers <- filter(df_yield, per_change2 > 100)
+        outliers <- filter(df_yield, per_change > 100)
   
          
         write.csv(cc_yield_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Yield_Summary.csv")
@@ -935,14 +1053,14 @@ qplot(Response_var, per_change2, data=df_pest,  colour=Cover_crop_diversity) + t
         
        
         cc_water_summary <- df_water %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change2) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity) %>%
-                summarise(mean_per_change = mean(per_change2, na.rm = TRUE), sem_per_change = std.error(per_change2, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
         
-        qplot(Response_var, per_change2, data=df_water,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+        qplot(Response_var, per_change, data=df_water,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
-        outliers <- filter(df_water, per_change2 > 100)
+        outliers <- filter(df_water, per_change > 100)
   
         write.csv(cc_water_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Water_Summary.csv")
          

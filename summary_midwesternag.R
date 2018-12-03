@@ -110,9 +110,13 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
           summarise (city_state_list = paste(unique(city_state), collapse =
               ", "))
         
-        farmnames <- c("University", "Station", "Research", "Center")
+       #conditional statement for "in" (city, state) or "at" (research center)
+      city_statelist$city_state_list2 <- if_else(grepl("University" , city_statelist$city_state_list), paste("at", city_statelist$city_state_list, sep = " "),
+                                      if_else(grepl("Station", city_statelist$city_state_list), paste("at", city_statelist$city_state_list, sep = " "),
+                                          if_else(grepl("Research", city_statelist$city_state_list), paste("at", city_statelist$city_state_list, sep = " "), 
+                                            paste("in", city_statelist$city_state_list, sep = " "))))
+                                              
         
-        city_statelist$city_state_list_prep <- if_else(str_view(df$city_state_list, farmnames, match = TRUE), str_glue_data("at {city_state_list}"), str_glue_data("in {city_state_list}" ))
         
         #ATtach list of city, states to dataset
         df_refexp <-
@@ -176,7 +180,7 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         
         
         #Count number of sites for each experiment####
-        #conditional statement for "in" (city, state) or "at" (research center)
+        
         df_refexp <- df_refexp %>%
           group_by(Paper_id) %>%
           mutate(unique_locations = n_distinct(Loc_multi))
@@ -261,7 +265,7 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
         #######INTRODUCTION Statement #################
         df2$intro <- df2 %>%
           str_glue_data(
-            "{Paper_id} A {Exp_list} study with {reps_list} replications was conducted at {locs_text} from {years_list} in {city_state_list} investigating the effects of {Trtmt_list} in a {Cash_species} system ({Authors_abbrev}, {PubYear})."
+            "{Paper_id} A {Exp_list} study with {reps_list} replications was conducted at {locs_text} from {years_list} {city_state_list2} investigating the effects of {Trtmt_list} in a {Cash_species} system ({Authors_abbrev}, {PubYear})."
           )
         unique(df2$intro)
         

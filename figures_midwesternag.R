@@ -1,13 +1,15 @@
 #Midwestern Agriculture Synthesis
 #Figures
 
-library("dplyr", lib.loc="~/R/win-library/3.4")
-library("readxl", lib.loc="~/R/win-library/3.4")
-library("tidyverse", lib.loc="~/R/win-library/3.4")
-library("stringr", lib.loc="~/R/win-library/3.4")
-library("stringi", lib.loc="~/R/win-library/3.4")
-library("forcats", lib.loc="~/R/win-library/3.4")
-library("ggplot2", lib.loc="~/R/win-library/3.4")
+library("dplyr", lib.loc="~/R/win-library/3.5")
+library("readxl", lib.loc="~/R/win-library/3.5")
+library("tidyverse", lib.loc="~/R/win-library/3.5")
+library("stringr", lib.loc="~/R/win-library/3.5")
+library("stringi", lib.loc="~/R/win-library/3.5")
+library("forcats", lib.loc="~/R/win-library/3.5")
+library("ggplot2", lib.loc="~/R/win-library/3.5")
+library("colorRamps", lib.loc= "~/R/win-library/3.5")
+library("colorspace", lib.loc= "~/R/win-library/3.5")
 
 setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
 
@@ -22,29 +24,35 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
  
    
     ###Figure for Cover Crop Review: Soils####
-    df <- cc_water_summary
+    df <- 
+      #cc_soil_summary
+      #cc_water_summary 
+      cc_yield_summary
+      #cc_pest_summary[cc_pest_summary$mean_per_change < 1000,]
     df$Cover_crop_diversity <- as.factor( df$Cover_crop_diversity)
-
-    #Forest plot  
+    
+    
+    
+   
+   #Forest plot  
     j <- ggplot(df, aes(group_metric, mean_per_change, ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change)) +
           geom_pointrange() +
+      geom_errorbar(aes(ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change, width=.1)) +
           geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
           coord_flip() + # flip coordinates (puts labels on y axis)
           #xlab("group metric") + ylab("percent difference (%)") + # use a white background
-          labs(title ="Cover Crop Review", subtitle = "Water Movement", x = "", y = "percent difference (%)") + 
-              theme_bw() +
-          geom_point(aes(colour = Cover_crop_diversity)) + #color labeling of fine level groupings
-          scale_fill_gradientn(colours=topo.colors(6)) +
+          labs(title ="Cover Crop Review", subtitle = "Crop Production", x = "", y = "percent difference (%)") + 
+      #scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +        
+      theme_bw() +
+      #theme(legend.position = "right") +
+          geom_point( aes(colour = Cover_crop_diversity)) + #color labeling of fine level groupings
           facet_grid(main_group ~ .,scales = "free")
-          #+ geom_label(aes(label = num_papers), nudge_x = 10, nudge_y = 0) #add labels that include number of papers for each response and number of comparisons included in statistic
     
-    #need to add labels for each cover crop diversity grouping. color the range of percent difference.
-    #investigate extrodinarily large ranges
-    #add num_comparisons and num_papers to the figure.
-    #organize by soil metric type
+ print(j)  
     
-    print(j)
     
-    ggsave("CC_water.png")
     
-     
+    
+    ggsave("CC_yield.png")
+    
+    

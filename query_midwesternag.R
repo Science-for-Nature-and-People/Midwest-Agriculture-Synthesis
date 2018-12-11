@@ -2,6 +2,7 @@
 #Database Querying 2
 
 #Download pdfs from bibsource file
+install.package(devtools)
 library(devtools)
 devtools::install_github("Science-for-Nature-and-People/BibScan")
 library(BibScan)
@@ -13,7 +14,7 @@ screened = "C:/Users/LWA/Desktop/ColandrOut/screened_abstracts.csv"
 
 article_pdf_download(source1, output, screened)
 
-
+?article_pdf_download
 
 #libraries
 
@@ -118,22 +119,23 @@ Results %>%
 
 
 #filter tibble for Group_Rv
-CC_Soil <- filter(Results, Group_RV == "Soil")
-CC_Production <-
-  filter(Results, Group_RV == "Crop Production")
-CC_Water <- filter(Results, Group_RV == "Water")
-CC_Pest <- filter(Results, Group_RV == "Pest Regulation")
+#CC_Soil <- filter(Results, Group_RV == "Soil")
+#CC_Production <-
+ # filter(Results, Group_RV == "Crop Production")
+#CC_Water <- filter(Results, Group_RV == "Water")
+#CC_Pest <- filter(Results, Group_RV == "Pest Regulation")
 
 
 #Identify variables included in each grouping
 #itemized list of unique metrics (Response_var)
-(uniqueSoils <- unique(CC_Soil$Response_var))
+#(uniqueSoils <- unique(CC_Soil$Response_var))
 
-(uniquePestR <- unique(CC_Pest$Response_var))
+#(uniquePestR <- unique(CC_Pest$Response_var))
 
-(uniqueProduction <- unique(CC_Production$Response_var))
+#(uniqueProduction <- unique(CC_Production$Response_var))
 
-(uniqueWater <- unique(CC_Water$Response_var))
+#(uniqueWater <- unique(CC_Water$Response_var))
+
 
 
 
@@ -144,6 +146,61 @@ CC_Pest <- filter(Results, Group_RV == "Pest Regulation")
 
 ####Soils####
 ##Soil Chemical Properties####
+chem_som <- c(
+  "particulate organic carbon",
+  "total POM",
+  "particulate organic matter (fPOM) including macro orgnaic matter fractions",
+  "particulate organic matter (oPOM)",
+  "soil organic matter",
+  "soil organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                                      
+  "soil organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",                       
+  "soil organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",                        
+  "soil organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",                         
+  "soil organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",                        
+  "soil organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                                      
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                          
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",           
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",            
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",             
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",            
+  "fine particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                          
+  "total particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                         
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",          
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",           
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",            
+  "total particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",           
+  "total particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)"                         
+)
+
+chem_carbon_020 <-  c(
+  "soil organic carbon in topsoil",
+  "water extractable organic carbon (0-5 cm)",
+  "water extractable organic carbon (5-20 cm)",
+  "soil organic carbon (SOC) in fall following cover crop, 0-15cm",
+  "organic carbon (0-15 cm)",
+  "soil organic carbon in soybean (0-5 cm soil depth)",                                                               
+  "soil organic carbon in maize (0-5 cm soil depth)",                                                                 
+  "soil organic carbon in soybean (5-15 cm soil depth)",                                                              
+  "soil organic carbon (0-10 cm depth)",                                                                             
+  "soil organic carbon (10-20 cm depth)",
+  "soil carbon concentration (0-5 cm depth)",
+  "soil organic carbon (0-5 cm depth)"
+)
+
+chem_carbon_2060<-  c(
+  "soil organic carbon (20-40 cm depth)",                                                                             
+  "soil organic carbon (40-60 cm depth)"
+)
+
+chem_carbon_075<-  c(  
+  "total carbon (0-50 cm depth)",
+  "total carbon (0-30 cm depth)",
+  "total carbon (0-45 cm depth)",
+  "soil organic carbon (0-75 cm)",
+  "soil organic carbon 0-30 cm depth (spring)",
+   "soil organic carbon (SOC), spring sample (0-60 cm depth)"
+)
+
 
 chem_nitrate_spring <- c(
   "soil nitrate (NO3-N)",
@@ -333,27 +390,6 @@ phy_watercontent <- c(
 
 ##Soil Biological Properties####
 
-biol_carbon <-  c(
-  "soil organic carbon in topsoil",
-  "soil organic carbon (0-75 cm)",
-  "water extractable organic carbon (0-5 cm)",
-  "water extractable organic carbon (5-20 cm)",
-  "total carbon",
-  "soil organic carbon (SOC) in fall following cover crop, 0-15cm",
-  "soil organic carbon (SOC), spring sample",
-  "soil organic carbon 0-30 cm depth (spring)",
-  "soil organic carbon",
-  "organic carbon (0-15 cm)",
-  "soil carbon concentration",
-  "soil organic carbon in soybean (0-5 cm soil depth)",                                                               
-  "soil organic carbon in maize (0-5 cm soil depth)",                                                                 
-  "soil organic carbon in soybean (5-15 cm soil depth)",                                                              
-  "soil organic carbon (0-10 cm depth)",                                                                             
-  "soil organic carbon (10-20 cm depth)",                                                                             
-  "soil organic carbon (20-40 cm depth)",                                                                             
-  "soil organic carbon (40-60 cm depth)"                                                                             
-)
-
 biol_microbes <- c(
   "microbial biomass",
   "microbial biomass nitrogen (MBN)",
@@ -361,31 +397,7 @@ biol_microbes <- c(
   "enzyme activity in maize (Hydrolysis of Fluroescein Diacetate)"                                                   
 )
 
-biol_som <- c(
-  "particulate organic carbon",
-  "total POM",
-  "particulate organic matter (fPOM) including macro orgnaic matter fractions",
-  "particulate organic matter (oPOM)",
-  "soil organic matter",
-  "soil organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                                      
-  "soil organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",                       
-  "soil organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",                        
-  "soil organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",                         
-  "soil organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",                        
-  "soil organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                                      
-  "fine particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                          
-  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",           
-  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",            
-  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",             
-  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",            
-  "fine particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                          
-  "total particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                         
-  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",          
-  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",           
-  "total particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",            
-  "total particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",           
-  "total particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)"                         
-)
+
 
 ##Soil Environmental Properties####
 
@@ -700,6 +712,10 @@ metric_labels <- Results %>%
       Response_var %in% chem_phosphorous ~ "Phosphorous",
       Response_var %in% chem_potassium ~ "Postassium",
       Response_var %in% chem_acidity ~ "pH",
+      Response_var %in% chem_carbon_020 ~ "Soil Carbon, 0-20 cm depth",
+      Response_var %in% chem_carbon_2060 ~ "Soil Carbon, 20-60 cm depth",
+      Response_var %in% chem_carbon_075 ~ "Soil Carbon, 0-75 cm depth",
+      Response_var %in% chem_som ~ "Soil Organic Matter",
       
       #Physical Properties####
       Response_var %in% phy_erosion ~ "Erosion",
@@ -711,9 +727,9 @@ metric_labels <- Results %>%
       Response_var %in% phy_watercontent ~ "Soil Water Content",
       
       #Biological Properties####
-      Response_var %in% biol_carbon ~ "Soil Carbon",
+      
       Response_var %in% biol_microbes ~ "Microbial Biomass",
-      Response_var %in% biol_som ~ "Soil Organic Matter",
+      
       
       #Environmental Properties####
       Response_var %in% envir_temp ~ "Soil Temperature",
@@ -733,20 +749,20 @@ metric_labels <- Results %>%
       Response_var %in% weed_community_density ~ "Weed community (abundance of weeds)",
       
       #Invertebrates####
-      Response_var %in% invert_pests_cornrootworm ~ "Pest: Corn Rootworm (# individuals)",
-      Response_var %in% invert_pests_seedcornmaggot ~ "Pest: Seedcorn Maggot (# individuals)",
-      Response_var %in% invert_pests_Aglycines ~ "Pest: Soybean Aphid (# individuals)",
-      Response_var %in% invert_pests_SCN ~ "Pest: Soybean Cyst Nematode (# individuals)",  
+      Response_var %in% invert_pests_cornrootworm ~ "Corn Rootworm (#)",
+      Response_var %in% invert_pests_seedcornmaggot ~ "Seedcorn Maggot (#)",
+      Response_var %in% invert_pests_Aglycines ~ "Soybean Aphid (#)",
+      Response_var %in% invert_pests_SCN ~ "Soybean Cyst Nematode (#)",  
       
-      Response_var %in% invert_pests_seedcornmaggot_damage ~ "Pest: Seedcorn Maggot (Damage to Crop)",
-      Response_var %in% invert_pests_cornrootworm_damage ~ "Pest: Corn Rootworm (Damage to Crop)",
+      Response_var %in% invert_pests_seedcornmaggot_damage ~ "Seedcorn Maggot (Damage to Crop)",
+      Response_var %in% invert_pests_cornrootworm_damage ~ "Corn Rootworm (Damage to Crop)",
       
-      Response_var %in% invert_preds ~ "Predators (# individuals)",
+      Response_var %in% invert_preds ~ "Predators (#)",
       
-      Response_var %in% invert_preds_vegcomm_div ~ "Predator Community inhabiting Foliage (Diversity)",
-      Response_var %in% invert_preds_vegcomm_abund ~ "Predator Community inhabiting Foliage (# individuals)",
-      Response_var %in% invert_preds_soilcomm_div ~ "Predator Community inhabiting Soils (Diversity)",
-      Response_var %in% invert_preds_soilcomm_abund ~ "Predator Community inhabiting Soils (# individuals)",
+      Response_var %in% invert_preds_vegcomm_div ~ "Predator community inhabiting foliage (#)",
+      Response_var %in% invert_preds_vegcomm_abund ~ "Predator community inhabiting foliage (#)",
+      Response_var %in% invert_preds_soilcomm_div ~ "Predator community inhabiting soils (Diversity)",
+      Response_var %in% invert_preds_soilcomm_abund ~ "Predator community inhabiting soils (#)",
       
       Response_var %in% invert_preds_activity ~ "Predator Activity",
       Response_var %in% invert_nonpredpest ~ "Non-predators & Non-pests",
@@ -797,6 +813,10 @@ metric_labels <- Results %>%
       Response_var %in% chem_phosphorous ~ "Chemical",
       Response_var %in% chem_potassium ~ "Chemical",
       Response_var %in% chem_acidity ~ "Chemical",
+      Response_var %in% chem_carbon_020 ~ "Chemical",
+      Response_var %in% chem_carbon_075 ~ "Chemical",
+      Response_var %in% chem_carbon_2060 ~ "Chemical",
+      Response_var %in% chem_som ~ "Chemical",
       
       #Physical Properties####
       Response_var %in% phy_erosion ~ "Physical",
@@ -808,9 +828,9 @@ metric_labels <- Results %>%
       Response_var %in% phy_watercontent ~ "Physical",
       
       #Biological Properties####
-      Response_var %in% biol_carbon ~ "Biological",
+      
       Response_var %in% biol_microbes ~ "Biological",
-      Response_var %in% biol_som ~ "Biological",
+      
       
       #Environmental Properties####
       Response_var %in% envir_temp ~ "Environmental",
@@ -889,6 +909,7 @@ Results <-
 missing <- Results[is.na(Results$group_metric),] #check to see if all rows have an assigned group_metric
 
 
+
 #File with all results included from Cover Crop review#####
 CC_Ref2 <- left_join(Ref, ExpD_Loc)
 CC_Cash <- left_join(CC_Ref2, CashCrop)
@@ -901,6 +922,7 @@ CC_all <-
 
 #add surrogate key to Results
 CC_all$master_key = rownames(CC_all)
+
 
 write.csv(CC_all, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv")
 write.csv(CC_Ref2, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_RefExp.csv")
@@ -930,6 +952,67 @@ df <- filter(covercrops_results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_
         df_results <- arrange(covercrops_results, Paper_id)
         df_refexp <- covercrops_refexp
         df_trtmt <- covercrops_trtmt
+        
+        #alphabetize groups (needed for figures)
+levels(as.factor(df_results$group_metric))
+group_order <- c("Aboveground growth of weed community",
+              "Ammonium (Preplant)",                          
+              "Carbon Dioxide Emissions",
+              "Cocklebur",
+              "Compaction",
+              "Corn Rootworm (#)",
+              "Corn Rootworm (Damage to Crop)",
+              "Deadnettle",
+              "Drainage",
+              "Erosion",
+              "Giant Foxtail",
+              "Grain (Maize)",
+              "Grain (Soybean)",
+              "Microbial Biomass",                              
+              "Nitrate",
+              "Nitrate (Maize)",
+              "Nitrate (Post Harvest)",
+              "Nitrate (Preplant)",                             
+              "Nitrate (Soybean)",
+              "Nitrous Oxide Emissions",                        
+              "Non-predators & Non-pests" ,
+              "Pathogens" ,                                     
+              "pH",
+              "Phosphorous" ,
+              "Pigweed" ,   
+              "Postassium" ,                                    
+              "Predator Activity",
+              "Predator community inhabiting foliage (#)" ,     
+              "Predator community inhabiting soils (#)",
+              "Predator community inhabiting soils (Diversity)",
+              "Predators (#)",
+              "Root biomass"   ,                                
+              "Seedcorn Maggot (#)" ,
+              "Seedcorn Maggot (Damage to Crop)",               
+              "Seedling Density",
+              "Soil Aggregates",                                
+              "Soil Bulk Density" ,
+              "Soil Carbon, 0-20 cm depth",                     
+              "Soil Carbon, 20-60 cm depth",
+              "Soil Carbon, 0-75 cm depth" ,
+              "Soil Organic Matter" ,
+              "Soil Pores" ,                                    
+              "Soil Temperature"  ,
+              "Soil Texture" ,                                  
+              "Soil Water Content",
+              "Soybean Aphid (#)",                              
+              "Soybean Cyst Nematode (#)",
+              "Stalk/Stover (Maize)",                           
+              "Stover Biomass",
+              "Total Nitrogen"  ,                               
+              "Waterhemp" ,
+              "Weed community (abundance of weeds)" )
+
+
+#library(plyr)  ## or dplyr (transform -> mutate)
+df_order <- df_results %>%
+             mutate(group_metric2 = factor(group_metric,levels=group_order))
+
 
         
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
@@ -937,7 +1020,7 @@ df <- filter(covercrops_results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_
          #       mutate(per_change = ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)
         #df$per_change <- as.numeric(df$per_change)
         
-        df <- df %>%
+        df <- df_order %>%
               mutate( Trt_id1value_alt = if_else(Trt_id1value == 0, 0.000000001, Trt_id1value)) %>%      
           mutate(per_change = ((Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt)*100)
         df$per_change <- as.numeric(df$per_change)
@@ -954,10 +1037,17 @@ df <- filter(covercrops_results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_
                           Cover_crop_diversity = case_when(
                             Group_finelevel %in% "mono" ~ "Monoculture", 
                             Group_finelevel %in% "mix_2" ~ "Mixture (2 Spp.)",
-                            Group_finelevel %in% "mix_3" ~ "Mixture (3+ Spp.)"
+                            Group_finelevel %in% "mix_3" ~ "Mixture (3+ Spp.)",
+                            Group_finelevel %in% "none" ~ "Exclude"
                         ))
-   df$Cover_crop_diversity <- as.factor( df$Cover_crop_diversity)
-   
+    
+    df2 <- df[df$Cover_crop_diversity != "Exclude",]
+   df2$Cover_crop_diversity <- as.factor( df2$Cover_crop_diversity)
+   diversity_order <- c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)")
+   df_order2 <- df2 %>%
+             mutate(Cover_crop_diversity2 =factor( Cover_crop_diversity,levels=diversity_order))
+
+   levels(df_order2$Cover_crop_diversity2)
    
 ##Monoculture Groupings ####
    
@@ -986,18 +1076,20 @@ df <- filter(covercrops_results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_
            
 ######Review: Cover crop####
   ####Group_RV: Soil####
-        df_soil <- df %>%
+        df_soil <- df_order2 %>%
                     filter (Group_RV == "Soil")
+   
+   levels(as.factor(cc_soil_summary$Cover_crop_diversity2))
          
         cc_soil_summary <- df_soil %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
-                group_by(main_group, group_metric, Cover_crop_diversity) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
  #Explore data distribution
    #look by Response_var
        
-qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
    outliers <- filter(df_soil, per_change > 100)
         
@@ -1006,15 +1098,15 @@ qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity) + th
         
         
   ####Group_RV: Pest Regulation####
-        df_pest <- df %>%
+        df_pest <- df_order2 %>%
                     filter (Group_RV == "Pest Regulation")      
-        
+        levels(cc_pest_summary$Cover_crop_diversity2)
        
-        cc_pest_summary <- df_pest %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
-                group_by(main_group, group_metric, Cover_crop_diversity) %>%
+        cc_pest_summary <- df_pest[!is.na(df_pest$Cover_crop_diversity2),] %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
-        
+        levels(df_pest$Cover_crop_diversity2)
      
         #Explore data distribution
    #look by Response_var
@@ -1022,7 +1114,7 @@ qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity) + th
                     filter(!is.na(per_change > 1000))
                     
   
-qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
       outliers <- filter(df_pest, per_change > 100)
         
          write.csv(cc_pest_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
@@ -1030,16 +1122,16 @@ qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colou
         
         
   ####Group_RV: Crop Production####
-        df_yield <- df %>%
+        df_yield <- df_order2 %>%
                     filter (Group_RV == "Crop Production")      
         
        
         cc_yield_summary <- df_yield %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
-                group_by(main_group, group_metric, Cover_crop_diversity) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
        
-        qplot(Response_var, per_change, data=df_yield,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+        qplot(Response_var, per_change, data=df_yield,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
         outliers <- filter(df_yield, per_change > 100)
   
@@ -1048,17 +1140,17 @@ qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colou
    
                     
   ####Group_RV: Water####
-        df_water <- df %>%
+        df_water <- df_order2 %>%
                     filter (Group_RV == "Water")      
         
        
         cc_water_summary <- df_water %>%
-                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity, per_change) %>%
-                group_by(main_group, group_metric, Cover_crop_diversity) %>%
+                select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
+                group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
         
         
-        qplot(Response_var, per_change, data=df_water,  colour=Cover_crop_diversity) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+        qplot(Response_var, per_change, data=df_water,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
         outliers <- filter(df_water, per_change > 100)
   

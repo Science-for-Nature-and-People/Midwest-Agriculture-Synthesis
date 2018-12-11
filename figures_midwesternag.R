@@ -27,9 +27,11 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
     df <- 
       #cc_soil_summary
       #cc_water_summary 
-      cc_yield_summary
-      #cc_pest_summary[cc_pest_summary$mean_per_change < 1000,]
-    df$Cover_crop_diversity <- as.factor( df$Cover_crop_diversity)
+      #cc_yield_summary
+      cc_pest_summary[cc_pest_summary$mean_per_change < 1000,]
+    levels(df$Cover_crop_diversity) <- as.factor( df$Cover_crop_diversity)
+    df$group_metric <- as.factor(df$group_metric)
+    df <- df[with(df, order(Cover_crop_diversity, group_metric)),]
     
     
     
@@ -41,18 +43,19 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
           geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
           coord_flip() + # flip coordinates (puts labels on y axis)
           #xlab("group metric") + ylab("percent difference (%)") + # use a white background
-          labs(title ="Cover Crop Review", subtitle = "Crop Production", x = "", y = "percent difference (%)") + 
+          labs(title ="Cover Crop Review", subtitle = "Pests & Natural Enemies", x = "", y = "percent difference (%)") + 
       #scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +        
       theme_bw() +
       #theme(legend.position = "right") +
-          geom_point( aes(colour = Cover_crop_diversity)) + #color labeling of fine level groupings
-          facet_grid(main_group ~ .,scales = "free")
+          geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
+          facet_grid(main_group ~., scales = "free", space = "free") +
+      theme(strip.text.y = element_text(angle = 0))
     
  print(j)  
     
     
     
     
-    ggsave("CC_yield.png")
+    ggsave("CC_pests.png")
     
     

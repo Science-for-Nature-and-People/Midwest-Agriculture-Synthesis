@@ -1,0 +1,27 @@
+"","main_group","group_metric","Cover_crop_diversity2","mean_per_change","sem_per_change","num_papers","num_comparisons"
+"1","Invertebrates","Corn Rootworm (#)","Monoculture",-18.2656421264158,12.8077684590195,1,8
+"2","Invertebrates","Corn Rootworm (Damage to Crop)","Monoculture",-27.6515151515152,10.9848484848485,1,2
+"3","Invertebrates","Non-predators & Non-pests","Monoculture",6.73650947512343,9.28722652900695,1,24
+"4","Invertebrates","Predator Activity","Mixture (2 Spp.)",0,0,1,2
+"5","Invertebrates","Predator community inhabiting foliage (#)","Monoculture",-7.33299123925962,34.2090380020908,1,10
+"6","Invertebrates","Predator community inhabiting foliage (#)","Mixture (2 Spp.)",28.4722222222222,11.474105306846,1,4
+"7","Invertebrates","Predator community inhabiting soils (#)","Monoculture",5.69104873013254,4.64071205702572,2,6
+"8","Invertebrates","Predator community inhabiting soils (Diversity)","Monoculture",3.68493598472536,1.63349289858974,1,4
+"9","Invertebrates","Predators (#)","Monoculture",26.7930347039601,9.98334901080014,1,16
+"10","Invertebrates","Seedcorn Maggot (#)","Monoculture",267000000856.942,213843400513.603,1,10
+"11","Invertebrates","Seedcorn Maggot (Damage to Crop)","Monoculture",182.532467532468,64.1757354890433,1,10
+"12","Invertebrates","Soybean Aphid (#)","Monoculture",39.8677597460247,39.5073342937452,2,26
+"13","Invertebrates","Soybean Cyst Nematode (#)","Monoculture",-24.5996611980857,3.9836494955582,3,85
+"14","Pathogens","Pathogens","Monoculture",-12.6052188552189,8.86329834513875,1,12
+"15","Weeds","Aboveground growth of weed community","Monoculture",74.6862860846818,112.263817724271,2,22
+"16","Weeds","Aboveground growth of weed community","Mixture (2 Spp.)",-20.2380952380952,NA,1,1
+"17","Weeds","Aboveground growth of weed community","Mixture (3+ Spp.)",-69.8412698412698,NA,1,1
+"18","Weeds","Cocklebur","Monoculture",10.2507331076685,13.9196166318102,1,10
+"19","Weeds","Deadnettle","Monoculture",6.93190621891893,8.30554402199535,1,18
+"20","Weeds","Giant Foxtail","Monoculture",29.6552153169288,10.9785115206766,1,10
+"21","Weeds","Pigweed","Monoculture",100.435061641727,58.082675838735,1,12
+"22","Weeds","Waterhemp","Monoculture",20.9746875844247,21.4003808064974,2,36
+"23","Weeds","Waterhemp","Mixture (2 Spp.)",-18.272059247638,3.46707118714456,1,2
+"24","Weeds","Weed community (abundance of weeds)","Monoculture",70.7253315716133,52.1785183542837,4,67
+"25","Weeds","Weed community (abundance of weeds)","Mixture (2 Spp.)",-32.4289393298512,18.6986758483045,2,3
+"26","Weeds","Weed community (abundance of weeds)","Mixture (3+ Spp.)",-10.2040816326531,NA,1,1

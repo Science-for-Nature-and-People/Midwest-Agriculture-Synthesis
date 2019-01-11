@@ -1032,34 +1032,26 @@ df_order <- df_results %>%
         df$main_group <- as.factor(df$main_group)
         
         
-        #Do we need to adjust the percent change for values that describe multiple years?
-          #Possibly, Weight the value by the number of years 
-            #to determine # of year for each data point
-              #If Year_result > 0 then number of years = 1
-              # If Year_results = 0, then the # years = final number in Duration (e.g. 2004-8 where these data represent 8 years)]
-          #Or does the denominator cancel out the year difference (3 years/3 years)?
         
+        #Adjust data so values representing multiple years are replicated within the dataframe####
+          #Weight means so they reflect # of years those data represent
         
-        #Data point representing multiple years
-        #Add column duration.yr 
+        #Create column that shows total number of years project was conducted (duration.yr )
         df <- df %>%
                 mutate(duration.yr = sub('.*-', '', df$Duration)) 
            
          df$duration.yr <- as.numeric(df$duration.yr)
       
-         
-      #Sort this out so that we get one column with either 1 or the number of years for the 
+         #determine number of years each mean represents
          df <- df %>%
-              mutate(per_change_yr = if_else(Year_result < 1, duration.yr, 1))
-        #Want to create multiple rows of the same result rather than multiply by this number....!
-        
-        
-        df <- df %>% 
+           mutate(per_change_yr = if_else(Year_result < 1, duration.yr, 1))
+         
+         
+        #  replicate rows so that total number of rows for that datapoint is equal to the # years the datapoint represents
+         df <- df %>% 
           uncount(per_change_yr)
         
-        
-        
-          
+
 
 ####Replace group_finelevel with a more descriptive description
     df <- df %>%
@@ -1143,7 +1135,7 @@ qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity2) + t
                     filter (Group_RV == "Pest Regulation")      
         
        
-        cc_pest_summary <- df_pest[!is.na(df_pest$per_change > 1000),] %>%
+        cc_pest_summary <- df_pest[df_pest$per_change < 2000,] %>%
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
@@ -1155,10 +1147,11 @@ qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity2) + t
    #look by Response_var
   #cc_pest_summary2 <- cc_pest_summary %>%
     #                filter(!is.na(per_change > 1000))
-                    
-  
-qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-      outliers <- filter(df_pest, per_change > 500)
+                  
+        qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 500,],  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+        
+qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 2000,],  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+      outliers <- filter(df_pest, per_change > 2000)
         
          write.csv(cc_pest_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
 

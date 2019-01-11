@@ -26,6 +26,7 @@ library("stringr", lib.loc = "~/R/win-library/3.5")
 library("stringi", lib.loc = "~/R/win-library/3.5")
 library("forcats", lib.loc = "~/R/win-library/3.5")
 library("plotrix", lib.loc = "~/R/win-library/3.5")
+library("tibble", lib.loc = "~/R/win-library/3.5")
 
 setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
 
@@ -796,12 +797,11 @@ metric_labels <- Results %>%
        
   
   #Create Main Groupings #####
-   mutate(
+   
+mutate(
         main_group = case_when(
       
-      
-          
-      #Soils####
+    #Soils####
       #Chemical Properties####
       
       Response_var %in% chem_nitrate_spring ~ "Chemical",
@@ -924,11 +924,11 @@ CC_all <-
 CC_all$master_key = rownames(CC_all)
 
 
-write.csv(CC_all, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv")
-write.csv(CC_Ref2, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_RefExp.csv")
-write.csv(CashCrop, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_CashCrop.csv")
-write.csv(Treatment, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Trt.csv")
-write.csv(Results, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Results.csv")
+write.csv(CC_all, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_data.csv")
+write.csv(CC_Ref2, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_RefExp.csv")
+write.csv(CashCrop, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_CashCrop.csv")
+write.csv(Treatment, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Trt.csv")
+write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Results.csv")
 
 
 
@@ -939,11 +939,11 @@ write.csv(Results, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_
 
 
 #import data
-covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv", header=TRUE, row.names = "X")
-  covercrops_refexp <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
-    covercrops_cashcrop <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
-      covercrops_trtmt <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Trt.csv", header=TRUE, row.names = "X")
-        covercrops_results <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Results.csv", header=TRUE, row.names = "X")
+covercrops <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_data.csv", header=TRUE, row.names = "X")
+  covercrops_refexp <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
+    covercrops_cashcrop <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
+      covercrops_trtmt <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Trt.csv", header=TRUE, row.names = "X")
+        covercrops_results <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Results.csv", header=TRUE, row.names = "X")
     
 #set dataframe to work with - only using comparisons to control (0), excluded groups, and means only (remove SEMs) 
 df <- filter(covercrops_results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_type == "mean", !is.na(Trt_id1value) & !is.na(Trt_id2value)) 
@@ -1031,6 +1031,36 @@ df_order <- df_results %>%
         df$Paper_id <- as.factor(df$Paper_id)
         df$main_group <- as.factor(df$main_group)
         
+        
+        #Do we need to adjust the percent change for values that describe multiple years?
+          #Possibly, Weight the value by the number of years 
+            #to determine # of year for each data point
+              #If Year_result > 0 then number of years = 1
+              # If Year_results = 0, then the # years = final number in Duration (e.g. 2004-8 where these data represent 8 years)]
+          #Or does the denominator cancel out the year difference (3 years/3 years)?
+        
+        
+        #Data point representing multiple years
+        #Add column duration.yr 
+        df <- df %>%
+                mutate(duration.yr = sub('.*-', '', df$Duration)) 
+           
+         df$duration.yr <- as.numeric(df$duration.yr)
+      
+         
+      #Sort this out so that we get one column with either 1 or the number of years for the 
+         df <- df %>%
+              mutate(per_change_yr = if_else(Year_result < 1, duration.yr, 1))
+        #Want to create multiple rows of the same result rather than multiply by this number....!
+        
+        
+        df <- df %>% 
+          uncount(per_change_yr)
+        
+        
+        
+          
+
 ####Replace group_finelevel with a more descriptive description
     df <- df %>%
                         mutate(
@@ -1048,8 +1078,9 @@ df_order <- df_results %>%
              mutate(Cover_crop_diversity2 =factor( Cover_crop_diversity,levels=diversity_order))
 
    levels(df_order2$Cover_crop_diversity2)
-   
-##Monoculture Groupings ####
+   colnames(df_order2)
+
+   ##Monoculture Groupings ####
    
 ####Add broad groupings of monocultured cover crops
    # Mismatches for descriptions of rotated monocultures of cover crops
@@ -1075,49 +1106,61 @@ df_order <- df_results %>%
    
            
 ######Review: Cover crop####
+   
+   #Make sure duplicate rows are included with other summary tables... First one is complete.
+   
   ####Group_RV: Soil####
         df_soil <- df_order2 %>%
                     filter (Group_RV == "Soil")
+   colnames(df_soil)
    
-   levels(as.factor(cc_soil_summary$Cover_crop_diversity2))
-         
-        cc_soil_summary <- df_soil %>%
+  
+      cc_soil_summary <- df_soil %>%
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+                mutate(Group_RV = "Soil")
+       
         
+         levels(as.factor(cc_soil_summary$Cover_crop_diversity2))     
+        
+    
+       
  #Explore data distribution
    #look by Response_var
        
 qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
    outliers <- filter(df_soil, per_change > 100)
+   
         
-            write.csv(cc_soil_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Soil_Summary.csv")
+    write.csv(cc_soil_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Soil_Summary.csv")
 
         
         
   ####Group_RV: Pest Regulation####
         df_pest <- df_order2 %>%
                     filter (Group_RV == "Pest Regulation")      
-        levels(cc_pest_summary$Cover_crop_diversity2)
+        
        
-        cc_pest_summary <- df_pest[!is.na(df_pest$Cover_crop_diversity2),] %>%
+        cc_pest_summary <- df_pest[!is.na(df_pest$per_change > 1000),] %>%
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+                mutate(Group_RV = "Pest Regulation")
+        
         levels(df_pest$Cover_crop_diversity2)
      
         #Explore data distribution
    #look by Response_var
-  cc_pest_summary2 <- cc_pest_summary %>%
-                    filter(!is.na(per_change > 1000))
+  #cc_pest_summary2 <- cc_pest_summary %>%
+    #                filter(!is.na(per_change > 1000))
                     
   
 qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-      outliers <- filter(df_pest, per_change > 100)
+      outliers <- filter(df_pest, per_change > 500)
         
-         write.csv(cc_pest_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
+         write.csv(cc_pest_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
 
         
         
@@ -1129,14 +1172,15 @@ qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colou
         cc_yield_summary <- df_yield %>%
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+                mutate(Group_RV = "Crop Production")
        
         qplot(Response_var, per_change, data=df_yield,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
         outliers <- filter(df_yield, per_change > 100)
   
          
-        write.csv(cc_yield_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Yield_Summary.csv")
+        write.csv(cc_yield_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Yield_Summary.csv")
    
                     
   ####Group_RV: Water####
@@ -1147,15 +1191,24 @@ qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colou
         cc_water_summary <- df_water %>%
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+                summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+                mutate(Group_RV = "Water")
         
         
         qplot(Response_var, per_change, data=df_water,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
         outliers <- filter(df_water, per_change > 100)
   
-        write.csv(cc_water_summary, file = "C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Water_Summary.csv")
+        write.csv(cc_water_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Water_Summary.csv")
          
         
+  ####Join Cover Crop Summary results back into one file ####
+        CC_summary_all <- cc_soil_summary %>%
+                         full_join(cc_pest_summary) %>%
+                        full_join(cc_yield_summary) %>%
+                        full_join(cc_water_summary)
+        
+        write.csv(CC_summary_all, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CoverCrop_Summary.csv")
+
 
    

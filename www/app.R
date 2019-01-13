@@ -1,27 +1,20 @@
 # -----------------------------------------
 #Midwestern agriculture synthesis Shiny app
 # -----------------------------------------
+# Managing Soil Carbon - SNAPP Working Group
 
-setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis")
-getwd()
 
-library("shiny", lib.loc="~/R/win-library/3.5")      # for making Shiny app
-library("dplyr", lib.loc="~/R/win-library/3.5")      # for sorting and summarizing data
-library("readxl",lib.loc="~/R/win-library/3.5")     # for importing dataframe
-library("ggplot2", lib.loc="~/R/win-library/3.5")    # for plotting data
-library("colorRamps", lib.loc="~/R/win-library/3.5") # for colorschemes in plots
-library("colorspace", lib.loc="~/R/win-library/3.5") # for colorschemes in plots
+library("shiny")      # for making Shiny app
+library("dplyr")      # for sorting and summarizing data
+library("readxl")     # for importing dataframe
+library("ggplot2")    # for plotting data
 
+setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data")
 
 #import data -> summary files
-cc_yield_summary <- read.csv(file = "CoverCrop_Yield_Summary.csv", header=TRUE, row.names = "X")
-cc_soil_summary <- read.csv(file = "CoverCrop_Soil_Summary.csv", header=TRUE, row.names = "X")
-cc_pest_summary <- read.csv(file = "CoverCrop_Pest_Summary.csv", header=TRUE, row.names = "X")
-cc_water_summary <- read.csv(file = "CoverCrop_Water_Summary.csv", header=TRUE, row.names = "X")
+summary_all <- read.csv("./CoverCrop_Summary.csv", header=TRUE, row.names = "X")
  
    
-    ###Figure for Cover Crop Review: Soils####
-    #df <-   cc_soil_summary
 
 
   #user interface
@@ -29,18 +22,12 @@ ui <-  fluidPage(
   
 titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
       sidebarPanel( 
-        radioButtons(inputId = "MgmtPractice", label = "Select 1 Management Practice", 
-          choices = list("Cover Cropping" ,
-                         "Soil Fertility", 
-                         "Pest Contro", 
-                         "Tillage"),
+        radioButtons(inputId = "MgmtPractice", label = "Management Practice", 
+          choices = unique(CC_summary_all$Review), #will be expanded as review dataframes are populated
           selected = "Cover Cropping")),
 
-        radioButtons(inputId = "RV", label = "Select 1 Agro-Environmental Response (Infield)",
-          choices = c( "Crop Production",
-                       "Pest Regulation", 
-                       "Soils", 
-                       "Water Movement"), 
+        radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
+          choices = unique(CC_summary_all$Group_RV),
           selected = "Crop Production"),
     
 
@@ -49,61 +36,41 @@ titlePanel('Synthesis of the trade-offs associated with Best Management Practice
 )
   
   mainPanel(
+        #textOutput(outputId ="description_of_selection"),
         plotOutput(outputId = "forestplot")
-        #textOutput(outputId ="Mgmt_RV")
+        
         )
 
 
-
-  
-  #df <- case_when(
-   # input$MgmtPractice == "Cover Cropping" & input$RV  == "Crop Production" ~ cc_yield_summary,
-  #  input$MgmtPractice == "Cover Cropping" & input$RV  == "Pest Regulation"~ cc_pest_summary,
-   # input$MgmtPractice == "Cover Cropping" & input$RV  == "Soils" ~ cc_soil_summary,
-    #input$MgmtPractice == "Cover Cropping" & input$RV  == "Water Movement" ~ cc_water_summary
-  #)
-  
-    
-  
 
 ####server instructions####
 #build plot in server function
 
 server <- function(input, output) { 
-       #df <- eventReactive(input$update,{
-        #  if_else(input$RV  == "Crop Production",cc_yield_summary,
-        #if_else(input$RV  == "Pest Regulation",cc_pest_summary,
-        #if_else(input$RV  == "Soils", cc_soil_summary,
-        #if_else(input$RV  == "Water Movement", cc_water_summary, NULL)
-        #)))})
-           
-       df <- eventReactive(input$update,{ #merge datasets and then filter based on RVs
-            if (input$RV %in% "Crop Production") {
-                dataset1 <- cc_yield_summary
-            if (input$RV %in% "Pest Regulation") {
-              dataset1 <- cc_pest_summary
-            if (input$RV %in% "Soils") {
-              dataset1 <- cc_soil_summary
-            }
-              return(dataset1)
-            }
-            }})
-                
-       
-           #data files to access from RV choices with cover cropping mangement practice
+      
+  df <- eventReactive(input$update,{ #set action button to initiate changes in the figures displayed
+          
+    #filter dataset to display selected review and response variables
+          summary_all %>%
+            filter(Review == input$MgmtPractice) %>%
+            filter(Group_RV == input$RV)
+          }) 
+   
+           #build figure based on selected data
         output$forestplot <- renderPlot({
-          
-          
-           ggplot(df(), aes(group_metric, mean_per_change, ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change)) +
-                  geom_pointrange() +
-                  geom_errorbar(aes(ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change, width=.2)) +
-                  geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
-                  coord_flip() + # flip coordinates (puts labels on y axis)
-                  #labs(title ="Cover Crop Review", subtitle = "Soils", x = "", y = "percent difference (%)") + 
-                  theme_bw() +
-                  geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
-                  facet_grid(main_group ~ .,scales = "free", space = "free") +
-                  theme(strip.text.y = element_text(angle = 0))
+            
+            
+          ggplot(df(), aes(group_metric, mean_per_change, ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change)) +
+            geom_pointrange() +
+            geom_errorbar(aes(ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change, width=.1)) +
+            geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
+            coord_flip() + # flip coordinates (puts labels on y axis)
+            labs(title =input$MgmtPractice, subtitle = input$RV, x = "", y = "percent difference between control and treatment (%)") + 
+            #scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +        
+            theme_bw() +
+            geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
+            facet_grid(main_group ~., scales = "free", space = "free") +
+            theme(strip.text.y = element_text(angle = 0))
           
         })
 }
@@ -145,3 +112,33 @@ shinyApp(ui = ui, server = server)
 
 #need to set each grouping name to each new datafile
 #I think you link each list option to the different data sets
+
+#df <- eventReactive(input$update,{
+#  if_else(input$RV  == "Crop Production",cc_yield_summary,
+#if_else(input$RV  == "Pest Regulation",cc_pest_summary,
+#if_else(input$RV  == "Soils", cc_soil_summary,
+#if_else(input$RV  == "Water Movement", cc_water_summary, NULL)
+#)))})
+
+#df <- eventReactive(input$update,{ #merge datasets and then filter based on RVs
+#    if (input$RV %in% "Crop Production") {
+#       dataset1 <- cc_yield_summary
+#  if (input$RV %in% "Pest Regulation") {
+#   dataset1 <- cc_pest_summary
+#if (input$RV %in% "Soils") {
+# dataset1 <- cc_soil_summary
+#}
+#  return(dataset1)
+#}
+#}})
+
+#ggplot(df(), aes(group_metric, mean_per_change, ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change)) +
+ # geom_pointrange() +
+  #geom_errorbar(aes(ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change, width=.2)) +
+  #geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
+  #coord_flip() + # flip coordinates (puts labels on y axis)
+  #theme_bw() +
+  #geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
+  #facet_grid(main_group ~ .,scales = "free", space = "free") +
+  #theme(strip.text.y = element_text(angle = 0))
+

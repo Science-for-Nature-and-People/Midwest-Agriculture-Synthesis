@@ -8,14 +8,14 @@ library("stringr", lib.loc="~/R/win-library/3.5")
 library("stringi", lib.loc="~/R/win-library/3.5")
 library("forcats", lib.loc="~/R/win-library/3.5")
 
-setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
+setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/")
 
 #import data
-covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv", header=TRUE, row.names = "X")
-  covercrops_refexp <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
-    covercrops_cashcrop <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
-      covercrops_trtmt <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Trt.csv", header=TRUE, row.names = "X")
-        covercrops_results <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Results.csv", header=TRUE, row.names = "X")
+covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
+  covercrops_refexp <- read.csv("CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
+    covercrops_cashcrop <- read.csv("CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
+      covercrops_trtmt <- read.csv("CoverCrop_Trt.csv", header=TRUE, row.names = "X")
+        covercrops_results <- read.csv("CoverCrop_Results.csv", header=TRUE, row.names = "X")
       
         ###NOTE: Use Paper_id list to filter papers for synthesis writing
         
@@ -26,7 +26,7 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
           filter(covercrops,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
         df_results <-
           filter(covercrops_results,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
-        
+       
         
         #df <- filter(monocultures, !(Trt_id1>0)) #set dataframe to work with - only using comparisions to control (0)
         #df <- filter(mixtures, !(Trt_id1>0)) #set dataframe to work with - only using comparisions to control (0)
@@ -269,28 +269,47 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
           )
         unique(df2$intro)
         
+        df_intro <- df2 %>%
+          select(Paper_id, intro) %>%
+          group_by(Paper_id) %>%
+          summarise(introduction = paste(unique(intro), collapse = " "))
+        
         
         
         
         ######Results#####
         #Continue adding results (short & long) to dataframe.
+        df_results2 <- df_results %>%
+                      select(Paper_id:Loc_multi_results, Group_finelevel, Response_var,Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description , Reviewers_results_short, Reviewers_results_long) %>%
+                      mutate(results_short = str_c("They found ", {df_results$Reviewers_results_short}, " "))
+                      
+        df_results_short <- df_results2 %>%
+            group_by(Paper_id, Year_result, Response_var, Group_finelevel, Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description) %>%
+          distinct(results_short)
         
-        results_abbrev <-
-          str_c("They found", {
-            df$Reviewers_results_short
-          }, {
-            df$Reviewers_results_long
-          }, sep = " ")
-        unique(results_abbrev)
+        df_results_long <- df_results2 %>%
+          group_by(Paper_id, Year_result, Response_var, Group_finelevel, Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description ) %>%
+          distinct(Reviewers_results_long)
+        
+        
         #need abridged dataframe for each unique paper to synthesize across
         
+        results_summary <- left_join(df_results_short, df_results_long)
         
         
         
+        #import methods and merge with intro and results
+        CC_methods_summary <- read.csv("CC_methods_summary.csv", header=TRUE, row.names = "X")
         
         
+        #Join and export full summary table for Cover Crop Review ###############
+        intro_results_summary <- left_join(df_intro, results_summary)
+        CC_review_summary <- left_join(intro_results_summary, CC_methods_summary)
         
+        CC_review_summary <- CC_review_summary %>%
+                              filter(Group_finelevel != "none")
         
+        write.csv(CC_review_summary, file = "CC_report_summary.csv")
         
         
         ## Experiments with Cover crop mixtures

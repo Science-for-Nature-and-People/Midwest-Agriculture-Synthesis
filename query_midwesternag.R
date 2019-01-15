@@ -1111,7 +1111,8 @@ df_order <- df_results %>%
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
-                mutate(Group_RV = "Soil")
+                mutate(Group_RV = "Soil") %>%
+                mutate(Review = "Cover Cropping")
        
         
          levels(as.factor(cc_soil_summary$Cover_crop_diversity2))     
@@ -1139,7 +1140,8 @@ qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity2) + t
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
-                mutate(Group_RV = "Pest Regulation")
+                mutate(Group_RV = "Pest Regulation") %>%
+                mutate(Review = "Cover Cropping")
         
         levels(df_pest$Cover_crop_diversity2)
      
@@ -1166,7 +1168,8 @@ qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 2000,],  colou
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
-                mutate(Group_RV = "Crop Production")
+                mutate(Group_RV = "Crop Production") %>%
+                mutate(Review = "Cover Cropping")
        
         qplot(Response_var, per_change, data=df_yield,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
         
@@ -1185,7 +1188,8 @@ qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 2000,],  colou
                 select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
                 group_by(main_group, group_metric, Cover_crop_diversity2) %>%
                 summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
-                mutate(Group_RV = "Water")
+                mutate(Group_RV = "Water") %>%
+                mutate(Review = "Cover Cropping")
         
         
         qplot(Response_var, per_change, data=df_water,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)

@@ -1,55 +1,26 @@
   ##METHODS for Cover Crop Review#####
     #working with strings
 
-library("dplyr", lib.loc="~/R/win-library/3.4")
-library("readxl", lib.loc="~/R/win-library/3.4")
-library("tidyverse", lib.loc="~/R/win-library/3.4")
-library("stringr", lib.loc="~/R/win-library/3.4")
-library("stringi", lib.loc="~/R/win-library/3.4")
-library("forcats", lib.loc="~/R/win-library/3.4")
+library("dplyr", lib.loc="~/R/win-library/3.5")
+library("readxl", lib.loc="~/R/win-library/3.5")
+library("tidyverse", lib.loc="~/R/win-library/3.5")
+library("stringr", lib.loc="~/R/win-library/3.5")
+library("stringi", lib.loc="~/R/win-library/3.5")
+library("forcats", lib.loc="~/R/win-library/3.5")
 
   
-#Paste function to remove NAs
-  paste.omitna <- function(..., sep = " ", collapse = NULL, na.rm = F) {
-  if (na.rm == F)
-    paste(..., sep = sep, collapse = collapse)
-  else
-    if (na.rm == T) {
-      paste.na <- function(x, sep) {
-        x <- gsub("^\\s+|\\s+$", "", x)
-        ret <- paste(na.omit(x), collapse = sep)
-        is.na(ret) <- ret == ""
-        return(ret)
-      }
-      df <- data.frame(..., stringsAsFactors = F)
-      ret <- apply(df, 1, FUN = function(x) paste.na(x, sep))
 
-      if (is.null(collapse))
-        ret
-      else {
-        paste.na(ret, sep = collapse)
-      }
-    }
-}
-  
-  
-setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
+setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis")
 
 #import data
-covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_data.csv", header=TRUE, row.names = "X")
-  covercrops_refexp <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
-    covercrops_cashcrop <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
-      covercrops_trtmt <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Trt.csv", header=TRUE, row.names = "X")
-        covercrops_results <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_Results.csv", header=TRUE, row.names = "X")
+covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
+  covercrops_refexp <- read.csv("CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
+    covercrops_cashcrop <- read.csv("CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
+      covercrops_trtmt <- read.csv("CoverCrop_Trt.csv", header=TRUE, row.names = "X")
+        covercrops_results <- read.csv("CoverCrop_Results.csv", header=TRUE, row.names = "X")
       
-###NOTE: Use Paper_id list to filter papers for synthesis writing
-        
-
-#df <- filter(covercrops, !(Trt_id1>0)) #set dataframe to work with - only using comparisons to control (0)
- # df_results <- filter(covercrops_results, !(Trt_id1>0)) #set dataframe to work with - only using comparisons to control (0)
-              
-                 
-        #Describe cover crop treatments #####
+                
+        #Goal: Describe cover crop treatments #####
         #Merge cover crop treatments and experimental design dataframes
         df_methods <- left_join(covercrops_refexp, covercrops_trtmt)
         
@@ -202,11 +173,6 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
           na.omit(Herbicide_type)
         
         
-        
-        Herbicide_list <- Herbicide_list %>%
-          group_by(Paper_id) %>%
-          mutate(Herb_list = case_when(#is.na(Herbicide_type) ~ paste("") %>%!is.na(Herbicide_type)  ~  paste(unique(Herbicide_type), collapse =
-            ", ")))
   
   #unique(Herbicide_list$Herb_list)
   
@@ -271,13 +237,13 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
   
   
   
-  df_ccs2 <- df_ccs %>%
+  df_ccs2 <- df_ccs2 %>%
     group_by(Paper_id) %>%
     mutate(
       methods2 = case_when(
         plantinglist %in% "planted" &
           plantdate2 %in% "" &
-          is.na(CC_terminationlist) ~ paste(Paper_id, "X"),
+          is.na(CC_terminationlist) ~ paste(""),
         plantinglist %in% "planted" &
           plantdate2 %in% ""  ~ paste(
             Paper_id,
@@ -292,7 +258,7 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
           plantdate2 %in% "" ~ paste(Paper_id, "Cover crops were ", plantinglist, ".", sep = ""),
         is.na(CC_terminationlist) ~ paste(
           Paper_id,
-          "Cover crops were ",
+          " Cover crops were ",
           plantinglist,
           " ",
           plantdate2,
@@ -314,6 +280,7 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
   df_ccs2$methods3 <-
     paste(df_ccs2$Paper_id, " Plots were ", df_ccs2$plots_list, ".", sep = "")
   
+  
   #str_glue_data("{Paper_id} Plots received one of the following cover crop treatments: {Cult_seed_list}.
   # Cover crops were {plantinglist} {plantdate2} ") #and terminated with {Termination_type} on {Termination_timing}.
   #Plots were {plots_list}.")
@@ -321,6 +288,40 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
   noquote(unique(df_ccs2$methods1))
   noquote(unique(df_ccs2$methods2))
   noquote(unique(df_ccs2$methods3))
+  
+  
+  #Write complete methods statement by concatenating methods1, methods2, and methods3
+  #need to create only one statement per paper ID.
+  #remove paper Id from methods 2 & 3 after single statement is constructed.
+  
+  #Condititional statement that writes single sentence only if all columns are present
+  #then creates new dataframe with just one row for each paper ID
+  #remove blanks
+  #unique rows only
+  
+  
+  #need to consolidate unique planting dates and exclude NAs
+  
+  df_ccs2 <- df_ccs2 %>%
+    group_by(Paper_id) %>%
+    #na.omit(meth_CC_plantdate) %>%
+    mutate (methods2 = paste(unique(na.omit(methods2)), collapse = ""))
+  
+                                                                
+  
+  #Generate single dataframe with Paper Id and complete Methods Statement. 
+    #Includes one line for each unique paper.
+  method_statements <- df_ccs2 %>%
+                    select(Paper_id, methods1, methods2, methods3) %>%
+                    group_by(Paper_id) %>%
+                    mutate(methods = stri_paste(methods1, methods2, methods3, sep = " ") ) %>%
+                    select(Paper_id, methods) %>%
+                    summarise(methods = paste(unique(methods), collapse = " "))
+  unique(method_statements$methods)
+  
+  #Export final methods summary statement
+  write.csv(method_statements, file = "CC_methods_summary.csv")
+  
   
   
   #Extras
@@ -335,6 +336,4 @@ covercrops <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/CoverCrop_dat
   #add CC Treatment list to main data frame
   #df_ccs <- left_join(df_ccs, df_ccs2, by="Paper_id")
   
-  
-  
-  
+ 

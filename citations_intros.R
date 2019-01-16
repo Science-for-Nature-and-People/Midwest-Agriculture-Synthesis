@@ -293,15 +293,15 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
         ######Results#####
         #Continue adding results (short & long) to dataframe.
         df_results2 <- df_results %>%
-                      select(Paper_id:Loc_multi_results, Group_finelevel, Response_var,Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description , Reviewers_results_short, Reviewers_results_long) %>%
+                      select(Paper_id:Loc_multi_results, Group_RV, group_metric, main_group, Group_finelevel, Response_var,Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description , Reviewers_results_short, Reviewers_results_long) %>%
                       mutate(results_short = str_c("They found ", {df_results$Reviewers_results_short}, " "))
                       
         df_results_short <- df_results2 %>%
-            group_by(Paper_id, Year_result, Response_var, Group_finelevel, Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description) %>%
+          select(Paper_id:Loc_multi_results, Group_RV, group_metric, main_group, Group_finelevel, Response_var,Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description , Reviewers_results_short, Reviewers_results_long) %>%
           distinct(results_short)
         
         df_results_long <- df_results2 %>%
-          group_by(Paper_id, Year_result, Response_var, Group_finelevel, Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description ) %>%
+          select(Paper_id:Loc_multi_results, Group_RV, group_metric, main_group, Group_finelevel, Response_var,Trt_id1, Trt1_interaction, Trt1_interaction2 , Trt_id1description ,Trt_id2, Trt2_interaction, Trt2_interaction2 , Trt_id2description , Reviewers_results_short, Reviewers_results_long) %>%
           distinct(Reviewers_results_long)
         
         

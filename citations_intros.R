@@ -45,8 +45,21 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
             "{Paper_id} {Authors} ({PubYear}). {Title}. {Journal}, {Volume_issue}: {Pages}. DOI: {DOI}"
           )
         
+        df_refexp$citation_short <- df_refexp %>%
+            str_glue_data("{Authors_abbrev} ({PubYear})")
+        
         #print list of citations
         noquote(unique(df_refexp$citation))
+        
+        df_citation <- df_refexp %>%
+          group_by(Paper_id) %>%
+          distinct(citation)
+        
+        df_citation_short <- df_refexp %>%
+          group_by(Paper_id) %>%
+          distinct(citation_short)
+        
+      CC_citation_summary <- left_join(df_citation, df_citation_short)
         
         
         #df$citation <- df %>%
@@ -304,10 +317,12 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
         
         #Join and export full summary table for Cover Crop Review ###############
         intro_results_summary <- left_join(df_intro, results_summary)
-        CC_review_summary <- left_join(intro_results_summary, CC_methods_summary)
+        CC_review_summary1 <- left_join(intro_results_summary, CC_methods_summary)
+        CC_review_summary <- left_join(CC_review_summary1, CC_citation_summary)
         
         CC_review_summary <- CC_review_summary %>%
                               filter(Group_finelevel != "none")
+        
         
         write.csv(CC_review_summary, file = "CC_report_summary.csv")
         
@@ -331,6 +346,4 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
         )
         
         
-        Soil_type , Annual_precip,
-        #Trtmt_levels:Trtmt_splitB_levels,
         

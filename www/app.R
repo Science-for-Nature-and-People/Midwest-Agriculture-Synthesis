@@ -9,39 +9,45 @@ library("dplyr")      # for sorting and summarizing data
 library("readxl")     # for importing dataframe
 library("ggplot2")    # for plotting data
 
-setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data")
+setwd(".")
+datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data/" 
 
 #import data -> summary files
-summary_all <- read.csv("./CoverCrop_Summary.csv", header=TRUE, row.names = "X")
+CC_summary_all <- read.csv(file.path(datapath, "CoverCrop_Summary.csv"), header=TRUE, row.names = "X")
  
-   
 
+###start of management button test (safe to delete this chunk)###
+  #all of our data has cover cropping in this column. I make half of the data (randomly chosen) a different entry to see if the button works.
+levels(CC_summary_all$Review) <- c(levels(CC_summary_all$Review), "test")
+CC_summary_all$Review[sample(x = nrow(CC_summary_all), size = nrow(CC_summary_all)/2)] <- "test"
+###end of test###
 
   #user interface
 ui <-  fluidPage( 
   
 titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
-      sidebarPanel( 
+
+sidebarLayout(
+  sidebarPanel( 
         radioButtons(inputId = "MgmtPractice", label = "Management Practice", 
           choices = unique(CC_summary_all$Review), #will be expanded as review dataframes are populated
-          selected = "Cover Cropping")),
+          selected = "Cover Cropping"),
 
         radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
           choices = unique(CC_summary_all$Group_RV),
           selected = "Crop Production"),
     
-
-        actionButton(inputId = "update", label = "Update the Figure")
+          actionButton(inputId = "update", label = "Update the Figure")
+        ),
           
-)
-  
+
   mainPanel(
         #textOutput(outputId ="description_of_selection"),
-        plotOutput(outputId = "forestplot")
-        
-        )
+            plotOutput(outputId = "forestplot")
+            )
 
-
+  )    
+)
 
 ####server instructions####
 #build plot in server function
@@ -51,21 +57,28 @@ server <- function(input, output) {
   df <- eventReactive(input$update,{ #set action button to initiate changes in the figures displayed
           
     #filter dataset to display selected review and response variables
-          summary_all %>%
+          CC_summary_all %>%
             filter(Review == input$MgmtPractice) %>%
             filter(Group_RV == input$RV)
           }) 
    
            #build figure based on selected data
+  
         output$forestplot <- renderPlot({
             
-            
-          ggplot(df(), aes(group_metric, mean_per_change, ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change)) +
+          ggplot(df(), aes(group_metric, mean_per_change, 
+                           ymin = mean_per_change-sem_per_change, 
+                           ymax = mean_per_change +sem_per_change)) +
             geom_pointrange() +
-            geom_errorbar(aes(ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change, width=.1)) +
+            geom_errorbar(aes(ymin = mean_per_change-sem_per_change, 
+                              ymax = mean_per_change +sem_per_change, 
+                              width=.1)) +
             geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
             coord_flip() + # flip coordinates (puts labels on y axis)
-            labs(title =input$MgmtPractice, subtitle = input$RV, x = "", y = "percent difference between control and treatment (%)") + 
+            labs(title =input$MgmtPractice, 
+                 subtitle = input$RV, 
+                 x = "",
+                 y = "percent difference between control and treatment (%)") + 
             #scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +        
             theme_bw() +
             geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
@@ -73,6 +86,8 @@ server <- function(input, output) {
             theme(strip.text.y = element_text(angle = 0))
           
         })
+      
+        
 }
       
 

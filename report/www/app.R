@@ -85,7 +85,7 @@ server <- function(input, output) {
             filter(Response_Group == input$RVGroup) %>%
             filter(Measured_Responses == input$RV) %>%
           #add specific response group variable
-            select(Original_Paper_ID, Synopsis)
+            select(Cover_Crop_Composition, Synopsis)
           }) 
   
   

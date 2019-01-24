@@ -8,6 +8,7 @@ library("shiny")      # for making Shiny app
 library("dplyr")      # for sorting and summarizing data
 library("readxl")     # for importing dataframe
 library("ggplot2")    # for plotting data
+library(shinyjs)
 
 setwd(".")
 datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data/" 
@@ -24,7 +25,7 @@ CC_summary_all$Review[sample(x = nrow(CC_summary_all), size = nrow(CC_summary_al
 
   #user interface
 ui <-  fluidPage( 
-  
+useShinyjs(), #this lets us use the shinyjs package. This is required just for the "click" function below, which "clicks" the update button to initialize a plot at the start
 titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
 
 sidebarLayout(
@@ -86,7 +87,11 @@ server <- function(input, output) {
             theme(strip.text.y = element_text(angle = 0))
           
         })
-      
+        observe({
+          click("update")  #this chunk will click the update button at the very start, so that our app starts with a plot.
+                           # if you want to change the default plot, then change the default "selected" values above
+          invalidateLater(3000) #invalidateLater just makes it so that the update button is only pressed once.
+        })
         
 }
       

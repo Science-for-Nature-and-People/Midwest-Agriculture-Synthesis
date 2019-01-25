@@ -3,6 +3,8 @@
 
 library(dplyr)
 library(tidyverse)
+library(stringr) #string detection/ working with strings
+library(plotrix) # for standard error calculations
 
 
 #This file:
@@ -13,7 +15,10 @@ library(tidyverse)
 
 
 #import data
-Results <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review/PestMgmt_ResultsGrouped.csv")
+setwd(".")
+datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
+
+Results <- read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_ResultsGrouped.csv"))
 
 
 #data set should include all treatment comparisons with the control (absence of the treatment)
@@ -25,7 +30,7 @@ Results <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt
           #list of 'Group_finelevel' to exclude 
             levels(Results$Group_finelevel)
             
-            exclude <- c("seedI_seedI",
+            remove_these <- c("seedI_seedI",
                          "seedIF_seedF",
                          "seedIF_seedIF",
                          "untreated_seedunknown",
@@ -42,7 +47,7 @@ Results <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt
                          "seedFfoliarI_seedIFfoliarI")
             
             
-            df <- filter(Results, Group_finelevel != exclude, Stat_type == "mean", !is.na(Trt_id1value), !is.na(Trt_id2value) )
+            df <- filter(Results, !(Group_finelevel %in% remove_these), Stat_type == "mean", !is.na(Trt_id1value), !is.na(Trt_id2value) )
             
   
 #####Cover Crop Review Filter######################################################################
@@ -120,26 +125,26 @@ df_order <- df_results %>%
 
 
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
-df$Trt_id1value <- as.numeric(df$Trt_id1value)
-df$Trt_id2value <- as.numeric(df$Trt_id2value)
+df$Trt_id1value <- as.integer(as.character(df$Trt_id1value))
+df$Trt_id2value <- as.integer(as.character(df$Trt_id2value))
 
 #df <- df %>%
  #      mutate(per_change = ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)
 #df$per_change <- as.numeric(df$per_change)
 
 df <- df %>%
-  mutate( Trt_id1value_alt = if_else(Trt_id1value == 0, 0.000000001, Trt_id1value)) %>%      
-  mutate(per_change = ((Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt)*100) %>%
-  mutate(abundance_change = (if_else(main_group == "Invertebrates", (Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt, 0)))
+  mutate(per_change = if_else(Trt_id1value == 0,  0, ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)) %>%      
+  #mutate(per_change = ((Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt)*100) %>%
+  mutate(abundance_change = (if_else(str_detect(main_group,"Invertebrates") &  (str_detect(group_metric, "#") | str_detect(Response_var_units, "# | number")), 
+                                     (Trt_id2value - Trt_id1value), NULL)))
+
 
 #Use number change for changes in Invertebrate Pest and Predator populations
  levels(df$group_metric)
 
-df$per_change <- as.numeric(df$per_change)
-
-
-#df$per_change2 <- as.numeric(if_else(df$per_change == 0, 0.000001, df$per_change ))
-df$per_change <- as.numeric(if_else(df$per_change == Inf, 0.000001, df$per_change ))
+#Change types
+df$per_change <- as.numeric(as.character(df$per_change))
+df$abundance_change <- as.numeric(as.character(df$abundance_change))
 df$Paper_id <- as.factor(df$Paper_id)
 df$main_group <- as.factor(df$main_group)
 
@@ -192,6 +197,9 @@ df <- df %>%
       Group_finelevel %in% "untreated_seedIFN" ~ "Seed"
       
     ))
+
+#test for missing groupings
+#missing <- df[df$Legend_1 == NULL,]
       
       
       df <- df %>%
@@ -216,6 +224,8 @@ df <- df %>%
             Group_finelevel %in% "untreated_seedIF" ~ "Insecticide-Fungicide",
             Group_finelevel %in% "untreated_seedIFN" ~ "Insecticide-Fungicide-Nematicide"
             ))
+      #test for missing groupings
+      #missing <- df[df$Legend_2 == NULL,]
       
       
       df <- df %>%
@@ -227,22 +237,10 @@ df <- df %>%
             Group_finelevel %in% "untreated_bandI" ~ "In-Row",
             Group_finelevel %in% "untreated_broadcastI" ~ "Broadcast"
             
-            #TRUE ~ as.character(Group_finelevel)
-            
-            #untreated to foliar
-            #Group_finelevel %in% "untreated_foliarI" ~ 'x',
-            #Group_finelevel %in% "untreated_foliarIF" ~ NA,
-            
-            #untreated to seed
-            #Group_finelevel %in% "untreated_seedF" ~ NA,
-            #Group_finelevel %in% "untreated_seedFbio" ~ NA,
-            #Group_finelevel %in% "untreated_seedfoliarI" ~ NA,
-            #Group_finelevel %in% "untreated_seedI" ~ NA,
-            #Group_finelevel %in% "untreated_seedIF" ~ NA,
-            #Group_finelevel %in% "untreated_seedIFN" ~ NA
-            
           ))
       
+      #test for missing groupings
+      #missing <- df[df$Legend_3 == NULL,]
       
 
 
@@ -270,7 +268,7 @@ colnames(df_order2)
 
 ##Monoculture Groupings ####
 
-####Add broad groupings of monocultured cover crops
+####Add broad groupings of monocultured cover crops####
 # Mismatches for descriptions of rotated monocultures of cover crops
 #levels(df$Trt_id2name)
 #str_view(df$Trt_id2name, "rye")
@@ -293,113 +291,159 @@ colnames(df_order2)
 #   rm(df2)
 
 
-######Review: Cover crop####
+######Summaries for each Grouping: Soil, Crop Production, Water, Pest Regulation####
 
 #Make sure duplicate rows are included with other summary tables... First one is complete.
 
 ####Group_RV: Soil####
-df_soil <- df_order2 %>%
+df_soil <- df %>%
   filter (Group_RV == "Soil")
 colnames(df_soil)
 
 
-cc_soil_summary <- df_soil %>%
-  select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
-  group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-  summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+soil_summary <- df_soil %>%
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id))
+  
+soil_summary2 <- df_soil %>%
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
   mutate(Group_RV = "Soil") %>%
-  mutate(Review = "Cover Cropping")
+  mutate(Review = "Early Season Pest Management")
 
-
-levels(as.factor(cc_soil_summary$Cover_crop_diversity2))     
-
+soil_summary <- left_join(soil_summary, soil_summary2)
 
 
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_soil,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 outliers <- filter(df_soil, per_change > 100)
 
 
-write.csv(cc_soil_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Soil_Summary.csv")
+write.csv(soil_summary, file = "PestMgmt Review/PestMgmt_Soil_Summary.csv")
 
 
 
 ####Group_RV: Pest Regulation####
-df_pest <- df_order2 %>%
+df_pest <- df %>%
   filter (Group_RV == "Pest Regulation")      
 
 
-cc_pest_summary <- df_pest[df_pest$per_change < 2000,] %>%
-  select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
-  group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-  summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
-  mutate(Group_RV = "Pest Regulation") %>%
-  mutate(Review = "Cover Cropping")
+pest_summary <- df_pest %>% 
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_per_change = mean(per_change, na.rm = TRUE), 
+            sem_per_change = std.error(per_change, na.rm = TRUE),
+            mean_abundance_change = mean(abundance_change, na.rm = TRUE), 
+            sem_abundance_change = std.error(abundance_change, na.rm = TRUE),
+            num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+            mutate(Group_RV = "Pest Regulation") %>%
+            mutate(Review = "Early Season Pest Management")
 
-levels(df_pest$Cover_crop_diversity2)
+
+pest_summary2 <- df_pest %>%
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+  mutate(Group_RV = "Pest Regulation") %>%
+  mutate(Review = "Early Season Pest Management")
+
+pest_summary <- left_join(pest_summary, pest_summary2)
+
+summary(df_pest$abundance_change)
 
 #Explore data distribution
 #look by Response_var
 #cc_pest_summary2 <- cc_pest_summary %>%
 #                filter(!is.na(per_change > 1000))
+test <- df_pest[!is.na(df_pest$abundance_change),]
 
-qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 500,],  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_pest[is.na(df_pest$abundance_change) ,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 2000,],  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, abundance_change, data=df_pest[!is.na(df_pest$abundance_change),],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 outliers <- filter(df_pest, per_change > 2000)
 
-write.csv(cc_pest_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Pest_Summary.csv")
+
+write.csv(pest_summary, file = "PestMgmt Review/PestMgmt_Pest_Summary.csv")
 
 
 
 ####Group_RV: Crop Production####
-df_yield <- df_order2 %>%
+df_yield <- df %>%
   filter (Group_RV == "Crop Production")      
 
-
-cc_yield_summary <- df_yield %>%
-  select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
-  group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-  summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+yield_summary <- df_yield %>%
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_per_change = mean(per_change, na.rm = TRUE), 
+            sem_per_change = std.error(per_change, na.rm = TRUE),
+            mean_abundance_change = mean(abundance_change, na.rm = TRUE), 
+            sem_abundance_change = std.error(abundance_change, na.rm = TRUE),
+            num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
   mutate(Group_RV = "Crop Production") %>%
-  mutate(Review = "Cover Cropping")
+  mutate(Review = "Early Season Pest Management")
 
-qplot(Response_var, per_change, data=df_yield,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+
+yield_summary2 <- df_yield %>%
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+  mutate(Group_RV = "Crop Production") %>%
+  mutate(Review = "Early Season Pest Management")
+
+yield_summary <- left_join(yield_summary, yield_summary2)
+
+
+qplot(Response_var, per_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 outliers <- filter(df_yield, per_change > 100)
 
 
-write.csv(cc_yield_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Yield_Summary.csv")
-
+write.csv(yield_summary, file = "PestMgmt Review/PestMgmt_Yield_Summary.csv")
+write.csv(outliers, file = "PestMgmt Review/PestMgmt_Yield Outliers.csv")
 
 ####Group_RV: Water####
-df_water <- df_order2 %>%
+df_water <- df %>%
   filter (Group_RV == "Water")      
 
 
-cc_water_summary <- df_water %>%
-  select(Paper_id, Group_RV, main_group, group_metric, Group_finelevel, Cover_crop_diversity2, per_change) %>%
-  group_by(main_group, group_metric, Cover_crop_diversity2) %>%
-  summarise(mean_per_change = mean(per_change, na.rm = TRUE), sem_per_change = std.error(per_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+water_summary <- df_water %>%
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_per_change = mean(per_change, na.rm = TRUE), 
+            sem_per_change = std.error(per_change, na.rm = TRUE),
+            mean_abundance_change = mean(abundance_change, na.rm = TRUE), 
+            sem_abundance_change = std.error(abundance_change, na.rm = TRUE),
+            num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
   mutate(Group_RV = "Water") %>%
-  mutate(Review = "Cover Cropping")
+  mutate(Review = "Early Season Pest Management")
 
 
-qplot(Response_var, per_change, data=df_water,  colour=Cover_crop_diversity2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+water_summary2 <- df_water %>%
+  select(Paper_id, Group_RV, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  group_by(main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+  mutate(Group_RV = "Water") %>%
+  mutate(Review = "Early Season Pest Management")
+
+water_summary <- left_join(water_summary, water_summary2)
+
+qplot(Response_var, per_change, data=df_water,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 outliers <- filter(df_water, per_change > 100)
 
-write.csv(cc_water_summary, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Water_Summary.csv")
+write.csv(water_summary, file = "PestMgmt Review/PestMgmt_Water_Summary.csv")
 
 
-####Join Cover Crop Summary results back into one file ####
-CC_summary_all <- cc_soil_summary %>%
-  full_join(cc_pest_summary) %>%
-  full_join(cc_yield_summary) %>%
-  full_join(cc_water_summary)
+####Join Summary results back into one file ####
+summary_all <- soil_summary %>%
+    full_join(pest_summary) %>%
+    full_join(yield_summary) %>%
+    full_join(water_summary)
 
-write.csv(CC_summary_all, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CoverCrop_Summary.csv")
+write.csv(summary_all, file = "PestMgmt Review/PestMgmt_FULL_Summary.csv")
 

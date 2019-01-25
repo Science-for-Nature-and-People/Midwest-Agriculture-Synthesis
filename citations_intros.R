@@ -1,39 +1,43 @@
 #####Midwestern Agriculture Synthesis#####
 #####Citations & Introduction Statements######
 
-library("dplyr", lib.loc="~/R/win-library/3.5")
-library("readxl", lib.loc="~/R/win-library/3.5")
-library("tidyverse", lib.loc="~/R/win-library/3.5")
-library("stringr", lib.loc="~/R/win-library/3.5")
-library("stringi", lib.loc="~/R/win-library/3.5")
-library("forcats", lib.loc="~/R/win-library/3.5")
+library("readxl")
+library("dplyr")
+library("stringr")
+library("stringi")
+library("tidyverse")
+library("forcats")
 
 setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/")
 
+
 #import data
-covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
-  covercrops_refexp <- read.csv("CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
-    covercrops_cashcrop <- read.csv("CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
-      covercrops_trtmt <- read.csv("CoverCrop_Trt.csv", header=TRUE, row.names = "X")
-        covercrops_results <- read.csv("CoverCrop_Results.csv", header=TRUE, row.names = "X")
+fullfile <- read_excel("PestMgmt Review/PestMgmt_Review_completefile.xlsx")
+  ref <- read.csv("PestMgmt Review/PestMgmt_Review_Reference.csv")
+    cashcrop <- read.csv("PestMgmt Review/PestMgmt_Review_CashCrop.csv")
+      trtmt <- read.csv("PestMgmt Review/PestMgmt_Review_Treatment.csv")
+        results <- read.csv("PestMgmt Review/PestMgmt_Review_Results.csv")
+          expd <- read.csv("PestMgmt Review/PestMgmt_Review_ExpD_Location.csv")
+          
+          ref_expd <- left_join(ref, expd)
       
         ###NOTE: Use Paper_id list to filter papers for synthesis writing
         
         #monocultures <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/monocultures_data.csv", header=TRUE, row.names = "X")
         #mixtures <- read.csv("C:/Users/LWA/github/midwesternag_synthesis/mixtures_data.csv", header=TRUE, row.names = "X")
         
-        df <-
-          filter(covercrops,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
-        df_results <-
-          filter(covercrops_results,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
+        #df <-
+          #filter(fullfile,!(Trt_id1 > 0)) #set dataframe to work with - only using comparisons to control (0)
+        df_results <- results %>%
+                filter(Trt_id1 < 1, Stat_type == "mean") #set dataframe to work with - only using comparisons to control (0)
        
         
         #df <- filter(monocultures, !(Trt_id1>0)) #set dataframe to work with - only using comparisions to control (0)
         #df <- filter(mixtures, !(Trt_id1>0)) #set dataframe to work with - only using comparisions to control (0)
-        df <- arrange(df, Paper_id)
+        #df <- arrange(df, Paper_id)
         df_results <- arrange(df_results, Paper_id)
-        df_refexp <- covercrops_refexp
-        df_trtmt <- covercrops_trtmt
+        df_refexp <- ref_expd
+        df_trtmt <- trtmt
         
         ###Synthesis Output################################################################################################################
         #Run this code for each metric grouping (from query script)
@@ -62,10 +66,6 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
       CC_citation_summary <- left_join(df_citation, df_citation_short)
         
         
-        #df$citation <- df %>%
-        #                   str_glue_data( "{Paper_id} {Authors} ({PubYear}). {Title}. {Journal}, {Volume_issue}: {Pages}. DOI: {DOI}")
-        #noquote(unique(df$citation))
-        
         #need to italize Journal name <- preferably italize entire column
         
         
@@ -76,12 +76,12 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
         
         ###Create conditional statement for experimental design and experimental arrangement####
         
-        Experiment_row <- df %>%
-          select(Exp_design, Exp_arrangement, Res_key, Paper_id) %>%
-          mutate(Exp_list_row = case_when(
-            !is.na(Exp_arrangement)  ~ paste(Exp_arrangement, Exp_design),!is.na(Exp_design)  ~ paste(Exp_design)
-          ))
-        unique(Experiment_row$Exp_list_row)
+        #Experiment_row <- df %>%
+         # select(Exp_design, Exp_arrangement, Res_key, Paper_id) %>%
+        #  mutate(Exp_list_row = case_when(
+         #   !is.na(Exp_arrangement)  ~ paste(Exp_arrangement, Exp_design),!is.na(Exp_design)  ~ paste(Exp_design)
+        #  ))
+        #unique(Experiment_row$Exp_list_row)
         
         
         Experiment_row <- df_refexp %>%
@@ -271,7 +271,7 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
         
         #Join RefExp with Cash crops
         df2 <-
-          left_join(df_refexp, covercrops_cashcrop)
+          left_join(df_refexp, cashcrop)
         
         
         
@@ -312,22 +312,23 @@ covercrops <- read.csv("CoverCrop_data.csv", header=TRUE, row.names = "X")
         
         
         #import methods and merge with intro and results
-        CC_methods_summary <- read.csv("CC_methods_summary.csv", header=TRUE, row.names = "X")
+        methods_summary <- read.csv("methods_summary.csv", header=TRUE, row.names = "X")
         
         
-        #Join and export full summary table for Cover Crop Review ###############
+        #Join and export full summary table for Review ###############
         intro_results_summary <- left_join(df_intro, results_summary)
-        CC_review_summary1 <- left_join(intro_results_summary, CC_methods_summary)
-        CC_review_summary <- left_join(CC_review_summary1, CC_citation_summary)
+        review_summary1 <- left_join(intro_results_summary, methods_summary)
+        review_summary <- left_join(review_summary1, citation_summary)
         
-        CC_review_summary <- CC_review_summary %>%
+        review_summary <- review_summary %>%
                               filter(Group_finelevel != "none")
         
         
-        write.csv(CC_review_summary, file = "CC_report_summary.csv")
+        write.csv(review_summary, file = "report_summary.csv")
         
         
-        ## Experiments with Cover crop mixtures
+        ####Extra unused code####
+        ##### Experiments with Cover crop mixtures####
         colnames(mix_soil_om)
         
         #create abridged table with pertinent information

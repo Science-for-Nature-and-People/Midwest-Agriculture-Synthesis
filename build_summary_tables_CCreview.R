@@ -1,25 +1,62 @@
-#Summarizes Cover Crop review for Shiny App and data display#####
+#Synthesis of Midwestern Agriculture#######################
+#Managing Soil Carbon Working Group - SNAPP, NCEAS ###############
+
+library(dplyr)
+library(tidyverse)
+
+
+#This file:
+      #Summarizes all quantitative data to be used for the Shiny App and data display#####
 
 #######################################################################################################################
 ####Filtering Data Files###############################################################
 
 
 #import data
-covercrops <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_data.csv", header=TRUE, row.names = "X")
-covercrops_refexp <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_RefExp.csv", header=TRUE, row.names = "X")
-covercrops_cashcrop <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_CashCrop.csv", header=TRUE, row.names = "X")
-covercrops_trtmt <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Trt.csv", header=TRUE, row.names = "X")
-covercrops_results <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/CoverCrop_Results.csv", header=TRUE, row.names = "X")
+Results <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review/PestMgmt_ResultsGrouped.csv")
 
-#set dataframe to work with - only using comparisons to control (0), excluded groups, and means only (remove SEMs) 
-df <- filter(covercrops_results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_type == "mean", !is.na(Trt_id1value) & !is.na(Trt_id2value)) 
 
+#data set should include all treatment comparisons with the control (absence of the treatment)
+#and only treatment means (remove SEMs)
+
+
+#######Pest Management Review Filter###################################################################
+          #inspect 'Group_finelevel' column to determine which comparisons to exclude
+          #list of 'Group_finelevel' to exclude 
+            levels(Results$Group_finelevel)
+            
+            exclude <- c("seedI_seedI",
+                         "seedIF_seedF",
+                         "seedIF_seedIF",
+                         "untreated_seedunknown",
+                         "foliarI_seedI",
+                         "seedF_foliarI",
+                         "seedIF_foliarI",
+                         "seedF_seedIFfoliarI",
+                         "seedf_seedFfoliarI",
+                         "seedF_seedFfoliarI",
+                         "seedIF_seedFfoliarI",
+                         "seedIF_seedIFfoliari",
+                         "seedIF_seedIFfoliarI",
+                         "seedF_seedIF",
+                         "seedFfoliarI_seedIFfoliarI")
+            
+            
+            df <- filter(Results, Group_finelevel != exclude, Stat_type == "mean", !is.na(Trt_id1value), !is.na(Trt_id2value) )
+            
+  
+#####Cover Crop Review Filter######################################################################
+            
+  #df <- filter(Results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_type == "mean", !is.na(Trt_id1value) & !is.na(Trt_id2value)) 
+
+            
+            
+            
+            
+#################################################################################################            
 df <- arrange(df, Paper_id)
-df_results <- arrange(covercrops_results, Paper_id)
-df_refexp <- covercrops_refexp
-df_trtmt <- covercrops_trtmt
 
-#alphabetize groups (needed for figures) #not working properly!
+#alphabetize groups (needed for figures) #not working properly!####################
 levels(as.factor(df_results$group_metric))
 group_order <- c("Aboveground growth of weed community",
                  "Ammonium (Preplant)",                          
@@ -74,21 +111,30 @@ group_order <- c("Aboveground growth of weed community",
                  "Waterhemp" ,
                  "Weed community (abundance of weeds)" )
 
-
 #library(plyr)  ## or dplyr (transform -> mutate)
 df_order <- df_results %>%
   mutate(group_metric2 = factor(group_metric,levels=group_order))
 
+#################################################################################################################
+
 
 
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
+df$Trt_id1value <- as.numeric(df$Trt_id1value)
+df$Trt_id2value <- as.numeric(df$Trt_id2value)
+
 #df <- df %>%
-#       mutate(per_change = ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)
+ #      mutate(per_change = ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)
 #df$per_change <- as.numeric(df$per_change)
 
-df <- df_order %>%
+df <- df %>%
   mutate( Trt_id1value_alt = if_else(Trt_id1value == 0, 0.000000001, Trt_id1value)) %>%      
-  mutate(per_change = ((Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt)*100)
+  mutate(per_change = ((Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt)*100) %>%
+  mutate(abundance_change = (if_else(main_group == "Invertebrates", (Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt, 0)))
+
+#Use number change for changes in Invertebrate Pest and Predator populations
+ levels(df$group_metric)
+
 df$per_change <- as.numeric(df$per_change)
 
 
@@ -109,6 +155,8 @@ df <- df %>%
 df$duration.yr <- as.numeric(df$duration.yr)
 
 #determine number of years each mean represents
+df$Year_result <- as.numeric(df$Year_result)
+
 df <- df %>%
   mutate(per_change_yr = if_else(Year_result < 1, duration.yr, 1))
 
@@ -118,8 +166,90 @@ df <- df %>%
   uncount(per_change_yr)
 
 
+####Replace group_finelevel with a more descriptive description########################
+###########Pest Management Review########################
 
-####Replace group_finelevel with a more descriptive description
+df <- df %>%
+  mutate(
+    Legend_1 = case_when(
+      
+      #untreated to soil
+      Group_finelevel %in% "untreated_soilI" ~ "Soil",
+      Group_finelevel %in% "untreated_furrowI" ~ "Soil",
+      Group_finelevel %in% "untreated_bandI" ~ "Soil",
+      Group_finelevel %in% "untreated_broadcastI" ~ "Soil",
+      
+      #untreated to foliar
+      Group_finelevel %in% "untreated_foliarI" ~ "Foliage",
+      Group_finelevel %in% "untreated_foliarIF" ~ "Foliage",
+      
+      #untreated to seed
+      Group_finelevel %in% "untreated_seedF" ~ "Seed",
+      Group_finelevel %in% "untreated_seedFbio" ~ "Seed",
+      Group_finelevel %in% "untreated_seedfoliarI" ~ "Seed & Foliage",
+      Group_finelevel %in% "untreated_seedI" ~ "Seed",
+      Group_finelevel %in% "untreated_seedIF" ~ "Seed",
+      Group_finelevel %in% "untreated_seedIFN" ~ "Seed"
+      
+    ))
+      
+      
+      df <- df %>%
+        mutate(
+          Legend_2 = case_when(  
+            
+            #untreated to soil
+            Group_finelevel %in% "untreated_soilI" ~ "Insecticide",
+            Group_finelevel %in% "untreated_furrowI" ~ "Insecticide",
+            Group_finelevel %in% "untreated_bandI" ~ "Insecticide",
+            Group_finelevel %in% "untreated_broadcastI" ~ "Insecticide",
+            
+            #untreated to foliar
+            Group_finelevel %in% "untreated_foliarI" ~ "Insecticide",
+            Group_finelevel %in% "untreated_foliarIF" ~ "Insecticide-Fungicide",
+            
+            #untreated to seed
+            Group_finelevel %in% "untreated_seedF" ~ "Fungicide",
+            Group_finelevel %in% "untreated_seedFbio" ~ "Fungicide-Biologic",
+            Group_finelevel %in% "untreated_seedfoliarI" ~ "Insecticide",
+            Group_finelevel %in% "untreated_seedI" ~ "Insecticide",
+            Group_finelevel %in% "untreated_seedIF" ~ "Insecticide-Fungicide",
+            Group_finelevel %in% "untreated_seedIFN" ~ "Insecticide-Fungicide-Nematicide"
+            ))
+      
+      
+      df <- df %>%
+        mutate(
+          Legend_3 = case_when( 
+            #untreated to soil
+            Group_finelevel %in% "untreated_soilI" ~ "Broadcast",
+            Group_finelevel %in% "untreated_furrowI" ~ "In-Furrow",
+            Group_finelevel %in% "untreated_bandI" ~ "In-Row",
+            Group_finelevel %in% "untreated_broadcastI" ~ "Broadcast"
+            
+            #TRUE ~ as.character(Group_finelevel)
+            
+            #untreated to foliar
+            #Group_finelevel %in% "untreated_foliarI" ~ 'x',
+            #Group_finelevel %in% "untreated_foliarIF" ~ NA,
+            
+            #untreated to seed
+            #Group_finelevel %in% "untreated_seedF" ~ NA,
+            #Group_finelevel %in% "untreated_seedFbio" ~ NA,
+            #Group_finelevel %in% "untreated_seedfoliarI" ~ NA,
+            #Group_finelevel %in% "untreated_seedI" ~ NA,
+            #Group_finelevel %in% "untreated_seedIF" ~ NA,
+            #Group_finelevel %in% "untreated_seedIFN" ~ NA
+            
+          ))
+      
+      
+
+
+
+
+####Replace group_finelevel with a more descriptive description######################
+###################Cover Crop Review##############
 df <- df %>%
   mutate(
     Cover_crop_diversity = case_when(

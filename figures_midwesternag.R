@@ -12,7 +12,8 @@ library("ggplot2", lib.loc="~/R/win-library/3.5")
 library("colorRamps", lib.loc= "~/R/win-library/3.5")
 library("colorspace", lib.loc= "~/R/win-library/3.5")
 
-setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
+#setwd("C:/Users/LWA/Desktop/SNAPP_Wood_2017/LiteratureReview")
+setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review")
 
 
 #cover Crop Review

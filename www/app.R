@@ -11,7 +11,8 @@ library("ggplot2")    # for plotting data
 library(shinyjs)
 
 setwd(".")
-datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data/" 
+datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/" 
+
 
 #import data -> summary files
 CC_summary_all <- read.csv(file.path(datapath, "CoverCrop_Summary.csv"), header=TRUE, row.names = "X")

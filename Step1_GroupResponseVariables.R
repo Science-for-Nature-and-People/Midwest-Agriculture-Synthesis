@@ -355,7 +355,8 @@ unique(Pest$Response_var)
       
                         
       
-#Create Main Groupings #####
+
+                          #Create Main Groupings #####
 
 mutate(
   main_group = case_when( 
@@ -368,48 +369,48 @@ mutate(
     ##########Crop Production#######
     
     ##Crop Yields####                                                                          
-    Response_var %in% yield_soybean ~ "Grain Yield",
-    Response_var %in% grain_quality_soybean ~ "Grain Quality",
-    Response_var %in% yield_maize ~ "Grain Yield",
+    Response_var %in% yield_soybean ~ "Crop Yield",
+    Response_var %in% grain_quality_soybean ~ "Crop Yield",
+    Response_var %in% yield_maize ~ "Crop Yield",
     
     ##Stand Count####
-    Response_var %in% stand_count_soybean ~ "Stand Count",
-    Response_var %in% stand_count_maize ~ "Stand Count",
-    Response_var %in% lodging_soybean ~ "Lodging (Scored 1 = no lodging to 5 = completely lodged)",
-    Response_var %in% lodging_maize ~ "Lodging (#)",
+    Response_var %in% stand_count_soybean ~ "Stand Density",
+    Response_var %in% stand_count_maize ~ "Stand Density",
+    Response_var %in% lodging_soybean ~ "Stand Density",
+    Response_var %in% lodging_maize ~ "Stand Density",
     
     
     ##Crop Growth####
     
-    Response_var %in% plant_growth_soybean  ~ "Plant Growth (including photosynthetic capacity and leaf area index)",
-    Response_var %in% plant_height_soybean ~ "Plant Height",
-    Response_var %in% seedling_development_soybean ~ "Seedling Development",
-    Response_var %in% plant_height_maize ~ "Plant Height",
-    Response_var %in% vigor_reduction_maize ~ "Reduction in Vigor",
-    Response_var %in% insect_damage_maize ~ "Damage to Plant due to Black Cutworms",
+    Response_var %in% plant_growth_soybean  ~ "Crop Growth",
+    Response_var %in% plant_height_soybean ~ "Crop Growth",
+    Response_var %in% seedling_development_soybean ~ "Crop Growth",
+    Response_var %in% plant_height_maize ~ "Crop Growth",
+    Response_var %in% vigor_reduction_maize ~ "Crop Growth",
+    Response_var %in% insect_damage_maize ~ "Crop Growth",
     
     
     ############Pest Regulation####
     ## Disease/Pathogens ####
-    Response_var %in% disease_root_maize ~ "Pathogenic Root Injury",
-    Response_var %in% disease_leaftissue_maize ~ "Pathogenic Injury to Leaf Tissue",
-    Response_var %in% disease_soil_soybean ~ "Fusarium spp. Soil Forming Colonies",
-    Response_var %in% disease_tissue_soybean ~ "Pathogenic Injury to Leaf Tissue",
-    Response_var %in% disease_BPMV_soybean ~ "Bean Pod Mottle Virus Infections",
+    Response_var %in% disease_root_maize ~ "Pathogens",
+    Response_var %in% disease_leaftissue_maize ~ "Pathogens",
+    Response_var %in% disease_soil_soybean ~ "Pathogens",
+    Response_var %in% disease_tissue_soybean ~ "Pathogens",
+    Response_var %in% disease_BPMV_soybean ~ "Pathogens",
     
     
     ## Invertebrate Pests & Natural Enemies ####
     
-    Response_var %in% pests_aphids_soybean ~ "Soybean Aphids (# per Leaf)",
-    Response_var %in% pests_aphiddays_soybean ~ "Soybean Aphids (Cumulative Aphid Days)",
-    Response_var %in% pests_thrips_soybean ~ "Thrips (# per Soybean Plant)",
-    Response_var %in% pests_mites_soybean ~ "Spider Mites (# per cm. sq.)",
-    Response_var %in% pests_beanleafbeetles_soybean ~ "Bean Leaf Beetles (#)",
-    Response_var %in% pests_SCM_maize ~ "Seed Corn Maggot (#)",
-    Response_var %in% pests_WCRW_maize ~ "Western Corn Rootworm (#)",
-    Response_var %in% pests_WCRWemergence_maize ~ "Western Corn Rootworm (Mean Emergence Date)",
-    Response_var %in% pests_NCRW_maize ~ "Northern Corn Rootworm (#)",
-    Response_var %in% preds_abundance_soybeans ~ "Natural Enemies (#)"
+    Response_var %in% pests_aphids_soybean ~ "Invertebrates",
+    Response_var %in% pests_aphiddays_soybean ~ "Invertebrates",
+    Response_var %in% pests_thrips_soybean ~ "Invertebrates",
+    Response_var %in% pests_mites_soybean ~ "Invertebrates",
+    Response_var %in% pests_beanleafbeetles_soybean ~ "Invertebrates",
+    Response_var %in% pests_SCM_maize ~ "Invertebrates",
+    Response_var %in% pests_WCRW_maize ~ "Invertebrates",
+    Response_var %in% pests_WCRWemergence_maize ~ "Invertebrates",
+    Response_var %in% pests_NCRW_maize ~ "Invertebrates",
+    Response_var %in% preds_abundance_soybeans ~ "Invertebrates"
   ))
 
 
@@ -440,6 +441,12 @@ mutate(
     
                         
                         
+    
+    
+    
+    
+    
+    
 ########################Cover Crops Review####################################################
 #Bulk groupings####
 
@@ -993,6 +1000,7 @@ mutate(
 
 
 
+                
 ###Apply metric & grouping labels to dataframe#####################################
 
 
@@ -1097,6 +1105,7 @@ mutate(
                      
                 
                                 
+                  
                   
                   
   #Create Main Groupings ############################################

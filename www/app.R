@@ -12,11 +12,14 @@ library(shinyjs)
 
 setwd(".")
 datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/" 
-
+#datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
 
 #import data -> summary files
 CC_summary_all <- read.csv(file.path(datapath, "CoverCrop_Summary.csv"), header=TRUE, row.names = "X")
- 
+
+#reorder the data for the legend
+CC_summary_all$Cover_crop_diversity2 <- reorder.factor(CC_summary_all$Cover_crop_diversity2, new.order = c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)"))
+CC_summary_all <- CC_summary_all %>% arrange(Cover_crop_diversity2)
 
 ###start of management button test (safe to delete this chunk)###
   #all of our data has cover cropping in this column. I make half of the data (randomly chosen) a different entry to see if the button works.
@@ -36,7 +39,7 @@ sidebarLayout(
           selected = "Cover Cropping"),
 
         radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
-          choices = unique(CC_summary_all$Group_RV),
+          choices = unique(CC_summary_all$Group_RV) %>% sort(),
           selected = "Crop Production"),
     
           actionButton(inputId = "update", label = "Update the Figure")
@@ -91,9 +94,9 @@ server <- function(input, output) {
         observe({
           click("update")  #this chunk will click the update button at the very start, so that our app starts with a plot.
                            # if you want to change the default plot, then change the default "selected" values above
-          invalidateLater(3000) #invalidateLater just makes it so that the update button is only pressed once.
+          #invalidateLater(1000) #invalidateLater would click the update button every '1000' milliseconds
         })
-        
+
 }
       
 

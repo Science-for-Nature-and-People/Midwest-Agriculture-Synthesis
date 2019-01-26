@@ -43,13 +43,13 @@ Results <-read.csv("PestMgmt Review/PestMgmt_Review_Results.csv")
 
 #remove any unwanted response variables
 
+Results <-read.csv("Cover Crop Review/CoverCrop_Results.csv")
 #for cover crop data frame
 #Results = filter(Results,!(Response_var == "cover crop leaf N content")) #set dataframe to work with - remove cover crop nitrogen input data (incomplete dataset)
 
 
 #add surrogate key to Results
 Results$Res_key = rownames(Results)
-
 
 ###################################################################################################
 
@@ -356,7 +356,7 @@ unique(Pest$Response_var)
                         
       
 
-                          #Create Main Groupings #####
+#Create Main Groupings #####
 
 mutate(
   main_group = case_when( 
@@ -499,6 +499,7 @@ mutate(
                 )
                 
                 chem_carbon_075<-  c(  
+                  "total carbon",
                   "total carbon (0-50 cm depth)",
                   "total carbon (0-30 cm depth)",
                   "total carbon (0-45 cm depth)",
@@ -1223,11 +1224,12 @@ mutate(
 
 missing <- Results[is.na(Results$group_metric),] #check to see if all rows have an assigned group_metric
 
+                
 
 
 ####Save Results file with added Group names
 
-write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review/PestMgmt_ResultsGrouped.csv")
+write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Cover Crop Review/CC_ResultsGrouped.csv")
 
 
 

@@ -1,0 +1,280 @@
+Paper_id,Duration,Trt_id,Year,pest_seedprotection,pest_seedprotection_tradename,pest_fungicide,pest_insecticides,pest_application
+70,2012-3,0,0,untreated,,,,
+70,2012-3,1,0,fungicide-insecticide seed treatment,,"ipconazole (0.055 ml / kg seed), metalaxyl (0.065 ml / kg seed), and tryfloxystrobin (0.209 ml / kg seed)",clothianidin (0.253 mg ai / seed),applied to seed
+70,2012-3,2,0,fungicide-insecticide seed treatment,,"ipconazole (0.055 ml / kg seed), metalaxyl (0.065 ml / kg seed), and tryfloxystrobin (0.209 ml / kg seed)",clothianidin (1.25 mg ai / seed),
+71,2012-2,0,0,untreated,,,,
+71,2012-2,1,0,fungicide-insecticide seed treatment,CruiserMaxx,"mefenoxam (3.75 g / 100 seeds), fludioxonil (2.5 g / 100 seeds)",thiamethoxam (50 g / 100 seeds),applied to seed
+71,2012-2,2,0,fungicide seed treatment,ApronMaxx,"mefenoxam (3.75 g / 100 seeds), fludioxonil (2.5 g / 100 seeds)",,applied to seed
+71,2012-2,3,0,foliar insecticide,Warrior II or Tundra,,pyrethroid - lambda-cyhalothrin (116 - 232 mL/ha) or bifenthrin (291.4 mL/ha),applied at soybean aphid threshold of 250 soybean aphids per plant (mid August of 2013)
+72,2013-2,1,0,fungicide seed treatment,ApronMaxx,"mefenoxam (7.5 g / 100 seeds), fludioxonil (2.5 g / 100 seeds)",,applied to seed
+72,2013-2,2,0,fungicide seed treatment + foliar insecticide,ApronMaxx + Leverage,"mefenoxam (7.5 g / 100 seeds), fludioxonil (2.5 g / 100 seeds)","imidacloprid (239.68 g / L), β-cyfluthrin (119.84 g / L)",applied to seed and later foliar application
+72,2013-2,3,0,insecticide-fungicide seed treatment,CruiserMaxx + fungicides,"mefenoxam (7.5 g / 100 seeds), fludioxonil (2.5 g / 100 seeds)",thiamethoxam (50 g / 100 seeds),applied to seeds
+72,2013-2,4,0,insecticide-fungicide seed treatment + foliar insecticide,CruiserMaxx + fungicides + Leverage,"mefenoxam (7.5 g / 100 seeds), fludioxonil (2.5 g / 100 seeds)","thiamethoxam (50 g / 100 seeds) + imidacloprid (239.68 g / L), β-cyfluthrin (119.84 g / L)",applied to seed and later foliar application
+73,2000-3,0,0,untreated,,,,
+73,2000-3,1,0,insecticide seed treatment,Poncho,,clothianidin (0.25 mg ai / seed),applied to seeds
+73,2000-3,2,0,insecticide seed treatment,Poncho,,clothianidin (0.50 mg ai / seed),applied to seeds
+73,2000-3,3,0,insecticide seed treatment,Gaucho,,imidacloprid (0.34 mg ai / seed),applied to seeds
+73,2000-3,4,0,insecticide seed treatment,Gaucho,,imidacloprid (0.50 mg ai / seed),applied to seeds
+73,2000-3,5,0,insecticide seed treatment,Gaucho,,imidacloprid (0.675 mg ai / seed),applied to seeds
+73,2000-3,6,0,insecticide seed treatment,Cruiser FS,,thiamethoxam (0.135 mg ai / seed),applied to seeds
+73,2000-3,7,0,insecticide seed treatment,Cruiser FS,,thiamethoxam (0.27 mg ai / seed),applied to seeds
+73,2000-3,8,0,insecticide seed treatment,Cruiser FS,,thiamethoxam (0.54 mg ai / seed),applied to seeds
+73,2000-3,9,0,insecticide seed treatment,Cruiser FS,,thiamethoxam (0.6775 mg ai / seed),applied to seeds
+74,1989-2,0,0,untreated,,,,
+74,1989-2,1,1,insecticide soil treatment,XRM-4901,,organophosphate (113 g ai/ha),band
+74,1989-2,2,1,insecticide soil treatment,Lorsban 15G,,chlorpyrifos (226 g ai/ha),band
+74,1989-2,3,0,insecticide soil treatment,Dyfonate II + ICIA0321 20.4G,,fonofos/pyrethroid (170 g ai/ha),band
+74,1989-2,4,0,insecticide soil treatment,Couter 15G,,terbufos (226 g ai/ha),band
+74,1989-2,5,1,insecticide soil treatment,Dyfonate II + ICIA0321 20.4G ,,fonofos/pyrethroid (170 g ai/ha),band
+74,1989-2,6,0,insecticide soil treatment,Force 1.5G,,tefluthrin (226 g ai/ha),band
+74,1989-2,7,1,insecticide soil treatment,Lorsban 15G,,chlorpyrifos (113 g ai/ha),band
+74,1989-2,8,1,insecticide soil treatment,Astar 15G,,flucythrinate/phorate (226 g ai/ha),band
+74,1989-2,9,0,insecticide soil treatment,Counter 15G,,terbufos (226 g ai/ha),furrow
+74,1989-2,10,1,insecticide soil treatment,XRM-4901,,organophosphate (226 g ai/ha),band
+74,1989-2,11,1,insecticide soil treatment,"Dyfonate II 15G, 15CG, 20G",,fonofos (170 g ai/ha) ,band
+74,1989-2,12,1,insecticide soil treatment,Capture 2EC,,bifenthrin (44.8 g ai/ha),band
+74,1989-2,13,0,insecticide soil treatment,ICIA8882 10G,,organophosphate (170 g ai/ha),band
+74,1989-2,14,2,insecticide soil treatment,Ambush 2E,,permethrin (168 g ai/ha) ,band
+74,1989-2,15,2,insecticide soil treatment,Force 1.5G,,tefluthrin (226 g ai/ha) ,furrow
+74,1989-2,16,2,insecticide soil treatment,ICIA0321 1E,,pyrethroid (16.8 g ai/ha),band
+74,1989-2,17,2,insecticide soil treatment,Dyfonate II 15CG,,fonofos (226 g ai/ha),band
+74,1989-2,18,2,insecticide soil treatment,ICIA8882 10G,,organophosphate (212 g ai/ha),band
+74,1989-2,19,2,insecticide soil treatment,ICIA8882 10G,,organophosphate (255 g ai/ha),band
+74,1989-2,20,2,insecticide soil treatment,Lorsban 15G,,chlorpyrifos (226 g ai/ha),band
+74,1989-2,21,2,insecticide soil treatment,Dyfonate II 15CG,,fonofos (226 g ai/ha),furrow
+74,1989-2,22,2,insecticide soil treatment,Holdem 20G,,ethoprop/phorate (170 g ai/ha) ,band
+74,1989-2,23,2,insecticide soil treatment,Holdem 20G,,ethoprop/phorate (226 g ai/ha),band
+74,1989-2,24,2,insecticide soil treatment,Dyfonate II + ICIA0321 20.2G ,,fonofos/pyrethroid (170 g ai/ha),band
+74,1989-2,25,2,insecticide soil treatment,Dyfonate II 20G,,fonofos (170 g ai/ha),band
+74,1989-2,26,2,insecticide soil treatment,Dyfonate II 10G,,fonofos (340 g ai/ha),band
+74,1989-2,27,2,insecticide soil treatment,Dyfonate II 15G,,fonofos (226 g ai/ha),band
+74,1989-2,28,2,insecticide soil treatment,ICIA0321 1E,,pyrethroid (16.8 g ai/ha),broadcast
+74,1989-2,29,2,insecticide soil treatment,Ambush 2E,,permethrin (168 g ai/ha) ,broadcast
+,,,,,,,,
+75,2002-2,0,0,untreated,,,,
+75,2002-2,1,0,fungicide seed treatment,Captan,captan (0.06 g ai / kg seed),,applied to seed
+75,2002-2,2,0,fungicide seed treatment,PCNB,pentachloronitrobenzene (0.26 g / ai / kg seed),,applied to seed
+75,2002-2,3,0,fungicide seed treatment,TBZ,thiabendazole (0.03 g ai / kg seed),,applied to seed
+75,2002-2,4,0,fungicide seed treatment,Captan + PCNB + TBZ,captan (0.06 g ai / kg seed)/pentachloronitrobenzene (0.26 g / ai / kg seed)/thiabendazole (0.03 g ai / kg seed),,applied to seed
+75,2002-2,5,0,fungicide seed treatment,Fludioxonil,fludioxonil (0.03 g ai/kg seed),fludioxonil (0.03 g ai/kg seed),applied to seed
+75,2002-2,6,0,,,,,
+75,2002-2,7,0,,,,,
+75,2002-2,8,0,,,,,
+75,2002-2,9,0,,,,,
+75,2002-2,10,0,,,,,
+,,,,,,,,
+76,2007-2,0,0,untreated,,,,
+76,2007-2,1,0,insecticide seed treatment,Cruiser 5FS,,thiamethoxam (50 g / 100 kg seed),
+76,2007-2,2,0,,,,,
+76,2007-2,3,0,,,,,
+76,2007-2,4,0,,,,,
+76,2007-2,5,0,,,,,
+,,,,,,,,
+77,1987-2,0,0,untreated,,,,
+77,1987-2,1,0,insecticide soil treatment,Phorate (1.13 kg ai / ha),,phorate (1.13 kg a.i. / ha),band
+77,1987-2,2,0,insecticide soil treatment,Phorate (1.7 kg ai / ha),,phorate (1.7 kg a.i. / ha),band
+77,1987-2,3,0,insecticide seed treatment,Agrox D-L Plus (bucket mix),,"diazinon (0.33% w/w), lindane (15.0% w/w) and captan (14.67% w/w) applied at rate of 2.25 g formulation / kg seed in a bucket",applied to seed (bucket mix resulting in good coverage)
+77,1987-2,4,0,insecticide seed treatment,Agrox D-L Plus (hopper mix),,"diazinon (0.33% w/w), lindane (15.0% w/w) and captan (14.67% w/w) applied at rate of 2.25 g formulation / kg seed hopper box treatment",applied to seed (hopper mix resulting in moderate coverage)
+77,1987-2,5,0,,,,,
+77,1987-2,6,0,,,,,
+77,1987-2,7,0,,,,,
+,,,,,,,,
+78,1991-1,0,0,untreated,,,,
+78,1991-1,1,0,insecticide soil treatment,Terbufos,,organophosphate (15% ai granule applied at 0.11 g ai/m),in-furrow
+78,1991-1,2,0,insecticide soil treatment,Terbufos,,organophosphate (15% ai granule applied at 0.11 g ai/m),T-band
+78,1991-1,3,0,insecticide soil treatment,Terbufos,,organophosphate (15% ai granule applied at 0.11 g ai/m),surface band
+78,1991-1,4,0,insecticide soil treatment,Terbufos,,organophosphate (20% ai controlled release granule applied at 0.11 g ai/m),in-furrow
+78,1991-1,5,0,insecticide soil treatment,Terbufos,,organophosphate (20% ai controlled release granule applied at 0.11 g ai/m),T-band
+78,1991-1,6,0,insecticide soil treatment,Terbufos,,organophosphate (20% ai controlled release granule applied at 0.11 g ai/m),surface band
+78,1991-1,7,0,,,,,
+78,1991-1,8,0,,,,,
+78,1991-1,9,0,,,,,
+78,1991-1,10,0,untreated,,,,
+78,1991-1,11,0,insecticide soil treatment,Terbufos 15G,,organophosphate (Terbufos 15% ai granule applied at 0.11 g ai/m),
+78,1991-1,12,0,insecticide soil treatment,Terbufos 20CR,,organophosphate (Terbufos 20% ai controlled release granule applied at 0.11 g ai/m),
+78,1991-1,13,0,insecticide soil treatment,phorate 20G,,organophosphate (phorate 20% ai granule applied at 0.11 g ai/m),
+78,1991-1,14,0,insecticide soil treatment,phorate 20CR,,organophosphate (phorate 20% ai controlled release granule applied at 0.11 g ai/m),
+78,1991-1,15,0,insecticide soil treatment,fonofos 20G,,organophosphate (fonofos 20% ai granule applied at 0.11 g ai/m),
+78,1991-1,16,0,insecticide soil treatment,chylorpyrifos 15G,,organophosphate (chylorpyrifos 15% ai granule applied at 0.11 g ai/m),
+78,1991-1,17,0,insecticide soil treatment,chlorethoxyos 5G,,organophosphate (chlorethoxyfos 5% ai granule applied at 0.028 g ai/m),
+78,1991-1,18,0,insecticide soil treatment,tefluthrin 1.5G,,organophosphate (tefluthrin 1.5% ai granule applied at 0.11 g ai/m),
+78,1991-1,19,0,insecticide soil treatment,carbofuran 15G,,organophosphate (carbofurans 15% ai granule applied at 0.11 g ai/m),
+78,1991-1,20,0,,,,,
+78,1991-1,21,0,,,,,
+78,1991-1,22,0,,,,,
+78,1991-1,23,0,,,,,
+78,1991-1,24,0,,,,,
+,,,,,,,,
+79,1997-2,0,0,untreated,,,,
+79,1997-2,1,0,insecticide foliar treatment,Chlorpyrifos (Lorsban),,"chlorpyrifos (0.56 kg ai/ha, Lorsban)",
+79,1997-2,2,0,insecticide foliar treatment,Permethrin (Pounce),,"permethrin (0.168 kg ai/ha, Pounce)",
+79,1997-2,3,0,insecticide foliar treatment,Carbaryl (Sevin),,"carbaryl (0.818 kg ai/ha, Sevin)",
+79,1997-2,4,0,insecticide foliar treatment,Spinosad,,spinosad (0.101 kg ai/ha),
+,,,,,,,,
+80,2010-2,0,0,untreated,,,,
+80,2010-2,1,0,insecticide soil treatment,pyrethroid (Force CS),,pyrethroid (applied at 11.8 ml of liquid Force CS / 304.8 m),
+80,2010-2,2,0,,,,,
+80,2010-2,3,0,,,,,
+80,2010-2,4,0,,,,,
+80,2010-2,5,0,,,,,
+80,2010-2,6,0,,,,,
+80,2010-2,7,0,,,,,
+80,2010-2,8,0,,,,,
+,,,,,,,,
+81,2012-2,0,0,untreated,,,,
+81,2012-2,1,0,insecticide seed treatment,ApronMAXX RFC ,mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed),,applied to seeds
+81,2012-2,2,0,insecticide-fungicide seed treatment,CruiserMaxx,mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed),thiamethoxam (0.0762 mg ai per seed),applied to seeds
+81,2012-2,3,0,,,,,
+81,2012-2,4,0,,,,,
+81,2012-2,5,0,,,,,
+81,2012-2,6,0,,,,,
+81,2012-2,7,0,,,,,
+81,2012-2,8,0,,,,,
+,,,,,,,,
+82,2012-2,0,0,untreated,,,,
+82,2012-2,1,0,insecticide seed treatment,ApronMAXX RFC ,mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed),,applied to seeds
+82,2012-2,2,0,insecticide-fungicide seed treatment,CruiserMaxx,mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed),thiamethoxam (0.0762 mg ai per seed),applied to seeds
+82,2012-2,3,0,,,,,
+82,2012-2,4,0,,,,,
+82,2012-2,5,0,,,,,
+82,2012-2,6,0,,,,,
+82,2012-2,7,0,,,,,
+82,2012-2,8,0,,,,,
+82,2012-2,9,0,,,,,
+82,2012-2,10,0,,,,,
+82,2012-2,11,0,,,,,
+,,,,,,,,
+83,2011-3,0,0,untreated,,,,
+83,2011-3,1,0,fungicide seed treatment,ApronMaxx,fludioxonil (0.0038 mg ai per seed) and mefenoxam (0.0056 mg ai per seed),,
+83,2011-3,2,0,fungicide seed treatment,Trilex 2000,trifloxystrobin (0.0081 mg ai per seed) and metalaxyl (0.0065 mg ai per seed),,
+83,2011-3,3,0,fungicide seed treatment,EverGol Energy,"prothioconazole (0.0081 mg ai per seed), penflufen (0.0041 mg ai per seed), and metalaxyl (0.0065 mg ai per seed)",,
+83,2011-3,4,0,fungicide seed treatment,Accerleron (AC1),pyraclostrobin (0.0084 mg ai per seed) and metalaxyl (0.0262 mg ai per seed),,
+83,2011-3,5,0,fungicide seed treatment,Accerleron (AC3),"pyraclostrobin (0.0084 mg ai per seed), metalaxyl (0.0262 mg ai per seed), and fluxapyroxad (0.0082 mg ai per seed)",,
+83,2011-3,6,0,insecticide-fungicide seed treatment,CruiserMaxx,fludioxonil (0.0038 mg ai per seed) and mefenoxam (0.0056 mg ai per seed),thiamethoxam (0.0756 mg ai per seed),
+83,2011-3,7,0,insecticide-fungicide seed treatment,Accerleron (AC2),pyraclostrobin (0.0084 mg ai per seed) and metalaxyl (0.0262 mg ai per seed),imidacloprid (0.1266 mg ai per seed),
+83,2011-3,8,0,insecticide-fungicide seed treatment,Accerleron (AC4),"pyraclostrobin (0.0084 mg ai per seed), metalaxyl (0.0262 mg ai per seed), and fluxapyroxad (0.0082 mg ai per seed)",imidacloprid (0.1266 mg ai per seed),
+83,2011-3,9,0,insecticide-fungicide-nematicide seed treatment,Trilex 2000 + Yield Shield + Gaucho 600 + Poncho/VOTiVO,"trifloxystrobin (0.0081 mg ai per seed), metalaxyl (0.0065 mg ai per seed),  and Bacillus pumilus (0.000028 mg ai per seed)","imidacloprid (0.1013 mg ai per seed), clothianidin (0.1059), and Bacillus firmus (0.0213 mg ai per seed)",
+83,2011-3,10,0,insecticide-fungicide-nematicide seed treatment,EverGol Energy + Poncho/VOTiVO,"prothioconazole (0.0081 mg ai per seed), penflufen (0.0041 mg ai per seed), and metalaxyl (0.0065 mg ai per seed)",clothianidin (0.1056 mg ai per seed) and Bacillus firmus (0.0213 mg ai per seed),
+83,2011-3,11,0,insecticide-fungicide-nematicide seed treatment,Avicta Complete + Beans 500,fludioxonil (0.0038 mg ai per seed) and mefenoxam (0.0056 mg ai per seed),thiamethoxam (0.0756 mg ai per seed) and abamectin (0.1500 mg ai per seed),
+,,,,,,,,
+84,2011-3,0,0,untreated,,,,
+84,2011-3,1,0,insecticide seed treatment,Cruiser 5 FS,,thiamethoxam (0.0756 mg ai per seed),applied to seeds
+84,2011-3,2,0,insecticide foliar treatment,"Warrior II with Zeon Technology, Tundra EC, or Lorsban Adcanced",,"lamda-cyhalothrin, bifenthrin, or chlorpyrifos at full label rates",applied to foliage
+84,2011-3,3,0,,,,,
+84,2011-3,4,0,,,,,
+84,2011-3,5,0,,,,,
+84,2011-3,6,0,,,,,
+,,,,,,,,
+85,2006-2,0,0,untreated,,,,
+85,2006-2,1,0,insecticide seed treatment,Poncho 1250,,clothianidan (1.25 mg ai per seed),applied to seeds
+85,2006-2,2,0,,,,,
+85,2006-2,3,0,,,,,
+85,2006-2,4,0,,,,,
+,,,,,,,,
+86,2008-3,0,0,untreated,,,,
+86,2008-3,1,0,insecticide seed treatment,ApronMaxx RFC,"mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed)",,applied to seeds
+86,2008-3,2,0,insecticide-fungicide seed treatment,CruiserMaxx,"mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed)",thiamethoxam (0.0762 mg a.i. per seed),applied to seeds
+86,2008-3,3,0,,,,,
+86,2008-3,4,1,,,,,
+86,2008-3,5,"2,3",,,,,
+86,2008-3,6,"2,3",,,,,
+86,2008-3,7,2,,,,,
+86,2008-3,8,3,,,,,
+86,2008-3,9,3,,,,,
+86,2008-3,10,3,,,,,
+,,,,,,,,
+87,2007-1,0,0,untreated,,,,
+87,2007-1,1,0,insecticide-fungicide seed treatment,Cruiser Extreme 250,"azoxystrobin, fludioxonil, mefenoxam",thiamethoxam,applied to seeds
+87,2007-1,2,0,,,,,
+87,2007-1,3,0,,,,,
+87,2007-1,4,0,,,,,
+87,2007-1,5,0,,,,,
+,,,,,,,,
+88,2005-3,0,0,untreated,,,,
+88,2005-3,1,0,insecticide-fungicide seed treatment,CruiserMaxx,"not reported in paper, but typically has mefenoxam and fludioxonil",thiamethoxam (56.3 g ai/100 kg seed),applied to seeds
+88,2005-3,2,0,foliar insecticide-fungicide treatment (prophylactically applied),Warrior with Zeon Techonology (Syngenta) and Headline (BASF),pyraclostrobin at 89.6 g (AI)/ha,lambda-cyhalothrin at 28.0 g ai/ha,prophylactic foliar spray
+88,2005-3,3,0,IPM insecticide treatment,Headline (BASF),,lambda-cyhalothrin at 28.0 g ai/ha,IPM foliar spray
+,,,,,,,,
+89,2005-2,0,0,untreated,,,,
+89,2005-2,1,0,insecticide seed treatment,Gaucho,,imidacloprid (62.5 g ai/100 kg of seed),applied to seeds
+89,2005-2,2,0,insecticide seed treatment,Cruiser 5FS,,thiamethoxam (50 g ai/100 kg of seed),applied to seeds
+89,2005-2,3,0,IPM insecticide treatment,Warrior,,lambda-cyhalothrin (28.0 g ai/ha),IPM foliar spray
+,,,,,,,,
+90,2004-2,0,0,untreated,,,,
+90,2004-2,1,0,fungicide seed treatment,Apron XL LS,mefenoxam (0.05 g a.i. kg/seed),,
+90,2004-2,2,0,fungicide seed treatment,Maxim 4FS,fludioxonil (0.07 g a.i. kg/seed),,
+90,2004-2,3,0,fungicide seed treatment,ApronMaxx RFC,fludioxonil (0.037 g a.i. kg/seed) and mefenoxam (0.025 g a.i. kg/seed),,
+90,2004-2,4,0,,,,,
+90,2004-2,5,0,,,,,
+,,,,,,,,
+91,2003-2,0,0,untreated,,,,
+91,2003-2,1,0,fungicide seed treatment,Warden RTA,fludioxonil (2.5 g ai/100 kg seed) and mefenoxam (7.5 g ai/100 kg seed),,
+91,2003-2,2,0,fungicide seed treatment,SoyGard,azoxystrobin (4.1 g ai/100 kg seed) and metalaxyl (5.4 g ai/100 kg seed),,
+91,2003-2,3,0,fungicide seed treatment,Yield Shield,Bacillus pumilus GB 34 (1.74 x 10 ^4 CFU/100 kg seed) [biofungicide],,
+,,,,,,,,
+92,2001-1,0,0,untreated,,,,
+92,2001-1,1,0,fungicide seed treatment,biofungicide,Bacillus subtilis MB1600 (biofungicide) and Bradyrhizobium japonicum RCR3407 {nitrogen fixin bacteria) in a peat carrier inoculant ,,
+92,2001-1,2,0,,,,,
+92,2001-1,3,0,,,,,
+,,,,,,,,
+93,2002-2,0,0,untreated,,,,
+93,2002-2,1,0,fungicide seed treatment,thiamethoxam (seed applied),,thiamethoxam (seed applied),applied to seeds
+93,2002-2,2,0,foliar fungicide treatment,lambda-cyhalothrin (foliar application) at soybean emergence,,lambda-cyhalothrin (foliar application) at soybean emergence,foliar
+93,2002-2,3,0,foliar fungicide treatment,lambda-cyhalothrin (foliar application) at emergence of first bean leaf beetle generation,,lambda-cyhalothrin (foliar application) at emergence of first bean leaf beetle generation,foliar
+93,2002-2,4,0,foliar fungicide treatment,two lambda-cyhalothrin foliar applications (once at soybean emergence and one at emergence of first bean leaf beetle generation),,two lambda-cyhalothrin foliar applications (once at soybean emergence and one at emergence of first bean leaf beetle generation),foliar
+93,2002-2,5,0,fungicide seed treatment and foliar fungicide treatment,thiamethoxam seed treatment plus lambda-cyhalothrin (foliar application) at emergence of first bean leaf beetle generation,,thiamethoxam seed treatment plus lambda-cyhalothrin (foliar application) at emergence of first bean leaf beetle generation,applied to seeds and foliar
+93,2002-2,6,0,fungicide seed treatment and foliar fungicide treatment,thiamethoxam seed treatment plus lambda-cyhalothrin (foliar application) at 10 days post emergence (in 2003),,thiamethoxam seed treatment plus lambda-cyhalothrin (foliar application) at 10 days post emergence (in 2003),applied to seeds and foliar
+,,,,,,,,
+94,1992-2,0,0,untreated,,,,
+94,1992-2,1,0,no description,Addamax (growth hormones + nutrient mixture applied at 0.8 g ai/kg),Addamax (growth hormones + nutrient mixture applied at 0.8 g ai/kg),,
+94,1992-2,2,0,fungicide seed treatment,chlorothalonil (1.0 g ai/kg),chlorothalonil (1.0 g ai/kg),,
+94,1992-2,3,0,fungicide seed treatment,fluazinam (0.6 g ai/kg),fluazinam (0.6 g ai/kg),,
+94,1992-2,4,0,fungicide seed treatment,imazalil (0.1 g ai/kg),imazalil (0.1 g ai/kg),,
+94,1992-2,5,0,fungicide seed treatment,metalaxyl (0.1 g ai/kg),metalaxyl (0.1 g ai/kg),,
+94,1992-2,6,0,fungicide seed treatment,metalaxyl/captan 400D (0.1 g ai/kg + 0.4 g ai/kg),metalaxyl/captan 400D (0.1 g ai/kg + 0.4 g ai/kg),,
+94,1992-2,7,0,fungicide seed treatment,triadimefon (2.4 g ai/kg),triadimefon (2.4 g ai/kg),,
+,,,,,,,,
+95,2002-3,0,0,untreated,,,,
+95,2002-3,1,1,insecticide seed treatment,Poncho,,clothianidin (47.32 ml ai/kg),seed
+95,2002-3,2,0,insecticide seed treatment,Cruiser,,thiamethoxam (0.3 or 0.5 g ai/kg),seed
+95,2002-3,3,0,insecticide seed and foliar treatment,Cruiser + Warrior,,thiamethoxam + λ-cyhalothrin (0.5 or g ai/kg seed + 21.91 g ai/ha),seed + foliar
+95,2002-3,4,0,insecticide foliar treatment,Cruiser + Warrior,,thiamethoxam + λ-cyhalothrin (.03 or 0.5 g ai/kg seed + 28.05 g ai/ha),foliar
+95,2002-3,5,0,insecticide foliar treatment,Warrior,,λ-cyhalothrin (16.83 or 21.91 g ai/ha),foliar
+95,2002-3,6,0,insecticide foliar treatment,Warrior,,λ-cyhalothrin (28.05 g ai/ha),foliar
+95,2002-3,7,0,insecticide seed and foliar treatment,Warrior,,"λ-cyhalothrin (2 applications, 16.83 or 21.91 g ai/ha + 28.05 g ai/ha)",seed + foliar
+95,2002-3,8,"2,3",insecticide foliar treatment,Asana,,"esfenvalerate (2 applications, 43.74 g ai/ha + 54.69 g ai/ha)",foliar
+,,,,,,,,
+96,2003-4,0,,untreated,,,,
+96,2003-4,1,,fungicide seed treatment,Allegiance,metalaxyl (0.94 g a.i./kg seed),,seed
+96,2003-4,2,,fungicide seed treatment,Apron XL,mefenoxam (15.0 g a.i./100 kg seed),,seed
+96,2003-4,3,,fungicide seed treatment,Apron Maxx,mefenoxam (3.75 g a.i./100 kg) plus fludioxonil (2.5 g a.i./100 kg seed),,seed
+96,2003-4,4,,fungicide seed treatment,Apron Maxx plus Apron XL,mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed),,seed
+96,2003-4,5,,,,,,
+96,2003-4,6,,,,,,
+96,2003-4,7,,,,,,
+96,2003-4,8,,,,,,
+96,2003-4,9,,,,,,
+96,2003-4,10,,,,,,
+96,2003-4,11,,,,,,
+96,2003-4,12,,,,,,
+96,2003-4,13,,,,,,
+96,2003-4,14,,,,,,
+96,2003-4,15,,,,,,
+96,2003-4,16,,,,,,
+96,2003-4,17,,,,,,
+96,2003-4,18,,,,,,
+96,2003-4,5,,,,,,
+96,2003-4,19,,,,,,
+96,2003-4,20,,,,,,
+96,2003-4,21,,,,,,
+96,2003-4,22,,,,,,
+96,2003-4,23,,,,,,
+96,2003-4,24,,,,,,
+96,2003-4,25,,,,,,
+96,2003-4,26,,,,,,
+96,2003-4,27,,,,,,
+96,2003-4,28,,,,,,
+96,2003-4,29,,,,,,
+96,2003-4,30,,,,,,
+96,2003-4,31,,,,,,
+96,2003-4,32,,,,,,

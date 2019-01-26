@@ -1,0 +1,44 @@
+"","Review_id","main_group","group_metric","Legend_1","Legend_2","Legend_3","mean_per_change","sem_per_change","num_papers","num_comparisons","Group_RV","Review","mean_abundance_change","sem_abundance_change"
+"1","Seed Protection","Crop Growth","Damage to Plant due to Black Cutworms (Maize)","Soil","Insecticide","Broadcast",-100,0,1,2,"Crop Production","Early Season Pest Management",NA,NA
+"2","Seed Protection","Crop Growth","Damage to Plant due to Black Cutworms (Maize)","Soil","Insecticide","In-Furrow",-58.5652173913044,16.3432579186368,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"3","Seed Protection","Crop Growth","Damage to Plant due to Black Cutworms (Maize)","Soil","Insecticide","In-Row",-63.4782608695652,5.7258347016771,1,27,"Crop Production","Early Season Pest Management",NA,NA
+"4","Seed Protection","Crop Growth","Plant Height (Maize)","Seed","Fungicide","",-1.72413793103449,3.05193518329926,1,6,"Crop Production","Early Season Pest Management",NA,NA
+"5","Seed Protection","Crop Growth","Plant Height (Soybean)","Seed","Fungicide","",0,0,1,3,"Crop Production","Early Season Pest Management",NA,NA
+"6","Seed Protection","Crop Growth","Plant Height (Soybean)","Seed","Fungicide-Biologic","",6.75675675675675,6.75675675675675,1,2,"Crop Production","Early Season Pest Management",NA,NA
+"7","Seed Protection","Crop Growth","Reduction in Vigor (Maize)","Soil","Insecticide","In-Furrow",154.59133576843,44.734094008646,1,41,"Crop Production","Early Season Pest Management",NA,NA
+"8","Seed Protection","Crop Growth","Reduction in Vigor (Maize)","Soil","Insecticide","In-Row",58.2515194015895,24.5065572271849,1,62,"Crop Production","Early Season Pest Management",NA,NA
+"9","Seed Protection","Crop Growth","Soybean Growth (including photosynthetic capacity and leaf area index)","Seed","Fungicide-Biologic","",11.3526570048309,7.1824880841529,1,6,"Crop Production","Early Season Pest Management",NA,NA
+"10","Seed Protection","Crop Growth","Soybean Growth (including photosynthetic capacity and leaf area index)","Seed","Insecticide","",0.0311819402015938,0.757409232687384,1,9,"Crop Production","Early Season Pest Management",NA,NA
+"11","Seed Protection","Crop Growth","Soybean Growth (including photosynthetic capacity and leaf area index)","Seed","Insecticide-Fungicide","",1.31394782778162,0.485869779826247,1,3,"Crop Production","Early Season Pest Management",NA,NA
+"12","Seed Protection","Crop Growth","Soybean Seedling Development","Foliage","Insecticide","",-1.24691358024691,0.815546457552679,1,15,"Crop Production","Early Season Pest Management",NA,NA
+"13","Seed Protection","Crop Growth","Soybean Seedling Development","Seed","Insecticide","",-66.7932615629984,14.3043709567739,1,12,"Crop Production","Early Season Pest Management",-7.08333333333333,1.75144240700358
+"14","Seed Protection","Crop Growth","Soybean Seedling Development","Soil","Insecticide","In-Row",-17.775451887294,20.1446545943639,1,12,"Crop Production","Early Season Pest Management",-3.83333333333333,1.96497102042527
+"15","Seed Protection","Crop Yield","Grain Quality (Soybean)","Foliage","Insecticide","",-7.14285714285715,7.14285714285715,1,2,"Crop Production","Early Season Pest Management",NA,NA
+"16","Seed Protection","Crop Yield","Grain Quality (Soybean)","Seed","Fungicide","",-0.196008680454034,0.124250626403353,1,12,"Crop Production","Early Season Pest Management",NA,NA
+"17","Seed Protection","Crop Yield","Grain Quality (Soybean)","Seed","Insecticide","",-7.14285714285715,4.12393049421162,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"18","Seed Protection","Crop Yield","Grain Yield (Maize)","Foliage","Insecticide","",8.9662853401984,3.36687099829436,2,5,"Crop Production","Early Season Pest Management",NA,NA
+"19","Seed Protection","Crop Yield","Grain Yield (Maize)","Foliage","Insecticide-Fungicide","",8.57592446892211,NA,1,1,"Crop Production","Early Season Pest Management",NA,NA
+"20","Seed Protection","Crop Yield","Grain Yield (Maize)","Seed","Fungicide","",0,0,1,5,"Crop Production","Early Season Pest Management",NA,NA
+"21","Seed Protection","Crop Yield","Grain Yield (Maize)","Seed","Insecticide","",-2.92428478017443,3.72047860162881,2,22,"Crop Production","Early Season Pest Management",NA,NA
+"22","Seed Protection","Crop Yield","Grain Yield (Maize)","Seed","Insecticide-Fungicide","",1.86814967243469,1.10919424293957,2,17,"Crop Production","Early Season Pest Management",NA,NA
+"23","Seed Protection","Crop Yield","Grain Yield (Maize)","Soil","Insecticide","In-Furrow",-4.18782645549388,2.64972206244215,1,18,"Crop Production","Early Season Pest Management",NA,NA
+"24","Seed Protection","Crop Yield","Grain Yield (Maize)","Soil","Insecticide","In-Row",-0.311809272256743,0.674513758986756,1,63,"Crop Production","Early Season Pest Management",NA,NA
+"25","Seed Protection","Crop Yield","Grain Yield (Soybean)","Foliage","Insecticide","",0.0199227807987656,1.16741579514362,5,40,"Crop Production","Early Season Pest Management",NA,NA
+"26","Seed Protection","Crop Yield","Grain Yield (Soybean)","Seed","Fungicide","",3.41203850093487,2.03584260622575,5,81,"Crop Production","Early Season Pest Management",NA,NA
+"27","Seed Protection","Crop Yield","Grain Yield (Soybean)","Seed","Fungicide-Biologic","",14.6577255153704,16.5297472988967,1,2,"Crop Production","Early Season Pest Management",NA,NA
+"28","Seed Protection","Crop Yield","Grain Yield (Soybean)","Seed","Insecticide","",7.56593981564714,9.99113698834023,6,31,"Crop Production","Early Season Pest Management",NA,NA
+"29","Seed Protection","Crop Yield","Grain Yield (Soybean)","Seed","Insecticide-Fungicide","",1.79504203951613,0.519032266098327,4,33,"Crop Production","Early Season Pest Management",NA,NA
+"30","Seed Protection","Crop Yield","Grain Yield (Soybean)","Seed","Insecticide-Fungicide-Nematicide","",2.49653374428352,0.821994460487461,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"31","Seed Protection","Crop Yield","Grain Yield (Soybean)","Seed & Foliage","Insecticide","",0.675936884069495,2.10512050856056,2,10,"Crop Production","Early Season Pest Management",NA,NA
+"32","Seed Protection","Crop Yield","Grain Yield (Soybean)","Soil","Insecticide","In-Row",2.15754552726931,2.09593885723268,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"33","Seed Protection","Stand Density","Maize Lodging (#)","Seed","Insecticide","",-33.3333333333333,21.0818510677892,1,6,"Crop Production","Early Season Pest Management",-17.1666666666667,12.972834865381
+"34","Seed Protection","Stand Density","Soybean Lodging (Scored 1 = no lodging to 5 = completely lodged)","Seed","Fungicide","",0,0,1,3,"Crop Production","Early Season Pest Management",NA,NA
+"35","Seed Protection","Stand Density","Stand Count (Maize)","Seed","Fungicide","",-2.72294901459198,7.20866991414032,2,11,"Crop Production","Early Season Pest Management",NA,NA
+"36","Seed Protection","Stand Density","Stand Count (Maize)","Seed","Insecticide-Fungicide","",1.24844773445048,1.72923590735425,1,16,"Crop Production","Early Season Pest Management",NA,NA
+"37","Seed Protection","Stand Density","Stand Count (Soybean)","Seed","Fungicide","",11.318267442169,4.5665488882528,4,84,"Crop Production","Early Season Pest Management",NA,NA
+"38","Seed Protection","Stand Density","Stand Count (Soybean)","Seed","Fungicide-Biologic","",15.3847599990516,9.65821455080434,1,12,"Crop Production","Early Season Pest Management",NA,NA
+"39","Seed Protection","Stand Density","Stand Count (Soybean)","Seed","Insecticide","",-6.00995732574679,2.99149874384408,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"40","Seed Protection","Stand Density","Stand Count (Soybean)","Seed","Insecticide-Fungicide","",10.195243945244,3.04306131874618,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"41","Seed Protection","Stand Density","Stand Count (Soybean)","Seed","Insecticide-Fungicide-Nematicide","",16.3816251316251,2.01628601511942,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"42","Seed Protection","Stand Density","Stand Count (Soybean)","Soil","Insecticide","In-Row",-14.0469416785206,2.36435232612397,1,4,"Crop Production","Early Season Pest Management",NA,NA
+"43",NA,NA,NA,NA,NA,NA,NA,NA,1,6,"Crop Production","Early Season Pest Management",NA,NA

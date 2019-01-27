@@ -18,8 +18,8 @@ library(plotrix) # for standard error calculations
 setwd(".")
 datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
 
-Results <- read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_ResultsGrouped.csv"))
-
+df <- read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_ResultsGrouped.csv"))
+df <-  read.csv(file.path(datapath, "Cover Crop Review/CC_ResultsGrouped.csv"))
 
 #data set should include all treatment comparisons with the control (absence of the treatment)
 #and only treatment means (remove SEMs)
@@ -47,12 +47,12 @@ Results <- read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_ResultsGrouped
                          "seedFfoliarI_seedIFfoliarI")
             
             
-            df <- filter(Results, !(Group_finelevel %in% remove_these), Stat_type == "mean", !is.na(Trt_id1value), !is.na(Trt_id2value) )
+            df <- filter(df, !(Group_finelevel %in% remove_these), Stat_type == "mean", !is.na(Trt_id1value), !is.na(Trt_id2value) )
             
   
 #####Cover Crop Review Filter######################################################################
             
-  #df <- filter(Results,!(Trt_id1 > 0), Group_finelevel != "none", Stat_type == "mean", !is.na(Trt_id1value) & !is.na(Trt_id2value)) 
+  #df <- filter(df,!(Trt_id1 > 0), Group_finelevel != "none", Stat_type == "mean", !is.na(Trt_id1value) & !is.na(Trt_id2value)) 
 
             
             
@@ -137,8 +137,6 @@ df <- df %>%
   #mutate(per_change = ((Trt_id2value - Trt_id1value_alt)/Trt_id1value_alt)*100) %>%
   mutate(abundance_change = if_else((str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") | str_detect(Response_var_units, "# | number"))) | (str_detect(Response_var_units, "%"))), 
                                      (Trt_id2value - Trt_id1value), NULL))
-
-
 #Use number change for changes in Invertebrate Pest and Predator populations
  levels(df$group_metric)
 
@@ -253,21 +251,20 @@ df <- df %>%
 ###################Cover Crop Review##############
 df <- df %>%
   mutate(
-    Cover_crop_diversity = case_when(
+    Legend_1 = case_when(
       Group_finelevel %in% "mono" ~ "Monoculture", 
       Group_finelevel %in% "mix_2" ~ "Mixture (2 Spp.)",
       Group_finelevel %in% "mix_3" ~ "Mixture (3+ Spp.)",
-      Group_finelevel %in% "none" ~ "Exclude"
-    ))
+      Group_finelevel %in% "none" ~ "Exclude")) %>%
+      filter(Legend_1 != "Exclude")  %>%
+    
+  mutate(
+    Legend_2 = "Legume, NonLegume"
+  ) %>%
+  mutate(
+    Legend_3 = "Specific Cover crops used"
+  )
 
-df2 <- df[df$Cover_crop_diversity != "Exclude",]
-df2$Cover_crop_diversity <- as.factor( df2$Cover_crop_diversity)
-diversity_order <- c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)")
-df_order2 <- df2 %>%
-  mutate(Cover_crop_diversity2 =factor( Cover_crop_diversity,levels=diversity_order))
-
-levels(df_order2$Cover_crop_diversity2)
-colnames(df_order2)
 
 ##Monoculture Groupings ####
 
@@ -311,16 +308,16 @@ soil_summary <- df_soil %>%
             sem_per_change = std.error(per_change, na.rm = TRUE),
             num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
   mutate(Group_RV = "Soil") %>%
-  mutate(Review = "Early Season Pest Management")
+  mutate(Review = "Pest Management")
 
 
 soil_summary2 <- df_soil %>%
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, abundance_change) %>%
   filter(!is.na(abundance_change)) %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers_abund = n_distinct(Paper_id), num_comparisons_abund =length(Paper_id)) %>%
   mutate(Group_RV = "Soil") %>%
-  mutate(Review = "Early Season Pest Management")
+  mutate(Review = "Pest Management")
 
 soil_summary <- left_join(soil_summary, soil_summary2)
 
@@ -334,7 +331,7 @@ qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_1) + theme_bw
 outliers <- filter(df_soil, per_change > 100)
 
 
-write.csv(soil_summary2, file = "PestMgmt Review/PestMgmt_Soil_Summary.csv")
+write.csv(soil_summary, file = "PestMgmt Review/PestMgmt_Soil_Summary.csv")
 
 
 
@@ -343,7 +340,7 @@ df_pest <- df %>%
   filter (Group_RV == "Pest Regulation")      
 
 
-pest_summary <- df_pest %>% 
+pest_summary <- df_pest %>% #[df_pest$per_change < 1000,]
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
   #remove rows that will be used for soil summary 2
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
@@ -351,20 +348,20 @@ pest_summary <- df_pest %>%
             sem_per_change = std.error(per_change, na.rm = TRUE),
             num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
             mutate(Group_RV = "Pest Regulation") %>%
-            mutate(Review = "Early Season Pest Management")
+            mutate(Review = "Pest Management")
 
 
-pest_summary2 <- df_pest %>%
+pest_summary2 <- df_pest %>% #[df_pest$abundance_change > -1000,]
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, abundance_change) %>%
   filter(!is.na(abundance_change)) %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers_abund = n_distinct(Paper_id), num_comparisons_abund =length(Paper_id)) %>%
   mutate(Group_RV = "Pest Regulation") %>%
-  mutate(Review = "Early Season Pest Management")
+  mutate(Review = "Pest Management")
 
 pest_summary <- left_join(pest_summary, pest_summary2)
 
-summary(pest_summary2$mean_abundance_change)
+summary(pest_summary$mean_abundance_change)
 
 #Explore data distribution
 #look by Response_var
@@ -372,9 +369,10 @@ summary(pest_summary2$mean_abundance_change)
 #                filter(!is.na(per_change > 1000))
 test <- df_pest[!is.na(df_pest$abundance_change),]
 
-qplot(Response_var, per_change, data=df_pest[is.na(df_pest$abundance_change) ,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-
-qplot(Response_var, abundance_change, data=df_pest[!is.na(df_pest$abundance_change),],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_pest,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+#[df_pest$per_change < 1000,]
+qplot(Response_var, abundance_change, data=df_pest,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+#[df_pest$abundance_change > -1000,]
 outliers <- filter(df_pest, per_change > 2000)
 
 
@@ -386,7 +384,7 @@ write.csv(pest_summary, file = "PestMgmt Review/PestMgmt_Pest_Summary.csv")
 df_yield <- df %>%
   filter (Group_RV == "Crop Production")      
 
-yield_summary <- df_yield[df_yield$per_change < 1000,] %>% 
+yield_summary <- df_yield[df_yield$per_change < 1000,] %>% #[df_yield$per_change < 1000,]
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
   #remove rows that will be used for soil summary 2
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
@@ -394,21 +392,21 @@ yield_summary <- df_yield[df_yield$per_change < 1000,] %>%
             sem_per_change = std.error(per_change, na.rm = TRUE),
             num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
   mutate(Group_RV = "Crop Production") %>%
-  mutate(Review = "Early Season Pest Management")
+  mutate(Review = "Pest Management")
 
 
 yield_summary2 <- df_yield %>%
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, abundance_change) %>%
   filter(!is.na(abundance_change)) %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers_abund = n_distinct(Paper_id), num_comparisons_abund =length(Paper_id)) %>%
   mutate(Group_RV = "Crop Production") %>%
-  mutate(Review = "Early Season Pest Management")
+  mutate(Review = "Pest Management")
 
 yield_summary <- left_join(yield_summary, yield_summary2)
 
 
-qplot(Response_var, per_change, data=df_yield[df_yield$per_change < 1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 qplot(Response_var, abundance_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
@@ -416,7 +414,7 @@ outliers <- filter(df_yield, per_change > 1000)
 
 
 write.csv(yield_summary, file = "PestMgmt Review/PestMgmt_Yield_Summary.csv")
-write.csv(outliers, file = "PestMgmt Review/PestMgmt_Yield Outliers.csv")
+
 
 ####Group_RV: Water####
 df_water <- df %>%
@@ -431,20 +429,22 @@ water_summary <- df_water %>%
             sem_per_change = std.error(per_change, na.rm = TRUE),
             num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
   mutate(Group_RV = "Water") %>%
-  mutate(Review = "Early Season Pest Management")
+  mutate(Review = "Pest Management")
 
 
 water_summary2 <- df_water %>%
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, abundance_change) %>%
   filter(!is.na(abundance_change)) %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers = n_distinct(Paper_id), num_comparisons =length(Paper_id)) %>%
+  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers_abund = n_distinct(Paper_id), num_comparisons_abund =length(Paper_id)) %>%
   mutate(Group_RV = "Water") %>%
-  mutate(Review = "Early Season Pest Management")
+  mutate(Review = "Pest Management")
 
 water_summary <- left_join(water_summary, water_summary2)
 
 qplot(Response_var, per_change, data=df_water,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, abundance_change, data=df_water,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+
 
 outliers <- filter(df_water, per_change > 100)
 
@@ -457,5 +457,6 @@ summary_all <- soil_summary %>%
     full_join(yield_summary) %>%
     full_join(water_summary)
 
+#write.csv(summary_all, file = "Cover Crop Review/CC_FULL_Summary.csv")
 write.csv(summary_all, file = "PestMgmt Review/PestMgmt_FULL_Summary.csv")
 

@@ -1,0 +1,90 @@
+"","Review_id","main_group","group_metric","Legend_1","Legend_2","Legend_3","mean_per_change","sem_per_change","num_papers","num_comparisons","Group_RV","Review","mean_abundance_change","sem_abundance_change","num_papers_abund","num_comparisons_abund"
+"1","Cover crop","Biological","Microbial Biomass","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",114.320728291317,95.2030812324932,1,2,"Soil","Cover Crops",NA,NA,NA,NA
+"2","Cover crop","Biological","Microbial Biomass","Monoculture","Legume, NonLegume","Specific Cover crops used",21.1411148462315,24.7964944199072,3,9,"Soil","Cover Crops",NA,NA,NA,NA
+"3","Cover crop","Chemical","Ammonium (Preplant)","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",35.032835032835,8.09218059231923,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"4","Cover crop","Chemical","Ammonium (Preplant)","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",0.976800976801001,9.90261348025911,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"5","Cover crop","Chemical","Ammonium (Preplant)","Monoculture","Legume, NonLegume","Specific Cover crops used",15.0208767291568,10.1365642547373,6,23,"Soil","Cover Crops",NA,NA,NA,NA
+"6","Cover crop","Chemical","Nitrate (Maize)","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-60.4819986726793,5.31771777751454,1,8,"Soil","Cover Crops",NA,NA,NA,NA
+"7","Cover crop","Chemical","Nitrate (Maize)","Monoculture","Legume, NonLegume","Specific Cover crops used",-15.4575912130205,5.0242696788273,4,15,"Soil","Cover Crops",NA,NA,NA,NA
+"8","Cover crop","Chemical","Nitrate (Post Harvest)","Monoculture","Legume, NonLegume","Specific Cover crops used",19.4252313780661,12.0395369206255,2,9,"Soil","Cover Crops",NA,NA,NA,NA
+"9","Cover crop","Chemical","Nitrate (Preplant)","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-29.4971769468414,7.5302229111726,2,14,"Soil","Cover Crops",NA,NA,NA,NA
+"10","Cover crop","Chemical","Nitrate (Preplant)","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",0.20703933747412,0.130943174334095,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"11","Cover crop","Chemical","Nitrate (Preplant)","Monoculture","Legume, NonLegume","Specific Cover crops used",-15.0443332405342,4.2457552032375,12,52,"Soil","Cover Crops",NA,NA,NA,NA
+"12","Cover crop","Chemical","Nitrate (Soybean)","Monoculture","Legume, NonLegume","Specific Cover crops used",-5.32049868128098,13.1227810226824,1,3,"Soil","Cover Crops",NA,NA,NA,NA
+"13","Cover crop","Chemical","pH","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",0.505050505050507,0.319421985875595,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"14","Cover crop","Chemical","pH","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-1.05652109328579,0.85147826004653,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"15","Cover crop","Chemical","pH","Monoculture","Legume, NonLegume","Specific Cover crops used",-0.856999682464081,0.278183864757003,3,17,"Soil","Cover Crops",NA,NA,NA,NA
+"16","Cover crop","Chemical","Phosphorous","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",10.1245628058282,2.47472127729119,2,14,"Soil","Cover Crops",NA,NA,NA,NA
+"17","Cover crop","Chemical","Phosphorous","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-11.4312100236572,1.90813241575579,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"18","Cover crop","Chemical","Phosphorous","Monoculture","Legume, NonLegume","Specific Cover crops used",0.410040080291256,1.48630877761122,5,34,"Soil","Cover Crops",NA,NA,NA,NA
+"19","Cover crop","Chemical","Postassium","Monoculture","Legume, NonLegume","Specific Cover crops used",0.162057608866117,0.302006061068163,2,22,"Soil","Cover Crops",NA,NA,NA,NA
+"20","Cover crop","Chemical","Soil Carbon, 0-20 cm depth","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",1.54241645244217,0,1,7,"Soil","Cover Crops",NA,NA,NA,NA
+"21","Cover crop","Chemical","Soil Carbon, 0-20 cm depth","Monoculture","Legume, NonLegume","Specific Cover crops used",-15.5393609645231,2.59421415472709,7,90,"Soil","Cover Crops",NA,NA,NA,NA
+"22","Cover crop","Chemical","Soil Carbon, 0-75 cm depth","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-3.8081183901497,3.97369638718539,2,14,"Soil","Cover Crops",NA,NA,NA,NA
+"23","Cover crop","Chemical","Soil Carbon, 0-75 cm depth","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-2.63720055352541,0.0962279273603423,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"24","Cover crop","Chemical","Soil Carbon, 0-75 cm depth","Monoculture","Legume, NonLegume","Specific Cover crops used",17.2912838243556,11.5608653700523,6,60,"Soil","Cover Crops",NA,NA,NA,NA
+"25","Cover crop","Chemical","Soil Organic Matter","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",23.6933797909408,0,1,2,"Soil","Cover Crops",NA,NA,NA,NA
+"26","Cover crop","Chemical","Soil Organic Matter","Monoculture","Legume, NonLegume","Specific Cover crops used",7.57362922377773,1.1786681989103,5,44,"Soil","Cover Crops",0.0140000000000001,TRUE,1,10
+"27","Cover crop","Chemical","Total Nitrogen","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-24.2440354991544,7.19461230960572,2,16,"Soil","Cover Crops",NA,NA,NA,NA
+"28","Cover crop","Chemical","Total Nitrogen","Monoculture","Legume, NonLegume","Specific Cover crops used",21.3419399897381,8.78713480323424,10,64,"Soil","Cover Crops",NA,NA,NA,NA
+"29","Cover crop","Environmental","Carbon Dioxide Emissions","Monoculture","Legume, NonLegume","Specific Cover crops used",11.0168986712044,2.55420894106314,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"30","Cover crop","Environmental","Nitrous Oxide Emissions","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",6.88769768281724,8.68802697408653,1,8,"Soil","Cover Crops",NA,NA,NA,NA
+"31","Cover crop","Environmental","Nitrous Oxide Emissions","Monoculture","Legume, NonLegume","Specific Cover crops used",1.34385442404664,7.45670171176743,3,19,"Soil","Cover Crops",NA,NA,NA,NA
+"32","Cover crop","Environmental","Soil Temperature","Monoculture","Legume, NonLegume","Specific Cover crops used",0.298236486285729,0.464255777680263,1,12,"Soil","Cover Crops",NA,NA,NA,NA
+"33","Cover crop","Physical","Compaction","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",9.54032068225159,1.47814313642104,2,9,"Soil","Cover Crops",NA,NA,NA,NA
+"34","Cover crop","Physical","Compaction","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",9.59605761546301,4.26215772688799,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"35","Cover crop","Physical","Compaction","Monoculture","Legume, NonLegume","Specific Cover crops used",3.73491267771135,0.486507373247762,3,19,"Soil","Cover Crops",NA,NA,NA,NA
+"36","Cover crop","Physical","Erosion","Monoculture","Legume, NonLegume","Specific Cover crops used",-38.3425552466393,3.46442365982139,3,51,"Soil","Cover Crops",NA,NA,NA,NA
+"37","Cover crop","Physical","Soil Aggregates","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",1.90730712417474,0.416958879472998,2,14,"Soil","Cover Crops",1.58571428571429,TRUE,2,14
+"38","Cover crop","Physical","Soil Aggregates","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-0.92010147593617,1.19911583542333,1,6,"Soil","Cover Crops",-0.766666666666666,TRUE,1,6
+"39","Cover crop","Physical","Soil Aggregates","Monoculture","Legume, NonLegume","Specific Cover crops used",6.18478236074886,2.23990693959379,7,50,"Soil","Cover Crops",0.883333333333334,TRUE,4,24
+"40","Cover crop","Physical","Soil Bulk Density","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-0.671500817071563,0.403498607781384,2,13,"Soil","Cover Crops",NA,NA,NA,NA
+"41","Cover crop","Physical","Soil Bulk Density","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",0.5249343832021,0.331997654610854,1,6,"Soil","Cover Crops",NA,NA,NA,NA
+"42","Cover crop","Physical","Soil Bulk Density","Monoculture","Legume, NonLegume","Specific Cover crops used",0.313006129737155,0.408460424717136,7,53,"Soil","Cover Crops",NA,NA,NA,NA
+"43","Cover crop","Physical","Soil Pores","Monoculture","Legume, NonLegume","Specific Cover crops used",3.13851542261393,2.20128147241686,1,12,"Soil","Cover Crops",0.0024999999999995,TRUE,1,4
+"44","Cover crop","Physical","Soil Texture","Monoculture","Legume, NonLegume","Specific Cover crops used",0.585416974759362,1.06324757223744,1,42,"Soil","Cover Crops",-0.0166666666666667,TRUE,1,42
+"45","Cover crop","Physical","Soil Water Content","Monoculture","Legume, NonLegume","Specific Cover crops used",4.1358456859004,0.83118167463998,6,132,"Soil","Cover Crops",-0.2375,TRUE,2,48
+"46","Cover crop","Invertebrates","Corn Rootworm (#)","Monoculture","Legume, NonLegume","Specific Cover crops used",-18.2656421264158,12.8077684590195,1,8,"Pest Regulation","Cover Crops",-2.75,TRUE,1,8
+"47","Cover crop","Invertebrates","Corn Rootworm (Damage to Crop)","Monoculture","Legume, NonLegume","Specific Cover crops used",-27.6515151515151,10.9848484848484,1,2,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"48","Cover crop","Invertebrates","Non-predators & Non-pests","Monoculture","Legume, NonLegume","Specific Cover crops used",3.27621009703358,6.71707024329611,1,36,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"49","Cover crop","Invertebrates","Predator Activity","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",0,0,1,2,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"50","Cover crop","Invertebrates","Predator community inhabiting foliage (#)","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",40.2777777777778,8.8206291126193,1,4,"Pest Regulation","Cover Crops",0.525,TRUE,1,4
+"51","Cover crop","Invertebrates","Predator community inhabiting foliage (#)","Monoculture","Legume, NonLegume","Specific Cover crops used",-42.2988424203493,24.0121487353326,1,5,"Pest Regulation","Cover Crops",-78.24,TRUE,1,5
+"52","Cover crop","Invertebrates","Predator community inhabiting soils (#)","Monoculture","Legume, NonLegume","Specific Cover crops used",2.16326625060393,2.69389312517945,2,10,"Pest Regulation","Cover Crops",0.77,TRUE,2,10
+"53","Cover crop","Invertebrates","Predator community inhabiting soils (Diversity)","Monoculture","Legume, NonLegume","Specific Cover crops used",3.68493598472536,1.06937212213719,1,8,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"54","Cover crop","Invertebrates","Predators (#)","Monoculture","Legume, NonLegume","Specific Cover crops used",21.5870614714123,6.21850441223584,1,24,"Pest Regulation","Cover Crops",0.11875,TRUE,1,24
+"55","Cover crop","Invertebrates","Seedcorn Maggot (#)","Monoculture","Legume, NonLegume","Specific Cover crops used",127.147950089127,78.9126559714795,1,2,"Pest Regulation","Cover Crops",10.8,TRUE,1,5
+"56","Cover crop","Invertebrates","Seedcorn Maggot (Damage to Crop)","Monoculture","Legume, NonLegume","Specific Cover crops used",259.74025974026,113.268193523598,1,5,"Pest Regulation","Cover Crops",3.76,TRUE,1,5
+"57","Cover crop","Invertebrates","Soybean Aphid (#)","Monoculture","Legume, NonLegume","Specific Cover crops used",9.7443897083974,53.2013416177209,2,13,"Pest Regulation","Cover Crops",68.7325,TRUE,2,8
+"58","Cover crop","Invertebrates","Soybean Cyst Nematode (#)","Monoculture","Legume, NonLegume","Specific Cover crops used",-22.4063378564352,4.08167131297852,3,83,"Pest Regulation","Cover Crops",-70.7704918032787,TRUE,3,61
+"59","Cover crop","Pathogens","Pathogens","Monoculture","Legume, NonLegume","Specific Cover crops used",-12.6052188552189,8.86329834513874,1,12,"Pest Regulation","Cover Crops",-0.416666666666667,TRUE,1,12
+"60","Cover crop","Weeds","Aboveground growth of weed community","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-20.2380952380952,0,1,2,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"61","Cover crop","Weeds","Aboveground growth of weed community","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-69.8412698412698,0,1,2,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"62","Cover crop","Weeds","Aboveground growth of weed community","Monoculture","Legume, NonLegume","Specific Cover crops used",-75.9009421950599,8.98198904772815,2,11,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"63","Cover crop","Weeds","Cocklebur","Monoculture","Legume, NonLegume","Specific Cover crops used",30.634734058184,32.9567282279419,1,4,"Pest Regulation","Cover Crops",7.5,TRUE,1,4
+"64","Cover crop","Weeds","Deadnettle","Monoculture","Legume, NonLegume","Specific Cover crops used",5.85303559844843,7.40732418869399,1,20,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"65","Cover crop","Weeds","Giant Foxtail","Monoculture","Legume, NonLegume","Specific Cover crops used",36.6643073811931,22.3303275561705,1,4,"Pest Regulation","Cover Crops",16.25,TRUE,1,4
+"66","Cover crop","Weeds","Pigweed","Monoculture","Legume, NonLegume","Specific Cover crops used",130.198012989922,56.7220861619525,1,16,"Pest Regulation","Cover Crops",21.725,TRUE,1,8
+"67","Cover crop","Weeds","Waterhemp","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-18.272059247638,1.55052137145722,1,6,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"68","Cover crop","Weeds","Waterhemp","Monoculture","Legume, NonLegume","Specific Cover crops used",33.5715418476794,18.8925810285363,2,56,"Pest Regulation","Cover Crops",15.2,TRUE,1,8
+"69","Cover crop","Weeds","Weed community (abundance of weeds)","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-35.7172506236336,9.92381087584352,2,8,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"70","Cover crop","Weeds","Weed community (abundance of weeds)","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-10.2040816326531,0,1,2,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"71","Cover crop","Weeds","Weed community (abundance of weeds)","Monoculture","Legume, NonLegume","Specific Cover crops used",-21.8388009736218,4.03961663035907,4,75,"Pest Regulation","Cover Crops",NA,NA,NA,NA
+"72","Cover crop","Crop Nitrogen Uptake","Grain (Maize)","Monoculture","Legume, NonLegume","Specific Cover crops used",-16.6749032226574,2.35869908796009,4,34,"Crop Production","Cover Crops",NA,NA,NA,NA
+"73","Cover crop","Crop Nitrogen Uptake","Grain (Soybean)","Monoculture","Legume, NonLegume","Specific Cover crops used",-18.1286549707602,0,1,4,"Crop Production","Cover Crops",NA,NA,NA,NA
+"74","Cover crop","Crop Nitrogen Uptake","Stalk/Stover (Maize)","Monoculture","Legume, NonLegume","Specific Cover crops used",-8.17767035084231,2.29338048725218,6,45,"Crop Production","Cover Crops",NA,NA,NA,NA
+"75","Cover crop","Stand Count","Seedling Density","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-8.96428208667182,2.9834017649428,1,8,"Crop Production","Cover Crops",NA,NA,NA,NA
+"76","Cover crop","Stand Count","Seedling Density","Monoculture","Legume, NonLegume","Specific Cover crops used",1.45348834634102,2.19239527006819,5,192,"Crop Production","Cover Crops",NA,NA,NA,NA
+"77","Cover crop","Yields","Grain (Maize)","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-5.06148059951265,1.03938450735759,4,22,"Crop Production","Cover Crops",NA,NA,NA,NA
+"78","Cover crop","Yields","Grain (Maize)","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-2.92815275784806,1.68515464879742,1,6,"Crop Production","Cover Crops",NA,NA,NA,NA
+"79","Cover crop","Yields","Grain (Maize)","Monoculture","Legume, NonLegume","Specific Cover crops used",-2.31799093807313,0.613905710184379,25,309,"Crop Production","Cover Crops",2,TRUE,1,3
+"80","Cover crop","Yields","Grain (Soybean)","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-2.42564550242586,0.874651282614842,5,22,"Crop Production","Cover Crops",NA,NA,NA,NA
+"81","Cover crop","Yields","Grain (Soybean)","Mixture (3+ Spp.)","Legume, NonLegume","Specific Cover crops used",-9.69007211575583,5.8014086532991,1,4,"Crop Production","Cover Crops",NA,NA,NA,NA
+"82","Cover crop","Yields","Grain (Soybean)","Monoculture","Legume, NonLegume","Specific Cover crops used",-3.38258355560497,1.6041302487676,19,173,"Crop Production","Cover Crops",NA,NA,NA,NA
+"83","Cover crop","Yields","Root biomass","Monoculture","Legume, NonLegume","Specific Cover crops used",4.03691735213472,24.2742840296697,1,4,"Crop Production","Cover Crops",NA,NA,NA,NA
+"84","Cover crop","Yields","Stover Biomass","Mixture (2 Spp.)","Legume, NonLegume","Specific Cover crops used",-6.28594744864792,2.54586258776764,2,6,"Crop Production","Cover Crops",NA,NA,NA,NA
+"85","Cover crop","Yields","Stover Biomass","Monoculture","Legume, NonLegume","Specific Cover crops used",-11.5679590291017,3.30689887604922,6,27,"Crop Production","Cover Crops",NA,NA,NA,NA
+"86","Cover crop","Drainage","Drainage","Monoculture","Legume, NonLegume","Specific Cover crops used",-4.71652813763662,3.08267323540913,4,40,"Water","Cover Crops",NA,NA,NA,NA
+"87","Cover crop","Physical","Erosion","Monoculture","Legume, NonLegume","Specific Cover crops used",-68.1818181818181,25.7575757575757,1,2,"Water","Cover Crops",NA,NA,NA,NA
+"88","Cover crop","Runoff","Nitrate","Monoculture","Legume, NonLegume","Specific Cover crops used",-29.0519319383121,6.36416985483275,7,71,"Water","Cover Crops",NA,NA,NA,NA
+"89","Cover crop","Runoff","Phosphorous","Monoculture","Legume, NonLegume","Specific Cover crops used",-50.509549070693,5.26295319762122,2,12,"Water","Cover Crops",NA,NA,NA,NA

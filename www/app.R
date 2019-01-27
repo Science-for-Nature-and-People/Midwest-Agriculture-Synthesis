@@ -9,22 +9,33 @@ library("dplyr")      # for sorting and summarizing data
 library("readxl")     # for importing dataframe
 library("ggplot2")    # for plotting data
 library(shinyjs)
+library(gdata)        #reorder legends
 
 setwd(".")
-datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/" 
+datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
 #datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
 
 #import data -> summary files
-CC_summary_all <- read.csv(file.path(datapath, "CoverCrop_Summary.csv"), header=TRUE, row.names = "X")
+covercrop <-  read.csv(file.path(datapath, "Cover Crop Review/CC_FULL_Summary.csv"))
+pestmgmt <-  read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_FULL_Summary.csv"))
+
+summary_all <- full_join(covercrop, pestmgmt)
+
+#change columns to factors
+collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")
+summary_all[collist] <- lapply(summary_all[collist], factor)
+
+levels(summary_all$Legend_1)
 
 #reorder the data for the legend
-CC_summary_all$Cover_crop_diversity2 <- reorder.factor(CC_summary_all$Cover_crop_diversity2, new.order = c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)"))
-CC_summary_all <- CC_summary_all %>% arrange(Cover_crop_diversity2)
+summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)", "Soil", "Foliage","Seed", "Seed & Foliage" ))  
+                                                                            
+summary_all <- summary_all %>% arrange(Legend_1)
 
 ###start of management button test (safe to delete this chunk)###
   #all of our data has cover cropping in this column. I make half of the data (randomly chosen) a different entry to see if the button works.
-levels(CC_summary_all$Review) <- c(levels(CC_summary_all$Review), "test")
-CC_summary_all$Review[sample(x = nrow(CC_summary_all), size = nrow(CC_summary_all)/2)] <- "test"
+levels(summary_all$Review) <- c(levels(summary_all$Review), "test")
+summary_all$Review[sample(x = nrow(summary_all), size = nrow(summary_all)/2)] <- "test"
 ###end of test###
 
   #user interface
@@ -35,11 +46,11 @@ titlePanel('Synthesis of the trade-offs associated with Best Management Practice
 sidebarLayout(
   sidebarPanel( 
         radioButtons(inputId = "MgmtPractice", label = "Management Practice", 
-          choices = unique(CC_summary_all$Review), #will be expanded as review dataframes are populated
+          choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
           selected = "Cover Cropping"),
 
         radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
-          choices = unique(CC_summary_all$Group_RV) %>% sort(),
+          choices = unique(summary_all$Group_RV) %>% sort(),
           selected = "Crop Production"),
     
           actionButton(inputId = "update", label = "Update the Figure")
@@ -62,7 +73,7 @@ server <- function(input, output) {
   df <- eventReactive(input$update,{ #set action button to initiate changes in the figures displayed
           
     #filter dataset to display selected review and response variables
-          CC_summary_all %>%
+          summary_all %>%
             filter(Review == input$MgmtPractice) %>%
             filter(Group_RV == input$RV)
           }) 
@@ -86,7 +97,7 @@ server <- function(input, output) {
                  y = "percent difference between control and treatment (%)") + 
             #scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +        
             theme_bw() +
-            geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
+            geom_point( aes(colour = Legend_1)) + #color labeling of fine level groupings
             facet_grid(main_group ~., scales = "free", space = "free") +
             theme(strip.text.y = element_text(angle = 0))
           

@@ -191,13 +191,13 @@ df <- df %>%
       Group_finelevel %in% "untreated_seedIFN" ~ "Seed",
       TRUE                      ~ "other"
       
-    ))
+    )) %>%
 
 #test for missing groupings
 #missing <- df[df$Legend_1 %in% "other",]
       
       
-      df <- df %>%
+      
         mutate(
           Legend_2 = case_when(  
             
@@ -219,20 +219,19 @@ df <- df %>%
             Group_finelevel %in% "untreated_seedIF" ~ "Insecticide-Fungicide",
             Group_finelevel %in% "untreated_seedIFN" ~ "Insecticide-Fungicide-Nematicide",
             TRUE                      ~ "other"
-            ))
+            )) %>%
       #test for missing groupings
       #missing <- df[df$Legend_2 %in% "other",]
       
       
-      df <- df %>%
+      
         mutate(
           Legend_3 = case_when( 
             #untreated to soil
             Group_finelevel %in% "untreated_soilI" ~ "Broadcast",
             Group_finelevel %in% "untreated_furrowI" ~ "In-Furrow",
             Group_finelevel %in% "untreated_bandI" ~ "In-Row",
-            Group_finelevel %in% "untreated_broadcastI" ~ "Broadcast",
-            TRUE                      ~ ""
+            Group_finelevel %in% "untreated_broadcastI" ~ "Broadcast"
             
           ))
       
@@ -395,7 +394,7 @@ soil_summary3 <- df_soil %>%
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
             num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) %>%
   mutate(Group_RV = "Soil") %>%
-  mutate(Review = "Cover Crop")
+  mutate(Review = "Early Season Pest Management")
 
 soil_summary2 <- df_soil %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
@@ -429,7 +428,8 @@ soil_summary <- left_join(soil_summary, soil_summary3)
 
 
 
-write.csv(soil_summary, file = "Cover Crop Review/CC_Soil_Summary.csv")
+write.csv(soil_summary, file = "PestMgmt Review/PestMgmt_Soil_Summary.csv")
+################################"Cover Crop Review/CC_Soil_Summary.csv"
 
 
 
@@ -455,7 +455,7 @@ pest_summary3 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
             num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) %>%
             mutate(Group_RV = "Pest Regulation") %>%
-            mutate(Review = "Cover Crop")
+            mutate(Review = "Early Season Pest Management")
 
 
 pest_summary2 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 1000,]
@@ -498,8 +498,8 @@ test <- df_pest[!is.na(df_pest$abundance_change),]
 
 
 
-write.csv(pest_summary, file = "Cover Crop Review/CC_Pest_Summary.csv")
-
+write.csv(pest_summary, file = "PestMgmt Review/PestMgmt_Pest_Summary.csv")
+################################"Cover Crop Review/CC_Pest_Summary.csv"
 
 
 ####Group_RV: Crop Production####
@@ -516,14 +516,14 @@ outliers <- filter(df_yield, per_change > 1000)
 
 
 
-yield_summary3 <- df_yield %>% #[df_yield$per_change < 1000,]
+yield_summary3 <- df_yield[df_yield$per_change < 1000,] %>% #
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
   summarise(mean_per_change3 = mean(per_change, na.rm = TRUE),
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
             num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) %>%
   mutate(Group_RV = "Crop Production") %>%
-  mutate(Review = "Cover Crop")
+  mutate(Review = "Early Season Pest Management")
 
 yield_summary2 <- df_yield %>% #[df_yield$per_change < 1000,]
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
@@ -554,7 +554,8 @@ yield_summary <- left_join(yield_summary, yield_summary3)
 
 
 
-write.csv(yield_summary, file = "Cover Crop Review/CC_Yield_Summary.csv")
+write.csv(yield_summary, file = "PestMgmt Review/PestMgmt_Yield_Summary.csv")
+            #"Cover Crop Review/CC_Yield_Summary.csv")
 
 
 ####Group_RV: Water####
@@ -576,7 +577,7 @@ water_summary3 <- df_water %>%
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
             num_papers3 = n_distinct(Paper_id), num_comparison3s =length(Paper_id)) %>%
   mutate(Group_RV = "Water") %>%
-  mutate(Review = "Cover Crop")
+  mutate(Review = "Early Season Pest Management")
 
 water_summary2 <- df_water %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
@@ -606,7 +607,8 @@ water_summary <- left_join(water_summary1, water_summary2)
 water_summary <- left_join(water_summary, water_summary3)
 
 
-write.csv(water_summary, file = "Cover Crop Review/CC_Water_Summary.csv")
+write.csv(water_summary, file = "PestMgmt Review/PestMgmt_Water_Summary.csv")
+            #"Cover Crop Review/CC_Water_Summary.csv")
 
 
 ####Join Summary results back into one file ####
@@ -616,5 +618,5 @@ summary_all <- soil_summary %>%
     full_join(water_summary)
 
 #write.csv(summary_all, file = "Cover Crop Review/CC_FULL_Summary.csv")
-write.csv(summary_all, file = "Cover Crop Review/CC_FULL_Summary2.csv")
+write.csv(summary_all, file = "PestMgmt Review/PestMgmt_FULL_Summary2.csv")
 

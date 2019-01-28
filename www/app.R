@@ -16,8 +16,8 @@ datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/"
 #datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
 
 #import data -> summary files
-covercrop <-  read.csv(file.path(datapath, "Cover Crop Review/CC_FULL_Summary.csv"))
-pestmgmt <-  read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_FULL_Summary.csv"))
+covercrop <-  read.csv(file.path(datapath, "Cover Crop Review/CC_FULL_Summary2.csv"))
+pestmgmt <-  read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_FULL_Summary2.csv"))
 
 summary_all <- full_join(covercrop, pestmgmt)
 
@@ -34,8 +34,8 @@ summary_all <- summary_all %>% arrange(Legend_1)
 
 ###start of management button test (safe to delete this chunk)###
   #all of our data has cover cropping in this column. I make half of the data (randomly chosen) a different entry to see if the button works.
-levels(summary_all$Review) <- c(levels(summary_all$Review), "test")
-summary_all$Review[sample(x = nrow(summary_all), size = nrow(summary_all)/2)] <- "test"
+#levels(summary_all$Review) <- c(levels(summary_all$Review), "test")
+#summary_all$Review[sample(x = nrow(summary_all), size = nrow(summary_all)/2)] <- "test"
 ###end of test###
 
   #user interface
@@ -82,12 +82,12 @@ server <- function(input, output) {
   
         output$forestplot <- renderPlot({
             
-          ggplot(df(), aes(group_metric, mean_per_change, 
-                           ymin = mean_per_change-sem_per_change, 
-                           ymax = mean_per_change +sem_per_change)) +
+          ggplot(df(), aes(group_metric, mean_per_change1, 
+                           ymin = mean_per_change1-sem_per_change1, 
+                           ymax = mean_per_change1 +sem_per_change1)) +
             geom_pointrange() +
-            geom_errorbar(aes(ymin = mean_per_change-sem_per_change, 
-                              ymax = mean_per_change +sem_per_change, 
+            geom_errorbar(aes(ymin = mean_per_change1-sem_per_change1, 
+                              ymax = mean_per_change1 +sem_per_change1, 
                               width=.1)) +
             geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
             coord_flip() + # flip coordinates (puts labels on y axis)

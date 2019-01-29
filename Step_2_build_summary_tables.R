@@ -428,11 +428,6 @@ soil_summary <- left_join(soil_summary, soil_summary3)
 
 
 
-write.csv(soil_summary, file = "PestMgmt Review/PestMgmt_Soil_Summary.csv")
-################################"Cover Crop Review/CC_Soil_Summary.csv"
-
-
-
 ####Group_RV: Pest Regulation####
 df_pest <- df %>%
   filter (Group_RV == "Pest Regulation")      
@@ -497,18 +492,13 @@ summary(pest_summary$mean_abundance_change)
 test <- df_pest[!is.na(df_pest$abundance_change),]
 
 
-
-write.csv(pest_summary, file = "PestMgmt Review/PestMgmt_Pest_Summary.csv")
-################################"Cover Crop Review/CC_Pest_Summary.csv"
-
-
 ####Group_RV: Crop Production####
 df_yield <- df %>%
   filter (Group_RV == "Crop Production")      
 
 #Explore data distribution
 #look by Response_var
-qplot(Response_var, per_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_yield[df_yield$per_change < 1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 qplot(Response_var, abundance_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
@@ -525,14 +515,14 @@ yield_summary3 <- df_yield[df_yield$per_change < 1000,] %>% #
   mutate(Group_RV = "Crop Production") %>%
   mutate(Review = "Early Season Pest Management")
 
-yield_summary2 <- df_yield %>% #[df_yield$per_change < 1000,]
+yield_summary2 <- df_yield[df_yield$per_change < 1000,] %>% #
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2) %>%
   summarise(mean_per_change2 = mean(per_change, na.rm = TRUE),
             sem_per_change2 = std.error(per_change, na.rm = TRUE),
             num_papers2 = n_distinct(Paper_id), num_comparisons2 =length(Paper_id))
 
-yield_summary1 <- df_yield %>% #[df_yield$per_change < 1000,]
+yield_summary1 <- df_yield[df_yield$per_change < 1000,] %>% #[df_yield$per_change < 1000,]
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
   group_by(Review_id, main_group, group_metric, Legend_1) %>%
   summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
@@ -552,10 +542,6 @@ yield_summary1 <- df_yield %>% #[df_yield$per_change < 1000,]
 yield_summary <- left_join(yield_summary1, yield_summary2)
 yield_summary <- left_join(yield_summary, yield_summary3)
 
-
-
-write.csv(yield_summary, file = "PestMgmt Review/PestMgmt_Yield_Summary.csv")
-            #"Cover Crop Review/CC_Yield_Summary.csv")
 
 
 ####Group_RV: Water####
@@ -607,14 +593,12 @@ water_summary <- left_join(water_summary1, water_summary2)
 water_summary <- left_join(water_summary, water_summary3)
 
 
-write.csv(water_summary, file = "PestMgmt Review/PestMgmt_Water_Summary.csv")
-            #"Cover Crop Review/CC_Water_Summary.csv")
-
 
 ####Join Summary results back into one file ####
-summary_all <- soil_summary %>%
-    full_join(pest_summary) %>%
-    full_join(yield_summary) %>%
+summary_all <- full_join(soil_summary, pest_summary)
+summary_all <- full_join(summary_all, yield_summary)
+summary_all3 <- full_join(summary_all2, water_summary)    
+
     full_join(water_summary)
 
 #write.csv(summary_all, file = "Cover Crop Review/CC_FULL_Summary.csv")

@@ -52,20 +52,36 @@ ui <-  fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      radioButtons(inputId = "MgmtPractice", label = "Management Practice",
-                   choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
-                   selected = "Cover Crop"),
-      
-      radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
-                   choices = unique(summary_all$Group_RV) %>% sort(),
-                   selected = "Crop Production"),
-      
-      actionButton(inputId = "update", label = "Update the Figure")
+      tabsetPanel(
+        tabPanel("Practice",
+                 radioButtons(inputId = "MgmtPractice", label = "Practice",
+                              choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
+                              selected = "Cover Crop"),
+                 
+                 radioButtons(inputId = "RV", label = "Outcome",
+                              choices = unique(summary_all$Group_RV) %>% sort(),
+                              selected = "Soil"),
+                 
+                 actionButton(inputId = "update", label = "Update")  
+        ),
+        tabPanel("Outcome",
+                 radioButtons(inputId = "MgmtPractice", label = "Practice",
+                              choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
+                              selected = "Cover Crop"),
+                 
+                 radioButtons(inputId = "RV", label = "Outcome",
+                              choices = unique(summary_all$Group_RV) %>% sort(),
+                              selected = "Soil"),
+                 
+                 actionButton(inputId = "update", label = "Update")  
+                 
+        )
+      )
     ),
         
   mainPanel(
     tabsetPanel(
-      tabPanel("Data summary",
+      tabPanel("Data",
                plotOutput(outputId = "forestplot"),
                br(),
                fluidRow(
@@ -78,8 +94,7 @@ ui <-  fluidPage(
                )
       ),
       tabPanel("Map"),
-      tabPanel("References"),
-      tabPanel("Methods")
+      tabPanel("References")
     )
   )
   )

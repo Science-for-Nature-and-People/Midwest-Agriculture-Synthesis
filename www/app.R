@@ -14,7 +14,7 @@ library(shinydashboard)
 
 setwd(".")
 #datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
-datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
+datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
 
 #import data -> summary files
 covercrop <-  read.csv(file.path(datapath, "/CC_FULL_Summary2.csv"), stringsAsFactors = FALSE)
@@ -45,47 +45,46 @@ summary_all$group_metric_facet <- reorder.factor(summary_all$group_metric_facet,
 ###end of test###
 
 #user interface
-ui <-  fluidPage( 
+ui <-  fluidPage(
   useShinyjs(), #this lets us use the shinyjs package. This is required just for the "click" function below, which "clicks" the update button to initialize a plot at the start
+  
   titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
-  tabPanel(
-    title = "Data display",
-    sidebarLayout(
-      sidebarPanel( 
-        radioButtons(inputId = "MgmtPractice", label = "Management Practice", 
-                     choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
-                     selected = "Cover Crop"),
-        
-        radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
-                     choices = unique(summary_all$Group_RV) %>% sort(),
-                     selected = "Crop Production"),
-        
-        actionButton(inputId = "update", label = "Update the Figure")
-      ),
+  
+  sidebarLayout(
+    sidebarPanel(
+      radioButtons(inputId = "MgmtPractice", label = "Management Practice",
+                   choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
+                   selected = "Cover Crop"),
       
-      mainPanel(
-        plotOutput(outputId = "forestplot"),
-        br(),
-        fluidRow(
-          box(
-            textOutput(outputId = "text_description"),
-            title = "Plot Description",
-            width = 10 #change width depending on how big you want the textbox to be. can go from 1-12
-            #to use other features of box (like color, collapsable, ect..) we need to change fluidPage to dashboardPage
-          )
-        )
-      )
+      radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
+                   choices = unique(summary_all$Group_RV) %>% sort(),
+                   selected = "Crop Production"),
+      
+      actionButton(inputId = "update", label = "Update the Figure")
     ),
-    
-    tabPanel(
-      title = "Map"
-    ),
-    
-    tabPanel(
-      title = "Included studies"
+        
+  mainPanel(
+    tabsetPanel(
+      tabPanel("Data summary",
+               plotOutput(outputId = "forestplot"),
+               br(),
+               fluidRow(
+                 box(
+                   textOutput(outputId = "text_description"),
+                   title = "Plot Description",
+                   width = 10 #change width depending on how big you want the textbox to be. can go from 1-12
+                   #to use other features of box (like color, collapsable, ect..) we need to change fluidPage to dashboardPage  
+                 )
+               )
+      ),
+      tabPanel("Map"),
+      tabPanel("References"),
+      tabPanel("Methods")
     )
-  )    
+  )
+  )
 )
+
 
 ####server instructions####
 #build plot in server function

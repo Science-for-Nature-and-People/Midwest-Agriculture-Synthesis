@@ -73,6 +73,10 @@ ui <-  fluidPage(
                               choices = unique(summary_all$Group_RV) %>% sort(),
                               selected = "Soil"),
                  
+                 radioButtons(inputId = "State", label = "State",
+                              choices = unique(summary_all$Group_RV) %>% sort(),
+                              selected = "Illinois"),
+                 
                  actionButton(inputId = "update", label = "Update")  
                  
         )
@@ -94,7 +98,8 @@ ui <-  fluidPage(
                )
       ),
       tabPanel("Map"),
-      tabPanel("References")
+      tabPanel("References"),
+      tabPanel("Methods")
     )
   )
   )

@@ -14,7 +14,7 @@ library(shinydashboard)
 
 setwd(".")
 #datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
-datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
+datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
 
 #import data -> summary files
 covercrop <-  read.csv(file.path(datapath, "/CC_FULL_Summary2.csv"), stringsAsFactors = FALSE)
@@ -39,110 +39,131 @@ summary_all$group_metric_facet <- with(summary_all, paste(group_metric, main_gro
 summary_all$group_metric_facet <- reorder.factor(summary_all$group_metric_facet, new.order = sort(unique(summary_all$group_metric_facet), decreasing = TRUE))
 
 ###start of management button test (safe to delete this chunk)###
-  #all of our data has cover cropping in this column. I make half of the data (randomly chosen) a different entry to see if the button works.
+#all of our data has cover cropping in this column. I make half of the data (randomly chosen) a different entry to see if the button works.
 #levels(summary_all$Review) <- c(levels(summary_all$Review), "test")
 #summary_all$Review[sample(x = nrow(summary_all), size = nrow(summary_all)/2)] <- "test"
 ###end of test###
 
-  #user interface
-ui <-  fluidPage( 
-useShinyjs(), #this lets us use the shinyjs package. This is required just for the "click" function below, which "clicks" the update button to initialize a plot at the start
-titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
-
-sidebarLayout(
-  sidebarPanel( 
-        radioButtons(inputId = "MgmtPractice", label = "Management Practice", 
-          choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
-          selected = "Cover Crop"),
-
-        radioButtons(inputId = "RV", label = "Infield Agro-Environmental Response",
-          choices = unique(summary_all$Group_RV) %>% sort(),
-          selected = "Crop Production"),
-    
-          actionButton(inputId = "update", label = "Update the Figure")
+#user interface
+ui <-  fluidPage(
+  useShinyjs(), #this lets us use the shinyjs package. This is required just for the "click" function below, which "clicks" the update button to initialize a plot at the start
+  
+  titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
+  
+  sidebarLayout(
+    sidebarPanel(
+      tabsetPanel(
+        tabPanel("Practice",
+                 radioButtons(inputId = "MgmtPractice", label = "Practice",
+                              choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
+                              selected = "Cover Crop"),
+                 
+                 radioButtons(inputId = "RV", label = "Outcome",
+                              choices = unique(summary_all$Group_RV) %>% sort(),
+                              selected = "Soil"),
+                 
+                 actionButton(inputId = "update", label = "Update")  
         ),
-          
-
-  mainPanel(
-            plotOutput(outputId = "forestplot"),
-            br(),
-            fluidRow(
-              box(
-                textOutput(outputId = "text_description"),
-                title = "Plot Description",
-                width = 10 #change width depending on how big you want the textbox to be. can go from 1-12
-                           #to use other features of box (like color, collapsable, ect..) we need to change fluidPage to dashboardPage
-                
-              )
-            )
+        tabPanel("Outcome",
+                 radioButtons(inputId = "MgmtPractice", label = "Practice",
+                              choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
+                              selected = "Cover Crop"),
+                 
+                 radioButtons(inputId = "RV", label = "Outcome",
+                              choices = unique(summary_all$Group_RV) %>% sort(),
+                              selected = "Soil"),
+                 
+                 actionButton(inputId = "update", label = "Update")  
+                 
         )
-
-  )    
+      )
+    ),
+        
+  mainPanel(
+    tabsetPanel(
+      tabPanel("Data",
+               plotOutput(outputId = "forestplot"),
+               br(),
+               fluidRow(
+                 box(
+                   textOutput(outputId = "text_description"),
+                   title = "Plot Description",
+                   width = 10 #change width depending on how big you want the textbox to be. can go from 1-12
+                   #to use other features of box (like color, collapsable, ect..) we need to change fluidPage to dashboardPage  
+                 )
+               )
+      ),
+      tabPanel("Map"),
+      tabPanel("References")
+    )
+  )
+  )
 )
+
 
 ####server instructions####
 #build plot in server function
 
 server <- function(input, output) { 
-      
+  
   df <- eventReactive(input$update,{ #set action button to initiate changes in the figures displayed
-          
+    
     #filter dataset to display selected review and response variables
-          summary_all %>%
-            filter(Review == input$MgmtPractice) %>%
-            filter(Group_RV == input$RV)
-          }) 
-   
-           #build figure based on selected data
-        
-        output$forestplot <- renderPlot({
-            
-          ggplot(df(), aes(group_metric_facet, mean_per_change1, #remember that group_metric_facet is the column ordered by main_group and group_metric
-                           ymin = mean_per_change1-sem_per_change1, 
-                           ymax = mean_per_change1 +sem_per_change1)) +
-            scale_x_discrete("", breaks = summary_all$group_metric_facet, label = summary_all$group_metric) + #this line relabels the x from "group_metric_main_group" to just "group_metric"
-            geom_pointrange() +
-            geom_errorbar(aes(ymin = mean_per_change1-sem_per_change1, 
-                              ymax = mean_per_change1 +sem_per_change1, 
-                              width=.1)) +
-            geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
-            coord_flip() + # flip coordinates (puts labels on y axis)
-            labs(title =df()$Review[1], #since we are filtering summary_all to only have 1 value for review/group_rv, we can take any element as the label (they should all be the same)
-                 subtitle = df()$Group_RV[1], 
-                 x = "",
-                 y = "percent difference between control and treatment (%)") + 
-            #scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +        
-            theme_bw() +
-            geom_point( aes(colour = Legend_1)) + #color labeling of fine level groupings
-            facet_grid(main_group ~., scales = "free", space = "free") +
-            theme(strip.text.y = element_text(angle = 0)) 
-        })
-        
-        output$text_description <- renderText({
-          if(df()$Review[1] == "Cover Crop"){
-            "this is the text we can show for Cover Crop options. We can add another if statement within this one if we want a separate description for each response. See commented code for an example"
-            # if(df()$Group_RV[1] == "Crop Production"){
-            #   "This is the text we show for cover crop & crop production"
-            # }
-            # else if(df()$Group_RV[1] =="Soil"){
-            #   "This is the text we show for cover crop and soil"
-            # }
-            # else if ... ect ect
-          }
-          else{
-            "this is the text we can show for Early Season Pest Management. The width of these text boxes can be adjusted in the ui, in the 'box' function"
-          }
-          
-          })
-        
-        observe({
-          click("update")  #this chunk will click the update button at the very start, so that our app starts with a plot.
-                           # if you want to change the default plot, then change the default "selected" values above
-          #invalidateLater(1000) #invalidateLater would click the update button every '1000' milliseconds
-        })
-
+    summary_all %>%
+      filter(Review == input$MgmtPractice) %>%
+      filter(Group_RV == input$RV)
+  }) 
+  
+  #build figure based on selected data
+  
+  output$forestplot <- renderPlot({
+    
+    ggplot(df(), aes(group_metric_facet, mean_per_change1, #remember that group_metric_facet is the column ordered by main_group and group_metric
+                     ymin = mean_per_change1-sem_per_change1, 
+                     ymax = mean_per_change1 +sem_per_change1)) +
+      scale_x_discrete("", breaks = summary_all$group_metric_facet, label = summary_all$group_metric) + #this line relabels the x from "group_metric_main_group" to just "group_metric"
+      geom_pointrange() +
+      geom_errorbar(aes(ymin = mean_per_change1-sem_per_change1, 
+                        ymax = mean_per_change1 +sem_per_change1, 
+                        width=.1)) +
+      geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
+      coord_flip() + # flip coordinates (puts labels on y axis)
+      labs(title =df()$Review[1], #since we are filtering summary_all to only have 1 value for review/group_rv, we can take any element as the label (they should all be the same)
+           subtitle = df()$Group_RV[1], 
+           x = "",
+           y = "percent difference between control and treatment (%)") + 
+      #scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +        
+      theme_bw() +
+      geom_point( aes(colour = Legend_1)) + #color labeling of fine level groupings
+      facet_grid(main_group ~., scales = "free", space = "free") +
+      theme(strip.text.y = element_text(angle = 0)) 
+  })
+  
+  output$text_description <- renderText({
+    if(df()$Review[1] == "Cover Crop"){
+      "this is the text we can show for Cover Crop options. We can add another if statement within this one if we want a separate description for each response. See commented code for an example"
+      # if(df()$Group_RV[1] == "Crop Production"){
+      #   "This is the text we show for cover crop & crop production"
+      # }
+      # else if(df()$Group_RV[1] =="Soil"){
+      #   "This is the text we show for cover crop and soil"
+      # }
+      # else if ... ect ect
+    }
+    else{
+      "this is the text we can show for Early Season Pest Management. The width of these text boxes can be adjusted in the ui, in the 'box' function"
+    }
+    
+  })
+  
+  observe({
+    click("update")  #this chunk will click the update button at the very start, so that our app starts with a plot.
+    # if you want to change the default plot, then change the default "selected" values above
+    #invalidateLater(1000) #invalidateLater would click the update button every '1000' milliseconds
+  })
+  
 }
-      
+
 
 shinyApp(ui = ui, server = server)
 
@@ -201,12 +222,12 @@ shinyApp(ui = ui, server = server)
 #}})
 
 #ggplot(df(), aes(group_metric, mean_per_change, ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change)) +
- # geom_pointrange() +
-  #geom_errorbar(aes(ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change, width=.2)) +
-  #geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
-  #coord_flip() + # flip coordinates (puts labels on y axis)
-  #theme_bw() +
-  #geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
-  #facet_grid(main_group ~ .,scales = "free", space = "free") +
-  #theme(strip.text.y = element_text(angle = 0))
+# geom_pointrange() +
+#geom_errorbar(aes(ymin = mean_per_change-sem_per_change, ymax = mean_per_change +sem_per_change, width=.2)) +
+#geom_hline(yintercept=0, lty=2) +# add a dotted line at x=0 after flip
+#coord_flip() + # flip coordinates (puts labels on y axis)
+#theme_bw() +
+#geom_point( aes(colour = Cover_crop_diversity2)) + #color labeling of fine level groupings
+#facet_grid(main_group ~ .,scales = "free", space = "free") +
+#theme(strip.text.y = element_text(angle = 0))
 

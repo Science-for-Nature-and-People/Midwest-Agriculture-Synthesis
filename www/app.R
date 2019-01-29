@@ -14,11 +14,11 @@ library(shinydashboard)
 
 setwd(".")
 #datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
-datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/"
+datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
 
 #import data -> summary files
-covercrop <-  read.csv(file.path(datapath, "Cover Crop Review/CC_FULL_Summary2.csv"), stringsAsFactors = FALSE)
-pestmgmt <-  read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_FULL_Summary2.csv"), stringsAsFactors = FALSE)
+covercrop <-  read.csv(file.path(datapath, "/CC_FULL_Summary2.csv"), stringsAsFactors = FALSE)
+pestmgmt <-  read.csv(file.path(datapath, "/PestMgmt_FULL_Summary2.csv"), stringsAsFactors = FALSE)
 
 summary_all <- full_join(covercrop, pestmgmt)
 

@@ -97,7 +97,9 @@ ui <-  fluidPage(
                  )
                )
       ),
-      tabPanel("Map"),
+      tabPanel("Map",
+               leafletOutput("mymap",height = 1000)
+               ),
       tabPanel("References"),
       tabPanel("Methods")
     )

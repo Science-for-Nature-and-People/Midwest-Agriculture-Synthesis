@@ -14,8 +14,8 @@ library(shinydashboard)
 library(forcats)      #reorder data display from greatest to least
 
 setwd(".")
-datapath <- "C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data" 
-#datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
+#datapath <- "C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data" 
+datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
 
 #import data -> summary files
 covercrop <-  read.csv(file.path(datapath, "/CC_FULL_Summary.csv"), stringsAsFactors = FALSE)
@@ -53,7 +53,7 @@ summary_all %>%
 ui <-  fluidPage(
   useShinyjs(), #this lets us use the shinyjs package. This is required just for the "click" function below, which "clicks" the update button to initialize a plot at the start
   
-  titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
+  titlePanel(' '), # Removing title because it should be on main page. Makes this look busy.
   
   sidebarLayout(
     sidebarPanel(
@@ -63,7 +63,7 @@ ui <-  fluidPage(
                               choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
                               selected = "Cover Crop"),
                  
-                 selectInput(inputId = "RV", label = "Infield Agro-Environmental Response",
+                 selectInput(inputId = "RV", label = "Outcome",
                               choices = unique(summary_all$Group_RV) %>% sort(), multiple = T, #Now able to select multiple options from list
                               selected = "Soil"),
                  
@@ -106,9 +106,7 @@ ui <-  fluidPage(
                  )
                )
       ),
-      tabPanel("Map",
-               leafletOutput("mymap",height = 1000)
-               ),
+      tabPanel("Map"),
       tabPanel("References"),
       tabPanel("Methods")
     )

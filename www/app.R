@@ -30,7 +30,7 @@ summary_all[collist] <- lapply(summary_all[collist], factor)
 levels(summary_all$Legend_1)
 
 #reorder the data for the legend
-summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)", "Soil", "Foliage","Seed", "Seed & Foliage" ))  
+summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Single species", "Two species", "Three or more species", "Soil", "Foliage","Seed", "Seed & Foliage" ))  
 #rearrange the data according to the new ordering defined above
 summary_all <- summary_all %>% arrange(Legend_1)
 
@@ -64,10 +64,10 @@ ui <-  fluidPage(
                               selected = "Cover Crop"),
                  
                  selectInput(inputId = "RV", label = "Infield Agro-Environmental Response",
-                              choices = unique(summary_all$Group_RV) %>% sort(), multiple = T, #Now able to select multiple options from list
+                              choices = unique(summary_all$Group_RV) %>% sort(),
                               selected = "Soil"),
                  
-                 selectInput(inputId = "Legend_1", label = "A",
+                 selectInput(inputId = "Legend_1", label = "Practice Specifics",
                              choices = unique(summary_all$Legend_1) %>% sort(), multiple = T, #Now able to select multiple options from list
                              selected = "Monoculture"),
                  
@@ -151,9 +151,11 @@ server <- function(input, output, session) {
   df2 <- eventReactive(input$update,{ #set action button to initiate changes in the figures displayed
     
     #filter dataset to display selected review and response variables
+          ##Here we need to figure out how to sort data when asked to display all Legend_1 variables
+          ##as is it only reorders when Legend_1 has one selection
     df1() %>%
       filter(Legend_1 %in% input$Legend_1) %>%
-      group_by(Legend_1) %>%
+      group_by(Legend_1) %>% #needs to group by the greatest option within Legend_1 
       mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1))
     
   }) 

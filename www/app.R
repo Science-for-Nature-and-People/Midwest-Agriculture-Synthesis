@@ -53,7 +53,7 @@ summary_all %>%
 ui <-  fluidPage(
   useShinyjs(), #this lets us use the shinyjs package. This is required just for the "click" function below, which "clicks" the update button to initialize a plot at the start
   
-  titlePanel('Synthesis of the trade-offs associated with Best Management Practices (BMPs) in the US Midwest'),
+  titlePanel(' '),# Removing title because it should be on main page. Makes this look busy.
   
   sidebarLayout(
     sidebarPanel(
@@ -63,13 +63,13 @@ ui <-  fluidPage(
                               choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
                               selected = "Cover Crop"),
                  
-                 selectInput(inputId = "RV", label = "Infield Agro-Environmental Response",
-                              choices = unique(summary_all$Group_RV) %>% sort(),
-                              selected = "Soil"),
-                 
                  selectInput(inputId = "Legend_1", label = "Practice Specifics",
                              choices = unique(summary_all$Legend_1) %>% sort(), multiple = T, #Now able to select multiple options from list
-                             selected = "Monoculture"),
+                             ), #selected = "Single species"), #add back if we want to specify one of the options
+                 
+                 selectInput(inputId = "RV", label = "Outcome",
+                             choices = unique(summary_all$Group_RV) %>% sort(),
+                             selected = "Soil"),
                  
                  actionButton(inputId = "update", label = "Go")  
         ),
@@ -78,13 +78,13 @@ ui <-  fluidPage(
                               choices = unique(summary_all$Review), #will be expanded as review dataframes are populated
                               selected = "Cover Crop"),
                  
-                 radioButtons(inputId = "outcome", label = "Outcome",
-                              choices = unique(summary_all$Group_RV) %>% sort(),
-                              selected = "Soil"),
-                 
                  radioButtons(inputId = "state", label = "State",
                               choices = unique(summary_all$Group_RV) %>% sort(),
                               selected = "Illinois"),
+                 
+                 radioButtons(inputId = "outcome", label = "Outcome",
+                              choices = unique(summary_all$Group_RV) %>% sort(),
+                              selected = "Soil"),
                  
                  actionButton(inputId = "update2", label = "Go")  
                  

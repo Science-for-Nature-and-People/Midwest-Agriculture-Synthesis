@@ -32,10 +32,9 @@ collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", 
 summary_all[collist] <- lapply(summary_all[collist], factor)
 levels(summary_all$Legend_1)
 
-# reorder the data for the legend
-summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)", "Soil", "Foliage", "Seed", "Seed & Foliage"))
-
-# rearrange the data according to the new ordering defined above
+#reorder the data for the legend
+summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Single species", "Two species", "Three or more species", "Soil", "Foliage","Seed", "Seed & Foliage" ))  
+#rearrange the data according to the new ordering defined above
 summary_all <- summary_all %>% arrange(Legend_1)
 
 # make a temporary new column that just combines the group_metric and the main group.
@@ -171,9 +170,12 @@ server <- function(input, output, session) {
   df2 <- eventReactive(input$update, {
 
     # filter dataset to display selected review and response variables
+          ##Here we need to figure out how to sort data when asked to display all Legend_1 variables
+          ##as is it only reorders when Legend_1 has one selection
+
     df1() %>%
       filter(Legend_1 %in% input$Legend_1) %>%
-      group_by(Legend_1) %>%
+      group_by(Legend_1) %>% #needs to group by the greatest option within Legend_1 
       mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1))
   })
 

@@ -51,81 +51,90 @@ summary_all %>%
 
 #### User Interface ####
 # user interface
-ui <- fluidPage(
+ui <- navbarPage(
+  "Midwest Soil Health Evidence",
 
-  # shinyjs required for the update button to initialize a plot
-  useShinyjs(),
+  tabPanel(
+    "Data",
 
-  # Set up header columns
-  fluidRow(
-    column(
-      3,
-      align = "center",
-      radioButtons(
-        inputId = "MgmtPractice", label = "Practice",
-        choices = unique(summary_all$Review),
-        selected = "Cover Crop"
-      )
-    ),
-    column(
-      4,
-      align = "center",
-      selectInput(
-        inputId = "RV", label = "Outcome",
-        choices = unique(summary_all$Group_RV) %>% sort(), multiple = T, # Now able to select multiple options from list
-        selected = "Soil"
-      )
-    ),
-    column(
-      4,
-      align = "center",
-      selectInput(
-        inputId = "Legend_1", label = "Grouping",
-        choices = unique(summary_all$Legend_1) %>% sort(), multiple = T, # Now able to select multiple options from list
-        selected = "Monoculture"
-      )
-    )
-  ),
-  fluidRow(
-    column(
-      12,
-      align = "center",
-      actionButton(inputId = "update", label = "Update", style = "padding:4px; font-size:80%")
-    )
-  ),
+    # shinyjs required for the update button to initialize a plot
+    useShinyjs(),
 
-  hr(),
-
-  # Set up row with plots of map and forest plot
-  fluidRow(
-    column(
-      4,
-      leafletOutput("Map")
-    ),
-    column(
-      8,
-      tabsetPanel(
-        tabPanel(
-          "Data",
-          plotOutput(outputId = "forestplot")
-        ),
-        tabPanel(
-          "References"
+    # Set up header columns
+    fluidRow(
+      column(
+        3,
+        align = "center",
+        radioButtons(
+          inputId = "MgmtPractice", label = "Practice",
+          choices = unique(summary_all$Review),
+          selected = "Cover Crop"
+        )
+      ),
+      column(
+        4,
+        align = "center",
+        selectInput(
+          inputId = "RV", label = "Outcome",
+          choices = unique(summary_all$Group_RV) %>% sort(), multiple = T, # Now able to select multiple options from list
+          selected = "Soil"
+        )
+      ),
+      column(
+        4,
+        align = "center",
+        selectInput(
+          inputId = "Legend_1", label = "Grouping",
+          choices = unique(summary_all$Legend_1) %>% sort(), multiple = T, # Now able to select multiple options from list
+          selected = "Monoculture"
         )
       )
-    )
+    ),
+    fluidRow(
+      column(
+        12,
+        align = "center",
+        actionButton(inputId = "update", label = "Update", style = "padding:4px; font-size:80%")
+      )
+    ),
+
+    hr(),
+
+    # Set up row with plots of map and forest plot
+    fluidRow(
+      column(
+        4,
+        leafletOutput("Map")
+      ),
+      column(
+        8,
+        tabsetPanel(
+          tabPanel(
+            "Data",
+            plotOutput(outputId = "forestplot")
+          ),
+          tabPanel(
+            "References"
+          )
+        )
+      )
+    ),
+
+    hr(),
+
+    # Set up row for text entry
+    fluidRow(
+      column(
+        12,
+        align = "center",
+        textOutput(outputId = "text_description")
+      )
+    ),
+
+    hr()
   ),
   
-  hr(),
-  
-  # Set up row for text entry
-  fluidRow(
-    column(
-      12,
-      align="center",
-      textOutput(outputId = "text_description")
-    )
-  )
+  tabPanel("Methods")
 )
 
 #### SERVER INSTRUCTIONS ####

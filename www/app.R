@@ -17,7 +17,8 @@ library(forcats)  # reorder data display from greatest to least
 
 #### Load data ####
 setwd(".")
-datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
+# datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
+datapath <- "./data" # using relative path
 
 # import data -> summary files
 covercrop <- read.csv(file.path(datapath, "/CC_FULL_Summary.csv"), stringsAsFactors = FALSE)

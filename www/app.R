@@ -3,15 +3,6 @@
 # Managing Soil Carbon - SNAPP Working Group
 # -------------------------------------------
 
-#--TO DO--#
-# Display sample number on point in forest plot
-# Add geography selection
-# Display AOIs selected
-# Display points of papers included
-# Add mad lib descriptions
-# Add reference list for papers included
-# Add download link for full data set
-
 
 #### Load libraries ####
 library(readr)
@@ -96,15 +87,7 @@ ui <- navbarPage(
       ),
       column(
         8,
-        tabsetPanel(
-          tabPanel(
-            "Data",
-            plotOutput(outputId = "forestplot")
-          ),
-          tabPanel(
-            "References"
-          )
-        )
+        plotOutput(outputId = "forestplot")
       )
     ),
     
@@ -122,6 +105,7 @@ ui <- navbarPage(
     hr()
   ),
   
+  tabPanel("References"),
   tabPanel("Methods")
 )
 

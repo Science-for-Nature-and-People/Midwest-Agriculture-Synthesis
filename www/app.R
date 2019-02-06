@@ -3,6 +3,16 @@
 # Managing Soil Carbon - SNAPP Working Group
 # -------------------------------------------
 
+#--TO DO--#
+# Display sample number on point in forest plot
+# Add geography selection
+# Display AOIs selected
+# Display points of papers included
+# Add mad lib descriptions
+# Add reference list for papers included
+# Add download link for full data set
+
+
 #### Load libraries ####
 library(readr)
 library(shiny)    # for making Shiny app
@@ -26,7 +36,9 @@ ui <- navbarPage(
     
     # shinyjs required for the update button to initialize a plot
     useShinyjs(),
-    
+
+    tags$style(type='text/css', ".selectize-input { font-size: 11px; line-height: 11px;}"),
+        
     # Set up header columns
     fluidRow(
       column(
@@ -34,12 +46,12 @@ ui <- navbarPage(
         align = "center",
         selectInput(
           inputId = "MgmtPractice", label = "Practice",
-          choices = unique(summary_all$Review),
+          choices = unique(summary_all$Review) %>% sort(), multiple = T,
           selected = "Cover Crop"
         )
       ),
       column(
-        4,
+        3,
         align = "center",
         selectInput(
           inputId = "RV", label = "Outcome",
@@ -48,10 +60,19 @@ ui <- navbarPage(
         )
       ),
       column(
-        4,
+        3,
         align = "center",
         selectInput(
           inputId = "Legend_1", label = "Grouping",
+          choices = unique(summary_all$Legend_1) %>% sort(), multiple = T, 
+          selected = "Monoculture"
+        )
+      ),
+      column(
+        3,
+        align = "center",
+        selectInput(
+          inputId = "Geography", label = "State",
           choices = unique(summary_all$Legend_1) %>% sort(), multiple = T, 
           selected = "Monoculture"
         )

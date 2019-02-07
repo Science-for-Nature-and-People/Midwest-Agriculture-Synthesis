@@ -48,6 +48,8 @@ Results <-read.csv("Cover Crop Review/CoverCrop_Results.csv")
 #Results = filter(Results,!(Response_var == "cover crop leaf N content")) #set dataframe to work with - remove cover crop nitrogen input data (incomplete dataset)
 
 
+Results<- read.csv("Nutrient Review/Nutrient_Results.csv")
+
 #add surrogate key to Results
 Results$Res_key = rownames(Results)
 
@@ -120,7 +122,7 @@ Soil <- Results %>%
       filter(Group_RV == "Soil") %>%
       distinct(Response_var)
       
-      unique(Soil$Response_var)
+    unique(Soil$Response_var)
       
         
 Production <- Results %>%
@@ -142,6 +144,287 @@ unique(Pest$Response_var)
         
 ##### Naming of all Grouping Variables Below########################################################
 ######Organized by Review ##########################################################################
+
+
+########################Nutrient Management Review####################################################
+
+#Bulk Groups####
+####Soils####
+##Soil Chemical Properties####
+
+chem_nitrate_early <- c("soil nitrate at maize planting (0-30 cm depth)",
+                        "soil nitrate at maize V6 stage (0-30 cm depth)",
+                        "total soil mineral nitrate at maize V6 stage (0-30 cm depth)",
+                        "soil nitrate (0-240 cm depth) prior to planting cash crop",
+                        "total soil mineral nitrate at maize planting (0-30 cm depth)")
+
+
+chem_nitrate_mid <- c("soil nitrate at maize R1 stage (0-30 cm depth)",
+                      "total soil mineral nitrate at maize R1 stage (0-30 cm depth)")
+
+chem_nitrate_harvest <- c("soil nitrate residual (0-0.3m)",
+                          "residual soil nitrate (0-60 cm depth)",
+                          "soil nitrate content (0.0 to 0.6 m depth) after harvest",
+                          "soil nitrate (0-240 cm depth) post harvest of cash crop",
+                          "soil residual nitrate (0-90 cm depth, after harvest or early spring)",
+                          "soil residual nitrate (0-90 cm depth)",
+                          "soil nitrate (0-1.2 m depth)",
+                          "residual soil nitrate from enriched UAN fertilizer (0-107 cm depth)",
+                          "residual soil nitrate (0-0.9 m depth)",
+                          "postharvest soil nitrate content",
+                          "residual soil nitrate (0-90 cm depth)")
+
+chem_totalN <- c("soil nitrate + ammonium content (0.0 to 0.6 m depth) after harvest",
+                 "residual total soil nitrogen (0-60 cm depth)",
+                 "residual total soil nitrogen from enriched UAN fertilizer (0-107 cm depth)",
+                 "fertilizer-derived nitrogen recovered in soil (0-90 cm depth)",
+                 "fertilizer-derived nitrogen recovered in soil (0-130 cm depth)")
+
+ 
+
+chem_ammonium_early <- c("soil ammonium at maize planting (0-30 cm depth)",
+                         "soil ammonium at maize V6 stage (0-30 cm depth)")
+
+chem_ammonium_mid <- c("soil ammonium at maize R1 stage (0-30 cm depth)")
+
+chem_ammonium_harvest <- c("soil ammonium residual (0-0.3m)",
+                           "soil ammonium at post harvest of maize (0-30 cm depth)",
+                           "residual soil ammonium (0-60 cm depth)",
+                           "soil ammonium content (0.0 to 0.6 m depth) after harvest",
+                           "soil ammonium at post harvest of maize (60-90 cm depth)",
+                           "soil ammonium at post harvest of maize (30-60 cm depth)",
+                           "residual soil ammonium from enriched UAN fertilizer (0-107 cm depth)")
+
+##Soil Environmental Properties####
+
+enviro_N2Oemissions <- c("area-scaled nitrous oxide",
+                         "yield-scaled nitrous oxide",
+                         "nitrous oxide (N20)",
+                         "area scaled nitrous oxide emissions (N2O) in maize",
+                         "yield scaled nitrous oxide emissions (N2O) in maize",
+                         "ferilizer-induced cumulative nitrous oxide emission factor (EF)",
+                         "fertilizer-induced nitrous oxide emissions factor",
+                         "nitrous oxide (N20) + nitric oxide (NO)")
+
+enviro_NOemissions <- ("nitric oxide (NO)")
+
+
+##########Crop Production#######
+##Crop Nitrogen Uptake#### 
+cropNuptake_grainsoy <- c("soybean grain nitrogen concentration",
+                    "grain nitrogen (soybean)")
+
+cropNuptake_grainmaize <- c("maize grain nitrogen concentration",
+                            "maize grain nitrogen yield",
+                            "maize grain nitrogen removal",
+                            "maize grain total nitrogen concentration",
+                            "grain nitrogen uptake (maize)",
+                            "grain nitrogen content (maize)",
+                            "maize grain nitrogen surplus",
+                            "maize grain nitrogen uptake")
+
+cropNuptake_abvgdbiomass_soy <- c("plant nitrogen concentration (soybean)",
+                                  "plant nitrogen (soybean)")
+
+cropNuptake_abvgdbiomass_maize <- c("stalk nitrate",
+                                    "maize whole plant nitrogen surplus",
+                                    "maize stover nitrogen concentration",
+                                    "maize total N",
+                                    "maize total nitrogen uptake",
+                                    "maize nitrogen recovery",
+                                    "aboveground N uptake (maize)",
+                                    "plant nitrogen uptake (maize)",
+                                    "maize whole plant (grain & stover) nitrogen uptake",
+                                    "maize total nitrogen uptake (3 year average)",
+                                    "maize leaf nitrogen content at silking (3 year average)",
+                                    "maize total aboveground nitrogen yield")
+
+cropNuptake_NUE <- c("agronomic efficiency",
+                     "Nitrogen Use Efficiency",
+                     "Nitrogen Recovery Efficiency",
+                     "Nitrogen Internal Efficiency",
+                     "maize nitrogen use efficiency",
+                     "Harvest Index",
+                     "nitrogen fertilizer recovery efficiency")
+
+##Stand Count#### 
+
+standcount_maize <- c("stand count (maize)",
+                      "maize stand count (3 year average)")
+
+standcount_damagedmaize <- "broken stalks (maize)"
+
+##Yields####
+
+yield_maizegrain <- c("maize grain yield (early planting)",
+                      "maize grain yield (late planting)",
+                      "maize grain yield (early planting, hybrid 1)",
+                      "maize grain yield (late planting, hybrid 1)",
+                      "maize grain yield (early planting, hybrid 2)",
+                      "maize grain yield (late planting, hybrid 2)",
+                      "grain yield (maize)",
+                      "maize grain yield",
+                      "crop yield (maize grain)",
+                      "maize grain yield",
+                      "maize yield",
+                      "maize yields",
+                      "maize grain yield (3 year average)")
+
+
+yield_soygrain <- c("soybean grain yield",
+                    "soybean yield")
+
+grainquality_soy <- c("soybean protein",
+                      "soybean oil",
+                      "soybean fiber")
+
+
+abovegroundbiomass_maize <- c("maize whole plant dry matter",
+                              "dry matter stover yield",
+                              "V6 dry wt.",
+                              "silage yield",
+                              "stover yield")
+
+abovegroundbiomass_soy <- "plant dry matter (soybean)"
+
+
+##########Water#######
+
+##Runoff####
+
+runoff_nitrate <- c("flow-weighted nitrate concentration in drainage tiles",
+                    "annual nitrate load in drainage tiles",
+                    "yield-scaled nitrate load",
+                    "yield-scaled nitrate concentration")
+
+##Drainage####
+
+drainage <- "annual tile drainage discharge volume"
+
+
+
+###Apply metric & grouping labels to dataframe#####################################3
+
+
+metric_labels <- Results %>%
+  select(Response_var, Res_key) %>%
+  mutate(
+    group_metric = case_when( 
+      
+      ####Soils####
+      ##Soil Chemical Properties####
+      
+      Response_var %in%  chem_nitrate_early  ~ "Nitrate (preplanting)",
+      Response_var %in%  chem_nitrate_mid  ~ "Nitrate (midseason)",
+      Response_var %in%  chem_nitrate_harvest  ~ "Nitrate (harvest)",
+      Response_var %in%  chem_totalN  ~ "Total Nitrogen (0-60+ cm) ",
+      Response_var %in%  chem_ammonium_early  ~ "Ammonium (preplanting) ",
+      Response_var %in%  chem_ammonium_mid  ~ "Ammonium (midseason)", 
+      Response_var %in%  chem_ammonium_harvest  ~ "Ammonium (harvest) ",
+      
+      
+      
+      ##Soil Environmental Properties####
+      
+      Response_var %in%   enviro_N2Oemissions  ~ "Nitrous oxide emissions",
+      Response_var %in%   enviro_NOemissions  ~ "Nitric oxide emissions",
+      
+     
+      
+      ##########Crop Production#######
+      ##Crop Nitrogen Uptake#### 
+      
+      Response_var %in%  cropNuptake_grainsoy  ~ "Grain (soybean)",
+      Response_var %in%  cropNuptake_grainmaize  ~ "Grain (maize)",
+      Response_var %in%  cropNuptake_abvgdbiomass_soy  ~ "Aboveground biomass (soybean)", 
+      Response_var %in%  cropNuptake_abvgdbiomass_maize  ~ "Aboveground biomass (maize)", 
+      Response_var %in%   cropNuptake_NUE  ~ "Nitrogen use efficiency", 
+       
+      
+      ##############Crop Production####
+      ##Stand Count####
+      Response_var %in% standcount_maize ~ "Stand count (maize)",
+      Response_var %in% standcount_damagedmaize ~ "Damaged stalks (maize)",
+      
+      
+      ##Yields####
+      Response_var %in% yield_maizegrain ~ "Grain (maize)",
+      Response_var %in% yield_soygrain ~ "Grain (soybean)",
+      Response_var %in% grainquality_soy ~ "Grain quality (soybean)",
+      Response_var %in% abovegroundbiomass_maize ~ "Aboveground biomass (maize)",
+      Response_var %in% abovegroundbiomass_soy ~ "Aboveground biomass (soybean)",
+      
+       
+      ##########Water#######
+      
+      ##Runoff####
+      Response_var %in% runoff_nitrate ~ "Nitrate",
+      
+       
+      ##Drainage####
+      Response_var %in% drainage ~ "Drainage"
+    )) %>%
+      
+      
+      #Create Main Groupings #####
+    
+    mutate(
+      main_group = case_when( 
+        
+        ####Soils####
+        ##Soil Chemical Properties####
+        
+        Response_var %in%  chem_nitrate_early  ~ "Chemical",
+        Response_var %in%  chem_nitrate_mid  ~ "Chemical",
+        Response_var %in%  chem_nitrate_harvest  ~ "Chemical",
+        Response_var %in%  chem_totalN  ~ "Chemical",
+        Response_var %in%  chem_ammonium_early  ~ "Chemical",
+        Response_var %in%  chem_ammonium_mid  ~ "Chemical",
+        Response_var %in%  chem_ammonium_harvest  ~ "Chemical",
+        
+        
+        
+        ##Soil Environmental Properties####
+        
+        Response_var %in%   enviro_N2Oemissions  ~ "Environmental",
+        Response_var %in%   enviro_NOemissions  ~ "Environmental",
+        
+        
+        
+        ##########Crop Production#######
+        ##Crop Nitrogen Uptake#### 
+        
+        Response_var %in%  cropNuptake_grainsoy  ~ "Crop Nitrogen Uptake",
+        Response_var %in%  cropNuptake_grainmaize  ~ "Crop Nitrogen Uptake",
+        Response_var %in%  cropNuptake_abvgdbiomass_soy  ~ "Crop Nitrogen Uptake", 
+        Response_var %in%  cropNuptake_abvgdbiomass_maize  ~ "Crop Nitrogen Uptake",  
+        Response_var %in%   cropNuptake_NUE  ~ "Crop Nitrogen Uptake",  
+        
+        
+        ##############Crop Production####
+        ##Stand Count####
+        Response_var %in% standcount_maize ~ "Stand Count",
+        Response_var %in% standcount_damagedmaize ~ "Stand Count",
+        
+        
+        ##Yields####
+        Response_var %in% yield_maizegrain ~ "Yields",
+        Response_var %in% yield_soygrain ~ "Yields",
+        Response_var %in% grainquality_soy ~ "Yields",
+        Response_var %in% abovegroundbiomass_maize ~ "Yields",
+        Response_var %in% abovegroundbiomass_soy ~ "Yields",
+        
+        
+        ##########Water#######
+        
+        ##Runoff####
+        Response_var %in% runoff_nitrate ~ "Runoff",
+        
+        
+        ##Drainage####
+        Response_var %in% drainage ~ "Drainage"
+      ))
+
 
 ########################Pest Management Review####################################################
 
@@ -204,6 +487,8 @@ unique(Pest$Response_var)
                         
                         insect_damage_maize <- c("maize plant death due to black cutworms", 
                                                  "maize yield when soybean aphid populations reached economically damaging levels")
+                        
+                        
                         
                         
                         
@@ -1213,11 +1498,14 @@ mutate(
                 ))
               
               
-              #Attach column to Results######
-              Results <-
-                left_join(Results, metric_labels, by = c("Res_key", "Response_var"))
-              
-
+                
+                
+                
+                #Attach column to Results######
+                Results <-
+                  left_join(Results, metric_labels, by = c("Res_key", "Response_var"))
+                
+                
 
 
 #############################################################################################
@@ -1229,7 +1517,7 @@ missing <- Results[is.na(Results$group_metric),] #check to see if all rows have 
 
 ####Save Results file with added Group names
 
-write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Cover Crop Review/CC_ResultsGrouped.csv")
+write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Nutrient Review/Nutrient_ResultsGrouped.csv")
 
 
 

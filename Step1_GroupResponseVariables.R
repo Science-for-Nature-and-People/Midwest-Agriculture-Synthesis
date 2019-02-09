@@ -288,6 +288,50 @@ abovegroundbiomass_maize <- c("maize whole plant dry matter",
 abovegroundbiomass_soy <- "plant dry matter (soybean)"
 
 
+
+
+#Review specifications (groups)####
+
+#Fertilizer Application####
+uniform_variable <- "uniform_variable"
+
+#Fertilizer Placement####
+
+broadcast_zone <- c("broad_band",
+                             "broadcast_band_ridge",
+                             "broadcast_sidedress",
+                             "broadcast_injected_interrow",
+                             "broadcast_injected_ridge"
+                    )
+
+surface_subsurface <- c("band_knife",
+                        "band_injection",
+                        "surfaceband_belowsurface")
+
+#Fertilizer Timing####
+
+preplant_plant <- c("preplant_postplant",
+                    "split_preplant_plant",
+                    "timing_preplant_plant"
+                    )
+
+fall_spring <- c("timing_fall_preplant",
+                 "timing_fall_spring",
+                 "timing_fall_V3")
+
+single_split <- c("timing_plant_plantV6",
+                  "split_plant_V6",
+                  "split_plant_plantV6",
+                  "timing_plant_V8",
+                  "timing_preplant_plantV12",
+                  "timing_preplant_splitpreplantV16",
+                  "timing_preplant_splitpreplantV4",
+                  "timing_preplant_splitpreplantV7",
+                  "timing_preplant_splitV4",
+                  "timing_preplant_V6",
+                  "timing_spring_V3")
+
+
 ##########Water#######
 
 ##Runoff####
@@ -307,7 +351,7 @@ drainage <- "annual tile drainage discharge volume"
 
 
 metric_labels <- Results %>%
-  select(Response_var, Res_key) %>%
+  select(Response_var, Group_finelevel, Res_key) %>%
   mutate(
     group_metric = case_when( 
       
@@ -423,7 +467,23 @@ metric_labels <- Results %>%
         
         ##Drainage####
         Response_var %in% drainage ~ "Drainage"
-      ))
+      )) %>%
+
+
+
+##Add Management Practice Specifics to Review ####
+mutate(
+  Review_specific = case_when( 
+    Group_finelevel %in% uniform_variable  ~ "Application (Variable Rate)",
+    Group_finelevel %in% broadcast_zone  ~ "Placement (Banding)",
+    Group_finelevel %in% surface_subsurface  ~ "Placement (Subsurface)",
+    Group_finelevel %in% preplant_plant  ~ "Timing (Pre/Post- Planting)",
+    Group_finelevel %in% fall_spring  ~ "Timing (Fall & Spring)",
+    Group_finelevel %in% single_split  ~ "Application (Split)"
+  ))
+
+
+
 
 
 ########################Pest Management Review####################################################
@@ -1503,7 +1563,7 @@ mutate(
                 
                 #Attach column to Results######
                 Results <-
-                  left_join(Results, metric_labels, by = c("Res_key", "Response_var"))
+                  left_join(Results, metric_labels, by = c("Res_key", "Response_var", "Group_finelevel"))
                 
                 
 

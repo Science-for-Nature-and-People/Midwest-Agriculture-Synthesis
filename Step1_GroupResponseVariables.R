@@ -301,12 +301,14 @@ broadcast_zone <- c("broad_band",
                              "broadcast_band_ridge",
                              "broadcast_sidedress",
                              "broadcast_injected_interrow",
-                             "broadcast_injected_ridge"
+                             "broadcast_injected_ridge", 
+                              "surface_interrow"
                     )
 
 surface_subsurface <- c("band_knife",
                         "band_injection",
-                        "surfaceband_belowsurface")
+                        "surfaceband_belowsurface",
+                        "surface_knife")
 
 #Fertilizer Timing####
 
@@ -315,12 +317,14 @@ preplant_plant <- c("preplant_postplant",
                     "timing_preplant_plant",
                     "timing_plant_V8",
                     "timing_preplant_V6",
-                    "timing_spring_V3"
+                    "timing_spring_V3",
+                    "preplant_V6"
                     )
 
 fall_spring <- c("timing_fall_preplant",
                  "timing_fall_spring",
-                 "timing_fall_V3"
+                 "timing_fall_V3",
+                 "timing_fall_spring"
                  )
 
 single_split <- c("timing_plant_plantV6",
@@ -1573,7 +1577,7 @@ mutate(
 #############################################################################################
 
 missing <- Results[is.na(Results$group_metric),] #check to see if all rows have an assigned group_metric
-
+missing <- Results[is.na(Results$Review_specific),] #check to see if all rows have an assigned
                 
 
 

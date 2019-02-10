@@ -312,24 +312,26 @@ surface_subsurface <- c("band_knife",
 
 preplant_plant <- c("preplant_postplant",
                     "split_preplant_plant",
-                    "timing_preplant_plant"
+                    "timing_preplant_plant",
+                    "timing_plant_V8",
+                    "timing_preplant_V6",
+                    "timing_spring_V3"
                     )
 
 fall_spring <- c("timing_fall_preplant",
                  "timing_fall_spring",
-                 "timing_fall_V3")
+                 "timing_fall_V3"
+                 )
 
 single_split <- c("timing_plant_plantV6",
                   "split_plant_V6",
                   "split_plant_plantV6",
-                  "timing_plant_V8",
                   "timing_preplant_plantV12",
                   "timing_preplant_splitpreplantV16",
                   "timing_preplant_splitpreplantV4",
                   "timing_preplant_splitpreplantV7",
-                  "timing_preplant_splitV4",
-                  "timing_preplant_V6",
-                  "timing_spring_V3")
+                  "timing_preplant_splitV4"
+                                    )
 
 
 ##########Water#######

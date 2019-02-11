@@ -743,6 +743,10 @@ summary_all_timing_prepostplant <- full_join(soil_summary1, yield_summary1)
     summary_all <- full_join(summary_all, summary_all2)
     summary_all <- full_join(summary_all, summary_all3)
     
+summary_all$Review <- paste(summary_all$Review, summary_all$Review_specific, sep = " ")
+summary_all$Review_specific <- NULL
+    
+    
     
 write.csv(summary_all, file = "www/data/CC_FULL_Summary.csv")
 write.csv(summary_all, file = "www/data/PestMgmt_FULL_Summary.csv")

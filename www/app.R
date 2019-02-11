@@ -165,7 +165,7 @@ server <- function(input, output, session) {
   })
   
   output$forestplot <- renderPlot({
-    ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
+    ggplot(df2(), aes(factor(group_metric_facet), mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
                       ymin = mean_per_change1 - sem_per_change1,
                       ymax = mean_per_change1 + sem_per_change1
     )) +

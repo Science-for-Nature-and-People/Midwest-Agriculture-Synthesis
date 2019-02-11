@@ -24,14 +24,14 @@ summary_all <- full_join(summary_all, nutrient)
 # change columns to factors
 collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")
 summary_all[collist] <- lapply(summary_all[collist], factor)
-summary_all$Legend_1 <- recode(summary_all$Legend_1,
-                               "Single species"="Monoculture", 
-                               "Two species"="Mixture (2 Spp.)",
-                               "Three or more species"="Mixture (3+ Spp.)"
-)
+#summary_all$Legend_1 <- recode(summary_all$Legend_1,
+ #                              "Single species"="Monoculture", 
+  #                             "Two species"="Mixture (2 Spp.)",
+   #                            "Three or more species"="Mixture (3+ Spp.)"
+#)
 
 # reorder the data for the legend
-summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)", "Soil", "Foliage", "Seed", "Seed & Foliage"))
+#summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)", "Soil", "Foliage", "Seed", "Seed & Foliage"))
 
 # rearrange the data according to the new ordering defined above
 summary_all <- summary_all %>% arrange(Legend_1)

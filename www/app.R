@@ -13,6 +13,10 @@ library(shinyjs)  # for interactive clicking
 library(gdata)    # reorder legends
 library(shinydashboard)
 
+#### Load data ####
+setwd(".")
+# datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
+datapath <- "./data" # using relative path
 
 summary_all <- read_csv("data/data-for-app.csv")
 

@@ -20,15 +20,37 @@ datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/"
 
 df <- read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_ResultsGrouped.csv"))
 df <-  read.csv(file.path(datapath, "Cover Crop Review/CC_ResultsGrouped.csv"))
+df <-  read.csv(file.path(datapath, "Nutrient Review/Nutrient_ResultsGrouped.csv"))
 
 #data set should include all treatment comparisons with the control (absence of the treatment)
 #and only treatment means (remove SEMs)
 
 
+#####Nutrient Review Filter######################################################################
+#list of 'Group_finelevel' to exclude 
+
+remove_these <- c("application_variable_variablereduced",
+                  "placement_pointinjection_knifeinjection",
+                  "varrate_varrate",
+                  "injection_injection",
+                  "unfertilized_plant",
+                  "unfertilized_split",
+                  "timing_spring_fall",
+                  "split_preplantplantV6_plantV6",
+                  "split_preplantV6_V6",
+                  "split_plantV6_V6",
+                  "variable_variable",
+                  "knife_knife")
+
+df <- filter(df, !(Group_finelevel %in% remove_these), Stat_type == "mean", !is.na(Trt_id1value), !is.na(Trt_id2value) )
+
+
+
+
 #######Pest Management Review Filter###################################################################
           #inspect 'Group_finelevel' column to determine which comparisons to exclude
           #list of 'Group_finelevel' to exclude 
-            levels(Results$Group_finelevel)
+            levels(df$Group_finelevel)
             
             remove_these <- c("seedI_seedI",
                          "seedIF_seedF",
@@ -142,7 +164,7 @@ df$abundance_change <- as.numeric(as.character(df$abundance_change))
 df$Paper_id <- as.factor(df$Paper_id)
 df$main_group <- as.factor(df$main_group)
 
-
+#df$Review_specific <- as.factor(df$Review_specific)
 
 #Adjust data so values representing multiple years are replicated within the dataframe####
 #Weight means so they reflect # of years those data represent
@@ -166,6 +188,65 @@ df <- df %>%
 
 
 ####Replace group_finelevel with a more descriptive description########################
+###########Nutrient Management Review########################
+
+df <- df %>%
+  mutate(
+    Legend_1 = case_when(
+      #Fertilizer Application####
+      Group_finelevel %in% "uniform_variable"  ~ "Variable Rate Application",
+      
+      
+      #Fertilizer Placement####
+      Group_finelevel %in% "broad_band"  ~ "In-Row",
+      Group_finelevel %in% "broadcast_band_ridge"  ~ "In-Row",
+      Group_finelevel %in% "broadcast_sidedress"  ~ "In-Row",
+      Group_finelevel %in% "broadcast_injected_interrow"  ~ "Interrow",
+      Group_finelevel %in% "broadcast_injected_ridge"  ~ "In-row",
+      Group_finelevel %in% "surface_interrow"  ~ "Interrow",
+      
+      Group_finelevel %in% "band_knife"  ~ "Knife",
+      Group_finelevel %in% "band_injection"  ~ "Injection",
+      Group_finelevel %in% "surfaceband_belowsurface"  ~ "Injection",
+      Group_finelevel %in% "surface_knife"  ~ "Knife",
+
+      #Fertilizer Timing####
+      
+      Group_finelevel %in% "preplant_postplant"  ~ "Preplant / Postplant",
+      Group_finelevel %in% "split_preplant_plant"  ~ "Preplant / Postplant",
+      Group_finelevel %in% "timing_preplant_plant"  ~ "Preplant / Postplant",
+      
+      
+      Group_finelevel %in% "timing_plant_V8"  ~ "Preplant / Early Season",
+      Group_finelevel %in% "timing_preplant_V6"  ~ "Preplant / Early Season",
+      Group_finelevel %in% "timing_spring_V3"  ~ "Preplant / Early Season",
+      Group_finelevel %in% "preplant_V6"  ~ "Preplant / Early Season",
+      
+      Group_finelevel %in% "timing_fall_preplant"  ~ "Fall / Preplant",
+      Group_finelevel %in% "timing_fall_spring"  ~ "Fall / Preplant",
+      Group_finelevel %in% "timing_fall_V3"  ~ "Fall / Early Season",
+      
+      
+      
+      Group_finelevel %in%  "timing_plant_V8"  ~ "Application (Split)",
+      Group_finelevel %in%  "preplant_V6"  ~ "Application (Split)", 
+      Group_finelevel %in%  "timing_spring_V3"  ~ "Application (Split)", 
+      
+      
+#Fertilizer Timing####
+
+      Group_finelevel %in%  "split_plant_V6"  ~ "Planting / Planting & Early Season",
+      Group_finelevel %in%  "timing_plant_plantV6"  ~ "Planting / Planting & Early Season",
+      Group_finelevel %in%  "split_plant_plantV6"  ~ "Planting / Planting & Early Season",
+      Group_finelevel %in%  "timing_preplant_plantV12"  ~ "Preplanting / Planting & Mid Season",
+      Group_finelevel %in%  "timing_preplant_splitpreplantV16"  ~ "Preplanting / Planting & Mid Season",
+      Group_finelevel %in%  "timing_preplant_splitpreplantV4"  ~ "Preplanting / Planting & Early Season",
+      Group_finelevel %in%  "timing_preplant_splitpreplantV7"  ~ "Preplanting / Planting & Early Season",
+      Group_finelevel %in%  "timing_preplant_splitV4"  ~ "Preplanting / Planting & Early Season"
+      
+    )) 
+
+
 ###########Pest Management Review########################
 
 df <- df %>%
@@ -253,9 +334,9 @@ df <- df %>%
 df <- df %>%
   mutate(
     Legend_1 = case_when(
-      Group_finelevel %in% "mono" ~ "Monoculture", 
-      Group_finelevel %in% "mix_2" ~ "Mixture (2 Spp.)",
-      Group_finelevel %in% "mix_3" ~ "Mixture (3+ Spp.)",
+      Group_finelevel %in% "mono" ~ "Single species", 
+      Group_finelevel %in% "mix_2" ~ "Two species",
+      Group_finelevel %in% "mix_3" ~ "Three or more species",
       Group_finelevel %in% "none" ~ "Exclude")
     ) %>%
       filter(Legend_1 != "Exclude")  %>%
@@ -304,7 +385,7 @@ df <- df %>%
       
     mutate( Legend_3 = case_when(
       #Monoculture: Rotation of Legume and Non-Legume
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Rye/Vetch Rotation",
+      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Cereal Rye/Vetch Rotation",
       #Group_finelevel %in% "mono" & str_detect(Trt_id2name, "rye") &  str_detect(Trt_id2name, "vetch") ~ "Non-legume/Legume Rotation",
       Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rape")  ~ "Rapeseed",
       
@@ -332,13 +413,13 @@ df <- df %>%
       Group_finelevel %in% "mono" & str_detect(Trt_id2description, "peas") ~ "Austrian Winter Peas",
       
       #Mixtures
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Rye/Vetch",
+      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Cereal Rye/Vetch",
       Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "vetch") ~ "Radish/Vetch",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "pea") ~ "Rye/Austrian Winter Pea",
+      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "pea") ~ "Cereal Rye/Austrian Winter Pea",
       Group_finelevel %in% "mix_3" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") &  str_detect(Trt_id2description, "radish") ~ "Rye/Vetch/Tillage Radish",
       Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "buckwheat") ~ "Tillage Radish/Buckwheat",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "oat") ~ "Rye/Oat",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "radish") ~ "Rye/TillageRadish",
+      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "oat") ~ "Cereal Rye/Oat",
+      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "radish") ~ "Cereal Rye/TillageRadish",
       Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "triticale") ~ "Tillage Radish/Winter Triticale"
       #TRUE ~ "inspect"
     ))
@@ -369,10 +450,23 @@ df <- df %>%
 
 ######Summaries for each Grouping: Soil, Crop Production, Water, Pest Regulation####
 
+#Separate Nutrient Review by Review_specific column
+levels(df$Review_specific)
+
+df2 <- filter(df, Review_specific == "Application (Split)")
+df2 <- filter(df, Review_specific == "Application (Variable Rate)")
+df2 <- filter(df, Review_specific == "Placement (Banding)")
+df2 <- filter(df, Review_specific == "Placement (Subsurface)" )
+df2 <- filter(df, Review_specific == "Timing (Fall & Spring)")
+df2 <- filter(df, Review_specific == "Timing (Pre/Post- Planting)")
+      
+
+###ADd specific review groupings back to the nutrient review...should we do something similar for other reviews?
+
 #Make sure duplicate rows are included with other summary tables... First one is complete.
 
 ####Group_RV: Soil####
-df_soil <- df %>%
+df_soil <- df2 %>%
   filter (Group_RV == "Soil")
 colnames(df_soil)
 
@@ -382,19 +476,17 @@ colnames(df_soil)
 qplot(Response_var, per_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-outliers <- filter(df_soil, per_change > 100)
+outliers <- filter(df_soil, per_change > 90)
 
 
 
 soil_summary3 <- df_soil %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
   #remove rows that will be used for soil summary 2
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  group_by(Review_id, main_group, group_metric, Legend_1 ) %>% #Legend_2, Legend_3
   summarise(mean_per_change3 = mean(per_change, na.rm = TRUE),
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
-            num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) %>%
-  mutate(Group_RV = "Soil") %>%
-  mutate(Review = "Early Season Pest Management")
+            num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) 
 
 soil_summary2 <- df_soil %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
@@ -405,12 +497,23 @@ soil_summary2 <- df_soil %>%
             num_papers2 = n_distinct(Paper_id), num_comparisons2 =length(Paper_id))
 
   soil_summary1 <- df_soil %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
   #remove rows that will be used for soil summary 2
   group_by(Review_id, main_group, group_metric, Legend_1) %>%
   summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))
+            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
+    mutate(Group_RV = "Soil") %>%
+    mutate(Review = "Fertilizer") %>%
+    mutate(Review_specific = "Timing (Pre/Post- Planting)")
+  
+                      "Application (Split)"
+                      "Application (Variable Rate)"
+                      "Placement (Banding)"
+                      "Placement (Subsurface)"
+                      "Timing (Fall & Spring)"
+                      "Timing (Pre/Post- Planting)"
+  
   
 
   #Calculates Change in Mean Abundance...maybe useful for pests and % values
@@ -429,7 +532,7 @@ soil_summary <- left_join(soil_summary, soil_summary3)
 
 
 ####Group_RV: Pest Regulation####
-df_pest <- df %>%
+df_pest <- df2 %>%
   filter (Group_RV == "Pest Regulation")      
 
 #Explore data distribution
@@ -448,9 +551,7 @@ pest_summary3 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
   summarise(mean_per_change3 = mean(per_change, na.rm = TRUE),
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
-            num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) %>%
-            mutate(Group_RV = "Pest Regulation") %>%
-            mutate(Review = "Early Season Pest Management")
+            num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id))
 
 
 pest_summary2 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 1000,]
@@ -462,12 +563,21 @@ pest_summary2 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 
             num_papers2 = n_distinct(Paper_id), num_comparisons2 =length(Paper_id))
 
 pest_summary1 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 1000,]
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
   #remove rows that will be used for soil summary 2
   group_by(Review_id, main_group, group_metric, Legend_1) %>%
   summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))
+            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id)) %>%
+            mutate(Group_RV = "Pest Regulation") %>%
+            mutate(Review = "Fertilizer") %>%
+            mutate(Review_specific = "Placement (Subsurface)")
+                  "Application (Split)"
+                  "Application (Variable Rate)"
+                  "Placement (Banding)"
+                  "Placement (Subsurface)"
+                  "Timing (Fall & Spring)"
+                  "Timing (Pre/Post- Planting)"
 
 
 
@@ -493,7 +603,7 @@ test <- df_pest[!is.na(df_pest$abundance_change),]
 
 
 ####Group_RV: Crop Production####
-df_yield <- df %>%
+df_yield <- df2 %>%
   filter (Group_RV == "Crop Production")      
 
 #Explore data distribution
@@ -507,13 +617,11 @@ outliers <- filter(df_yield, per_change > 1000)
 
 
 yield_summary3 <- df_yield[df_yield$per_change < 1000,] %>% #
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
+  select(Paper_id, Review_id, main_group, group_metric, Legend_1,  Group_finelevel, per_change, abundance_change) %>%
+  group_by(Review_id, main_group, group_metric, Legend_1) %>%
   summarise(mean_per_change3 = mean(per_change, na.rm = TRUE),
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
-            num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) %>%
-  mutate(Group_RV = "Crop Production") %>%
-  mutate(Review = "Early Season Pest Management")
+            num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) 
 
 yield_summary2 <- df_yield[df_yield$per_change < 1000,] %>% #
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
@@ -523,11 +631,21 @@ yield_summary2 <- df_yield[df_yield$per_change < 1000,] %>% #
             num_papers2 = n_distinct(Paper_id), num_comparisons2 =length(Paper_id))
 
 yield_summary1 <- df_yield[df_yield$per_change < 1000,] %>% #[df_yield$per_change < 1000,]
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
   group_by(Review_id, main_group, group_metric, Legend_1) %>%
   summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))
+            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
+            mutate(Group_RV = "Crop Production") %>%
+            mutate(Review = "Fertilizer") %>%
+            mutate(Review_specific = "Timing (Pre/Post- Planting)")
+
+            "Application (Split)"
+            "Application (Variable Rate)"
+            "Placement (Banding)"
+            "Placement (Subsurface)"
+            "Timing (Fall & Spring)"
+            "Timing (Pre/Post- Planting)"
 
 
 #Difference in Abundance
@@ -545,7 +663,7 @@ yield_summary <- left_join(yield_summary, yield_summary3)
 
 
 ####Group_RV: Water####
-df_water <- df %>%
+df_water <- df2 %>%
   filter (Group_RV == "Water")      
 
 #Explore data distribution
@@ -561,9 +679,7 @@ water_summary3 <- df_water %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
   summarise(mean_per_change3 = mean(per_change, na.rm = TRUE),
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
-            num_papers3 = n_distinct(Paper_id), num_comparison3s =length(Paper_id)) %>%
-  mutate(Group_RV = "Water") %>%
-  mutate(Review = "Early Season Pest Management")
+            num_papers3 = n_distinct(Paper_id), num_comparison3s =length(Paper_id)) 
 
 water_summary2 <- df_water %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
@@ -573,12 +689,22 @@ water_summary2 <- df_water %>%
             num_papers2 = n_distinct(Paper_id), num_comparisons2 =length(Paper_id))
 
 water_summary1 <- df_water %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
+  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
   #remove rows that will be used for soil summary 2
   group_by(Review_id, main_group, group_metric, Legend_1) %>%
   summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))
+            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
+            mutate(Group_RV = "Water") %>%
+            mutate(Review = "Fertilizer") %>%
+            mutate(Review_specific = "Timing (Pre/Post- Planting)")
+
+            "Application (Split)"
+            "Application (Variable Rate)"
+            "Placement (Banding)"
+            "Placement (Subsurface)"
+            "Timing (Fall & Spring)"
+            "Timing (Pre/Post- Planting)"
 
 #Calculates mean abundance
 #water_summary0 <- df_water %>%
@@ -597,10 +723,28 @@ water_summary <- left_join(water_summary, water_summary3)
 ####Join Summary results back into one file ####
 summary_all <- full_join(soil_summary, pest_summary)
 summary_all <- full_join(summary_all, yield_summary)
-summary_all3 <- full_join(summary_all2, water_summary)    
+summary_all <- full_join(summary_all, water_summary)    
 
-    full_join(water_summary)
 
-#write.csv(summary_all, file = "Cover Crop Review/CC_FULL_Summary.csv")
-write.csv(summary_all, file = "PestMgmt Review/PestMgmt_FULL_Summary2.csv")
+#Nutrient Review
+summary_all_appsplit <- full_join(soil_summary1, yield_summary1)    
+summary_all_appvarrate <- full_join(soil_summary1, yield_summary1) 
+summary_all_placement_banding <- full_join(soil_summary1, yield_summary1) 
+summary_all_placement_subsurface <- full_join(soil_summary1, yield_summary1)
+summary_all_timing_fallspring <- full_join(soil_summary1, yield_summary1)
+    summary_all_timing_fallspring <- full_join(summary_all_timing_fallspring, water_summary1)
+summary_all_timing_prepostplant <- full_join(soil_summary1, yield_summary1)
+    summary_all_timing_prepostplant <- full_join(summary_all_timing_fallspring, water_summary1)
+    
+    #merge all above
+    summary_all <- full_join(summary_all_appsplit, summary_all_appvarrate)
+    summary_all2 <- full_join(summary_all_placement_banding, summary_all_placement_subsurface)
+    summary_all3 <- full_join(summary_all_timing_fallspring, summary_all_timing_prepostplant)
+    summary_all <- full_join(summary_all, summary_all2)
+    summary_all <- full_join(summary_all, summary_all3)
+    
+    
+write.csv(summary_all, file = "www/data/CC_FULL_Summary.csv")
+write.csv(summary_all, file = "www/data/PestMgmt_FULL_Summary.csv")
+write.csv(summary_all, file = "www/data/NutrientMgmt_FULL_Summary.csv")
 

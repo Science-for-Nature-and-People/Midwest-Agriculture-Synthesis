@@ -6,15 +6,20 @@ library(forcats)
 
 #### Load data ####
 setwd(".")
-datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
+datapath <- "./data" # using relative path
+
 
 # import data -> summary files
-covercrop <- read.csv(file.path(datapath, "/CC_FULL_Summary.csv"), stringsAsFactors = FALSE)
-pestmgmt <- read.csv(file.path(datapath, "/PestMgmt_FULL_Summary2.csv"), stringsAsFactors = FALSE)
-
+covercrop <- read.csv(file.path(datapath, "CC_FULL_Summary.csv"), stringsAsFactors = FALSE)
+pestmgmt <- read.csv(file.path(datapath, "PestMgmt_FULL_Summary2.csv"), stringsAsFactors = FALSE)
+nutrient <- read.csv(file.path(datapath, "NutrientMgmt_FULL_Summary.csv"), stringsAsFactors = FALSE)
 
 #### Manipulate data ####
 summary_all <- full_join(covercrop, pestmgmt)
+  summary_all$num_comparison3s <- NULL
+summary_all <- full_join(summary_all, nutrient)
+  summary_all$X <- NULL
+  summary_all$X.1 <- NULL
 
 # change columns to factors
 collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")
@@ -42,4 +47,4 @@ summary_all %>%
   group_by(Legend_1, Group_RV, Review) %>%
   mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1)) -> summary_all
 
-write.csv(summary_all,"~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data/data-for-app.csv")
+write.csv(summary_all,"data/data-for-app.csv")

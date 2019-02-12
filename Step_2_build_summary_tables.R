@@ -18,9 +18,9 @@ library(plotrix) # for standard error calculations
 setwd(".")
 datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
 
-df <- read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_ResultsGrouped.csv"))
-df <-  read.csv(file.path(datapath, "Cover Crop Review/CC_ResultsGrouped.csv"))
-df <-  read.csv(file.path(datapath, "Nutrient Review/Nutrient_ResultsGrouped.csv"))
+df <- read.csv(file.path(datapath, "PestMgmt Review/PestMgmt_ResultsGrouped.csv"), row.names = NULL)
+df <-  read.csv(file.path(datapath, "Cover Crop Review/CC_ResultsGrouped.csv"), row.names = NULL)
+df <-  read.csv(file.path(datapath, "Nutrient Review/Nutrient_ResultsGrouped.csv"), row.names = NULL)
 
 #data set should include all treatment comparisons with the control (absence of the treatment)
 #and only treatment means (remove SEMs)
@@ -147,8 +147,8 @@ df_order <- df_results %>%
 
 
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
-df$Trt_id1value <- as.integer(as.character(df$Trt_id1value))
-df$Trt_id2value <- as.integer(as.character(df$Trt_id2value))
+df$Trt_id1value <- as.numeric((df$Trt_id1value))
+df$Trt_id2value <- as.numeric((df$Trt_id2value))
 
 
 df <- df %>%
@@ -503,7 +503,7 @@ soil_summary2 <- df_soil %>%
   summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
-    mutate(Group_RV = "Soil") %>%
+    mutate(Group_RV = "Early Season Pest Management") %>%
     mutate(Review = "Fertilizer") %>%
     mutate(Review_specific = "Timing (Pre/Post- Planting)")
   
@@ -570,8 +570,8 @@ pest_summary1 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id)) %>%
             mutate(Group_RV = "Pest Regulation") %>%
-            mutate(Review = "Fertilizer") %>%
-            mutate(Review_specific = "Placement (Subsurface)")
+            mutate(Review = "Cover Crops") #%>%
+            mutate(Review_specific = "Timing (Pre/Post- Planting)")
                   "Application (Split)"
                   "Application (Variable Rate)"
                   "Placement (Banding)"
@@ -679,7 +679,7 @@ water_summary3 <- df_water %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
   summarise(mean_per_change3 = mean(per_change, na.rm = TRUE),
             sem_per_change3 = std.error(per_change, na.rm = TRUE),
-            num_papers3 = n_distinct(Paper_id), num_comparison3s =length(Paper_id)) 
+            num_papers3 = n_distinct(Paper_id), num_comparisons3 =length(Paper_id)) 
 
 water_summary2 <- df_water %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
@@ -696,7 +696,7 @@ water_summary1 <- df_water %>%
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
             mutate(Group_RV = "Water") %>%
-            mutate(Review = "Fertilizer") %>%
+            mutate(Review = "Cover Crops") #%>%
             mutate(Review_specific = "Timing (Pre/Post- Planting)")
 
             "Application (Split)"
@@ -721,8 +721,8 @@ water_summary <- left_join(water_summary, water_summary3)
 
 
 ####Join Summary results back into one file ####
-summary_all <- full_join(soil_summary, pest_summary)
-summary_all <- full_join(summary_all, yield_summary)
+summary_all <- full_join(soil_summary, yield_summary)
+summary_all <- full_join(summary_all, pest_summary)
 summary_all <- full_join(summary_all, water_summary)    
 
 
@@ -748,7 +748,8 @@ summary_all$Review_specific <- NULL
     
     
     
-write.csv(summary_all, file = "www/data/CC_FULL_Summary.csv")
-write.csv(summary_all, file = "www/data/PestMgmt_FULL_Summary.csv")
-write.csv(summary_all, file = "www/data/NutrientMgmt_FULL_Summary.csv")
+write.csv(summary_all, file = "www/data/CC_FULL_Summary.csv", row.names = FALSE)
 
+write.csv(summary_all, file = "www/data/NutrientMgmt_FULL_Summary.csv", row.names = FALSE)
+
+write.csv(summary_all, file = "www/data/PestMgmt_FULL_Summary.csv", row.names = FALSE)

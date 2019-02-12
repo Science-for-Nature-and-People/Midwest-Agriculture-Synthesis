@@ -39,16 +39,16 @@ setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/")
 #Treatment <- read.csv("PestMgmt Review/PestMgmt_Review_Treatment.csv")
 
 #All related results 
-Results <-read.csv("PestMgmt Review/PestMgmt_Review_Results.csv")
+Results <-read.csv("PestMgmt Review/PestMgmt_Review_Results.csv", row.names = NULL)
 
 #remove any unwanted response variables
 
-Results <-read.csv("Cover Crop Review/CoverCrop_Results.csv")
+Results <-read.csv("Cover Crop Review/CoverCrop_Results.csv", row.names = NULL)
 #for cover crop data frame
 #Results = filter(Results,!(Response_var == "cover crop leaf N content")) #set dataframe to work with - remove cover crop nitrogen input data (incomplete dataset)
 
 
-Results<- read.csv("Nutrient Review/Nutrient_Results.csv")
+Results <- read.csv("Nutrient Review/Nutrient_Results.csv", row.names = NULL)
 
 #add surrogate key to Results
 Results$Res_key = rownames(Results)
@@ -298,11 +298,11 @@ uniform_variable <- "uniform_variable"
 #Fertilizer Placement####
 
 broadcast_zone <- c("broad_band",
-                             "broadcast_band_ridge",
-                             "broadcast_sidedress",
-                             "broadcast_injected_interrow",
-                             "broadcast_injected_ridge", 
-                              "surface_interrow"
+                    "broadcast_band_ridge",
+                    "broadcast_sidedress",
+                     "broadcast_injected_interrow",
+                     "broadcast_injected_ridge", 
+                     "surface_interrow"
                     )
 
 surface_subsurface <- c("band_knife",
@@ -316,7 +316,6 @@ preplant_plant <- c("preplant_postplant",
                     "split_preplant_plant",
                     "timing_preplant_plant",
                     "timing_plant_V8",
-                    "timing_preplant_V6",
                     "timing_spring_V3",
                     "preplant_V6"
                     )
@@ -490,6 +489,11 @@ mutate(
 
 
 
+
+
+#Attach column to Results######
+Results <-
+  left_join(Results, metric_labels, by = c("Res_key", "Response_var", "Group_finelevel"))
 
 
 ########################Pest Management Review####################################################
@@ -1569,7 +1573,7 @@ mutate(
                 
                 #Attach column to Results######
                 Results <-
-                  left_join(Results, metric_labels, by = c("Res_key", "Response_var", "Group_finelevel"))
+                  left_join(Results, metric_labels, by = c("Res_key", "Response_var"))
                 
                 
 
@@ -1583,9 +1587,9 @@ missing <- Results[is.na(Results$Review_specific),] #check to see if all rows ha
 
 ####Save Results file with added Group names
 
-write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Nutrient Review/Nutrient_ResultsGrouped.csv")
-
-
+write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review/PestMgmt_ResultsGrouped.csv", row.names = FALSE)
+write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Cover Crop Review/CC_ResultsGrouped.csv", row.names = FALSE)
+write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Nutrient Review/Nutrient_ResultsGrouped.csv", row.names = FALSE)
 
 
 

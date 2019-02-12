@@ -1,5 +1,0 @@
-"","Review_id","main_group","group_metric","Legend_1","Legend_2","Legend_3","mean_per_change","sem_per_change","num_papers","num_comparisons","Group_RV","Review","mean_abundance_change","sem_abundance_change","num_papers_abund","num_comparisons_abund"
-"1","Cover crop","Drainage","Drainage","Monoculture","Legume, NonLegume","Specific Cover crops used",-4.71652813763662,3.08267323540913,4,40,"Water","Cover Crops",NA,NA,NA,NA
-"2","Cover crop","Physical","Erosion","Monoculture","Legume, NonLegume","Specific Cover crops used",-68.1818181818181,25.7575757575757,1,2,"Water","Cover Crops",NA,NA,NA,NA
-"3","Cover crop","Runoff","Nitrate","Monoculture","Legume, NonLegume","Specific Cover crops used",-29.0519319383121,6.36416985483275,7,71,"Water","Cover Crops",NA,NA,NA,NA
-"4","Cover crop","Runoff","Phosphorous","Monoculture","Legume, NonLegume","Specific Cover crops used",-50.509549070693,5.26295319762122,2,12,"Water","Cover Crops",NA,NA,NA,NA

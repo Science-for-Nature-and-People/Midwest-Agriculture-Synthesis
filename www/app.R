@@ -19,7 +19,8 @@ setwd(".")
 datapath <- "./data" # using relative path
 
 summary_all <- read_csv("data/data-for-app.csv")
-
+  #collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")
+  #summary_all[collist] <- lapply(summary_all[collist], factor)
 
 #### User Interface ####
 # user interface
@@ -41,8 +42,8 @@ ui <- navbarPage(
         align = "center",
         selectInput(
           inputId = "MgmtPractice", label = "Practice",
-          choices = unique(summary_all$Review) %>% sort(), multiple = T,
-          selected = "Cover Crop"
+          choices = unique(summary_all$Review) %>% sort(),# multiple = T,
+          selected = "Cover Crops"
         )
       ),
       column(
@@ -134,7 +135,7 @@ server <- function(input, output, session) {
     
     # filter dataset to display selected review and response variables
     summary_all %>%
-      filter(Review == input$MgmtPractice)
+      filter(Review %in% input$MgmtPractice)
   })
   
   # Next tier selection of reactive selection of outcome grouping
@@ -165,7 +166,7 @@ server <- function(input, output, session) {
   })
   
   output$forestplot <- renderPlot({
-    ggplot(df2(), aes(factor(group_metric_facet), mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
+    ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
                       ymin = mean_per_change1 - sem_per_change1,
                       ymax = mean_per_change1 + sem_per_change1
     )) +

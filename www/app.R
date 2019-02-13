@@ -14,13 +14,14 @@ library(gdata)    # reorder legends
 library(shinydashboard)
 
 #### Load data ####
-setwd(".")
-# datapath <- "~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data"
-datapath <- "./data" # using relative path
+#setwd(".")
+#datapath <- "./data" # using relative path
+setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
 
-summary_all <- read_csv("data/data-for-app.csv")
-  #collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")
-  #summary_all[collist] <- lapply(summary_all[collist], factor)
+
+summary_all <- read_csv("data-for-app.csv")
+#collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")
+#summary_all[collist] <- lapply(summary_all[collist], factor)
 
 #### User Interface ####
 # user interface
@@ -217,4 +218,3 @@ server <- function(input, output, session) {
 
 #### RUN THE APP ####
 shinyApp(ui = ui, server = server)
-

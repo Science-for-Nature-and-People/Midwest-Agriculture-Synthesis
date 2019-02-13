@@ -5,9 +5,9 @@ library(forcats)
 
 
 #### Load data ####
-setwd(".")
-datapath <- "./data" # using relative path
-#setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data")
+# setwd(".")
+# datapath <- "./data" # using relative path
+setwd("Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
 
 
 # import data -> summary files
@@ -22,8 +22,8 @@ nutrient$Review2 <- NULL
 
 #### Manipulate data ####
 summary_all <- full_join(covercrop, pestmgmt)
-  summary_all <- full_join(summary_all, nutrient)
-  #
+summary_all <- full_join(summary_all, nutrient)
+#
 
 # change columns to factors
 collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")

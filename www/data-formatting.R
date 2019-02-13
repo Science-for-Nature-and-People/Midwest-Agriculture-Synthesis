@@ -7,31 +7,28 @@ library(forcats)
 #### Load data ####
 setwd(".")
 datapath <- "./data" # using relative path
+#setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data")
 
 
 # import data -> summary files
-covercrop <- read.csv(file.path(datapath, "CC_FULL_Summary.csv"), stringsAsFactors = FALSE)
-pestmgmt <- read.csv(file.path(datapath, "PestMgmt_FULL_Summary2.csv"), stringsAsFactors = FALSE)
-nutrient <- read.csv(file.path(datapath, "NutrientMgmt_FULL_Summary.csv"), stringsAsFactors = FALSE)
+covercrop <- read.csv("CC_FULL_Summary.csv", row.names = NULL, stringsAsFactors = FALSE)
+pestmgmt <- read.csv("PestMgmt_FULL_Summary.csv", row.names = NULL, stringsAsFactors = FALSE)
+nutrient <- read.csv("NutrientMgmt_FULL_Summary.csv", row.names = NULL, stringsAsFactors = FALSE)
+nutrient$Review <- NULL
+nutrient$Review <- nutrient$Review2
+nutrient$Review2 <- NULL
+
+#nutrient$Legend_1 <- if_else(nutrient$Legend_1 == "In-Row", paste("In-row"), nutrient$Legend_1)
 
 #### Manipulate data ####
 summary_all <- full_join(covercrop, pestmgmt)
-  summary_all$num_comparison3s <- NULL
-summary_all <- full_join(summary_all, nutrient)
-  summary_all$X <- NULL
-  summary_all$X.1 <- NULL
+  summary_all <- full_join(summary_all, nutrient)
+  #
 
 # change columns to factors
 collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")
 summary_all[collist] <- lapply(summary_all[collist], factor)
-#summary_all$Legend_1 <- recode(summary_all$Legend_1,
- #                              "Single species"="Monoculture", 
-  #                             "Two species"="Mixture (2 Spp.)",
-   #                            "Three or more species"="Mixture (3+ Spp.)"
-#)
 
-# reorder the data for the legend
-#summary_all$Legend_1 <- reorder.factor(summary_all$Legend_1, new.order = c("Monoculture", "Mixture (2 Spp.)", "Mixture (3+ Spp.)", "Soil", "Foliage", "Seed", "Seed & Foliage"))
 
 # rearrange the data according to the new ordering defined above
 summary_all <- summary_all %>% arrange(Legend_1)
@@ -45,6 +42,6 @@ summary_all$group_metric_facet <- with(summary_all, paste(group_metric, main_gro
 
 summary_all %>%
   group_by(Legend_1, Group_RV, Review) %>%
-  mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1)) -> summary_all
+  mutate(group_metric_facet = fct_reorder(as.factor(group_metric_facet), mean_per_change1)) -> summary_all
 
-write.csv(summary_all,"data/data-for-app.csv")
+write.csv(summary_all, "data-for-app.csv", row.names = FALSE)

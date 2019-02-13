@@ -202,7 +202,7 @@ df <- df %>%
       Group_finelevel %in% "broadcast_band_ridge"  ~ "In-Row",
       Group_finelevel %in% "broadcast_sidedress"  ~ "In-Row",
       Group_finelevel %in% "broadcast_injected_interrow"  ~ "Interrow",
-      Group_finelevel %in% "broadcast_injected_ridge"  ~ "In-row",
+      Group_finelevel %in% "broadcast_injected_ridge"  ~ "In-Row",
       Group_finelevel %in% "surface_interrow"  ~ "Interrow",
       
       Group_finelevel %in% "band_knife"  ~ "Knife",
@@ -503,17 +503,11 @@ soil_summary2 <- df_soil %>%
   summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
-    mutate(Group_RV = "Early Season Pest Management") %>%
+    mutate(Group_RV = "Soil") %>%
     mutate(Review = "Fertilizer") %>%
     mutate(Review_specific = "Timing (Pre/Post- Planting)")
   
-                      "Application (Split)"
-                      "Application (Variable Rate)"
-                      "Placement (Banding)"
-                      "Placement (Subsurface)"
-                      "Timing (Fall & Spring)"
-                      "Timing (Pre/Post- Planting)"
-  
+                      
   
 
   #Calculates Change in Mean Abundance...maybe useful for pests and % values
@@ -532,7 +526,7 @@ soil_summary <- left_join(soil_summary, soil_summary3)
 
 
 ####Group_RV: Pest Regulation####
-df_pest <- df2 %>%
+df_pest <- df %>%
   filter (Group_RV == "Pest Regulation")      
 
 #Explore data distribution
@@ -572,13 +566,7 @@ pest_summary1 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 
             mutate(Group_RV = "Pest Regulation") %>%
             mutate(Review = "Cover Crops") #%>%
             mutate(Review_specific = "Timing (Pre/Post- Planting)")
-                  "Application (Split)"
-                  "Application (Variable Rate)"
-                  "Placement (Banding)"
-                  "Placement (Subsurface)"
-                  "Timing (Fall & Spring)"
-                  "Timing (Pre/Post- Planting)"
-
+                 
 
 
 
@@ -640,13 +628,7 @@ yield_summary1 <- df_yield[df_yield$per_change < 1000,] %>% #[df_yield$per_chang
             mutate(Review = "Fertilizer") %>%
             mutate(Review_specific = "Timing (Pre/Post- Planting)")
 
-            "Application (Split)"
-            "Application (Variable Rate)"
-            "Placement (Banding)"
-            "Placement (Subsurface)"
-            "Timing (Fall & Spring)"
-            "Timing (Pre/Post- Planting)"
-
+           
 
 #Difference in Abundance
 #yield_summary2 <- df_yield %>%
@@ -696,16 +678,10 @@ water_summary1 <- df_water %>%
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
             mutate(Group_RV = "Water") %>%
-            mutate(Review = "Cover Crops") #%>%
+            mutate(Review = "Fertilizer") %>%
             mutate(Review_specific = "Timing (Pre/Post- Planting)")
 
-            "Application (Split)"
-            "Application (Variable Rate)"
-            "Placement (Banding)"
-            "Placement (Subsurface)"
-            "Timing (Fall & Spring)"
-            "Timing (Pre/Post- Planting)"
-
+            
 #Calculates mean abundance
 #water_summary0 <- df_water %>%
  # select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, abundance_change) %>%
@@ -734,7 +710,7 @@ summary_all_placement_subsurface <- full_join(soil_summary1, yield_summary1)
 summary_all_timing_fallspring <- full_join(soil_summary1, yield_summary1)
     summary_all_timing_fallspring <- full_join(summary_all_timing_fallspring, water_summary1)
 summary_all_timing_prepostplant <- full_join(soil_summary1, yield_summary1)
-    summary_all_timing_prepostplant <- full_join(summary_all_timing_fallspring, water_summary1)
+    summary_all_timing_prepostplant <- full_join(summary_all_timing_prepostplant, water_summary1)
     
     #merge all above
     summary_all <- full_join(summary_all_appsplit, summary_all_appvarrate)
@@ -743,13 +719,13 @@ summary_all_timing_prepostplant <- full_join(soil_summary1, yield_summary1)
     summary_all <- full_join(summary_all, summary_all2)
     summary_all <- full_join(summary_all, summary_all3)
     
-summary_all$Review <- paste(summary_all$Review, summary_all$Review_specific, sep = " ")
+summary_all$Review2 <- as.factor(paste(summary_all$Review, summary_all$Review_specific, sep = " "))
 summary_all$Review_specific <- NULL
     
     
     
-write.csv(summary_all, file = "www/data/CC_FULL_Summary.csv", row.names = FALSE)
+write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
 
-write.csv(summary_all, file = "www/data/NutrientMgmt_FULL_Summary.csv", row.names = FALSE)
+write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_FULL_Summary.csv", row.names = FALSE)
 
-write.csv(summary_all, file = "www/data/PestMgmt_FULL_Summary.csv", row.names = FALSE)
+write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/PestMgmt_FULL_Summary.csv", row.names = FALSE)

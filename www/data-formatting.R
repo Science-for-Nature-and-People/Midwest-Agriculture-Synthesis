@@ -7,12 +7,17 @@ library(forcats)
 #### Load data ####
 # setwd(".")
 # datapath <- "./data" # using relative path
-setwd("Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
+#setwd("Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
+setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data")
 
 
 # import data -> summary files
 covercrop <- read.csv("CC_FULL_Summary.csv", row.names = NULL, stringsAsFactors = FALSE)
 pestmgmt <- read.csv("PestMgmt_FULL_Summary.csv", row.names = NULL, stringsAsFactors = FALSE)
+levels(as.factor(pestmgmt$group_metric))
+pestmgmt <- pestmgmt[!(pestmgmt$group_metric == "Reduction in Vigor (Maize)"),]
+
+
 nutrient <- read.csv("NutrientMgmt_FULL_Summary.csv", row.names = NULL, stringsAsFactors = FALSE)
 nutrient$Review <- NULL
 nutrient$Review <- nutrient$Review2

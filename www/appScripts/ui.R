@@ -117,7 +117,8 @@ ui <- navbarPage(
   ),
   
   tabPanel("References"),
-  tabPanel("Methods")
+  tabPanel("Methods"),
+  downloadButton(outputId = "downloadData", label = "Download") #the download button goes to the bottom
 )
 
 # #### RUN THE APP ####

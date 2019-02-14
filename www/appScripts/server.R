@@ -92,6 +92,14 @@ server <- function(input, output, session) {
     }
   })
   
+  #picks out the filtered data for download as a csv
+  output$downloadData <- downloadHandler(
+    filename = "app_data.csv",  
+    content = function(file){
+      write.csv(df2(), file, row.names = FALSE)
+    }
+  )
+  
   # Will click the update button at the start so the app starts with a plot.
   observe({
     click("update") 

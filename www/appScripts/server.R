@@ -59,7 +59,7 @@ server <- function(input, output, session) {
       geom_errorbar(aes(
         ymin = mean_per_change1 - sem_per_change1,
         ymax = mean_per_change1 + sem_per_change1,
-        width = .1
+        width = .5
       )) +
       geom_hline(yintercept = 0, lty = 2) + # add a dotted line at x=0 after flip
       coord_flip() + # flip coordinates (puts labels on y axis)
@@ -71,9 +71,10 @@ server <- function(input, output, session) {
       ) +
       # scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +
       theme_bw() +
-      geom_point(aes(colour = Legend_1)) + # color labeling of fine level groupings
+      geom_point(aes(colour = Legend_1), size = 3) + # color labeling of fine level groupings
       facet_grid(main_group ~ ., scales = "free", space = "free") +
-      theme(legend.title = element_blank(), legend.position="top", strip.text.y = element_text(angle = 0))
+      theme(legend.title = element_blank(), legend.position="top" ,
+            strip.text.y = element_text(angle = 0), text = element_text(size=14))
   })
   
   output$text_description <- renderText({

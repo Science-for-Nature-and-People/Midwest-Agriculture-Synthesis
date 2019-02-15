@@ -65,15 +65,15 @@ server <- function(input, output, session) {
       coord_flip() + # flip coordinates (puts labels on y axis)
       labs(
         title = df2()$Review[1], # since we are filtering summary_all to only have 1 value for review/group_rv, we can take any element as the label (they should all be the same)
-        subtitle = df2()$Group_RV[1],
+      #  subtitle = df2()$Group_RV[1],
         x = "",
-        y = "percent difference between control and treatment (%)"
+        y = "Percent difference between treatment and control (%)"
       ) +
       # scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +
       theme_bw() +
       geom_point(aes(colour = Legend_1)) + # color labeling of fine level groupings
       facet_grid(main_group ~ ., scales = "free", space = "free") +
-      theme(strip.text.y = element_text(angle = 0))
+      theme(legend.title = element_blank(), legend.position="top", strip.text.y = element_text(angle = 0))
   })
   
   output$text_description <- renderText({

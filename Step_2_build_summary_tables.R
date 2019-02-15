@@ -147,8 +147,8 @@ df_order <- df_results %>%
 
 
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
-df$Trt_id1value <- as.numeric((df$Trt_id1value))
-df$Trt_id2value <- as.numeric((df$Trt_id2value))
+df$Trt_id1value <- as.numeric(as.character(df$Trt_id1value))
+df$Trt_id2value <- as.numeric(as.character(df$Trt_id2value))
 
 
 df <- df %>%
@@ -466,7 +466,7 @@ df2 <- filter(df, Review_specific == "Timing (Pre/Post- Planting)")
 #Make sure duplicate rows are included with other summary tables... First one is complete.
 
 ####Group_RV: Soil####
-df_soil <- df2 %>%
+df_soil <- df %>%
   filter (Group_RV == "Soil")
 colnames(df_soil)
 
@@ -504,7 +504,7 @@ soil_summary2 <- df_soil %>%
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
     mutate(Group_RV = "Soil") %>%
-    mutate(Review = "Fertilizer") %>%
+    mutate(Review = "Early Season Pest Management") #%>%
     mutate(Review_specific = "Timing (Pre/Post- Planting)")
   
                       
@@ -564,7 +564,7 @@ pest_summary1 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id)) %>%
             mutate(Group_RV = "Pest Regulation") %>%
-            mutate(Review = "Cover Crops") #%>%
+            mutate(Review = "Early Season Pest Management") #%>%
             mutate(Review_specific = "Timing (Pre/Post- Planting)")
                  
 
@@ -591,7 +591,7 @@ test <- df_pest[!is.na(df_pest$abundance_change),]
 
 
 ####Group_RV: Crop Production####
-df_yield <- df2 %>%
+df_yield <- df %>%
   filter (Group_RV == "Crop Production")      
 
 #Explore data distribution
@@ -600,7 +600,7 @@ qplot(Response_var, per_change, data=df_yield[df_yield$per_change < 1000,],  col
 qplot(Response_var, abundance_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
-outliers <- filter(df_yield, per_change > 1000)
+outliers <- filter(df_yield, per_change > 500)
 
 
 
@@ -625,7 +625,7 @@ yield_summary1 <- df_yield[df_yield$per_change < 1000,] %>% #[df_yield$per_chang
             sem_per_change1 = std.error(per_change, na.rm = TRUE),
             num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id))%>%
             mutate(Group_RV = "Crop Production") %>%
-            mutate(Review = "Fertilizer") %>%
+            mutate(Review = "Early Season Pest Management") #%>%
             mutate(Review_specific = "Timing (Pre/Post- Planting)")
 
            
@@ -645,7 +645,7 @@ yield_summary <- left_join(yield_summary, yield_summary3)
 
 
 ####Group_RV: Water####
-df_water <- df2 %>%
+df_water <- df %>%
   filter (Group_RV == "Water")      
 
 #Explore data distribution

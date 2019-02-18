@@ -1,7 +1,7 @@
-library(dplyr)    # for sorting and summarizing data
 library(readxl)   # for importing dataframe
 library(DescTools)
 library(forcats)
+library(tidyverse)
 
 
 #### Load data ####

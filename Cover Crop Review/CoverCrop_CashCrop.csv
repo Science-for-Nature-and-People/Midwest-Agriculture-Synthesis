@@ -1,59 +1,59 @@
-"","Paper_id","Duration","Cash_tillage","Cash_seeddensity","Cash_species","Cash_cultivar","Cash_genetics"
-"1",1,"2001-8","variable","64000; 432000","maize/soybean",NA,NA
-"2",2,"2006-4","variable","79000; 740000","maize/soybean","Pioneer 34A16, Pioneer 34A20, Pioneer 34Y03; Stine 2289-4, Harosoy 63",NA
-"3",3,"2012-3","tilled",NA,"maize",NA,NA
-"4",4,"2011-2","tilled",NA,"maize/soybean",NA,NA
-"5",5,"2014-2",NA,NA,"soybean","AG4933, AG2933, AG3832, P35T58R, P35T97R2, AG4633; P95LO1, BE2984L, BE2984, HS42L22, LL3579, P34T35L, CZ3841LL, LL4650","glyphosate resistant; glucosinate-resistant"
-"6",6,"1989-2","variable","58500","maize","Pioneer3379",NA
-"7",7,"2005-2","no-tillage","81510","maize",NA,NA
-"8",8,"2006-2","no-tillage","76000; 370000","maize/soybean","DKC61-45; DKB31-51","glyphosate resistant"
-"9",9,"1987-2","disked",NA,"soybean","Asgrow3127, Beeson, Winchester",NA
-"10",10,"1990-6","no-tillage",NA,"soybean",NA,NA
-"11",11,"1994-2","no-tillage","100000","soybean","Dunbar",NA
-"12",12,"1995-3","tillage","74074","maize","inbred variety 'Pioneer P38'",NA
-"13",13,"1994-3","chisel plow",NA,"maize/soybean",NA,NA
-"14",14,"1998-3",NA,NA,"maize/soybean",NA,NA
-"15",15,"2005-2","no-tillage","444600 / 81,510","soybean/maize","Asgrow Brand1 ""Ag2203"" / Dekalb 'DKC59-08'",NA
-"16",16,"2007-2","no-tillage","77000","maize","DeKalb 44-92","glyphosate tolerant"
-"17",17,"2006-3","chisel plow","77,000 / 439,750","maize/soybean","DeKalb 50-45 / Pioneer 92M40-Group 2 middle season","glyphosate resistant"
-"18",18,"2005-4","chisel plow","77,000 / 439,750","maize/soybean","DeKalb 50-45 / Pioneer 92M40-Group 2 middle season","glyphosate resistant"
-"19",19,"2005-1",NA,NA,"variable",NA,NA
-"20",20,"2009-3","no-tillage",NA,"maize/soybean",NA,NA
-"21",21,"2008-1","cultivation","88920","maize","Pioneer 35A34",NA
-"22",22,"2010-2","conservation tillage",NA,"maize/soybean",NA,NA
-"23",23,"2012-1",NA,NA,"maize/soybean",NA,NA
-"24",24,"2012-1","no-tillage","12000","maize",NA,NA
-"25",25,"2008-4","conventional tillage","79,500-82,500","maize","Agrigold VT3","glyphosate resistant, corn borer resistant, corn rootworm protection / glyphosate resistant"
-"26",26,"2006-2","no-tillage","70000","maize",NA,"glyphosate tolerant"
-"27",27,"2011-3","variable (moldboard or no-tillage)",NA,"maize/soybean",NA,NA
-"28",28,"2009-3",NA,NA,"maize/soybean",NA,NA
-"29",29,"2006-2",NA,"370,658 - 593,052","soybean","Iowa2053, ProSoy, Viking2022",NA
-"30",30,"2010-4",NA,"82500","maize","Agrigold 6325 VT3, Pioneer P0448XR",NA
-"31",31,"2002-2","no-tillage",NA,"maize",NA,NA
-"32",32,"2009-1",NA,NA,"maize/soybean",NA,NA
-"33",33,"2010-2","no-tillage","350000","soybean",NA,"glyphosate resistant"
-"34",34,"2001-2","no-tillage",NA,"maize/soybean",NA,NA
-"35",35,"2001-3","moldboard","76500","maize","DK493, DKC5073, P37R71",NA
-"36",36,"1996-7",NA,"387,000 / 84,000","soybean/maize","Northrup King S19-90, Stine 2250, Stine 2289 / Pioneer 3563",NA
-"37",37,"2003-2","no-tillage",NA,"maize/soybean",NA,NA
-"38",38,"2014-2","tillage and no-tillage",NA,"maize/soybean",NA,NA
-"39",39,"2009-6","no-tillage","79500","maize","Agrigold 6325 VT3, Pioneer P0448XR",NA
-"40",40,"2013-2","no-tillage","75000","maize","Pioneer P8906AM, DeKalb 52-59","glyphosate-tolerant"
-"41",41,"2014-3","no-tillage","80000","maize","yellow and white",NA
-"42",42,"2013-3","no-tillage","370,000 seeds/ha","soybean","MorSoy 3759N LL","glufosinate-resistant"
-"43",43,"2011-3","no-tillage",NA,"maize/soybean",NA,NA
-"44",44,"2013-1",NA,NA,"maize",NA,NA
-"45",45,"2012-2",NA,"89,958 / 33,592","maize/soybean","Channel hybrid 193-46VT3 / Channel 2305R2 RR2Y","glyphosate resistant"
-"46",46,"2002-2",NA,"432,000 /  undescribed","soybean/maize","resistant: 2121 NNR (Gold Country), D151EE/N (Garst) - suceptible: 92B36 (Pioneer), AG1602RR (AsGrow) / Dekalb DK42-93","soybean cyst nematode resistant and susceptible / glyphosate resistant"
-"47",47,"2008-7","no-tillage",NA,"maize/soybean",NA,NA
-"48",48,"2012-2","tillage",NA,"maize (silage)",NA,NA
-"49",49,"2011-3","tillage (university farms) and no-tillage (on-farm trials)","dependent on site","soybean",NA,NA
-"50",50,"2002-5",NA,NA,"maize (silage)",NA,NA
-"51",51,"2006-4",NA,"79,000 seeds/ha (maize)","maize/soybean","Pioneer 35P17 (maize)",NA
-"52",52,"2008-4",NA,NA,"maize/soybean",NA,NA
-"53",53,"2008-4",NA,NA,"maize/soybean",NA,NA
-"54",54,"2011-5",NA,NA,"maize/soybean",NA,NA
-"55",55,"1991-3",NA,"72,000 seeds/ha (maize), 500,000 seeds/ha","maize/soybean","Pioneer 3189/Century 84",NA
-"56",56,"1982-3","no-tillage","18,000 plants/acre","maize",NA,NA
-"57",57,"1991-2","tillage","68,900 seeds/ha","maize","DeKalb DK547",NA
-"58",58,"1986-2","no-tillage","500,000 seeds/ha","soybeans",NA,NA
+Paper_id,Duration,Cash_tillage,Cash_seeddensity,Cash_species,Cash_cultivar,Cash_genetics
+1,2001-8,variable,64000; 432000,maize/soybean,,
+2,2006-4,variable,79000; 740000,maize/soybean,"Pioneer 34A16, Pioneer 34A20, Pioneer 34Y03; Stine 2289-4, Harosoy 63",
+3,2012-3,tilled,,maize,,
+4,2011-2,tilled,,maize/soybean,,
+5,2014-2,,,soybean,"AG4933, AG2933, AG3832, P35T58R, P35T97R2, AG4633; P95LO1, BE2984L, BE2984, HS42L22, LL3579, P34T35L, CZ3841LL, LL4650",glyphosate resistant; glucosinate-resistant
+6,1989-2,variable,58500,maize,Pioneer3379,
+7,2005-2,no-tillage,81510,maize,,
+8,2006-2,no-tillage,76000; 370000,maize/soybean,DKC61-45; DKB31-51,glyphosate resistant
+9,1987-2,disked,,soybean,"Asgrow3127, Beeson, Winchester",
+10,1990-6,no-tillage,,soybean,,
+11,1994-2,no-tillage,"100,000",soybean,Dunbar,
+12,1995-3,tillage,"74,074",maize,inbred variety 'Pioneer P38',
+13,1994-3,chisel plow,,maize/soybean,,
+14,1998-3,,,maize/soybean,,
+15,2005-2,no-tillage,"444600 / 81,510",soybean/maize,"Asgrow Brand1 ""Ag2203"" / Dekalb 'DKC59-08'",
+16,2007-2,no-tillage,"77,000",maize,DeKalb 44-92,glyphosate tolerant
+17,2006-3,chisel plow,"77,000 / 439,750",maize/soybean,DeKalb 50-45 / Pioneer 92M40-Group 2 middle season,glyphosate resistant
+18,2005-4,chisel plow,"77,000 / 439,750",maize/soybean,DeKalb 50-45 / Pioneer 92M40-Group 2 middle season,glyphosate resistant
+19,2005-1,,,variable,,
+20,2009-3,no-tillage,,maize/soybean,,
+21,2008-1,cultivation,"88,920",maize,Pioneer 35A34,
+22,2010-2,conservation tillage,,maize/soybean,,
+23,2012-1,,,maize/soybean,,
+24,2012-1,no-tillage,12000,maize ,,
+25,2008-4,conventional tillage,"79,500-82,500",maize ,Agrigold VT3 ,"glyphosate resistant, corn borer resistant, corn rootworm protection / glyphosate resistant"
+26,2006-2,no-tillage,"70,000",maize,,glyphosate tolerant
+27,2011-3,variable (moldboard or no-tillage),,maize/soybean,,
+28,2009-3,,,maize/soybean,,
+29,2006-2,,"370,658 - 593,052",soybean,"Iowa2053, ProSoy, Viking2022",
+30,2010-4,,"82,500",maize,"Agrigold 6325 VT3, Pioneer P0448XR",
+31,2002-2,no-tillage,,maize,,
+32,2009-1,,,maize/soybean,,
+33,2010-2,no-tillage,"350,000",soybean,,glyphosate resistant
+34,2001-2,no-tillage,,maize/soybean,,
+35,2001-3,moldboard,"76,500",maize,"DK493, DKC5073, P37R71",
+36,1996-7,,"387,000 / 84,000",soybean/maize,"Northrup King S19-90, Stine 2250, Stine 2289 / Pioneer 3563",
+37,2003-2,no-tillage,,maize/soybean,,
+38,2014-2,tillage and no-tillage,,maize/soybean,,
+39,2009-6,no-tillage,"79,500",maize,"Agrigold 6325 VT3, Pioneer P0448XR",
+40,2013-2,no-tillage,"75,000",maize,"Pioneer P8906AM, DeKalb 52-59",glyphosate-tolerant
+41,2014-3,no-tillage,"80,000",maize,yellow and white,
+42,2013-3,no-tillage,"370,000 seeds/ha",soybean,MorSoy 3759N LL,glufosinate-resistant
+43,2011-3,no-tillage,,maize/soybean,,
+44,2013-1,,,maize,,
+45,2012-2,,"89,958 / 33,592",maize/soybean,Channel hybrid 193-46VT3 / Channel 2305R2 RR2Y,glyphosate resistant
+46,2002-2,,"432,000 /  undescribed",soybean/maize,"resistant: 2121 NNR (Gold Country), D151EE/N (Garst) - suceptible: 92B36 (Pioneer), AG1602RR (AsGrow) / Dekalb DK42-93",soybean cyst nematode resistant and susceptible / glyphosate resistant
+47,2008-7,no-tillage,,maize/soybean,,
+48,2012-2,tillage,,maize (silage),,
+49,2011-3,tillage (university farms) and no-tillage (on-farm trials),dependent on site,soybean,,
+50,2002-5,,,maize (silage),,
+51,2006-4,,"79,000 seeds/ha (maize)",maize/soybean,Pioneer 35P17 (maize),
+52,2008-4,,,maize/soybean,,
+53,2008-4,,,maize/soybean,,
+54,2011-5,,,maize/soybean,,
+55,1991-3,,"72,000 seeds/ha (maize), 500,000 seeds/ha",maize/soybean,Pioneer 3189/Century 84,
+56,1982-3,no-tillage,"18,000 plants/acre",maize,,
+57,1991-2,tillage,"68,900 seeds/ha",maize,DeKalb DK547,
+58,1986-2,no-tillage,"500,000 seeds/ha",soybeans,,

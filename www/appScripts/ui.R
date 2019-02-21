@@ -15,9 +15,9 @@ library(shinydashboard)
 
 #### Load data ####
 # setwd(".")
-setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
-summary_all <- read_csv("data-for-app.csv")
-map.data <- read_csv("mapping/site-data_with_counties.csv")
+# setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
+# summary_all <- read_csv("data-for-app.csv")
+# map.data <- read_csv("mapping/site-data_with_counties.csv")
 
 # #for nathan's system
 # datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"

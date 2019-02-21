@@ -10,7 +10,7 @@ library(htmltools) # For HTML function in Shiny
 
 
 #### LOAD DATA ####
-setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
+setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data/mapping")
 map.data <- read_csv("site-data_with_counties.csv")
 
 
@@ -48,7 +48,8 @@ server <- function(input, output, session) {
 
     # Function to define multi-line labels
     labs <- lapply(seq(nrow(df0())), function(i) {
-      paste0("State: ", df0()[i, "State"], "<p>", "County: ", df0()[i, "NAME"])
+      paste0("State: ", df0()[i, "State"], "<p>", "County: ", df0()[i, "NAME"], 
+             "<p>", "Treatment: ", df0()[i, "Trtmt_main"], "<p>", "DOI: ", df0()[i, "DOI"])
     })
 
     # Print map with points

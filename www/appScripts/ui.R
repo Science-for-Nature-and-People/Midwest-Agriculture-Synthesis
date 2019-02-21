@@ -17,16 +17,16 @@ library(shinydashboard)
 
 #### Load data ####
 #setwd(".")
-#setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
-#summary_all <- read_csv("data-for-app.csv")
+# setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
+# summary_all <- read_csv("data-for-app.csv")
 
 # #for nathan's system
 # datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
 # summary_all <- read_csv(file.path(datapath, "data-for-app.csv"))
 
 # #for Lesley's system
- datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data"
- summary_all <- read_csv(file.path(datapath, "data-for-app.csv"))
+ # datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data"
+ # summary_all <- read_csv(file.path(datapath, "data-for-app.csv"))
 
 
 #collist <- c("Review_id", "main_group", "group_metric", "Legend_1", "Legend_2", "Legend_3", "Group_RV", "Review")

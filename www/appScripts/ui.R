@@ -3,8 +3,6 @@
 # Managing Soil Carbon - SNAPP Working Group
 # -------------------------------------------
 
-# note: we can run this code outside of the ui/server scripts by using the command runApp('www/appScripts/') (assuming your working directory is up to Midwest-Agriculture-Synthesis)
-
 #### Load libraries ####
 library(readr)
 library(tidyverse) # For reading and manipulating data
@@ -50,7 +48,7 @@ ui <- navbarPage(
         align = "center",
         selectInput(
           inputId = "MgmtPractice", label = "Practice",
-          choices = unique(summary_all$Review) %>% sort(), # multiple = T,
+          choices = unique(summary_all$Review) %>% sort(),
           selected = "Cover Crops"
         )
       ),
@@ -69,7 +67,7 @@ ui <- navbarPage(
         selectInput(
           inputId = "Legend_1", label = "Grouping",
           choices = unique(summary_all$Legend_1) %>% sort(), multiple = T,
-          selected = "Monoculture"
+          selected = "Single species"
         )
       )
     ),

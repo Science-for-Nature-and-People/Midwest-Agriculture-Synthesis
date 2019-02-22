@@ -2,11 +2,12 @@
 # Script to pull county information from Lat/Long #
 ###################################################
 
+library(readxl)
 library(tigris)
 library(sp)
 
-#setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data/mapping")
-setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/mapping")
+setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data/mapping")
+#setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/mapping")
 
 counties <- counties(cb=TRUE)
 
@@ -29,7 +30,7 @@ points <- SpatialPoints(all.data,
 
 countynames <- over(points, counties)
 
-final <- data.frame(all.data, countynames)[,c(1,2,6:11,15,27,33)]
+final <- data.frame(all.data, countynames)[,c(1,2,6:11,15,27,34)]
 
 write.csv(final,"site-data_with_counties.csv")
 

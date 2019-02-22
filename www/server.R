@@ -50,7 +50,7 @@ server <- function(input, output, session) {
     labs <- lapply(seq(nrow(df3())), function(i) {
       paste0(
         "State: ", df3()[i, "State"], "<p>", "County: ", df3()[i, "NAME"],
-        "<p>", "Treatment: ", df3()[i, "Trtmt_main"], "<p>", "DOI: ", df3()[i, "DOI"]
+        "<p>", "Treatment: ", df3()[i, "Review"], "<p>", "DOI: ", df3()[i, "DOI"]
       )
     })
 

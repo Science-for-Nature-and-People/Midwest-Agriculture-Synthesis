@@ -20,9 +20,11 @@ library(here) # to deal with tehfact we are using a sub directory (www)
 
 #### Load data ####
 
-summary_all <- read_csv(here("www", "data", "data-for-app.csv"))
-map.data <- read_csv(here("www","data", "mapping/site-data_with_counties.csv"))
+#summary_all <- read_csv(here("www", "data", "data-for-app.csv"))
+#map.data <- read_csv(here("www","data", "mapping","site-data_with_counties.csv"))
 
+#print(head(summary_all))
+#print(head(map.data))
 # setwd(".")
 # setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
 # summary_all <- read_csv("data-for-app.csv")

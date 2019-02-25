@@ -15,30 +15,6 @@ library(shinydashboard)
 library(here) # to deal with tehfact we are using a sub directory (www)
 
 
-
-
-
-#### Load data ####
-
-#summary_all <- read_csv(here("www", "data", "data-for-app.csv"))
-#map.data <- read_csv(here("www","data", "mapping","site-data_with_counties.csv"))
-
-#print(head(summary_all))
-#print(head(map.data))
-# setwd(".")
-# setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data")
-# summary_all <- read_csv("data-for-app.csv")
-# map.data <- read_csv("mapping/site-data_with_counties.csv")
-
-# #for nathan's system
-# datapath <- "/Users/nathan/Desktop/Midwest-Agriculture-Synthesis/www/data"
-# summary_all <- read_csv(file.path(datapath, "data-for-app.csv"))
-
-# #for Lesley's system
-# datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data"
-# summary_all <- read_csv(file.path(datapath, "data-for-app.csv"))
-
-
 #### User Interface ####
 # user interface
 ui <- navbarPage(
@@ -86,10 +62,10 @@ ui <- navbarPage(
       column(
         12,
         align = "center",
-        actionButton(inputId = "update", label = "Update", style = "padding:4px; font-size:80%")
+        actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")
       )
     ),
-
+    
     hr(),
 
     # Set up row with plots of map and forest plot
@@ -124,12 +100,23 @@ ui <- navbarPage(
       )
     ),
 
+    hr(),
+    
+    fluidRow(
+      column(
+        12,
+        align = "center",
+        actionButton(inputId = "downloadData", label = "Download filtered data", style = "padding:4px; font-size:80%"),
+        actionButton(inputId = "downloadAllData", label = "Download all data", style = "padding:4px; font-size:80%"),
+        actionButton(inputId = "downloadFigure", label = "Download figure", style = "padding:4px; font-size:80%")
+      )
+    ),
+    
     hr()
   ),
 
   tabPanel("References"),
-  tabPanel("Methods"),
-  downloadButton(outputId = "downloadData", label = "Download") # the download button goes to the bottom
+  tabPanel("Methods")
 )
 
 # #### RUN THE APP ####

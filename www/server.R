@@ -122,10 +122,23 @@ server <- function(input, output, session) {
 
   # picks out the filtered data for download as a csv
   output$downloadData <- downloadHandler(
-    filename = "app_data.csv",
+    filename = "filtered_app_data.csv",
     content = function(file) {
       write.csv(df2(), file, row.names = FALSE)
     }
+  )
+  
+  # picks out all data for download as a csv
+  output$downloadAllData <- downloadHandler(
+    filename = "all_app_data.csv",
+    content = function(file) {
+      write.csv(summary_all, file, row.names = FALSE)
+    }
+  )
+  
+  # prints static figure
+  output$downloadFigure <- downloadHandler(
+    ggsave("figure.pdf")
   )
 
   # Will click the update button at the start so the app starts with a plot.

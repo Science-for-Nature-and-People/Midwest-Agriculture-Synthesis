@@ -1871,7 +1871,7 @@ summary_all$Review2 <- as.factor(paste(summary_all$Review, summary_all$Review_sp
 summary_all$Review_specific <- NULL
 
 
-write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
+write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_FULL_Summary.csv", row.names = FALSE)
 
 
 

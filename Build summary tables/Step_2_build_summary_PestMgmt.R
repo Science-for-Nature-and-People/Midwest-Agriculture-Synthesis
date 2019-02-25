@@ -226,9 +226,9 @@ soil_summary1 <- df_soil %>%
 soil_summary1 <- distinct(soil_summary1)
 
 
-#Need to embed data tables into a column rather than join
-#soil_summary <- left_join(soil_summary1, soil_summary2)
-#soil_summary <- left_join(soil_summary, soil_summary3)
+#join tables
+soil_summary <- left_join(soil_summary1, soil_summary2)
+soil_summary <- left_join(soil_summary, soil_summary3)
 
 
 
@@ -293,9 +293,9 @@ pest_summary1 <- df_pest[df_pest$per_change < 1000,] %>%
 pest_summary1 <- distinct(pest_summary1)
 
 
-#Need to embed data tables into a column rather than join
-#pest_summary <- left_join(pest_summary1, pest_summary2)
-#pest_summary <- left_join(pest_summary, pest_summary3)
+#join tables
+pest_summary <- left_join(pest_summary1, pest_summary2)
+pest_summary <- left_join(pest_summary, pest_summary3)
 
 summary(pest_summary$mean_abundance_change)
 
@@ -366,9 +366,9 @@ yield_summary1 <- df_yield[df_yield$per_change < 1000,] %>%
 #Isolate distinct rows within table
 yield_summary1 <- distinct(yield_summary1)
 
-#Need to embed data tables into a column rather than join
-#yield_summary <- left_join(yield_summary1, yield_summary2)
-#yield_summary <- left_join(yield_summary, yield_summary3)
+#join tables
+yield_summary <- left_join(yield_summary1, yield_summary2)
+yield_summary <- left_join(yield_summary, yield_summary3)
 
 
 
@@ -430,9 +430,9 @@ water_summary1 <- df_water[df_water$per_change < 1000,] %>%
 #Isolate distinct rows within table
 water_summary1 <- distinct(water_summary1)
 
-#Need to embed data tables into a column rather than join
-#water_summary <- left_join(water_summary1, water_summary2)
-#water_summary <- left_join(water_summary, water_summary3)
+#join tables
+water_summary <- left_join(water_summary1, water_summary2)
+water_summary <- left_join(water_summary, water_summary3)
 
 
 ####Join Summary results back into one file ####
@@ -440,11 +440,9 @@ summary_all <- full_join(soil_summary, yield_summary)
 summary_all <- full_join(summary_all, pest_summary)
 #summary_all <- full_join(summary_all, water_summary) 
 
-summary_all$Review2 <- as.factor(paste(summary_all$Review, summary_all$Review_specific, sep = " "))
-summary_all$Review_specific <- NULL
 
 
-write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
+write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/PestMgmt_FULL_Summary.csv", row.names = FALSE)
 
 
 

@@ -451,7 +451,7 @@ water_summary1 <- df_water[df_water$per_change < 1000,] %>%
             paper_id_list1 = paste(unique(Paper_id), collapse = ",")) %>%
   ungroup() %>%
   select(Review_id, main_group, group_metric, Legend_1, mean_per_change1, sem_per_change1, num_papers1, num_comparisons1, paper_id_list1) %>%
-  mutate(Group_RV = "Crop Production") %>%
+  mutate(Group_RV = "Water") %>%
   mutate(Review = "Cover Crops") 
 
 #Isolate distinct rows within table
@@ -468,7 +468,7 @@ summary_all <- full_join(summary_all, pest_summary)
 summary_all <- full_join(summary_all, water_summary) 
 
 
-summary_all <- slice(summary_all, 1:12)
+#summary_all <- slice(summary_all, 1:12)
 
 write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
 

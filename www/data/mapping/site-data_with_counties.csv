@@ -1,270 +1,270 @@
-"","DOI","Paper_id","State","Latitude","Longitude","Year_start","Years_num","Annual_precip","Reps","Review","NAME"
-"1","10.2134/agronj2005.0052",35,"WI",44.07,-89.32,2001,3,769,"4","Cover Crops","Waushara"
-"2","10.1017/wet.2017.30",5,"OH",40.15,-83.02,2013,1,NA,"4","Cover Crops","Delaware"
-"3","10.1017/wet.2017.30",5,"OH",40.15,-83.02,2014,1,NA,"4","Cover Crops","Delaware"
-"4","10.2134/agronj2009.0144",26,"OH",40,-83.02,2006,2,98,"4","Cover Crops","Franklin"
-"5","http://www.jstor.org/stable/25085273",9,"OH",39.82,-83.64,1987,2,NA,"3","Cover Crops","Clark"
-"6","http://www.jstor.org/stable/25085273",9,"OH",41.28,-83.84,1987,1,NA,"4","Cover Crops","Wood"
-"7","http://www.jstor.org/stable/25085273",9,"OH",38.74,-83.84,1987,2,NA,"4","Cover Crops","Brown"
-"8","10.1007/s12665-014-3353-z",24,"OH",40.17,-84.13,2012,1,110,"1","Cover Crops","Miami"
-"9","10.1016/j.still.2015.06.015",45,"MI",42.63,-84.44,2012,2,977,"2","Cover Crops","Ingham"
-"10","10.1016/j.still.2015.06.015",45,"MI",42.24,-85.24,2012,2,1027,"2","Cover Crops","Calhoun"
-"11","10.1016/j.agee.2016.07.003",40,"MI",42.4,-85.37,2013,2,NA,"5","Cover Crops","Kalamazoo"
-"12","10.2489/jswc.72.3.260",54,"IN",39.03,-85.54,2011,5,NA,"4","Cover Crops","Jennings"
-"13","10.2134/jeq2000.00472425002900010037x",12,"MI",41.84,-85.66,1995,3,NA,"4","Cover Crops","St. Joseph"
-"14","10.2489/jswc.69.6.564",23,"IN",39.1,-85.9,2012,1,118.6,"2","Cover Crops","Bartholomew"
-"15","10.1017/wet.2017.30",5,"IN",40.02,-86.33,2013,1,NA,"4","Cover Crops","Boone"
-"16","10.1017/wet.2017.30",5,"IN",40.02,-86.33,2014,1,NA,"4","Cover Crops","Boone"
-"17","10.1017/wet.2017.30",5,"TN",35.82,-86.77,2013,1,NA,"4","Cover Crops","Williamson"
-"18","10.1017/wet.2017.30",5,"TN",35.82,-86.77,2014,1,NA,"4","Cover Crops","Williamson"
-"19","10.1614/WS-D-11-00192.1",8,"IN",40.45,-86.92,2006,2,NA,"6","Cover Crops","Tippecanoe"
-"20","10.1614/WS-D-11-00192.1",8,"IN",38.68,-87.52,2006,2,NA,"6","Cover Crops","Knox"
-"21","10.2135/cropsci2005.09.0306",31,"IL",40.11,-88.2,2002,2,NA,"4","Cover Crops","Champaign"
-"22","10.2134/agronj2004.0800",34,"IL",40.11,-88.2,2001,2,NA,"4","Cover Crops","Champaign"
-"23","10.2136/sssaj2013.09.0403",32,"IL",40.063,-88.23,2009,1,NA,"4","Cover Crops","Champaign"
-"24","10.2134/agronj13.0370",33,"IL",40.09,-88.23,2010,2,NA,"2","Cover Crops","Champaign"
-"25","10.1094/PDIS-07-16-1067-RE",49,"IL",40.06,-88.24,2011,3,NA,"4","Cover Crops","Champaign"
-"26","0.2134/agronj2016.10.0613",38,"IL",44.1,-88.39,2014,2,NA,"4","Cover Crops","Calumet"
-"27","10.1016/j.agee.2015.10.014",4,"IL",39.54,-88.43,2011,2,1015,"2","Cover Crops","Coles"
-"28","10.1016/j.agee.2015.10.014",4,"IL",41.55,-88.56,2011,2,1015,"2","Cover Crops","Kendall"
-"29","10.1094/PDIS-07-16-1067-RE",49,"IL",39.92,-88.57,2011,3,NA,"4","Cover Crops","Piatt"
-"30","10.1097/SS.0b013e3181cf7959",1,"IL",37.44,-88.67,2001,4,617,"6","Cover Crops","Pope"
-"31","10.4137/ASWR.S30708",3,"IL",40.64,-88.78,2012,3,NA,"3","Cover Crops","McLean"
-"32","10.2134/jeq2013.12.0529",48,"IL",40.69,-88.78,2012,2,NA,"3","Cover Crops","McLean"
-"33","10.2134/agronj2004.0800",34,"IL",39,-88.95,2001,2,NA,"4","Cover Crops","Fayette"
-"34","10.1016/j.agee.2015.10.014",4,"IL",39.27,-89.03,2011,2,1015,"2","Cover Crops","Shelby"
-"35","10.1016/j.agee.2015.10.014",4,"IL",39.27,-89.03,2011,2,1015,"2","Cover Crops","Shelby"
-"36","10.1080/21683565.2014.901275",22,"WI",43.18,-89.21,2010,2,NA,"4","Cover Crops","Dane"
-"37","10.1017/wet.2017.30",5,"IL",40.35,-89.26,2013,1,NA,"4","Cover Crops","McLean"
-"38","10.1017/wet.2017.30",5,"IL",40.35,-89.26,2014,1,NA,"4","Cover Crops","McLean"
-"39","10.1017/wet.2017.30",5,"IL",40.35,-89.26,2014,1,NA,"4","Cover Crops","McLean"
-"40","10.1016/j.agee.2016.07.003",40,"WI",43.3,-89.33,2013,2,NA,"5","Cover Crops","Columbia"
-"41","10.2134/agronj1995.00021962008700060006x",57,"WI",43.34,-89.37,1991,2,NA,"3","Cover Crops","Columbia"
-"42","10.2489/jswc.68.5.411",50,"WI",43.2,-89.43,2002,5,NA,"4","Cover Crops","Dane"
-"43","10.1094/PDIS-07-16-1067-RE",49,"IL",40.47,-90.69,2011,3,NA,"3","Cover Crops","McDonough"
-"44","10.1094/PDIS-07-16-1067-RE",49,"IL",40.55,-90.87,2011,3,NA,"4","Cover Crops","McDonough"
-"45","10.2136/sssaj2015.02.0084",28,"IA",41.2,-91.49,2009,3,NA,"4","Cover Crops","Washington"
-"46","4abc",58,"MO",38.94,-91.94,1986,2,NA,"2","Cover Crops","Callaway"
-"47","10.1515/intag-2015-0030",27,"MO",38.97,-92.18,2011,3,990.6,"3","Cover Crops","Boone"
-"48","10.1017/S0890037X00027834",6,"MO",38.96,-92.33,1989,2,NA,"4","Cover Crops","Boone"
-"49","10.1017/wet.2017.23",42,"MO",38.9,-92.37,2013,3,1176,"4","Cover Crops","Boone"
-"50","10.1017/wet.2017.23",42,"MO",39.3,-92.37,2013,3,1098,"5","Cover Crops","Randolph"
-"51","10.1017/wet.2017.30",5,"AR",34.75,-92.45,2013,1,NA,"4","Cover Crops","Pulaski"
-"52","10.1017/wet.2017.30",5,"AR",34.75,-92.45,2014,1,NA,"4","Cover Crops","Pulaski"
-"53","10.2136/sssaj2015.02.0084",28,"IA",42.93,-92.58,2009,3,NA,"4","Cover Crops","Floyd"
-"54","10.1017/wet.2017.30",5,"MO",38.45,-92.69,2013,1,NA,"4","Cover Crops","Morgan"
-"55","10.1017/wet.2017.30",5,"MO",38.45,-92.69,2014,1,NA,"4","Cover Crops","Morgan"
-"56","10.1111/afe.12099",29,"MN",43.67,-92.98,2006,2,NA,"4","Cover Crops","Mower"
-"57","10.1111/afe.12099",29,"MN",44.75,-93.06,2006,1,NA,"4","Cover Crops","Dakota"
-"58","10.2135/cropsci2005.09-0296",46,"MN",44.75,-93.06,2002,2,NA,"8","Cover Crops","Dakota"
-"59","10.1016/j.agee.2009.05.008",7,"IA",42.02,-93.45,2005,2,835,"4","Cover Crops","Story"
-"60","1abc",10,"IA",42.02,-93.45,1990,6,NA,"5","Cover Crops","Story"
-"61","3abc",13,"IA",42.02,-93.45,1994,3,NA,"5","Cover Crops","Story"
-"62","10.1111/gcbb.12096",25,"IA",41.55,-93.45,2008,4,NA,"4","Cover Crops","Polk"
-"63","10.1097/SS.0000000000000187",44,"IA",41.55,-93.45,2013,1,NA,"4","Cover Crops","Polk"
-"64","10.2135/cropsci2005.09-0296",46,"MN",44.08,-93.51,2002,2,NA,"8","Cover Crops","Waseca"
-"65","10.1016/j.agwat.2012.03.010",2,"IA",42.05,-93.71,2006,5,856,"4","Cover Crops","Boone"
-"66","10.1016/j.agwat.2016.04.006",47,"IA",42.05,-93.71,2008,7,NA,"4","Cover Crops","Boone"
-"67","10.1016/j.fcr.2016.06.016",39,"IA",41.92,-93.75,2009,6,935,"4","Cover Crops","Boone"
-"68","10.2136/sssaj2013.02.0074",20,"IA",42.02,-93.77,2009,3,872,"4","Cover Crops","Boone"
-"69","10.2489/jswc.70.6.353",51,"IA",42.02,-93.77,2006,4,856,"3","Cover Crops","Boone"
-"70","10.2136/sssaj2015.02.0084",28,"IA",42.01,-93.78,2009,3,NA,"4","Cover Crops","Boone"
-"71","10.2134/jeq2015.02.0080",30,"IA",42.01,-93.78,2010,4,935,"4","Cover Crops","Boone"
-"72","10.2136/sssaj2005.0095",36,"IA",42.01,-93.78,1996,7,NA,"10","Cover Crops","Boone"
-"73","10.2134/jeq2005.0183",37,"IA",42.01,-93.78,2003,2,NA,"10","Cover Crops","Boone"
-"74","10.1007/s10705-010-9345-9",15,"IA",42.05,-93.94,2005,2,NA,"4","Cover Crops","Boone"
-"75","10.2489/jswc.69.6.564",23,"IA",42.03,-94,2012,1,90.7,"2","Cover Crops","Boone"
-"76","10.1093/ee/nvw177",43,"IA",42.03,-94,2011,3,NA,"2","Cover Crops","Boone"
-"77","10.1603/EN11168",19,"MN",46.01,-94.57,2005,1,NA,"22","Cover Crops","Morrison"
-"78","10.1016/j.agwat.2010.11.004",17,"IA",42.75,-94.7,2006,3,NA,"4","Cover Crops","Pocahontas"
-"79","10.2134/jeq2011.0151",18,"IA",42.75,-94.7,2005,4,NA,"4","Cover Crops","Pocahontas"
-"80","10.2489/jswc.69.6.564",23,"IA",43.25,-94.83,2012,1,84.7,"2","Cover Crops","Palo Alto"
-"81","10.1093/ee/nvw177",43,"IA",43.25,-94.83,2011,3,NA,"2","Cover Crops","Palo Alto"
-"82","10.2136/sssaj2015.02.0084",28,"IA",41.31,-95.18,2009,3,NA,"4","Cover Crops","Pottawattamie"
-"83","10.2134/jeq2004.1010",14,"MN",44.23,-95.27,1998,3,670,"4","Cover Crops","Redwood"
-"84","10.1111/afe.12099",29,"MN",44.23,-95.27,2006,2,NA,"4","Cover Crops","Redwood"
-"85","10.2135/cropsci2005.09-0296",46,"MN",44.23,-95.27,2002,2,NA,"8","Cover Crops","Redwood"
-"86","10.2489/jswc.68.6.438",21,"MN",46.21,-95.48,2008,1,NA,"1","Cover Crops","Otter Tail"
-"87","10.1007/s12155-017-9858-z",41,"NE",48.846,-96.472,2014,3,860,"4","Cover Crops","Kittson"
-"88","10.2134/agronj1997.00021962008900010011x",55,"NE",41.15,-96.5,1991,3,NA,"3","Cover Crops","Saunders"
-"89","10.1111/afe.12099",29,"MN",47.08,-96.51,2006,1,NA,"3","Cover Crops","Clay"
-"90","2abc",11,"NE",41.16,-96.54,1994,1,NA,"3","Cover Crops","Saunders"
-"91","2abc",11,"NE",41.16,-96.54,1995,1,NA,"4","Cover Crops","Saunders"
-"92","10.2134/jpa1991.0062",56,"NE",40.82,-96.69,1982,3,NA,"4","Cover Crops","Lancaster"
-"93","10.2136/sssaj2014.10.0399",52,"SD",44.3,-96.79,2008,4,500,"3","Cover Crops","Brookings"
-"94","10.1007/s12155-014-9413-0",53,"SD",44.3,-96.79,2008,4,500,"3","Cover Crops","Brookings"
-"95","10.1603/EN10041",16,"SD",44.348,-96.811,2007,2,NA,"6 to 8","Cover Crops","Brookings"
-"96","10.1007/s12155-017-9858-z",41,"NE",40.582,-98.144,2014,3,688,"4","Cover Crops","Clay"
-"97","10.2136/sssaj2015.10.0363",120,"NE",42.23,-96.56,2008,1,NA,"4","Fertility Management","Thurston"
-"98","10.2136/sssaj2015.10.0363",120,"NE",42.38,-96.95,2009,1,NA,"4","Fertility Management","Dixon"
-"99","10.2136/sssaj2015.10.0363",120,"NE",42.35,-97.92,2009,1,NA,"4","Fertility Management","Antelope"
-"100","10.2489/jswc.72.3.183",121,"IA",42.02,-93.63,2012,2,NA,"3","Fertility Management","Story"
-"101","10.2489/jswc.72.3.183",121,"IA",42.93,-93.8,2012,2,NA,"3","Fertility Management","Hancock"
-"102","10.2489/jswc.72.3.183",121,"IA",42.95,-92.54,2012,2,NA,"3","Fertility Management","Chickasaw"
-"103","10.2489/jswc.72.3.183",121,"IA",42.02,-95.43,2012,2,NA,"3","Fertility Management","Crawford"
-"104","10.2489/jswc.72.3.183",121,"IA",41.39,-95.02,2012,2,NA,"3","Fertility Management","Cass"
-"105","10.2489/jswc.72.3.183",121,"IA",41.02,-93.31,2012,1,NA,"3","Fertility Management","Lucas"
-"106","10.2134/jeq2016.01.0024",122,"MN",44.99,-93.17,2014,2,542,"4","Fertility Management","Ramsey"
-"107","10.2134/agronj13.0441",123,"IL",40.09,-88.23,2007,3,NA,"4","Fertility Management","Champaign"
-"108","10.2134/agronj13.0441",123,"IA",42.01,-93.74,2007,3,NA,"4","Fertility Management","Boone"
-"109","10.2134/agronj13.0441",123,"KS",39.09,-95.94,2007,1,NA,"4","Fertility Management","Shawnee"
-"110","10.2134/agronj13.0441",123,"KS",39.1,-95.83,2008,2,NA,"4","Fertility Management","Shawnee"
-"111","10.2134/agronj2013.0043",124,"IN",40.47,-87.01,2010,2,970,"6","Fertility Management","Tippecanoe"
-"112","10.2134/agronj2013.0043",124,"IN",41.45,-86.94,2011,1,980,"6","Fertility Management","Porter"
-"113","10.2134/jeq2011.0240",125,"MN",45.23,-93.53,2009,2,531,"4","Fertility Management","Wright"
-"114","10.2134/agronj2005.0615",126,"IA",41.21,-91.54,1999,2,NA,"4","Fertility Management","Washington"
-"115","10.2134/agronj2005.0615",126,"IA",42.93,-93.8,1999,2,NA,"4","Fertility Management","Hancock"
-"116","10.2134/agronj2005.0615",126,"IA",41.31,-95.08,1999,2,NA,"4","Fertility Management","Cass"
-"117","10.2134/agronj2005.0615",126,"IA",42.95,-92.54,1999,2,NA,"4","Fertility Management","Chickasaw"
-"118","10.2134/agronj2005.0615",126,"IA",42.97,-95.5,1999,2,NA,"4","Fertility Management","O'Brien"
-"119","http://www.scopus.com/inward/record.url?scp=0037346504&partnerID=8YFLogxK",127,"NE",40.78,-98.73,1994,4,NA,"5","Fertility Management","Buffalo"
-"120","10.2134/agronj2004.5020",128,"MN",44.06,-93.52,1997,3,NA,"4","Fertility Management","Waseca"
-"121","10.2134/jpa1999.0293",129,"NE",40.53,-98.05,1993,2,NA,NA,"Fertility Management","Clay"
-"122","10.2134/agronj2004.1412",130,"KS",39.19,-96.6,2000,2,NA,"3","Fertility Management","Riley"
-"123","10.1080/01904169809365488",131,"IL",40.78,-89.16,1993,1,NA,"4","Fertility Management","Woodford"
-"124","10.1080/01904169809365488",131,"IL",40.47,-88.88,1993,1,NA,"4","Fertility Management","McLean"
-"125","10.1080/01904169809365488",131,"IL",41.37,-88.92,1993,1,NA,"4","Fertility Management","LaSalle"
-"126","10.1080/01904169809365488",131,"IL",40.78,-89.16,1993,1,NA,"4","Fertility Management","Woodford"
-"127","10.1080/01904169809365488",131,"IL",41.37,-88.92,1993,1,NA,"4","Fertility Management","LaSalle"
-"128","10.1080/01904169809365488",131,"IL",40.51,-88.87,1993,1,NA,"4","Fertility Management","McLean"
-"129","10.1007/s11104-004-0272-x",132,"IL",40.09,-88.23,2001,2,1041,"4","Fertility Management","Champaign"
-"130","10.2134/agronj2004.0303",133,"KS",38.25,-98.62,2001,2,NA,"4","Fertility Management","Stafford"
-"131","10.2134/agronj2004.0304",133,"KS",39.12,-95.93,2001,2,NA,"4","Fertility Management","Shawnee"
-"132","10.2134/agronj2004.0305",133,"KS",39.77,-97.79,2001,2,NA,"4","Fertility Management","Republic"
-"133","10.2134/agronj2004.0306",133,"KS",39.13,-96.62,2001,2,NA,"4","Fertility Management","Riley"
-"134","10.2134/agronj2006.0172",134,"IA",42.17,-93.78,1998,4,NA,"3.5","Fertility Management","Boone"
-"135","10.2134/agronj2006.0173",134,"IA",42.17,-93.78,1998,4,NA,"3.5","Fertility Management","Boone"
-"136","10.2134/agronj2006.0174",134,"IA",42.17,-93.78,1998,4,NA,"3.5","Fertility Management","Boone"
-"137","10.2134/agronj2006.0175",134,"IA",42.17,-93.78,1999,3,NA,"3.5","Fertility Management","Boone"
-"138","10.2134/agronj2006.0176",134,"IA",42.17,-93.78,1999,3,NA,"3.5","Fertility Management","Boone"
-"139","10.2134/agronj2006.0177",134,"IA",42.17,-93.78,1999,3,NA,"3.5","Fertility Management","Boone"
-"140","10.2134/agronj2007.0174",135,"NE",40.98,-98.59,2003,2,NA,"3","Fertility Management","Hall"
-"141","10.2134/agronj2007.0174",135,"NE",41.33,-98.34,2003,2,NA,"3","Fertility Management","Howard"
-"142","10.2134/jeq2016.06.0237",136,"MN",43.85,-93.73,2014,2,NA,"4","Fertility Management","Waseca"
-"143","10.2134/jeq2017.03.0109",137,"IL",37.72,-88.23,2002,3,NA,"3","Fertility Management","Gallatin"
-"144","10.2134/jpa1992.0142",138,"IA",42.02,-93.63,1986,2,NA,"3","Fertility Management","Story"
-"145","10.2134/jpa1992.0142",138,"IA",42.17,-93.78,1986,2,NA,"3","Fertility Management","Boone"
-"146","10.2134/agronj1992.00021962008400030026x",139,"IA",42.17,-93.78,1984,3,NA,NA,"Fertility Management","Boone"
-"147","10.2134/agronj1994.00021962008600060036x",140,"OH",41.19,-83.79,1986,3,514,"4","Fertility Management","Wood"
-"148","10.2134/agronj1994.00021962008600060036x",140,"OH",40.81,-81.94,1987,2,568,"4","Fertility Management","Wayne"
-"149","10.2136/sssaj1997.03615995006100060022x",141,"MN",44.41,-92.74,1982,3,NA,"4","Fertility Management","Goodhue"
-"150","10.2136/sssaj1997.03615995006100060022x",141,"MN",44.08,-93.5,1982,3,NA,"4","Fertility Management","Waseca"
-"151","10.2134/agronj1998.00021962009000050011x",142,"NE",41.23,-96.5,1992,5,NA,"4","Fertility Management","Saunders"
-"152","10.2134/agronj1998.00021962009000050011x",142,"NE",40.56,-98.06,1992,5,NA,"4","Fertility Management","Clay"
-"153","10.2136/sssaj2002.0544",143,"NE",40.51,-98.07,1994,3,NA,"5","Fertility Management","Clay"
-"154","10.2136/sssaj2002.0545",143,"NE",41.07,-100.82,1994,3,NA,"5","Fertility Management","Lincoln"
-"155","10.2136/sssaj2002.0546",143,"NE",40.86,-99.1,1994,4,NA,"5","Fertility Management","Buffalo"
-"156","10.2136/sssaj2002.0547",143,"NE",40.86,-99.1,1994,3,NA,"5","Fertility Management","Buffalo"
-"157","10.1111/1365-2664.12924",70,"IN",40.263035,-85.152023,2012,2,NA,"4.0","Pest Management","Randolph"
-"158","10.1111/1365-2664.12924",70,"IN",41.446398,-86.941901,2012,3,NA,"4.0","Pest Management","Porter"
-"159","10.1111/1365-2664.12924",70,"IN",40.300682,-86.902448,2012,3,NA,"4.0","Pest Management","Tippecanoe"
-"160","10.1002/ps.4602",71,"IN",40.300682,-86.902448,2012,2,NA,"4.0","Pest Management","Tippecanoe"
-"161","10.1002/ps.4602",71,"IA",41.982225,-93.639749,2012,2,NA,"4.0","Pest Management","Story"
-"162","10.1002/ps.4602",71,"MN",44.242425,-95.308314,2012,2,NA,"4.0","Pest Management","Redwood"
-"163","10.1002/ps.4602",71,"ND",46.600221,-97.176631,2012,2,NA,"4.0","Pest Management","Richland"
-"164","10.1002/ps.4602",71,"ND",46.928519,-97.002872,2012,1,NA,"4.0","Pest Management","Cass"
-"165","10.1002/ps.4602",71,"SD",44.299763,-96.922711,2012,2,NA,"4.0","Pest Management","Brookings"
-"166","10.1002/ps.4602",71,"WI",43.29795,-89.348524,2013,1,NA,"4.0","Pest Management","Columbia"
-"167","10.1002/ps.4602",71,"KS",39.143831,-96.633759,2012,2,NA,"4.0","Pest Management","Riley"
-"168","10.1002/ps.4602",71,"ND",47.836174,-97.308994,2013,1,NA,"4.0","Pest Management","Grand Forks"
-"169","10.1002/ps.4602",71,"ND",47.013136,-96.836685,2013,1,NA,"4.0","Pest Management","Cass"
-"170","10.1016/j.cropro.2017.03.004",72,"SD",44.32,-96.92,2013,2,NA,"4.0","Pest Management","Brookings"
-"171","10.1016/j.cropro.2017.03.004",72,"SD",45.1,-96.93,2013,2,NA,"6.0","Pest Management","Codington"
-"172","10.1094/PD-89-0262",73,"IL",40.12,-88.2,2000,3,NA,"3 to 4","Pest Management","Champaign"
-"173","10.1094/PD-89-0262",73,"IL",40.42,-89.78,2000,1,NA,"3 to 4","Pest Management","Mason"
-"174","10.1094/PD-89-0262",73,"IL",40,-88.95,2002,1,NA,"3 to 4","Pest Management","Macon"
-"175","10.1016/0261-2194(92)90057-C",74,"IL",40.12,-88.2,1989,2,NA,"5.0","Pest Management","Champaign"
-"176","10.1016/j.cropro.2005.03.013",75,"IL",40.36,-89.57,2002,2,NA,"4.0","Pest Management","Tazewell"
-"177","10.1111/j.1439-0418.2011.01656.x",76,"IL",41.77,-89.95,2007,2,NA,"4.0","Pest Management","Whiteside"
-"178","10.1016/0261-2194(93)90096-2",77,"OH",40.82,-81.93,1987,2,NA,"4.0","Pest Management","Wayne"
-"179","10.1017/S0890037X00038793",78,"MN",44.08,-93.51,1991,1,NA,"6.0","Pest Management","Waseca"
-"180","10.1017/S0890037X00038793",78,"MI",42.75,-84.48,1991,1,NA,"6.0","Pest Management","Ingham"
-"181","10.1017/S0890037X00038793",78,"WI",43.33,-89.37,1991,1,NA,"6.0","Pest Management","Columbia"
-"182","10.1017/S0890037X00038793",78,"MN",44.08,-93.51,1991,1,NA,"3.0","Pest Management","Waseca"
-"183","10.1017/S0890037X00038793",78,"MI",42.75,-84.48,1991,1,NA,"3.0","Pest Management","Ingham"
-"184","10.1017/S0890037X00038793",78,"WI",43.33,-89.37,1991,1,NA,"3.0","Pest Management","Columbia"
-"185","10.1093/jee/92.4.954",79,"NE",41.16,-96.54,1997,2,NA,"4.0","Pest Management","Saunders"
-"186","10.1093/jee/92.4.954",79,"NE",40.81,-96.68,1997,2,NA,"4.0","Pest Management","Lancaster"
-"187","10.1093/jee/tov081",80,"IN",40.300682,-86.902448,2010,2,NA,"3.0","Pest Management","Tippecanoe"
-"188","10.1093/jee/tov081",80,"IL",40.15,-88.21,2010,2,NA,"3.0","Pest Management","Champaign"
-"189","10.1093/jee/tov081",80,"MO",39.01,-92.36,2010,2,NA,"3.0","Pest Management","Boone"
-"190","10.1093/jee/tov081",80,"IA",41.982225,-93.639749,2010,2,NA,"3.0","Pest Management","Story"
-"191","10.1093/jee/tov081",80,"IA",43.22,-94.21,2010,1,NA,"3.0","Pest Management","Kossuth"
-"192","10.1093/jee/tov081",80,"NE",41.26,-96.66,2011,1,NA,"3.0","Pest Management","Saunders"
-"193","10.2135/cropsci2014.02.0114",81,"WI",43.30222222,-89.33555556,2012,2,NA,"4.0","Pest Management","Columbia"
-"194","10.2135/cropsci2014.02.0114",81,"WI",42.72583333,-89.02138889,2012,2,NA,"4.0","Pest Management","Rock"
-"195","10.2135/cropsci2014.02.0114",81,"WI",42.83027778,-90.78916667,2012,2,NA,"4.0","Pest Management","Grant"
-"196","10.2135/cropsci2014.02.0114",81,"WI",43.72611111,-88.57166667,2012,2,NA,"4.0","Pest Management","Fond du Lac"
-"197","10.2135/cropsci2014.02.0114",81,"WI",44.07416667,-91.33277778,2012,2,NA,"4.0","Pest Management","Trempealeau"
-"198","10.2135/cropsci2014.02.0114",81,"WI",44.11944444,-89.53527778,2012,2,NA,"4.0","Pest Management","Waushara"
-"199","10.2135/cropsci2014.02.0114",81,"WI",44.95,-91.35027778,2012,2,NA,"4.0","Pest Management","Chippewa"
-"200","10.2135/cropsci2014.02.0114",81,"WI",44.64138889,-90.13305556,2012,2,NA,"4.0","Pest Management","Wood"
-"201","10.2135/cropsci2014.02.0114",81,"WI",44.52361111,-88.32944444,2012,2,NA,"4.0","Pest Management","Outagamie"
-"202","10.2135/cropsci2014.03.0200",82,"WI",43.30222222,-89.33555556,2012,2,508,"4.0","Pest Management","Columbia"
-"203","10.2134/agronj14.0277",83,"WI",43.30222222,-89.33555556,2011,3,NA,"4.0","Pest Management","Columbia"
-"204","10.2134/agronj14.0277",83,"WI",42.72583333,-89.02138889,2011,3,NA,"4.0","Pest Management","Rock"
-"205","10.2134/agronj14.0277",83,"WI",42.83027778,-90.78916667,2011,3,NA,"4.0","Pest Management","Grant"
-"206","10.2134/agronj14.0277",83,"WI",43.72611111,-88.57166667,2011,3,NA,"4.0","Pest Management","Fond du Lac"
-"207","10.2134/agronj14.0277",83,"WI",44.07416667,-91.33277778,2011,3,NA,"4.0","Pest Management","Trempealeau"
-"208","10.2134/agronj14.0277",83,"WI",44.11944444,-89.53527778,2011,3,NA,"4.0","Pest Management","Waushara"
-"209","10.2134/agronj14.0277",83,"WI",44.95,-91.35027778,2011,3,NA,"4.0","Pest Management","Chippewa"
-"210","10.2134/agronj14.0277",83,"WI",44.64138889,-90.13305556,2011,3,NA,"4.0","Pest Management","Wood"
-"211","10.2134/agronj14.0277",83,"WI",44.52361111,-88.32944444,2011,3,NA,"4.0","Pest Management","Outagamie"
-"212","10.2134/agronj14.0277",83,"WI",42.7675,-88.46777778,2011,3,NA,"4.0","Pest Management","Walworth"
-"213","10.1603/EC14047",84,"SD",44.32,-96.92,2011,3,NA,NA,"Pest Management","Brookings"
-"214","10.1603/EC14047",84,"MN",44.23,-95.27,2011,3,NA,NA,"Pest Management","Redwood"
-"215","10.1603/EC14047",84,"WI",43.30222222,-89.33555556,2011,3,NA,NA,"Pest Management","Columbia"
-"216","10.1603/EC14047",84,"IA",42.95,-92.54,2011,3,NA,NA,"Pest Management","Chickasaw"
-"217","10.1603/EC14047",84,"IA",42.02,-93.64,2011,3,NA,NA,"Pest Management","Story"
-"218","10.1603/EC14047",84,"PA",40.88,-78.43,2011,3,NA,NA,"Pest Management","Clearfield"
-"219","10.1603/EC14047",84,"KS",39.8,-97.78,2011,3,NA,NA,"Pest Management","Republic"
-"220","10.1603/EC14047",84,"ND",46.96,-97.02,2012,2,NA,NA,"Pest Management","Cass"
-"221","10.1111/j.1439-0418.2012.01716.x",85,"OH",40.76666667,-81.94527778,2006,2,NA,"4.0","Pest Management","Wayne"
-"222","10.1111/j.1439-0418.2012.01716.x",85,"OH",39.85,-83.69583333,2006,2,NA,"4.0","Pest Management","Clark"
-"223","10.2135/cropsci2011.06.0311",86,"WI",43.30222222,-89.33555556,2008,3,NA,"4.0","Pest Management","Columbia"
-"224","10.2135/cropsci2011.06.0311",86,"WI",42.72583333,-89.02138889,2008,3,NA,"4.0","Pest Management","Rock"
-"225","10.2135/cropsci2011.06.0311",86,"WI",42.83027778,-90.78916667,2008,3,NA,"4.0","Pest Management","Grant"
-"226","10.2135/cropsci2011.06.0311",86,"WI",43.72611111,-88.57166667,2008,3,NA,"4.0","Pest Management","Fond du Lac"
-"227","10.2135/cropsci2011.06.0311",86,"WI",44.07416667,-91.33277778,2008,3,NA,"4.0","Pest Management","Trempealeau"
-"228","10.2135/cropsci2011.06.0311",86,"WI",44.11944444,-89.53527778,2008,3,NA,"4.0","Pest Management","Waushara"
-"229","10.2135/cropsci2011.06.0311",86,"WI",44.95,-91.35027778,2008,3,NA,"4.0","Pest Management","Chippewa"
-"230","10.2135/cropsci2011.06.0311",86,"WI",44.64138889,-90.13305556,2008,3,NA,"4.0","Pest Management","Wood"
-"231","10.2135/cropsci2011.06.0311",86,"WI",44.52361111,-88.32944444,2008,3,NA,"4.0","Pest Management","Outagamie"
-"232","10.1007/s10658-009-9545-9",87,"IO",42.03,-93.65,2007,1,NA,"5.0","Pest Management","Story"
-"233","10.1007/s10658-009-9545-9",87,"IO",42.95,-92.54,2007,1,NA,"5.0","Pest Management","Chickasaw"
-"234","10.1603/029.102.0613",88,"IA",42.05,-93.48,2005,3,NA,"4 to 6","Pest Management","Story"
-"235","10.1603/029.102.0613",88,"IA",41.03,-93.36,2005,3,NA,"4 to 6","Pest Management","Lucas"
-"236","10.1603/029.102.0613",88,"MI",42.28,-85.55,2005,3,NA,"4 to 6","Pest Management","Kalamazoo"
-"237","10.1603/029.102.0613",88,"MI",43.33,-84.09,2005,3,NA,"4 to 6","Pest Management","Saginaw"
-"238","10.1603/029.102.0613",88,"MN",44.38,-95.3,2005,3,NA,"4 to 6","Pest Management","Redwood"
-"239","10.1603/029.102.0613",88,"MN",44.67,-93.09,2005,3,NA,"4 to 6","Pest Management","Dakota"
-"240","10.1603/029.102.0127",89,"NE",42.38,-96.99,2005,2,NA,"4.0","Pest Management","Dixon"
-"241","10.2134/agronj2007.0142",90,"IO",41.82,-90.55,2004,2,NA,"4.0","Pest Management","Clinton"
-"242","10.2134/agronj2007.0142",90,"IO",42.02,-93.46,2004,2,NA,"4.0","Pest Management","Story"
-"243","10.2134/agronj2007.0142",90,"IO",42.18,-93.55,2004,2,NA,"4.0","Pest Management","Story"
-"244","10.1094/ PDIS-92-1-0120",91,"NE",46.9,-97.21,2003,2,NA,"4.0","Pest Management","Cass"
-"245","10.1094/ PDIS-92-1-0120",91,"NE",41.71,-100.13,2003,2,NA,"4.0","Pest Management","Custer"
-"246","10.1094/ PDIS-92-1-0120",91,"NE",38.36,-98.78,2003,2,NA,"4.0","Pest Management","Barton"
-"247","10.1094/ PDIS-92-1-0120",91,"NE",46.36,-98.3,2003,2,NA,"4.0","Pest Management","LaMoure"
-"248","10.1094/ PDIS-92-1-0120",91,"NE",47.73,-97.6,2003,2,NA,"4.0","Pest Management","Grand Forks"
-"249","10.1094/ PDIS-92-1-0120",91,"NE",41.69,-100.01,2003,2,NA,"4.0","Pest Management","Custer"
-"250","10.1094/ PDIS-92-1-0120",91,"NE",41.57,-100.7,2003,1,NA,"4.0","Pest Management","Logan"
-"251","10.1094/ PDIS-92-1-0120",91,"NE",41.77,-99.71,2003,1,NA,"4.0","Pest Management","Blaine"
-"252","10.1023/B:PLSO.0000016561.58742.93",92,"MN",46.23,-94.48,2001,1,NA,"6.0","Pest Management","Morrison"
-"253","10.1023/B:PLSO.0000016561.58742.93",92,"MN",46.27,-94.53,2001,1,NA,"6.0","Pest Management","Morrison"
-"254","11abc",93,"IO",42.21,-93.4,2002,2,NA,"4 or 8","Pest Management","Hardin"
-"255","11abc",93,"IO",42.82,-92.1,2002,2,NA,"4 or 8","Pest Management","Bremer"
-"256","11abc",93,"IO",42.73,-95.58,2002,2,NA,"4 or 8","Pest Management","Cherokee"
-"257","10.1094/PD-78-0817",94,"IN",38.74,-87.49,1992,2,NA,"3.0","Pest Management","Knox"
-"258","10.1094/PD-78-0817",94,"IN",40.9,-85.79,1992,2,NA,"4.0","Pest Management","Wabash"
-"259","10.1093/jee/101.4.1211",95,"IA",42.05,-93.48,2002,2,NA,"7 or 8","Pest Management","Story"
-"260","10.1093/jee/101.4.1212",95,"IA",43.07,-92.82,2002,3,NA,"7 or 8","Pest Management","Floyd"
-"261","10.1093/jee/101.4.1213",95,"IA",43.09,-95.64,2002,3,NA,"7 or 8","Pest Management","O'Brien"
-"262","10.1094/ PDIS-93-9-0875",96,"IA",41.16,-92.63,2005,3,NA,"4.0","Pest Management","Wapello"
-"263","10.1094/ PDIS-93-9-0875",96,"NE",41.78,-96.22,2005,2,NA,"4.0","Pest Management","Burt"
-"264","10.1094/ PDIS-93-9-0875",96,"OH",41.28,-83.84,2005,2,NA,"4.0","Pest Management","Wood"
-"265","10.1094/ PDIS-93-9-0875",96,"SD",45.45,-98.1,2003,1,NA,"3.0","Pest Management","Brown"
-"266","10.1094/ PDIS-93-9-0875",96,"WI",42.72,-87.81,2006,1,NA,"4.0","Pest Management","Racine"
-"267","10.1094/ PDIS-93-9-0875",96,"Canada",50.77,-86.69,2004,1,NA,"4.0","Pest Management",NA
-"268","10.1094/ PDIS-93-9-0875",96,"IA",42.78,-94.95,2005,3,NA,"4.0","Pest Management","Buena Vista"
-"269","10.1094/ PDIS-93-9-0875",96,"IA",42.11,-92.99,2005,3,NA,"4.0","Pest Management","Marshall"
+,DOI,Paper_id,State,Latitude,Longitude,Year_start,Years_num,Annual_precip,Reps,Review,NAME
+1,10.2134/agronj2005.0052,35,WI,44.07,-89.32,2001,3,769,4,Cover Crops,Waushara
+2,10.1017/wet.2017.30,5,OH,40.15,-83.02,2013,1,NA,4,Cover Crops,Delaware
+3,10.1017/wet.2017.30,5,OH,40.15,-83.02,2014,1,NA,4,Cover Crops,Delaware
+4,10.2134/agronj2009.0144,26,OH,40,-83.02,2006,2,98,4,Cover Crops,Franklin
+5,http://www.jstor.org/stable/25085273,9,OH,39.82,-83.64,1987,2,NA,3,Cover Crops,Clark
+6,http://www.jstor.org/stable/25085273,9,OH,41.28,-83.84,1987,1,NA,4,Cover Crops,Wood
+7,http://www.jstor.org/stable/25085273,9,OH,38.74,-83.84,1987,2,NA,4,Cover Crops,Brown
+8,10.1007/s12665-014-3353-z,24,OH,40.17,-84.13,2012,1,110,1,Cover Crops,Miami
+9,10.1016/j.still.2015.06.015,45,MI,42.63,-84.44,2012,2,977,2,Cover Crops,Ingham
+10,10.1016/j.still.2015.06.015,45,MI,42.24,-85.24,2012,2,1027,2,Cover Crops,Calhoun
+11,10.1016/j.agee.2016.07.003,40,MI,42.4,-85.37,2013,2,NA,5,Cover Crops,Kalamazoo
+12,10.2489/jswc.72.3.260,54,IN,39.03,-85.54,2011,5,NA,4,Cover Crops,Jennings
+13,10.2134/jeq2000.00472425002900010037x,12,MI,41.84,-85.66,1995,3,NA,4,Cover Crops,St. Joseph
+14,10.2489/jswc.69.6.564,23,IN,39.1,-85.9,2012,1,118.6,2,Cover Crops,Bartholomew
+15,10.1017/wet.2017.30,5,IN,40.02,-86.33,2013,1,NA,4,Cover Crops,Boone
+16,10.1017/wet.2017.30,5,IN,40.02,-86.33,2014,1,NA,4,Cover Crops,Boone
+17,10.1017/wet.2017.30,5,TN,35.82,-86.77,2013,1,NA,4,Cover Crops,Williamson
+18,10.1017/wet.2017.30,5,TN,35.82,-86.77,2014,1,NA,4,Cover Crops,Williamson
+19,10.1614/WS-D-11-00192.1,8,IN,40.45,-86.92,2006,2,NA,6,Cover Crops,Tippecanoe
+20,10.1614/WS-D-11-00192.1,8,IN,38.68,-87.52,2006,2,NA,6,Cover Crops,Knox
+21,10.2135/cropsci2005.09.0306,31,IL,40.11,-88.2,2002,2,NA,4,Cover Crops,Champaign
+22,10.2134/agronj2004.0800,34,IL,40.11,-88.2,2001,2,NA,4,Cover Crops,Champaign
+23,10.2136/sssaj2013.09.0403,32,IL,40.063,-88.23,2009,1,NA,4,Cover Crops,Champaign
+24,10.2134/agronj13.0370,33,IL,40.09,-88.23,2010,2,NA,2,Cover Crops,Champaign
+25,10.1094/PDIS-07-16-1067-RE,49,IL,40.06,-88.24,2011,3,NA,4,Cover Crops,Champaign
+26,0.2134/agronj2016.10.0613,38,IL,44.1,-88.39,2014,2,NA,4,Cover Crops,Calumet
+27,10.1016/j.agee.2015.10.014,4,IL,39.54,-88.43,2011,2,1015,2,Cover Crops,Coles
+28,10.1016/j.agee.2015.10.014,4,IL,41.55,-88.56,2011,2,1015,2,Cover Crops,Kendall
+29,10.1094/PDIS-07-16-1067-RE,49,IL,39.92,-88.57,2011,3,NA,4,Cover Crops,Piatt
+30,10.1097/SS.0b013e3181cf7959,1,IL,37.44,-88.67,2001,4,617,6,Cover Crops,Pope
+31,10.4137/ASWR.S30708,3,IL,40.64,-88.78,2012,3,NA,3,Cover Crops,McLean
+32,10.2134/jeq2013.12.0529,48,IL,40.69,-88.78,2012,2,NA,3,Cover Crops,McLean
+33,10.2134/agronj2004.0800,34,IL,39,-88.95,2001,2,NA,4,Cover Crops,Fayette
+34,10.1016/j.agee.2015.10.014,4,IL,39.27,-89.03,2011,2,1015,2,Cover Crops,Shelby
+35,10.1016/j.agee.2015.10.014,4,IL,39.27,-89.03,2011,2,1015,2,Cover Crops,Shelby
+36,10.1080/21683565.2014.901275,22,WI,43.18,-89.21,2010,2,NA,4,Cover Crops,Dane
+37,10.1017/wet.2017.30,5,IL,40.35,-89.26,2013,1,NA,4,Cover Crops,McLean
+38,10.1017/wet.2017.30,5,IL,40.35,-89.26,2014,1,NA,4,Cover Crops,McLean
+39,10.1017/wet.2017.30,5,IL,40.35,-89.26,2014,1,NA,4,Cover Crops,McLean
+40,10.1016/j.agee.2016.07.003,40,WI,43.3,-89.33,2013,2,NA,5,Cover Crops,Columbia
+41,10.2134/agronj1995.00021962008700060006x,57,WI,43.34,-89.37,1991,2,NA,3,Cover Crops,Columbia
+42,10.2489/jswc.68.5.411,50,WI,43.2,-89.43,2002,5,NA,4,Cover Crops,Dane
+43,10.1094/PDIS-07-16-1067-RE,49,IL,40.47,-90.69,2011,3,NA,3,Cover Crops,McDonough
+44,10.1094/PDIS-07-16-1067-RE,49,IL,40.55,-90.87,2011,3,NA,4,Cover Crops,McDonough
+45,10.2136/sssaj2015.02.0084,28,IA,41.2,-91.49,2009,3,NA,4,Cover Crops,Washington
+46,4abc,58,MO,38.94,-91.94,1986,2,NA,2,Cover Crops,Callaway
+47,10.1515/intag-2015-0030,27,MO,38.97,-92.18,2011,3,990.6,3,Cover Crops,Boone
+48,10.1017/S0890037X00027834,6,MO,38.96,-92.33,1989,2,NA,4,Cover Crops,Boone
+49,10.1017/wet.2017.23,42,MO,38.9,-92.37,2013,3,1176,4,Cover Crops,Boone
+50,10.1017/wet.2017.23,42,MO,39.3,-92.37,2013,3,1098,5,Cover Crops,Randolph
+51,10.1017/wet.2017.30,5,AR,34.75,-92.45,2013,1,NA,4,Cover Crops,Pulaski
+52,10.1017/wet.2017.30,5,AR,34.75,-92.45,2014,1,NA,4,Cover Crops,Pulaski
+53,10.2136/sssaj2015.02.0084,28,IA,42.93,-92.58,2009,3,NA,4,Cover Crops,Floyd
+54,10.1017/wet.2017.30,5,MO,38.45,-92.69,2013,1,NA,4,Cover Crops,Morgan
+55,10.1017/wet.2017.30,5,MO,38.45,-92.69,2014,1,NA,4,Cover Crops,Morgan
+56,10.1111/afe.12099,29,MN,43.67,-92.98,2006,2,NA,4,Cover Crops,Mower
+57,10.1111/afe.12099,29,MN,44.75,-93.06,2006,1,NA,4,Cover Crops,Dakota
+58,10.2135/cropsci2005.09-0296,46,MN,44.75,-93.06,2002,2,NA,8,Cover Crops,Dakota
+59,10.1016/j.agee.2009.05.008,7,IA,42.02,-93.45,2005,2,835,4,Cover Crops,Story
+60,1abc,10,IA,42.02,-93.45,1990,6,NA,5,Cover Crops,Story
+61,3abc,13,IA,42.02,-93.45,1994,3,NA,5,Cover Crops,Story
+62,10.1111/gcbb.12096,25,IA,41.55,-93.45,2008,4,NA,4,Cover Crops,Polk
+63,10.1097/SS.0000000000000187,44,IA,41.55,-93.45,2013,1,NA,4,Cover Crops,Polk
+64,10.2135/cropsci2005.09-0296,46,MN,44.08,-93.51,2002,2,NA,8,Cover Crops,Waseca
+65,10.1016/j.agwat.2012.03.010,2,IA,42.05,-93.71,2006,5,856,4,Cover Crops,Boone
+66,10.1016/j.agwat.2016.04.006,47,IA,42.05,-93.71,2008,7,NA,4,Cover Crops,Boone
+67,10.1016/j.fcr.2016.06.016,39,IA,41.92,-93.75,2009,6,935,4,Cover Crops,Boone
+68,10.2136/sssaj2013.02.0074,20,IA,42.02,-93.77,2009,3,872,4,Cover Crops,Boone
+69,10.2489/jswc.70.6.353,51,IA,42.02,-93.77,2006,4,856,3,Cover Crops,Boone
+70,10.2136/sssaj2015.02.0084,28,IA,42.01,-93.78,2009,3,NA,4,Cover Crops,Boone
+71,10.2134/jeq2015.02.0080,30,IA,42.01,-93.78,2010,4,935,4,Cover Crops,Boone
+72,10.2136/sssaj2005.0095,36,IA,42.01,-93.78,1996,7,NA,10,Cover Crops,Boone
+73,10.2134/jeq2005.0183,37,IA,42.01,-93.78,2003,2,NA,10,Cover Crops,Boone
+74,10.1007/s10705-010-9345-9,15,IA,42.05,-93.94,2005,2,NA,4,Cover Crops,Boone
+75,10.2489/jswc.69.6.564,23,IA,42.03,-94,2012,1,90.7,2,Cover Crops,Boone
+76,10.1093/ee/nvw177,43,IA,42.03,-94,2011,3,NA,2,Cover Crops,Boone
+77,10.1603/EN11168,19,MN,46.01,-94.57,2005,1,NA,22,Cover Crops,Morrison
+78,10.1016/j.agwat.2010.11.004,17,IA,42.75,-94.7,2006,3,NA,4,Cover Crops,Pocahontas
+79,10.2134/jeq2011.0151,18,IA,42.75,-94.7,2005,4,NA,4,Cover Crops,Pocahontas
+80,10.2489/jswc.69.6.564,23,IA,43.25,-94.83,2012,1,84.7,2,Cover Crops,Palo Alto
+81,10.1093/ee/nvw177,43,IA,43.25,-94.83,2011,3,NA,2,Cover Crops,Palo Alto
+82,10.2136/sssaj2015.02.0084,28,IA,41.31,-95.18,2009,3,NA,4,Cover Crops,Pottawattamie
+83,10.2134/jeq2004.1010,14,MN,44.23,-95.27,1998,3,670,4,Cover Crops,Redwood
+84,10.1111/afe.12099,29,MN,44.23,-95.27,2006,2,NA,4,Cover Crops,Redwood
+85,10.2135/cropsci2005.09-0296,46,MN,44.23,-95.27,2002,2,NA,8,Cover Crops,Redwood
+86,10.2489/jswc.68.6.438,21,MN,46.21,-95.48,2008,1,NA,1,Cover Crops,Otter Tail
+87,10.1007/s12155-017-9858-z,41,NE,48.846,-96.472,2014,3,860,4,Cover Crops,Kittson
+88,10.2134/agronj1997.00021962008900010011x,55,NE,41.15,-96.5,1991,3,NA,3,Cover Crops,Saunders
+89,10.1111/afe.12099,29,MN,47.08,-96.51,2006,1,NA,3,Cover Crops,Clay
+90,2abc,11,NE,41.16,-96.54,1994,1,NA,3,Cover Crops,Saunders
+91,2abc,11,NE,41.16,-96.54,1995,1,NA,4,Cover Crops,Saunders
+92,10.2134/jpa1991.0062,56,NE,40.82,-96.69,1982,3,NA,4,Cover Crops,Lancaster
+93,10.2136/sssaj2014.10.0399,52,SD,44.3,-96.79,2008,4,500,3,Cover Crops,Brookings
+94,10.1007/s12155-014-9413-0,53,SD,44.3,-96.79,2008,4,500,3,Cover Crops,Brookings
+95,10.1603/EN10041,16,SD,44.348,-96.811,2007,2,NA,6 to 8,Cover Crops,Brookings
+96,10.1007/s12155-017-9858-z,41,NE,40.582,-98.144,2014,3,688,4,Cover Crops,Clay
+97,10.2136/sssaj2015.10.0363,120,NE,42.23,-96.56,2008,1,NA,4,Fertility Management,Thurston
+98,10.2136/sssaj2015.10.0363,120,NE,42.38,-96.95,2009,1,NA,4,Fertility Management,Dixon
+99,10.2136/sssaj2015.10.0363,120,NE,42.35,-97.92,2009,1,NA,4,Fertility Management,Antelope
+100,10.2489/jswc.72.3.183,121,IA,42.02,-93.63,2012,2,NA,3,Fertility Management,Story
+101,10.2489/jswc.72.3.183,121,IA,42.93,-93.8,2012,2,NA,3,Fertility Management,Hancock
+102,10.2489/jswc.72.3.183,121,IA,42.95,-92.54,2012,2,NA,3,Fertility Management,Chickasaw
+103,10.2489/jswc.72.3.183,121,IA,42.02,-95.43,2012,2,NA,3,Fertility Management,Crawford
+104,10.2489/jswc.72.3.183,121,IA,41.39,-95.02,2012,2,NA,3,Fertility Management,Cass
+105,10.2489/jswc.72.3.183,121,IA,41.02,-93.31,2012,1,NA,3,Fertility Management,Lucas
+106,10.2134/jeq2016.01.0024,122,MN,44.99,-93.17,2014,2,542,4,Fertility Management,Ramsey
+107,10.2134/agronj13.0441,123,IL,40.09,-88.23,2007,3,NA,4,Fertility Management,Champaign
+108,10.2134/agronj13.0441,123,IA,42.01,-93.74,2007,3,NA,4,Fertility Management,Boone
+109,10.2134/agronj13.0441,123,KS,39.09,-95.94,2007,1,NA,4,Fertility Management,Shawnee
+110,10.2134/agronj13.0441,123,KS,39.1,-95.83,2008,2,NA,4,Fertility Management,Shawnee
+111,10.2134/agronj2013.0043,124,IN,40.47,-87.01,2010,2,970,6,Fertility Management,Tippecanoe
+112,10.2134/agronj2013.0043,124,IN,41.45,-86.94,2011,1,980,6,Fertility Management,Porter
+113,10.2134/jeq2011.0240,125,MN,45.23,-93.53,2009,2,531,4,Fertility Management,Wright
+114,10.2134/agronj2005.0615,126,IA,41.21,-91.54,1999,2,NA,4,Fertility Management,Washington
+115,10.2134/agronj2005.0615,126,IA,42.93,-93.8,1999,2,NA,4,Fertility Management,Hancock
+116,10.2134/agronj2005.0615,126,IA,41.31,-95.08,1999,2,NA,4,Fertility Management,Cass
+117,10.2134/agronj2005.0615,126,IA,42.95,-92.54,1999,2,NA,4,Fertility Management,Chickasaw
+118,10.2134/agronj2005.0615,126,IA,42.97,-95.5,1999,2,NA,4,Fertility Management,O'Brien
+119,http://www.scopus.com/inward/record.url?scp=0037346504&partnerID=8YFLogxK,127,NE,40.78,-98.73,1994,4,NA,5,Fertility Management,Buffalo
+120,10.2134/agronj2004.5020,128,MN,44.06,-93.52,1997,3,NA,4,Fertility Management,Waseca
+121,10.2134/jpa1999.0293,129,NE,40.53,-98.05,1993,2,NA,NA,Fertility Management,Clay
+122,10.2134/agronj2004.1412,130,KS,39.19,-96.6,2000,2,NA,3,Fertility Management,Riley
+123,10.1080/01904169809365488,131,IL,40.78,-89.16,1993,1,NA,4,Fertility Management,Woodford
+124,10.1080/01904169809365488,131,IL,40.47,-88.88,1993,1,NA,4,Fertility Management,McLean
+125,10.1080/01904169809365488,131,IL,41.37,-88.92,1993,1,NA,4,Fertility Management,LaSalle
+126,10.1080/01904169809365488,131,IL,40.78,-89.16,1993,1,NA,4,Fertility Management,Woodford
+127,10.1080/01904169809365488,131,IL,41.37,-88.92,1993,1,NA,4,Fertility Management,LaSalle
+128,10.1080/01904169809365488,131,IL,40.51,-88.87,1993,1,NA,4,Fertility Management,McLean
+129,10.1007/s11104-004-0272-x,132,IL,40.09,-88.23,2001,2,1041,4,Fertility Management,Champaign
+130,10.2134/agronj2004.0303,133,KS,38.25,-98.62,2001,2,NA,4,Fertility Management,Stafford
+131,10.2134/agronj2004.0304,133,KS,39.12,-95.93,2001,2,NA,4,Fertility Management,Shawnee
+132,10.2134/agronj2004.0305,133,KS,39.77,-97.79,2001,2,NA,4,Fertility Management,Republic
+133,10.2134/agronj2004.0306,133,KS,39.13,-96.62,2001,2,NA,4,Fertility Management,Riley
+134,10.2134/agronj2006.0172,134,IA,42.17,-93.78,1998,4,NA,3.5,Fertility Management,Boone
+135,10.2134/agronj2006.0173,134,IA,42.17,-93.78,1998,4,NA,3.5,Fertility Management,Boone
+136,10.2134/agronj2006.0174,134,IA,42.17,-93.78,1998,4,NA,3.5,Fertility Management,Boone
+137,10.2134/agronj2006.0175,134,IA,42.17,-93.78,1999,3,NA,3.5,Fertility Management,Boone
+138,10.2134/agronj2006.0176,134,IA,42.17,-93.78,1999,3,NA,3.5,Fertility Management,Boone
+139,10.2134/agronj2006.0177,134,IA,42.17,-93.78,1999,3,NA,3.5,Fertility Management,Boone
+140,10.2134/agronj2007.0174,135,NE,40.98,-98.59,2003,2,NA,3,Fertility Management,Hall
+141,10.2134/agronj2007.0174,135,NE,41.33,-98.34,2003,2,NA,3,Fertility Management,Howard
+142,10.2134/jeq2016.06.0237,136,MN,43.85,-93.73,2014,2,NA,4,Fertility Management,Waseca
+143,10.2134/jeq2017.03.0109,137,IL,37.72,-88.23,2002,3,NA,3,Fertility Management,Gallatin
+144,10.2134/jpa1992.0142,138,IA,42.02,-93.63,1986,2,NA,3,Fertility Management,Story
+145,10.2134/jpa1992.0142,138,IA,42.17,-93.78,1986,2,NA,3,Fertility Management,Boone
+146,10.2134/agronj1992.00021962008400030026x,139,IA,42.17,-93.78,1984,3,NA,NA,Fertility Management,Boone
+147,10.2134/agronj1994.00021962008600060036x,140,OH,41.19,-83.79,1986,3,514,4,Fertility Management,Wood
+148,10.2134/agronj1994.00021962008600060036x,140,OH,40.81,-81.94,1987,2,568,4,Fertility Management,Wayne
+149,10.2136/sssaj1997.03615995006100060022x,141,MN,44.41,-92.74,1982,3,NA,4,Fertility Management,Goodhue
+150,10.2136/sssaj1997.03615995006100060022x,141,MN,44.08,-93.5,1982,3,NA,4,Fertility Management,Waseca
+151,10.2134/agronj1998.00021962009000050011x,142,NE,41.23,-96.5,1992,5,NA,4,Fertility Management,Saunders
+152,10.2134/agronj1998.00021962009000050011x,142,NE,40.56,-98.06,1992,5,NA,4,Fertility Management,Clay
+153,10.2136/sssaj2002.0544,143,NE,40.51,-98.07,1994,3,NA,5,Fertility Management,Clay
+154,10.2136/sssaj2002.0545,143,NE,41.07,-100.82,1994,3,NA,5,Fertility Management,Lincoln
+155,10.2136/sssaj2002.0546,143,NE,40.86,-99.1,1994,4,NA,5,Fertility Management,Buffalo
+156,10.2136/sssaj2002.0547,143,NE,40.86,-99.1,1994,3,NA,5,Fertility Management,Buffalo
+157,10.1111/1365-2664.12924,70,IN,40.263035,-85.152023,2012,2,NA,4,Pest Management,Randolph
+158,10.1111/1365-2664.12924,70,IN,41.446398,-86.941901,2012,3,NA,4,Pest Management,Porter
+159,10.1111/1365-2664.12924,70,IN,40.300682,-86.902448,2012,3,NA,4,Pest Management,Tippecanoe
+160,10.1002/ps.4602,71,IN,40.300682,-86.902448,2012,2,NA,4,Pest Management,Tippecanoe
+161,10.1002/ps.4602,71,IA,41.982225,-93.639749,2012,2,NA,4,Pest Management,Story
+162,10.1002/ps.4602,71,MN,44.242425,-95.308314,2012,2,NA,4,Pest Management,Redwood
+163,10.1002/ps.4602,71,ND,46.600221,-97.176631,2012,2,NA,4,Pest Management,Richland
+164,10.1002/ps.4602,71,ND,46.928519,-97.002872,2012,1,NA,4,Pest Management,Cass
+165,10.1002/ps.4602,71,SD,44.299763,-96.922711,2012,2,NA,4,Pest Management,Brookings
+166,10.1002/ps.4602,71,WI,43.29795,-89.348524,2013,1,NA,4,Pest Management,Columbia
+167,10.1002/ps.4602,71,KS,39.143831,-96.633759,2012,2,NA,4,Pest Management,Riley
+168,10.1002/ps.4602,71,ND,47.836174,-97.308994,2013,1,NA,4,Pest Management,Grand Forks
+169,10.1002/ps.4602,71,ND,47.013136,-96.836685,2013,1,NA,4,Pest Management,Cass
+170,10.1016/j.cropro.2017.03.004,72,SD,44.32,-96.92,2013,2,NA,4,Pest Management,Brookings
+171,10.1016/j.cropro.2017.03.004,72,SD,45.1,-96.93,2013,2,NA,6,Pest Management,Codington
+172,10.1094/PD-89-0262,73,IL,40.12,-88.2,2000,3,NA,3 to 4,Pest Management,Champaign
+173,10.1094/PD-89-0262,73,IL,40.42,-89.78,2000,1,NA,3 to 4,Pest Management,Mason
+174,10.1094/PD-89-0262,73,IL,40,-88.95,2002,1,NA,3 to 4,Pest Management,Macon
+175,10.1016/0261-2194(92)90057-C,74,IL,40.12,-88.2,1989,2,NA,5,Pest Management,Champaign
+176,10.1016/j.cropro.2005.03.013,75,IL,40.36,-89.57,2002,2,NA,4,Pest Management,Tazewell
+177,10.1111/j.1439-0418.2011.01656.x,76,IL,41.77,-89.95,2007,2,NA,4,Pest Management,Whiteside
+178,10.1016/0261-2194(93)90096-2,77,OH,40.82,-81.93,1987,2,NA,4,Pest Management,Wayne
+179,10.1017/S0890037X00038793,78,MN,44.08,-93.51,1991,1,NA,6,Pest Management,Waseca
+180,10.1017/S0890037X00038793,78,MI,42.75,-84.48,1991,1,NA,6,Pest Management,Ingham
+181,10.1017/S0890037X00038793,78,WI,43.33,-89.37,1991,1,NA,6,Pest Management,Columbia
+182,10.1017/S0890037X00038793,78,MN,44.08,-93.51,1991,1,NA,3,Pest Management,Waseca
+183,10.1017/S0890037X00038793,78,MI,42.75,-84.48,1991,1,NA,3,Pest Management,Ingham
+184,10.1017/S0890037X00038793,78,WI,43.33,-89.37,1991,1,NA,3,Pest Management,Columbia
+185,10.1093/jee/92.4.954,79,NE,41.16,-96.54,1997,2,NA,4,Pest Management,Saunders
+186,10.1093/jee/92.4.954,79,NE,40.81,-96.68,1997,2,NA,4,Pest Management,Lancaster
+187,10.1093/jee/tov081,80,IN,40.300682,-86.902448,2010,2,NA,3,Pest Management,Tippecanoe
+188,10.1093/jee/tov081,80,IL,40.15,-88.21,2010,2,NA,3,Pest Management,Champaign
+189,10.1093/jee/tov081,80,MO,39.01,-92.36,2010,2,NA,3,Pest Management,Boone
+190,10.1093/jee/tov081,80,IA,41.982225,-93.639749,2010,2,NA,3,Pest Management,Story
+191,10.1093/jee/tov081,80,IA,43.22,-94.21,2010,1,NA,3,Pest Management,Kossuth
+192,10.1093/jee/tov081,80,NE,41.26,-96.66,2011,1,NA,3,Pest Management,Saunders
+193,10.2135/cropsci2014.02.0114,81,WI,43.30222222,-89.33555556,2012,2,NA,4,Pest Management,Columbia
+194,10.2135/cropsci2014.02.0114,81,WI,42.72583333,-89.02138889,2012,2,NA,4,Pest Management,Rock
+195,10.2135/cropsci2014.02.0114,81,WI,42.83027778,-90.78916667,2012,2,NA,4,Pest Management,Grant
+196,10.2135/cropsci2014.02.0114,81,WI,43.72611111,-88.57166667,2012,2,NA,4,Pest Management,Fond du Lac
+197,10.2135/cropsci2014.02.0114,81,WI,44.07416667,-91.33277778,2012,2,NA,4,Pest Management,Trempealeau
+198,10.2135/cropsci2014.02.0114,81,WI,44.11944444,-89.53527778,2012,2,NA,4,Pest Management,Waushara
+199,10.2135/cropsci2014.02.0114,81,WI,44.95,-91.35027778,2012,2,NA,4,Pest Management,Chippewa
+200,10.2135/cropsci2014.02.0114,81,WI,44.64138889,-90.13305556,2012,2,NA,4,Pest Management,Wood
+201,10.2135/cropsci2014.02.0114,81,WI,44.52361111,-88.32944444,2012,2,NA,4,Pest Management,Outagamie
+202,10.2135/cropsci2014.03.0200,82,WI,43.30222222,-89.33555556,2012,2,508,4,Pest Management,Columbia
+203,10.2134/agronj14.0277,83,WI,43.30222222,-89.33555556,2011,3,NA,4,Pest Management,Columbia
+204,10.2134/agronj14.0277,83,WI,42.72583333,-89.02138889,2011,3,NA,4,Pest Management,Rock
+205,10.2134/agronj14.0277,83,WI,42.83027778,-90.78916667,2011,3,NA,4,Pest Management,Grant
+206,10.2134/agronj14.0277,83,WI,43.72611111,-88.57166667,2011,3,NA,4,Pest Management,Fond du Lac
+207,10.2134/agronj14.0277,83,WI,44.07416667,-91.33277778,2011,3,NA,4,Pest Management,Trempealeau
+208,10.2134/agronj14.0277,83,WI,44.11944444,-89.53527778,2011,3,NA,4,Pest Management,Waushara
+209,10.2134/agronj14.0277,83,WI,44.95,-91.35027778,2011,3,NA,4,Pest Management,Chippewa
+210,10.2134/agronj14.0277,83,WI,44.64138889,-90.13305556,2011,3,NA,4,Pest Management,Wood
+211,10.2134/agronj14.0277,83,WI,44.52361111,-88.32944444,2011,3,NA,4,Pest Management,Outagamie
+212,10.2134/agronj14.0277,83,WI,42.7675,-88.46777778,2011,3,NA,4,Pest Management,Walworth
+213,10.1603/EC14047,84,SD,44.32,-96.92,2011,3,NA,NA,Pest Management,Brookings
+214,10.1603/EC14047,84,MN,44.23,-95.27,2011,3,NA,NA,Pest Management,Redwood
+215,10.1603/EC14047,84,WI,43.30222222,-89.33555556,2011,3,NA,NA,Pest Management,Columbia
+216,10.1603/EC14047,84,IA,42.95,-92.54,2011,3,NA,NA,Pest Management,Chickasaw
+217,10.1603/EC14047,84,IA,42.02,-93.64,2011,3,NA,NA,Pest Management,Story
+218,10.1603/EC14047,84,PA,40.88,-78.43,2011,3,NA,NA,Pest Management,Clearfield
+219,10.1603/EC14047,84,KS,39.8,-97.78,2011,3,NA,NA,Pest Management,Republic
+220,10.1603/EC14047,84,ND,46.96,-97.02,2012,2,NA,NA,Pest Management,Cass
+221,10.1111/j.1439-0418.2012.01716.x,85,OH,40.76666667,-81.94527778,2006,2,NA,4,Pest Management,Wayne
+222,10.1111/j.1439-0418.2012.01716.x,85,OH,39.85,-83.69583333,2006,2,NA,4,Pest Management,Clark
+223,10.2135/cropsci2011.06.0311,86,WI,43.30222222,-89.33555556,2008,3,NA,4,Pest Management,Columbia
+224,10.2135/cropsci2011.06.0311,86,WI,42.72583333,-89.02138889,2008,3,NA,4,Pest Management,Rock
+225,10.2135/cropsci2011.06.0311,86,WI,42.83027778,-90.78916667,2008,3,NA,4,Pest Management,Grant
+226,10.2135/cropsci2011.06.0311,86,WI,43.72611111,-88.57166667,2008,3,NA,4,Pest Management,Fond du Lac
+227,10.2135/cropsci2011.06.0311,86,WI,44.07416667,-91.33277778,2008,3,NA,4,Pest Management,Trempealeau
+228,10.2135/cropsci2011.06.0311,86,WI,44.11944444,-89.53527778,2008,3,NA,4,Pest Management,Waushara
+229,10.2135/cropsci2011.06.0311,86,WI,44.95,-91.35027778,2008,3,NA,4,Pest Management,Chippewa
+230,10.2135/cropsci2011.06.0311,86,WI,44.64138889,-90.13305556,2008,3,NA,4,Pest Management,Wood
+231,10.2135/cropsci2011.06.0311,86,WI,44.52361111,-88.32944444,2008,3,NA,4,Pest Management,Outagamie
+232,10.1007/s10658-009-9545-9,87,IA,42.03,-93.65,2007,1,NA,5,Pest Management,Story
+233,10.1007/s10658-009-9545-9,87,IA,42.95,-92.54,2007,1,NA,5,Pest Management,Chickasaw
+234,10.1603/029.102.0613,88,IA,42.05,-93.48,2005,3,NA,4 to 6,Pest Management,Story
+235,10.1603/029.102.0613,88,IA,41.03,-93.36,2005,3,NA,4 to 6,Pest Management,Lucas
+236,10.1603/029.102.0613,88,MI,42.28,-85.55,2005,3,NA,4 to 6,Pest Management,Kalamazoo
+237,10.1603/029.102.0613,88,MI,43.33,-84.09,2005,3,NA,4 to 6,Pest Management,Saginaw
+238,10.1603/029.102.0613,88,MN,44.38,-95.3,2005,3,NA,4 to 6,Pest Management,Redwood
+239,10.1603/029.102.0613,88,MN,44.67,-93.09,2005,3,NA,4 to 6,Pest Management,Dakota
+240,10.1603/029.102.0127,89,NE,42.38,-96.99,2005,2,NA,4,Pest Management,Dixon
+241,10.2134/agronj2007.0142,90,IA,41.82,-90.55,2004,2,NA,4,Pest Management,Clinton
+242,10.2134/agronj2007.0142,90,IA,42.02,-93.46,2004,2,NA,4,Pest Management,Story
+243,10.2134/agronj2007.0142,90,IA,42.18,-93.55,2004,2,NA,4,Pest Management,Story
+244,10.1094/ PDIS-92-1-0120,91,NE,46.9,-97.21,2003,2,NA,4,Pest Management,Cass
+245,10.1094/ PDIS-92-1-0120,91,NE,41.71,-100.13,2003,2,NA,4,Pest Management,Custer
+246,10.1094/ PDIS-92-1-0120,91,NE,38.36,-98.78,2003,2,NA,4,Pest Management,Barton
+247,10.1094/ PDIS-92-1-0120,91,NE,46.36,-98.3,2003,2,NA,4,Pest Management,LaMoure
+248,10.1094/ PDIS-92-1-0120,91,NE,47.73,-97.6,2003,2,NA,4,Pest Management,Grand Forks
+249,10.1094/ PDIS-92-1-0120,91,NE,41.69,-100.01,2003,2,NA,4,Pest Management,Custer
+250,10.1094/ PDIS-92-1-0120,91,NE,41.57,-100.7,2003,1,NA,4,Pest Management,Logan
+251,10.1094/ PDIS-92-1-0120,91,NE,41.77,-99.71,2003,1,NA,4,Pest Management,Blaine
+252,10.1023/B:PLSO.0000016561.58742.93,92,MN,46.23,-94.48,2001,1,NA,6,Pest Management,Morrison
+253,10.1023/B:PLSO.0000016561.58742.93,92,MN,46.27,-94.53,2001,1,NA,6,Pest Management,Morrison
+254,11abc,93,IA,42.21,-93.4,2002,2,NA,4 or 8,Pest Management,Hardin
+255,11abc,93,IA,42.82,-92.1,2002,2,NA,4 or 8,Pest Management,Bremer
+256,11abc,93,IA,42.73,-95.58,2002,2,NA,4 or 8,Pest Management,Cherokee
+257,10.1094/PD-78-0817,94,IN,38.74,-87.49,1992,2,NA,3,Pest Management,Knox
+258,10.1094/PD-78-0817,94,IN,40.9,-85.79,1992,2,NA,4,Pest Management,Wabash
+259,10.1093/jee/101.4.1211,95,IA,42.05,-93.48,2002,2,NA,7 or 8,Pest Management,Story
+260,10.1093/jee/101.4.1212,95,IA,43.07,-92.82,2002,3,NA,7 or 8,Pest Management,Floyd
+261,10.1093/jee/101.4.1213,95,IA,43.09,-95.64,2002,3,NA,7 or 8,Pest Management,O'Brien
+262,10.1094/ PDIS-93-9-0875,96,IA,41.16,-92.63,2005,3,NA,4,Pest Management,Wapello
+263,10.1094/ PDIS-93-9-0875,96,NE,41.78,-96.22,2005,2,NA,4,Pest Management,Burt
+264,10.1094/ PDIS-93-9-0875,96,OH,41.28,-83.84,2005,2,NA,4,Pest Management,Wood
+265,10.1094/ PDIS-93-9-0875,96,SD,45.45,-98.1,2003,1,NA,3,Pest Management,Brown
+266,10.1094/ PDIS-93-9-0875,96,WI,42.72,-87.81,2006,1,NA,4,Pest Management,Racine
+267,10.1094/ PDIS-93-9-0875,96,Canada,50.77,-86.69,2004,1,NA,4,Pest Management,NA
+268,10.1094/ PDIS-93-9-0875,96,IA,42.78,-94.95,2005,3,NA,4,Pest Management,Buena Vista
+269,10.1094/ PDIS-93-9-0875,96,IA,42.11,-92.99,2005,3,NA,4,Pest Management,Marshall

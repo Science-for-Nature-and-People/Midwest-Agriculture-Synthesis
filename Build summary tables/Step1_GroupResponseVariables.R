@@ -41,11 +41,17 @@ setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/")
 #All related results 
 Results <-read.csv("PestMgmt Review/PestMgmt_Review_Results.csv", row.names = NULL)
 
+#add surrogate key to Results
+Results$Res_key = rownames(Results)
+
 #remove any unwanted response variables
 
 Results <-read.csv("Cover Crop Review/CoverCrop_Results.csv", row.names = NULL)
 #for cover crop data frame
 #Results = filter(Results,!(Response_var == "cover crop leaf N content")) #set dataframe to work with - remove cover crop nitrogen input data (incomplete dataset)
+
+#add surrogate key to Results
+Results$Res_key = rownames(Results)
 
 
 Results <- read.csv("Nutrient Review/Nutrient_Results.csv", row.names = NULL)
@@ -669,39 +675,39 @@ Results <-
           ##Stand Count####
           Response_var %in% stand_count_soybean ~ "Stand Count (Soybean)",
           Response_var %in% stand_count_maize ~ "Stand Count (Maize)",
-          Response_var %in% lodging_soybean ~ "Soybean Lodging (Scored 1 = no lodging to 5 = completely lodged)",
+          Response_var %in% lodging_soybean ~ "Soybean Lodging",
           Response_var %in% lodging_maize ~ "Maize Lodging (#)",
           
           
           ##Crop Growth####
           
-          Response_var %in% plant_growth_soybean  ~ "Soybean Growth (including photosynthetic capacity and leaf area index)",
+          Response_var %in% plant_growth_soybean  ~ "Growth (Soybean)",
           Response_var %in% plant_height_soybean ~ "Plant Height (Soybean)",
-          Response_var %in% seedling_development_soybean ~ "Soybean Seedling Development",
+          Response_var %in% seedling_development_soybean ~ "Seedling Development  (Soybean)",
           Response_var %in% plant_height_maize ~ "Plant Height (Maize)",
           Response_var %in% vigor_reduction_maize ~ "Reduction in Vigor (Maize)",
-          Response_var %in% insect_damage_maize ~ "Damage to Plant due to Black Cutworms (Maize)",
+          Response_var %in% insect_damage_maize ~ "Black Cutworm Damage (Maize)",
           
           
           ############Pest Regulation####
           ## Disease/Pathogens ####
           Response_var %in% disease_root_maize ~ "Pathogenic Root Injury (Maize)",
           Response_var %in% disease_leaftissue_maize ~ "Pathogenic Injury to Leaf Tissue (Maize)",
-          Response_var %in% disease_soil_soybean ~ "Fusarium spp. Soil Forming Colonies (Soybean)",
+          Response_var %in% disease_soil_soybean ~ "Pathogenic Colonies in Soil (Soybean)",
           Response_var %in% disease_tissue_soybean ~ "Pathogenic Injury to Leaf Tissue (Soybean)",
-          Response_var %in% disease_BPMV_soybean ~ "Bean Pod Mottle Virus Infections (Soybean)",
+          Response_var %in% disease_BPMV_soybean ~ "Bean Pod Mottle Virus Infection (Soybean)",
           
           
           ## Invertebrate Pests & Natural Enemies ####
           
-          Response_var %in% pests_aphids_soybean ~ "Soybean Aphids (# per Leaf)",
+          Response_var %in% pests_aphids_soybean ~ "Soybean Aphids (#)",
           Response_var %in% pests_aphiddays_soybean ~ "Soybean Aphids (Cumulative Aphid Days)",
-          Response_var %in% pests_thrips_soybean ~ "Thrips (# per Soybean Plant)",
-          Response_var %in% pests_mites_soybean ~ "Spider Mites (# per cm. sq. in Soybean)",
+          Response_var %in% pests_thrips_soybean ~ "Thrips (#)",
+          Response_var %in% pests_mites_soybean ~ "Spider Mites (Density in Soybean)",
           Response_var %in% pests_beanleafbeetles_soybean ~ "Bean Leaf Beetles (#)",
           Response_var %in% pests_SCM_maize ~ "Seed Corn Maggot (#)",
           Response_var %in% pests_WCRW_maize ~ "Western Corn Rootworm (#)",
-          Response_var %in% pests_WCRWemergence_maize ~ "Western Corn Rootworm (Mean Emergence Date)",
+          Response_var %in% pests_WCRWemergence_maize ~ "Western Corn Rootworm (Emergence Date)",
           Response_var %in% pests_NCRW_maize ~ "Northern Corn Rootworm (#)",
           Response_var %in% preds_abundance_soybeans ~ "Natural Enemies (#)"
         )) %>%
@@ -1410,8 +1416,8 @@ mutate(
                     Response_var %in% weed_Palmeramaranth ~ "Pigweed",
                     
                     
-                    Response_var %in% weed_community_biomass ~ "Aboveground growth of weed community",
-                    Response_var %in% weed_community_density ~ "Weed community (abundance of weeds)",
+                    Response_var %in% weed_community_biomass ~ "Weed community (Aboveground Growth)",
+                    Response_var %in% weed_community_density ~ "Weed community (Abundance)",
                     
                     #Invertebrates####
                     Response_var %in% invert_pests_cornrootworm ~ "Corn Rootworm (#)",
@@ -1419,15 +1425,15 @@ mutate(
                     Response_var %in% invert_pests_Aglycines ~ "Soybean Aphid (#)",
                     Response_var %in% invert_pests_SCN ~ "Soybean Cyst Nematode (#)",  
                     
-                    Response_var %in% invert_pests_seedcornmaggot_damage ~ "Seedcorn Maggot (Damage to Crop)",
-                    Response_var %in% invert_pests_cornrootworm_damage ~ "Corn Rootworm (Damage to Crop)",
+                    Response_var %in% invert_pests_seedcornmaggot_damage ~ "Seedcorn Maggot (Crop Damage)",
+                    Response_var %in% invert_pests_cornrootworm_damage ~ "Corn Rootworm (Crop Damage)",
                     
                     Response_var %in% invert_preds ~ "Predators (#)",
                     
-                    Response_var %in% invert_preds_vegcomm_div ~ "Predator community inhabiting foliage (#)",
-                    Response_var %in% invert_preds_vegcomm_abund ~ "Predator community inhabiting foliage (#)",
-                    Response_var %in% invert_preds_soilcomm_div ~ "Predator community inhabiting soils (Diversity)",
-                    Response_var %in% invert_preds_soilcomm_abund ~ "Predator community inhabiting soils (#)",
+                    Response_var %in% invert_preds_vegcomm_div ~ "Predator community in Foliage (#)",
+                    Response_var %in% invert_preds_vegcomm_abund ~ "Predator community in Foliage (#)",
+                    Response_var %in% invert_preds_soilcomm_div ~ "Predator community in Soils (Diversity)",
+                    Response_var %in% invert_preds_soilcomm_abund ~ "Predator community in Soils (#)",
                     
                     Response_var %in% invert_preds_activity ~ "Predator Activity",
                     Response_var %in% invert_nonpredpest ~ "Non-predators & Non-pests",

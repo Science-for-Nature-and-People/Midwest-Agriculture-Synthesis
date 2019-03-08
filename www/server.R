@@ -1,5 +1,8 @@
 #### SERVER INSTRUCTIONS ####
 server <- function(input, output, session) {
+  
+  cdata <- session$clientData
+  
   # Reactive selection by management practice
   df0 <- eventReactive(input$MgmtPractice, {
 
@@ -74,8 +77,8 @@ server <- function(input, output, session) {
       fitBounds(~ min(Longitude), ~ min(Latitude), ~ max(Longitude), ~ max(Latitude))
   })
 
-  output$forestplot <- renderPlot({
-    ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
+  output$forestplot <- renderPlotly({
+    p <- ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
       ymin = mean_per_change1 - sem_per_change1,
       ymax = mean_per_change1 + sem_per_change1
     )) +
@@ -96,12 +99,16 @@ server <- function(input, output, session) {
       ) +
       # scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +
       theme_bw() +
-      geom_point(aes(colour = Legend_1), size = 3) + # color labeling of fine level groupings
+      geom_point(aes(colour = Legend_1), size = 0.5) + # color labeling of fine level groupings
       facet_grid(main_group ~ ., scales = "free", space = "free") +
       theme(
         legend.title = element_blank(), legend.position = "top",
-        strip.text.y = element_text(angle = 0), text = element_text(size = 14)
+        strip.text.y = element_text(angle = 0), text = element_text(size = 6)
       )
+    ggplotly(p) %>%
+      layout(margin = list(b = 50, l = 100),
+             legend = list(x = 1.10, y = 1, font = list(size=10)),
+             hoverlabel = list(font = list(size = 8)))
   })
 
   output$text_description <- renderText({

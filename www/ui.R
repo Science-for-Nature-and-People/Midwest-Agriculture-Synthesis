@@ -13,7 +13,8 @@ library(shinyjs) # for interactive clicking
 library(gdata) # reorder legends
 library(shinydashboard)
 library(here) # to deal with tehfact we are using a sub directory (www)
-
+library(crosstalk) # to get the map and figure to communicate
+library(plotly) #to get interactive plots
 
 #### User Interface ####
 # user interface
@@ -85,7 +86,7 @@ ui <- navbarPage(
       ),
       column(
         8,
-        plotOutput(outputId = "forestplot")
+        plotlyOutput(outputId = "forestplot")
       )
     ),
 

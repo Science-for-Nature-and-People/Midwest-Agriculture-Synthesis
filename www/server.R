@@ -80,14 +80,16 @@ server <- function(input, output, session) {
   output$forestplot <- renderPlotly({
     p <- ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
       ymin = mean_per_change1 - sem_per_change1,
-      ymax = mean_per_change1 + sem_per_change1
+      ymax = mean_per_change1 + sem_per_change1,
+      text = sprintf("Number of Papers: %s<br>Number of Comparisons: %s<br>Mean: %s<br>SE: %s", num_papers1, num_comparisons1, round(mean_per_change1,2), round(sem_per_change1,2))  #text will be hoverlabel
     )) +
       scale_x_discrete("", breaks = df2()$group_metric_facet, label = df2()$group_metric) + # this line relabels the x from "group_metric_main_group" to just "group_metric"
       geom_pointrange() +
       geom_errorbar(aes(
         ymin = mean_per_change1 - sem_per_change1,
         ymax = mean_per_change1 + sem_per_change1,
-        width = .5
+        width = 2, #controls whisker length
+        size = 1   #controls line width
       )) +
       geom_hline(yintercept = 0, lty = 2) + # add a dotted line at x=0 after flip
       coord_flip() + # flip coordinates (puts labels on y axis)
@@ -99,17 +101,24 @@ server <- function(input, output, session) {
       ) +
       # scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +
       theme_bw() +
-      geom_point(aes(colour = Legend_1), size = 0.5) + # color labeling of fine level groupings
+      geom_point(aes(colour = Legend_1),
+                 size = 0.5) + # color labeling of fine level groupings
       facet_grid(main_group ~ ., scales = "free", space = "free") +
       theme(
-        legend.title = element_blank(), legend.position = "top",
-        strip.text.y = element_text(angle = 0), text = element_text(size = 6)
+        plot.title = element_text(size = 13),                     #changes plot title size
+        legend.title = element_blank(), legend.position = "top",  # moves the legend
+        strip.text.y = element_text(angle = 0, size = rel(1.5)),  # turns the facet names horizontal
+        text = element_text(size = 7),
+        strip.background = element_blank(), #element_rect(fill = "white", color = NULL, size = 50),
+        strip.placement = "outside"         #meant to add spacing between facet names and plot, but not working in plotly.
       )
-    ggplotly(p) %>%
-      layout(margin = list(b = 50, l = 100),
-             legend = list(x = 1.10, y = 1, font = list(size=10)),
-             hoverlabel = list(font = list(size = 8)))
-  })
+    ggplotly(p, tooltip = "text") %>%
+      layout(margin = list(b = 0, l = 110, r= 100), #bottom, left, and right respectively
+             legend = list(y = 1.11, font = list(size=10), orientation = "h", xanchor = "left", linetype = "solid"),
+             hoverlabel = list(font = list(size = 10)), #size will change font of text inside
+             yaxis = list(scaleanchor = "x")) #this is an attempt to imiate "scales = free" in the ggplot, but it's not working
+                
+    })
 
   output$text_description <- renderText({
     if (df2()$Review[1] == "Cover Crop") {

@@ -24,10 +24,15 @@ server <- function(input, output, session) {
       mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1))
   })
 
+  
   # Filter by geography
   df3 <- eventReactive(input$State, {
+    
+    #pick out all the paper ids in the filtered dataset
+    filtered_paper_id <- df2()$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
+    
     map.data %>%
-      filter(State %in% input$State)
+      filter(State %in% input$State & Paper_id %in% filtered_paper_id)
   })
 
   observeEvent(df0(), {

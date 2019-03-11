@@ -13,7 +13,8 @@ library(shinyjs) # for interactive clicking
 library(gdata) # reorder legends
 library(shinydashboard)
 library(here) # to deal with tehfact we are using a sub directory (www)
-
+library(crosstalk)
+library(RColorBrewer)
 
 #### User Interface ####
 # user interface

@@ -13,8 +13,9 @@ library(shinyjs) # for interactive clicking
 library(gdata) # reorder legends
 library(shinydashboard)
 library(here) # to deal with tehfact we are using a sub directory (www)
-library(crosstalk)
-library(RColorBrewer)
+library(RColorBrewer) #to color the plot
+library(grid) #to add annotations to the plot (using grobs)
+library(cowplot)
 
 #### User Interface ####
 # user interface

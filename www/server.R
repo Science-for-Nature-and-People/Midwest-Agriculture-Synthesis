@@ -1,5 +1,10 @@
 #### SERVER INSTRUCTIONS ####
 server <- function(input, output, session) {
+  
+  #lookup table for control descriptions
+  control_lookup <- data.frame(review_name = summary_all$Review %>% as.factor() %>% levels(), control_descrip = c("No Cover Crops", "No Pesticides", "Single Application", "Uniform Application", "Broadcast Application", "Applied to Surface", "Applied in Fall", "Applied Preplant"))
+  
+  
   # Reactive selection by management practice
   df0 <- eventReactive(input$MgmtPractice, {
 
@@ -73,6 +78,7 @@ server <- function(input, output, session) {
       addTiles() %>%
       fitBounds(~ min(Longitude), ~ min(Latitude), ~ max(Longitude), ~ max(Latitude))
   })
+  
 
   output$forestplot <- renderPlot({
     ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
@@ -87,7 +93,8 @@ server <- function(input, output, session) {
         width = .5
       )) +
       geom_hline(yintercept = 0, lty = 2) + # add a dotted line at x=0 after flip
-      coord_flip() + # flip coordinates (puts labels on y axis)
+      coord_flip(clip = "off") + # flip coordinates (puts labels on y axis)
+                                 # clip = "off" allows for plot annotations outside the plot area (used for the control annotations below the x axis)
       labs(
         title = df2()$Review[1], # since we are filtering summary_all to only have 1 value for review/group_rv, we can take any element as the label (they should all be the same)
         #  subtitle = df2()$Group_RV[1],
@@ -102,8 +109,15 @@ server <- function(input, output, session) {
       facet_grid(main_group ~ ., scales = "free", space = "free") +
       theme(
         legend.title = element_blank(), legend.position = "top",
-        strip.text.y = element_text(angle = 0), text = element_text(size = 14)
-      )
+        strip.text.y = element_text(angle = 0), text = element_text(size = 14),
+        axis.title.x = element_text(margin = margin(t = 20)) #moves the x.axis down to make room for the control annotation
+      ) + 
+      annotation_custom(textGrob(control_lookup[which(control_lookup$review_name == df2()$Review[1]),2], #pulls out the control description based on the current filter
+                                 y = unit(0, "npc"), vjust = 2.75),                                      # specifies where the annotation goes (use vjust to adjust how up/down it goes)
+                        xmin = -Inf, 
+                        xmax = Inf, 
+                        ymin = 0, 
+                        ymax= 0)
   })
 
   output$text_description <- renderText({

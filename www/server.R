@@ -26,13 +26,18 @@ server <- function(input, output, session) {
 
   
   # Filter by geography
-  df3 <- eventReactive(input$State, {
+  df3 <- eventReactive(c(input$update, input$State),  {
     
-    #pick out all the paper ids in the filtered dataset
-    filtered_paper_id <- df2()$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
+    #pick out all the paper ids in the filtered dataset df1() is prefiltered for practice/outcome
+      #the filter command in the line below filters the "grouping" seleciton
+    #paper_id_list1 is a string column, with comma delim lists of ints
+      #so on each element/list in the column, we split the list on commas, then turn the list into a vector, convert the vector to a numeric one.
+        #So now we have a list of numeric vectors. We turn this list into one long vector, and then pull out unique values
+    filtered_paper_id <- (df1() %>% filter(Legend_1 %in% input$Legend_1))$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
     
+    #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
     map.data %>%
-      filter(State %in% input$State & Paper_id %in% filtered_paper_id)
+      filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
   })
 
   observeEvent(df0(), {
@@ -48,6 +53,8 @@ server <- function(input, output, session) {
       selected = unique(df1()$Legend_1) # add [1] to select option in list, remove (as is) for Default is select all options
     )
   })
+  
+  
 
   observe({
 
@@ -74,7 +81,7 @@ server <- function(input, output, session) {
 
   # Add base map and set scale
   output$map <- renderLeaflet({
-    leaflet(map.data) %>%
+    leaflet(df3()) %>%
       addTiles() %>%
       fitBounds(~ min(Longitude), ~ min(Latitude), ~ max(Longitude), ~ max(Latitude))
   })

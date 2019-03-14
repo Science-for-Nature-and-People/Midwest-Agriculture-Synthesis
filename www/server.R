@@ -81,6 +81,10 @@ server <- function(input, output, session) {
   
 
   output$forestplot <- renderPlot({
+    #control_text should hold the control name
+    control_text <- control_lookup[which(control_lookup$review_name == df2()$Review[1]),2]
+    control_labels <- data.frame(desired_label = control_text, main_group = factor(control_text, levels = unique(df2()$main_group)))
+    
     ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
       ymin = mean_per_change1 - sem_per_change1,
       ymax = mean_per_change1 + sem_per_change1
@@ -112,7 +116,9 @@ server <- function(input, output, session) {
         strip.text.y = element_text(angle = 0), text = element_text(size = 14),
         axis.title.x = element_text(margin = margin(t = 20)) #moves the x.axis down to make room for the control annotation
       ) + 
-      annotation_custom(textGrob(control_lookup[which(control_lookup$review_name == df2()$Review[1]),2], #pulls out the control description based on the current filter
+      #https://stackoverflow.com/questions/12409960/ggplot2-annotate-outside-of-plot
+      annotation_custom(grob = textGrob(control_labels,
+                                 label = "test", #pulls out the control description based on the current filter
                                  y = unit(0, "npc"), vjust = 2.75),                                      # specifies where the annotation goes (use vjust to adjust how up/down it goes)
                         xmin = -Inf, 
                         xmax = Inf, 

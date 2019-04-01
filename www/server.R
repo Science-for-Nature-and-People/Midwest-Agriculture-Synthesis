@@ -2,7 +2,8 @@
 server <- function(input, output, session) {
   
   #lookup table for control descriptions
-  control_lookup <- data.frame(review_name = summary_all$Review %>% as.factor() %>% levels(), control_descrip = c("No Cover Crops", "No Pesticides", "Single Application", "Uniform Application", "Broadcast Application", "Applied to Surface", "Applied in Fall", "Applied Preplant"))
+  control_lookup <- data.frame(review_name = summary_all$Review %>% as.factor() %>% levels(), 
+                               control_descrip = c("No Cover Crops", "No Pesticides", "Single Application", "Uniform Application", "Broadcast Application", "Applied to Surface", "Applied in Fall", "Applied Preplant"))
   
   
   # Reactive selection by management practice
@@ -83,7 +84,14 @@ server <- function(input, output, session) {
   output$forestplot <- renderPlot({
     #control_text should hold the control name
     control_text <- control_lookup[which(control_lookup$review_name == df2()$Review[1]),2]
-    control_labels <- data.frame(desired_label = control_text, main_group = factor(control_text, levels = unique(df2()$main_group)))
+    
+    #we use this dataframe to make sure that we only plot the control text on the bottom facet (not all the facets)
+    control_labels <- data.frame(main_group = factor(tail(sort(df2()$main_group),1),       #the facets are sorted alphabetically, so this pulls out the bottom one
+                                                     levels = df2()$main_group %>% unique), #we set the levels just to get rid of some warnings
+                                 group_metric_facet = 0,                                    #group_metric_facet is the x axis on the plot, so this will put the control text at x = 0
+                                 mean_per_change1 = 0,                                      #mean_per_change1 is the y axis on the plot, so this plots the control text at y = 0
+                                 sem_per_change1 = 0)                                       #this is just needed because the ggplot below uses this to calculate the error bars. number doesn't matter I think
+
     
     ggplot(df2(), aes(group_metric_facet, mean_per_change1, # remember that group_metric_facet is the column ordered by main_group and group_metric
       ymin = mean_per_change1 - sem_per_change1,
@@ -116,15 +124,9 @@ server <- function(input, output, session) {
         strip.text.y = element_text(angle = 0), text = element_text(size = 14),
         axis.title.x = element_text(margin = margin(t = 20)) #moves the x.axis down to make room for the control annotation
       ) + 
-      #https://stackoverflow.com/questions/12409960/ggplot2-annotate-outside-of-plot
-      annotation_custom(grob = textGrob(control_labels,
-                                 label = "test", #pulls out the control description based on the current filter
-                                 y = unit(0, "npc"), vjust = 2.75),                                      # specifies where the annotation goes (use vjust to adjust how up/down it goes)
-                        xmin = -Inf, 
-                        xmax = Inf, 
-                        ymin = 0, 
-                        ymax= 0)
-  })
+      geom_text(data = control_labels, label = control_text, vjust = 2.75)    #vjust puts the text underneath the x axis
+                                                                              #the control_lables dataframe specifies which facet to put the text, puts the text at the x axis (y=0), so vjust moves it down a little
+    })
 
   output$text_description <- renderText({
     if (df2()$Review[1] == "Cover Crop") {

@@ -117,7 +117,7 @@ ui <- navbarPage(
     hr()
   ),
 
-  tabPanel("References"),
+  tabPanel("References", tableOutput(outputId = "reference_table")),
   tabPanel("Methods")
 )
 

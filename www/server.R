@@ -155,7 +155,12 @@ server <- function(input, output, session) {
       "Early season pest management is related to pests."
     }
   })
-
+  #add reference table, filtered by the plot filters.
+  output$reference_table <- renderTable({
+    plot_filtered_paper_id <- df2()$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
+    references %>% filter(Paper_id %in% plot_filtered_paper_id)
+  })
+    
   # picks out the filtered data for download as a csv
   output$downloadData <- downloadHandler(
     filename = "filtered_app_data.csv",

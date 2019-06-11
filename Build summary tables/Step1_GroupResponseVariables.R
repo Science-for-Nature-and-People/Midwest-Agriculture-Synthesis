@@ -26,17 +26,6 @@ setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/")
 
 ############Import dataframes######################################################################
 
-#Publication reference
-#Ref <- read.csv("PestMgmt Review/PestMgmt_Review_Reference.csv")
-
-#Experimental design information and location of experiment
-#ExpD_Loc <-read.csv("PestMgmt Review/PestMgmt_Review_ExpD_Location.csv")
-
-#Details about cash crops planted in experiment
-#CashCrop <- read.csv("PestMgmt Review/PestMgmt_Review_CashCrop.csv")
-
-#Details about treatments
-#Treatment <- read.csv("PestMgmt Review/PestMgmt_Review_Treatment.csv")
 
 #All related results 
 Results <-read.csv("PestMgmt Review/PestMgmt_Review_Results.csv", row.names = NULL)
@@ -48,7 +37,7 @@ Results$Res_key = rownames(Results)
 
 Results <-read.csv("Cover Crop Review/CoverCrop_Results.csv", row.names = NULL)
 #for cover crop data frame
-#Results = filter(Results,!(Response_var == "cover crop leaf N content")) #set dataframe to work with - remove cover crop nitrogen input data (incomplete dataset)
+Results <- filter(Results,!(Response_var == "cover crop leaf N content")) #set dataframe to work with - remove cover crop nitrogen input data (incomplete dataset)
 
 #add surrogate key to Results
 Results$Res_key = rownames(Results)
@@ -58,6 +47,11 @@ Results <- read.csv("Nutrient Review/Nutrient_Results.csv", row.names = NULL)
 
 #add surrogate key to Results
 Results$Res_key = rownames(Results)
+
+Results <- read.csv("Tillage Review/Tillage_Results.csv", row.names = NULL)
+
+#add surrogate key to Results
+Results$Res_key = as.integer(rownames(Results))
 
 ###################################################################################################
 
@@ -100,13 +94,9 @@ Results %>%
 
 ##################ARE ANY OF THE PRIMARY-FOREIGN KEYS MISMATCHED?###################
 #use anti_join to check for mismatched primary-foreign keys between tibbles
-Ref %>%
-  anti_join(ExpD_Loc, by = "DOI") %>%
-  count(DOI, sort = TRUE)
-
 #inspect unique key
 Results %>%
-  count(key) %>%
+  count(Res_key) %>%
   filter(n > 1) #zero duplicates
 
 ##################################################################################
@@ -127,10 +117,10 @@ Results %>%
 Soil <- Results %>%
       filter(Group_RV == "Soil") %>%
       distinct(Response_var)
-      
-    unique(Soil$Response_var)
-      
-        
+
+  unique(Soil$Response_var)  
+  
+  
 Production <- Results %>%
               filter(Group_RV == "Crop Production")%>%
               distinct(Response_var)
@@ -146,6 +136,11 @@ Pest <- Results %>%
         distinct(Response_var)
 unique(Pest$Response_var)
 
+library(openxlsx)
+write.xlsx(Soil, file="C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Soil_RVlist.xlsx", sheetName="Soil", row.names=FALSE, append=TRUE)
+write.xlsx(Production, file="C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Production_RVlist.xlsx", sheetName="Production", append=TRUE, row.names=FALSE)
+write.xlsx(Pest, file="C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Pest_RVlist.xlsx", sheetName="Pest", append=TRUE, row.names=FALSE)
+write.xlsx(Water, file="C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Water_RVlist.xlsx", sheetName="Water", append=TRUE, row.names=FALSE)
 
         
 ##### Naming of all Grouping Variables Below########################################################
@@ -851,10 +846,16 @@ mutate(
                   "soil organic carbon (0-10 cm depth)",                                                                             
                   "soil organic carbon (10-20 cm depth)",
                   "soil carbon concentration (0-5 cm depth)",
-                  "soil organic carbon (0-5 cm depth)"
+                  "soil organic carbon (0-5 cm depth)",
+                  "soil organic carbon (0-15 cm)"
                 )
                 
+                #datatoexplore <- filter(Results,Response_var %in% chem_carbon_020)
+                #write.xlsx(datatoexplore, file="C:/Users/LWA/Desktop/CC_SOC020.xlsx", row.names=FALSE, append=TRUE)
+                #colnames(Results)
+                
                 chem_carbon_2060<-  c(
+                  "soil organic carbon (15-75 cm)",
                   "soil organic carbon (20-40 cm depth)",                                                                             
                   "soil organic carbon (40-60 cm depth)"
                 )
@@ -1389,7 +1390,6 @@ mutate(
                     Response_var %in% chem_som ~ "Soil Organic Matter",
                     
                     #Physical Properties####
-                    Response_var %in% phy_erosion ~ "Erosion",
                     Response_var %in% phy_compaction ~ "Compaction",
                     Response_var %in% phy_pores ~ "Soil Pores",
                     Response_var %in% phy_aggregates ~ "Soil Aggregates",
@@ -1406,6 +1406,7 @@ mutate(
                     Response_var %in% envir_temp ~ "Soil Temperature",
                     Response_var %in% envir_CO2 ~ "Carbon Dioxide Emissions",
                     Response_var %in% envir_N2O ~ "Nitrous Oxide Emissions",
+                    Response_var %in% phy_erosion ~ "Erosion",
                     
                     #Pest Regulation####
                     #Weeds####
@@ -1493,7 +1494,6 @@ mutate(
                     Response_var %in% chem_som ~ "Chemical",
                     
                     #Physical Properties####
-                    Response_var %in% phy_erosion ~ "Physical",
                     Response_var %in% phy_compaction ~ "Physical",
                     Response_var %in% phy_pores ~ "Physical",
                     Response_var %in% phy_aggregates ~ "Physical",
@@ -1510,7 +1510,7 @@ mutate(
                     Response_var %in% envir_temp ~ "Environmental",
                     Response_var %in% envir_CO2 ~ "Environmental",
                     Response_var %in% envir_N2O ~ "Environmental",
-                    
+                    Response_var %in% phy_erosion ~ "Environmental",
                         
                     #Pest Regulation####
                         

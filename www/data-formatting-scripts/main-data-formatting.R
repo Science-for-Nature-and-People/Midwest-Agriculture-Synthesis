@@ -49,4 +49,6 @@ summary_all %>%
   group_by(Legend_1, Group_RV, Review) %>%
   mutate(group_metric_facet = fct_reorder(as.factor(group_metric_facet), mean_per_change1)) -> summary_all
 
+summary_all
+
 write.csv(summary_all, "data-for-app.csv", row.names = FALSE)

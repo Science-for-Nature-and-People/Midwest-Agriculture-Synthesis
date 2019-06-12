@@ -202,7 +202,7 @@ qplot(Response_var, per_change, data=df_soil,  colour=Legend_1) + theme_bw(base_
 qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 outliers <- filter(df_soil, per_change > 90)
-
+outliers <- filter(df_soil, per_change < -90)
 
 
 soil_summary3 <- df_soil %>% 
@@ -270,7 +270,7 @@ qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colou
 #[df_pest$per_change < 1000,]
 qplot(Response_var, abundance_change, data=df_pest[df_pest$abundance_change > -1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 #[df_pest$abundance_change > -1000,]
-outliers <- filter(df_pest, per_change > 2000)
+outliers <- filter(df_pest, per_change > 200)
 
 
 pest_summary3 <- df_pest[df_pest$per_change < 1000,] %>% 
@@ -343,7 +343,7 @@ qplot(Response_var, per_change, data=df_yield[df_yield$per_change < 1000,],  col
 qplot(Response_var, abundance_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
-outliers <- filter(df_yield, per_change > 500)
+outliers <- filter(df_yield, per_change > 100)
 
 
 

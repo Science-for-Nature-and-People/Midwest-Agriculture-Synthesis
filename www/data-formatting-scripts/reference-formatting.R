@@ -11,9 +11,9 @@ setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data")
 
 
 #import data
-ref_cc <- read.csv("CoverCrop_References.csv")
-ref_pest <- read.csv("PestMgmt_References.csv")
-ref_nutrient <- read.csv("NutrientMgmt_References.csv")
+ref_cc <- read.csv("CoverCrop_References.csv",row.names = NULL)
+ref_pest <- read.csv("PestMgmt_References.csv",row.names = NULL)
+ref_nutrient <- read.csv("NutrientMgmt_References.csv",row.names = NULL)
 #ref_till <- read.csv("Tillage_References.csv")
 
 ref_cc$DateRead <- NULL

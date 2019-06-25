@@ -20,7 +20,7 @@ datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/"
 df <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_ResultsGrouped.csv", row.names = NULL)
 
 #remove unclassified rows
-df <- df[!is.na(df$group_metric),]
+df <- df[!is.na(df$group_metric) & !is.na(df$Trt_id1value),]
 
 #data set should include all treatment comparisons with the control (absence of the treatment)
 #and only treatment means (remove SEMs)
@@ -40,9 +40,11 @@ unit_list <- df %>%
               select(Review_id, Group_RV, group_metric, unit_list) %>%
               distinct()
 
+write.csv(unit_list, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Group_units.csv", row.names = FALSE)
 
+######################################################################################
 
-##Standarize ranking of tillage treatments based on Reicoisky 2015
+##Standarize ranking of tillage treatments based on Reicoisky 2015##########
 # "Conservation tillage is not conservation agriculture", Journal of Soil and Water Conservation
 #Sept 2015, doi: 10.2489/jswc.70.5.103A
 #See Fig 2 for list and rankings (Conventional tillage - Conservation tillage - No tillage)
@@ -72,82 +74,115 @@ unit_list <- df %>%
 #Add rankings to new columns.
 
 df <- df %>%
-          mutate(tilltype_1 = if_else(str_detect(Group_finelevel, "conventional_"), paste("Conventional"),
-                      if_else(str_detect(Group_finelevel, "MP_"), paste("Moldboard plow"),
-                              if_else(str_detect(Group_finelevel, "MPmini_"), paste("Moldboard plow"),
-                              if_else(str_detect(Group_finelevel, "disc_"), paste("Disc plow"), 
-                                      if_else(str_detect(Group_finelevel, "deep_"), paste("Deep ripper"), 
-                                              if_else(str_detect(Group_finelevel, "deeptill_"), paste("Deep ripper"), 
-                                                      if_else(str_detect(Group_finelevel, "deep90_"), paste("Deep ripper"),
-                                                              if_else(str_detect(Group_finelevel, "deep60_"), paste("Deep ripper"),
-                                                                      if_else(str_detect(Group_finelevel, "deep40_"), paste("Deep ripper"), 
-                                              if_else(str_detect(Group_finelevel, "subsoil_"), paste("Subsoil"), 
-                                                      if_else(str_detect(Group_finelevel, "rotary_"), paste("Rotary tillage"), 
-                      if_else(str_detect(Group_finelevel, "CP_"), paste("Chisel plow"),
-                        if_else(str_detect(Group_finelevel, "CPnew_"), paste("Chisel plow"),
-                              if_else(str_detect(Group_finelevel, "conservation_"), paste("Conservation"), 
-                                      if_else(str_detect(Group_finelevel, "cultivator_"), paste("Field cultivator"),
-                                              if_else(str_detect(Group_finelevel, "deepzone_"), paste("Deep zonal tillage"),
-                                              if_else(str_detect(Group_finelevel, "RT_"), paste("Ridge tillage"), 
-                                                      if_else(str_detect(Group_finelevel, "subsoil_low_"), paste("Subsoil LD"), 
-                                                              if_else(str_detect(Group_finelevel, "vertical_"), paste("Vertical tillage"), 
-                      if_else(str_detect(Group_finelevel, "reduced_"), paste("Reduced tillage"),
-                              if_else(str_detect(Group_finelevel, "mulch_"), paste("Mulch tillage"), 
-                                      if_else(str_detect(Group_finelevel, "stubble_"), paste("Stubble mulch"), 
-                                              if_else(str_detect(Group_finelevel, "ST_"), paste("Strip tillage"),
-                                                      if_else(str_detect(Group_finelevel, "slot_"), paste("Slot tillage"), 
-                                                              if_else(str_detect(Group_finelevel, "NT_"), paste("No tillage"),
-                                                                      if_else(str_detect(Group_finelevel, "NTnew_"), paste("No tillage"),
-                                              paste("Albert")))))))))))))))))))))))))))) %>%
-  mutate(tilltype_2 = if_else(str_detect(Group_finelevel, "_conventional"), paste("Conventional"),
-                              if_else(str_detect(Group_finelevel, "_MP"), paste("Moldboard plow"),
-                                      if_else(str_detect(Group_finelevel, "_MPmini"), paste("Moldboard plow"),
-                                              if_else(str_detect(Group_finelevel, "_disc"), paste("Disc plow"), 
-                                                      if_else(str_detect(Group_finelevel, "_deep"), paste("Deep ripper"), 
-          if_else(str_detect(Group_finelevel, "_deeptill"), paste("Deep ripper"), 
-                  if_else(str_detect(Group_finelevel, "_deep90"), paste("Deep ripper"),
-                          if_else(str_detect(Group_finelevel, "_deep60"), paste("Deep ripper"),
-                                  if_else(str_detect(Group_finelevel, "_deep40"), paste("Deep ripper"), 
-                                          if_else(str_detect(Group_finelevel, "_subsoil"), paste("Subsoil"), 
-                                                  if_else(str_detect(Group_finelevel, "_rotary"), paste("Rotary tillage"), 
-                                                          if_else(str_detect(Group_finelevel, "_CP"), paste("Chisel plow"),
-        if_else(str_detect(Group_finelevel, "_CPnew"), paste("Chisel plow"),
-                if_else(str_detect(Group_finelevel, "_conservation"), paste("Conservation"), 
-                       if_else(str_detect(Group_finelevel, "_cultivator"), paste("Field cultivator"),
-                              if_else(str_detect(Group_finelevel, "_deepzone"), paste("Deep zonal tillage"),
-                                      if_else(str_detect(Group_finelevel, "_RT"), paste("Ridge tillage"), 
-                                              if_else(str_detect(Group_finelevel, "_subsoil_low"), paste("Subsoil LD"), 
-                                                      if_else(str_detect(Group_finelevel, "_vertical"), paste("Vertical tillage"), 
-                                                              if_else(str_detect(Group_finelevel, "_reduced"), paste("Reduced tillage"),
-                  if_else(str_detect(Group_finelevel, "_mulch"), paste("Mulch tillage"), 
-                          if_else(str_detect(Group_finelevel, "_stubble"), paste("Stubble mulch"), 
-                                  if_else(str_detect(Group_finelevel, "_ST"), paste("Strip tillage"),
-                                          if_else(str_detect(Group_finelevel, "_slot"), paste("Slot tillage"), 
-                                                  if_else(str_detect(Group_finelevel, "_NT"), paste("No tillage"),
-                                                          if_else(str_detect(Group_finelevel, "_NTnew"), paste("No tillage"),
-                                                                  paste("Albert"))))))))))))))))))))))))))))
+          mutate(tilltype_1 = if_else(str_detect(Group_finelevel, "conventional_"), 0,
+                      if_else(str_detect(Group_finelevel, "MP_"), 1,
+                              if_else(str_detect(Group_finelevel, "MPmini_"), 1,
+                              if_else(str_detect(Group_finelevel, "disc_"), 2, 
+                                      if_else(str_detect(Group_finelevel, "deep_"), 3, 
+                                              if_else(str_detect(Group_finelevel, "deeptill_"), 3, 
+                                                      if_else(str_detect(Group_finelevel, "deep90_"), 3,
+                                                              if_else(str_detect(Group_finelevel, "deep60_"), 3,
+                                                                      if_else(str_detect(Group_finelevel, "deep40_"), 3, 
+                                              if_else(str_detect(Group_finelevel, "subsoil_"), 4, 
+                                                      if_else(str_detect(Group_finelevel, "rotary_"), 5, 
+                      if_else(str_detect(Group_finelevel, "CP_"), 6,
+                        if_else(str_detect(Group_finelevel, "CPnew_"), 6,
+                              if_else(str_detect(Group_finelevel, "conservation_"), 6.5, 
+                                      if_else(str_detect(Group_finelevel, "cultivator_"), 7,
+                                              if_else(str_detect(Group_finelevel, "deepzone_"), 7.5,
+                                              if_else(str_detect(Group_finelevel, "RT_"), 8, 
+                                                      if_else(str_detect(Group_finelevel, "subsoil_low_"), 9, 
+                                                              if_else(str_detect(Group_finelevel, "vertical_"), 10, 
+                      if_else(str_detect(Group_finelevel, "reduced_"), 11,
+                              if_else(str_detect(Group_finelevel, "mulch_"), 12, 
+                                      if_else(str_detect(Group_finelevel, "stubble_"), 13, 
+                                              if_else(str_detect(Group_finelevel, "ST_"), 14,
+                                                      if_else(str_detect(Group_finelevel, "slot_"), 15, 
+                                                              if_else(str_detect(Group_finelevel, "NT_"), 16,
+                                                                      if_else(str_detect(Group_finelevel, "NTnew_"), 16,
+                                             99999999))))))))))))))))))))))))))) %>%
+  mutate(tilltype_2 = if_else(str_detect(Group_finelevel, "_conventional"), 0,
+                              if_else(str_detect(Group_finelevel, "_MP"), 1,
+                                      if_else(str_detect(Group_finelevel, "_MPmini"), 1,
+                                              if_else(str_detect(Group_finelevel, "_disc"), 2, 
+                                                      if_else(str_detect(Group_finelevel, "_deep"), 3, 
+          if_else(str_detect(Group_finelevel, "_deeptill"), 3, 
+                  if_else(str_detect(Group_finelevel, "_deep90"), 3,
+                          if_else(str_detect(Group_finelevel, "_deep60"), 3,
+                                  if_else(str_detect(Group_finelevel, "_deep40"), 3, 
+                                          if_else(str_detect(Group_finelevel, "_subsoil"), 4, 
+                                                  if_else(str_detect(Group_finelevel, "_rotary"), 5, 
+                                                          if_else(str_detect(Group_finelevel, "_CP"), 6,
+        if_else(str_detect(Group_finelevel, "_CPnew"), 6,
+                if_else(str_detect(Group_finelevel, "_conservation"), 6.5, 
+                       if_else(str_detect(Group_finelevel, "_cultivator"), 7,
+                              if_else(str_detect(Group_finelevel, "_deepzone"),7.5,
+                                      if_else(str_detect(Group_finelevel, "_RT"), 8, 
+                                              if_else(str_detect(Group_finelevel, "_subsoil_low"), 9, 
+                                                      if_else(str_detect(Group_finelevel, "_vertical"), 10, 
+                                                              if_else(str_detect(Group_finelevel, "_reduced"), 11,
+                  if_else(str_detect(Group_finelevel, "_mulch"), 12, 
+                          if_else(str_detect(Group_finelevel, "_stubble"), 13, 
+                                  if_else(str_detect(Group_finelevel, "_ST"), 14,
+                                          if_else(str_detect(Group_finelevel, "_slot"), 15, 
+                                                  if_else(str_detect(Group_finelevel, "_NT"), 16,
+                                                          if_else(str_detect(Group_finelevel, "_NTnew"), 16,
+                                                                  999999)))))))))))))))))))))))))))
 
 
 ####Apply tillage ranking order for calculations########################################################################################
 
 
 
+# 0. Conventional tillage (conventional) # Authors do not explicitly state the type of tillage used
+# 1. Moldboard plow (MP)
+# 2. Disc plow (disc)
+# 3. Deep ripper (deep)
+# 4. Subsoil-HD (subsoil)
+# 5. Rotary tillage (rotary)
+# 6. Chisel plow (CP)
+# 6.5 Conservation tillage (conservation) # Authors do not explicitly state the type of tillage used
+# 7. Field cultivator (cultivator)
+# 7.5 Deep zonal tillage (deepzone)
+# 8. Ridge till (RT)
+# 9. Subsoil-LD (subsoil_low)
+# 10. Vertical tillage (vertical)
+# 11. Reduced tillage (reduced)
+# 12. Mulch tillage (mulch)
+# 13. Stubble mulch (stubble)
+# 14. Strip tillage (ST)
+# 15. Slot tillage (slot)
+# 16. No tillage- LD & HD (NT)
 
-
-
-
-
+"Conventional tillage" < "Moldboard plow" < "Disc plow" < "Deep ripper" < "Subsoil tillage" < "Rotary tillage" < "Chisel plow"
+< "Conservation tillage" < "Field cultivator" < "Deep zonal tillage" < "Ridge tillage" < "Subsoil low" < "Vertical tillage"
+< "Reduced tillage" < "Mulch tillage" < "Stubble mulch" < "Strip tillage" < "Slot tillage" < "No tillage"
 
 
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
 df$Trt_id1value <- as.numeric(as.character(df$Trt_id1value))
 df$Trt_id2value <- as.numeric(as.character(df$Trt_id2value))
 
+#Calculates percent change and change in abundance based on the order of the tillage types listed in the dataframe
+#If the lower ranking tillage type is in tilltype_2 then tilltype_2 is used as the control and tilltype_1 is used as the treatment
 
-df <- df %>%
-  mutate(per_change = if_else(Trt_id1value == 0,  ((Trt_id2value - 0)/1)*100, ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)) %>%      
-  mutate(abundance_change = if_else((str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") | str_detect(Response_var_units, "# | number"))) | (str_detect(Response_var_units, "%"))), 
-                                    (Trt_id2value - Trt_id1value), NULL))
+
+df2 <- df %>%
+  filter(tilltype_1 != tilltype_2) %>%
+  group_by(tilltype_1, tilltype_2) %>%
+  mutate(per_change = case_when (tilltype_1 < tilltype_2 & Trt_id1value == 0 ~ ((Trt_id2value - 0)/1)*100, 
+                                 tilltype_1 < tilltype_2 & Trt_id1value != 0 ~ ((Trt_id2value - Trt_id1value)/Trt_id1value)*100,
+                                tilltype_1 > tilltype_2 & Trt_id2value == 0 ~ ((Trt_id1value - 0)/1)*100,
+                                tilltype_1 > tilltype_2 & Trt_id2value != 0 ~ ((Trt_id1value - Trt_id2value)/Trt_id2value)*100,
+                                TRUE ~ NA_real_)) %>%
+   mutate(abundance_change = case_when(tilltype_1 < tilltype_2 & Trt_id1value == 0 & 
+                                str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") |
+                                str_detect(Response_var_units, "# | number"))) | str_detect(Response_var_units, "%") ~  (Trt_id2value - Trt_id1value),
+                                tilltype_1 > tilltype_2 & Trt_id1value == 0 & 
+                                str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") |
+                                str_detect(Response_var_units, "# | number"))) | str_detect(Response_var_units, "%") ~  (Trt_id1value - Trt_id2value),
+                                TRUE ~ NA_real_))
+                                                
 #Use number change for changes in Invertebrate Pest and Predator populations
 levels(df$group_metric)
 

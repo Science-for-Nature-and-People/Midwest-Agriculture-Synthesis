@@ -5,6 +5,7 @@ library(dplyr)
 library(tidyverse)
 library(stringr) #string detection/ working with strings
 library(plotrix) # for standard error calculations
+library(splitstackshape) #expanding results by # of years the data recorded represent
 
 
 #This file:
@@ -167,7 +168,7 @@ df$Trt_id2value <- as.numeric(as.character(df$Trt_id2value))
 #If the lower ranking tillage type is in tilltype_2 then tilltype_2 is used as the control and tilltype_1 is used as the treatment
 
 
-df2 <- df %>%
+df <- df %>%
   filter(tilltype_1 != tilltype_2) %>%
   group_by(tilltype_1, tilltype_2) %>%
   mutate(per_change = case_when (tilltype_1 < tilltype_2 & Trt_id1value == 0 ~ ((Trt_id2value - 0)/1)*100, 
@@ -183,37 +184,32 @@ df2 <- df %>%
                                 str_detect(Response_var_units, "# | number"))) | str_detect(Response_var_units, "%") ~  (Trt_id1value - Trt_id2value),
                                 TRUE ~ NA_real_))
                                                 
-#Use number change for changes in Invertebrate Pest and Predator populations
-levels(df$group_metric)
+####################Expand table to display results for all years####
+
+df <- cSplit(df, splitCols = "Year_result", sep = ";", direction = "long")
+
 
 #Change types
 df$per_change <- as.numeric(as.character(df$per_change))
 df$abundance_change <- as.numeric(as.character(df$abundance_change))
 df$Paper_id <- as.factor(df$Paper_id)
 df$main_group <- as.factor(df$main_group)
+df$Year_result <- as.numeric(as.character(df$Year_result))
+
 
 #df$Review_specific <- as.factor(df$Review_specific)
 
-#Adjust data so values representing multiple years are replicated within the dataframe####
-#Weight means so they reflect # of years those data represent
 
-#Create column that shows total number of years project was conducted (duration.yr )
-df <- df %>%
-  mutate(duration.yr = sub('.*-', '', df$Duration)) 
-
-df$duration.yr <- as.numeric(df$duration.yr)
-
-#determine number of years each mean represents
+#determine number of years each mean represents & replicate number of rows to match # years the data represent#######
 df$Year_result <- as.numeric(df$Year_result)
 
 df <- df %>%
-  mutate(per_change_yr = if_else(Year_result < 1, duration.yr, 1))
-
+  mutate(per_change_yr = ifelse(Year_result == 0, sub('.*-', '', Duration), 1))
+  
 
 #  replicate rows so that total number of rows for that datapoint is equal to the # years the datapoint represents
 df <- df %>% 
-  uncount(per_change_yr)
-
+  uncount(as.numeric(per_change_yr))
 
 ####Replace group_finelevel with a more descriptive description########################
 

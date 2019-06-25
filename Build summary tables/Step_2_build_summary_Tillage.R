@@ -26,7 +26,21 @@ df <- df[!is.na(df$group_metric),]
 #and only treatment means (remove SEMs)
 
 
-#####Tillage Review ######################################################3
+#####Tillage Review ######################################################
+
+
+#Build list of units for each grouping variable #####
+
+#for each Review_id, Group_RV, group_metric build column of list with Response_var_units
+
+unit_list <- df %>%
+              select(Review_id, Group_RV, group_metric, Response_var_units) %>%
+              group_by(Review_id, Group_RV, group_metric) %>%
+              mutate(unit_list = case_when(!is.na(group_metric) ~ paste(unique(Response_var_units), collapse = "; "))) %>%
+              select(Review_id, Group_RV, group_metric, unit_list) %>%
+              distinct()
+
+
 
 ##Standarize ranking of tillage treatments based on Reicoisky 2015
 # "Conservation tillage is not conservation agriculture", Journal of Soil and Water Conservation
@@ -114,11 +128,14 @@ df <- df %>%
                                                                   paste("Albert"))))))))))))))))))))))))))))
 
 
+####Apply tillage ranking order for calculations########################################################################################
 
 
 
 
-#################################################################################################################
+
+
+
 
 
 

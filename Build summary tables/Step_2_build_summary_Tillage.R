@@ -211,28 +211,60 @@ df <- df %>%
 df <- df %>% 
   uncount(as.numeric(per_change_yr))
 
-####Replace group_finelevel with a more descriptive description########################
+####Legends#####
 
+df <- df %>%
+  mutate(
+    Legend_1 = case_when(
+      
+      #Replace tilltype_1 rankings with names of tillages
+      tilltype_1 %in% 0 ~ "Conventional tillage",
+      tilltype_1 %in% 1 ~ "Moldboard plow",
+      tilltype_1 %in% 2 ~ "Disc plow",
+      tilltype_1 %in% 3 ~ "Deep ripper",
+      tilltype_1 %in% 4 ~ "Subsoil deep",
+      tilltype_1 %in% 5 ~ "Rotary tillage",
+      tilltype_1 %in% 6 ~ "Chisel plow",
+      tilltype_1 %in% 6.5 ~ "Conservation tillage",
+      tilltype_1 %in% 7 ~ "Field cultivator",
+      tilltype_1 %in% 7.5 ~ "Deep zonal tillage",
+      tilltype_1 %in% 8 ~ "Ridge till",
+      tilltype_1 %in% 9 ~ "Subsoil shallow",
+      tilltype_1 %in% 10 ~ "Vertical tillage",
+      tilltype_1 %in% 11 ~ "Reduced tillage",
+      tilltype_1 %in% 12 ~ "Mulch tillage",
+      tilltype_1 %in% 13 ~ "Stubble mulch",
+      tilltype_1 %in% 14 ~ "Strip tillage",
+      tilltype_1 %in% 15 ~ "Slot tillage",
+      tilltype_1 %in% 16 ~ "No tillage",
+      TRUE ~ "Albert"))
 
-####Replace group_finelevel with a more descriptive description######################
+df <- df %>%      
+  mutate(
+    Legend_2 = case_when(
+      
+      #Replace tilltype_2 rankings with names of tillages
+      tilltype_2 %in% 0 ~ "Conventional tillage",
+      tilltype_2 %in% 1 ~ "Moldboard plow",
+      tilltype_2 %in% 2 ~ "Disc plow",
+      tilltype_2 %in% 3 ~ "Deep ripper",
+      tilltype_2 %in% 4 ~ "Subsoil deep",
+      tilltype_2 %in% 5 ~ "Rotary tillage",
+      tilltype_2 %in% 6 ~ "Chisel plow",
+      tilltype_2 %in% 6.5 ~ "Conservation tillage",
+      tilltype_2 %in% 7 ~ "Field cultivator",
+      tilltype_2 %in% 7.5 ~ "Deep zonal tillage",
+      tilltype_2 %in% 8 ~ "Ridge till",
+      tilltype_2 %in% 9 ~ "Subsoil shallow",
+      tilltype_2 %in% 10 ~ "Vertical tillage",
+      tilltype_2 %in% 11 ~ "Reduced tillage",
+      tilltype_2 %in% 12 ~ "Mulch tillage",
+      tilltype_2 %in% 13 ~ "Stubble mulch",
+      tilltype_2 %in% 14 ~ "Strip tillage",
+      tilltype_2 %in% 15 ~ "Slot tillage",
+      tilltype_2 %in% 16 ~ "No tillage",
+      TRUE ~ "Albert"))
 
-
-######Summaries for each Grouping: Soil, Crop Production, Water, Pest Regulation####
-
-#Separate Nutrient Review by Review_specific column
-levels(df$Review_specific)
-
-df2 <- filter(df, Review_specific == "Application (Split)")
-df2 <- filter(df, Review_specific == "Application (Variable Rate)")
-df2 <- filter(df, Review_specific == "Placement (Banding)")
-df2 <- filter(df, Review_specific == "Placement (Subsurface)" )
-df2 <- filter(df, Review_specific == "Timing (Fall & Spring)")
-df2 <- filter(df, Review_specific == "Timing (Pre/Post- Planting)")
-
-
-###ADd specific review groupings back to the nutrient review...should we do something similar for other reviews?
-
-#Make sure duplicate rows are included with other summary tables... First one is complete.
 
 ####Group_RV: Soil####
 df_soil <- df %>%
@@ -242,15 +274,21 @@ colnames(df_soil)
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_soil,  colour=Legend_2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-outliers <- filter(df_soil, per_change > 90)
+outliers <- filter(df_soil, per_change > 200 | per_change < -200)
+#304 comparisons with > 200 % change....investigate these for accuracy
+
+write.csv(outliers, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Soil_outliers.csv", row.names = FALSE)
 
 
+
+####NEed to rework code to handle out of order comparisons!!!
+#May need to just reorganize dataframe :(
 
 soil_summary3 <- df_soil %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
+  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
   #remove rows that will be used for soil summary 2
   group_by(Review_id, main_group, group_metric, Legend_1 ) %>% #Legend_2, Legend_3
   summarise(mean_per_change3 = mean(per_change, na.rm = TRUE),

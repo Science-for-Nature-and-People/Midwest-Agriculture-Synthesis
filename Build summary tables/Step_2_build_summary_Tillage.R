@@ -20,11 +20,8 @@ setwd(".")
 datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
 df <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_ResultsGrouped.csv", row.names = NULL)
 
-#remove unclassified rows
-df <- df[!is.na(df$group_metric) & !is.na(df$Trt_id1value),]
-
-#data set should include all treatment comparisons with the control (absence of the treatment)
-#and only treatment means (remove SEMs)
+#remove rows with no group metric, blank values, and something other than mean values
+df <- df[!is.na(df$group_metric) & !is.na(df$Trt_id1value) & df$Stat_type == "mean",]
 
 
 #####Tillage Review ######################################################
@@ -72,7 +69,7 @@ write.csv(unit_list, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/
 # 16. No tillage- LD & HD (NT)
 
 
-#Add rankings to new columns.
+#Add tillage rankings to new columns [ tilltype_1 & tilltype_2]
 
 df <- df %>%
           mutate(tilltype_1 = if_else(str_detect(Group_finelevel, "conventional_"), 0,
@@ -131,9 +128,63 @@ df <- df %>%
                                                                   999999)))))))))))))))))))))))))))
 
 
-####Apply tillage ranking order for calculations########################################################################################
+
+####Use tillage rankings to reorganize comparisons where higher ranking is listed in tilltype_1########################################################################################
+df$Trt_id1 <- as.integer(df$Trt_id1)
+df$Trt_id2 <- as.integer(df$Trt_id2)
 
 
+df2 <- df %>%
+      mutate(Trt1 = case_when(tilltype_1 < tilltype_2 ~ Trt_id1,
+                              tilltype_1 > tilltype_2 ~ Trt_id2)) %>%
+      mutate(Trt1_int = case_when(tilltype_1 < tilltype_2 ~ Trt1_interaction,
+                              tilltype_1 > tilltype_2 ~ Trt2_interaction)) %>%
+      mutate(Trt1_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt1_interaction2,
+                                tilltype_1 > tilltype_2 ~ Trt2_interaction2)) %>%
+      mutate(Trt1_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt1_interaction2,
+                               tilltype_1 > tilltype_2 ~ Trt2_interaction2)) %>%
+      mutate(Trt1_value = case_when(tilltype_1 < tilltype_2 ~ Trt_id1value,
+                               tilltype_1 > tilltype_2 ~ Trt_id2value)) %>%
+  
+      mutate(Trt2 = case_when(tilltype_1 < tilltype_2 ~ Trt_id2,
+                              tilltype_1 > tilltype_2 ~ Trt_id1)) %>%
+      mutate(Trt2_int = case_when(tilltype_1 < tilltype_2 ~ Trt2_interaction,
+                                  tilltype_1 > tilltype_2 ~ Trt1_interaction)) %>%
+      mutate(Trt2_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt2_interaction2,
+                                   tilltype_1 > tilltype_2 ~ Trt1_interaction2)) %>%
+      mutate(Trt2_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt2_interaction2,
+                                   tilltype_1 > tilltype_2 ~ Trt1_interaction2)) %>%
+      mutate(Trt2_value = case_when(tilltype_1 < tilltype_2 ~ Trt_id2value,
+                                    tilltype_1 > tilltype_2 ~ Trt_id1value)) %>%
+      mutate(significance = Sig_level) %>%
+      
+  #dropping Normative effect - having difficulties coercing it into the opposite value based on criteria below
+        #mutate(norm_effect = if_else(tilltype_1 < tilltype_2, Effect_norm,
+         #                           if_else(Effect_norm == 0, Effect_norm,
+          #                           if_else(is.na(Effect_norm), Effect_norm,
+           #                                  if_else(Effect_norm == "", Effect_norm,
+            #                         if_else(tilltype_1 > tilltype_2 && Effect_norm %in% "1", paste("-1"),
+             #                        if_else(tilltype_1 > tilltype_2 && Effect_norm %in% "-1", paste("1"), "ALBERT"))))))) %>% 
+      mutate(finelevel_group = if_else(tilltype_1 < tilltype_2, Group_finelevel,
+                                    if_else(tilltype_1 > tilltype_2, paste(Group_finelevel, " reverse"), Group_finelevel))) %>%
+      mutate(Trt1_name = case_when(tilltype_1 < tilltype_2 ~ Trt_id1name,
+                              tilltype_1 > tilltype_2 ~ Trt_id2name)) %>%
+        mutate(Trt1_description = case_when(tilltype_1 < tilltype_2 ~ Trt_id1description,
+                                     tilltype_1 > tilltype_2 ~ Trt_id2description)) %>%
+        mutate(Trt2_name = case_when(tilltype_1 < tilltype_2 ~ Trt_id2name,
+                                     tilltype_1 > tilltype_2 ~ Trt_id1name)) %>%
+        mutate(Trt2_description = case_when(tilltype_1 < tilltype_2 ~ Trt_id2description,
+                                            tilltype_1 > tilltype_2 ~ Trt_id1description))
+
+#Now drop columns that these new columns replace####
+df3 <- df2 %>%
+        select(Paper_id:Group_RV, Response_var:Stat_type, Trt1:Trt2_description, Res_key:main_group)
+
+write.csv(df3, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_treatmentsorganized.csv", row.names = FALSE)
+
+        
+                                    
+df$Group_finelevel <- as.character(df$Group_finelevel)
 
 # 0. Conventional tillage (conventional) # Authors do not explicitly state the type of tillage used
 # 1. Moldboard plow (MP)

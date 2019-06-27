@@ -132,7 +132,7 @@ df <- df %>%
 ####Use tillage rankings to reorganize comparisons where higher ranking is listed in tilltype_1########################################################################################
 df$Trt_id1 <- as.integer(df$Trt_id1)
 df$Trt_id2 <- as.integer(df$Trt_id2)
-
+df$Group_finelevel <- as.character(df$Group_finelevel)
 
 df2 <- df %>%
       mutate(Trt1 = case_when(tilltype_1 < tilltype_2 ~ Trt_id1,
@@ -174,70 +174,65 @@ df2 <- df %>%
         mutate(Trt2_name = case_when(tilltype_1 < tilltype_2 ~ Trt_id2name,
                                      tilltype_1 > tilltype_2 ~ Trt_id1name)) %>%
         mutate(Trt2_description = case_when(tilltype_1 < tilltype_2 ~ Trt_id2description,
-                                            tilltype_1 > tilltype_2 ~ Trt_id1description))
+                                            tilltype_1 > tilltype_2 ~ Trt_id1description)) %>%
+         mutate(Tillage_1 = case_when(tilltype_1 < tilltype_2 ~ tilltype_1,
+                                      tilltype_1 > tilltype_2 ~ tilltype_2)) %>%
+        mutate(Tillage_2 = case_when(tilltype_1 < tilltype_2 ~ tilltype_2,
+                                    tilltype_1 > tilltype_2 ~ tilltype_1)) 
+
+df3 <- df2 %>% filter(tilltype_1 > tilltype_2) %>% select(tilltype_1, tilltype_2, Tillage_1, Tillage_2)
 
 #Now drop columns that these new columns replace####
 df3 <- df2 %>%
-        select(Paper_id:Group_RV, Response_var:Stat_type, Trt1:Trt2_description, Res_key:main_group)
+        select(Paper_id:Group_RV, Response_var:Stat_type, Trt1:Trt2_description, Tillage_1, Tillage_2, Res_key:main_group)
 
 write.csv(df3, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_treatmentsorganized.csv", row.names = FALSE)
+##################################################################################################################################
+
+###Use this newly created file for the analysis####
+df <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_treatmentsorganized.csv", row.names = NULL)
 
         
-                                    
-df$Group_finelevel <- as.character(df$Group_finelevel)
-
-# 0. Conventional tillage (conventional) # Authors do not explicitly state the type of tillage used
-# 1. Moldboard plow (MP)
-# 2. Disc plow (disc)
-# 3. Deep ripper (deep)
-# 4. Subsoil-HD (subsoil)
-# 5. Rotary tillage (rotary)
-# 6. Chisel plow (CP)
-# 6.5 Conservation tillage (conservation) # Authors do not explicitly state the type of tillage used
-# 7. Field cultivator (cultivator)
-# 7.5 Deep zonal tillage (deepzone)
-# 8. Ridge till (RT)
-# 9. Subsoil-LD (subsoil_low)
-# 10. Vertical tillage (vertical)
-# 11. Reduced tillage (reduced)
-# 12. Mulch tillage (mulch)
-# 13. Stubble mulch (stubble)
-# 14. Strip tillage (ST)
-# 15. Slot tillage (slot)
-# 16. No tillage- LD & HD (NT)
-
-"Conventional tillage" < "Moldboard plow" < "Disc plow" < "Deep ripper" < "Subsoil tillage" < "Rotary tillage" < "Chisel plow"
-< "Conservation tillage" < "Field cultivator" < "Deep zonal tillage" < "Ridge tillage" < "Subsoil low" < "Vertical tillage"
-< "Reduced tillage" < "Mulch tillage" < "Stubble mulch" < "Strip tillage" < "Slot tillage" < "No tillage"
-
 
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
-df$Trt_id1value <- as.numeric(as.character(df$Trt_id1value))
-df$Trt_id2value <- as.numeric(as.character(df$Trt_id2value))
+df$Trt1_value <- as.numeric(as.character(df$Trt1_value))
+df$Trt2_value <- as.numeric(as.character(df$Trt2_value))
 
 #Calculates percent change and change in abundance based on the order of the tillage types listed in the dataframe
 #If the lower ranking tillage type is in tilltype_2 then tilltype_2 is used as the control and tilltype_1 is used as the treatment
 
-
 df <- df %>%
-  filter(tilltype_1 != tilltype_2) %>%
-  group_by(tilltype_1, tilltype_2) %>%
-  mutate(per_change = case_when (tilltype_1 < tilltype_2 & Trt_id1value == 0 ~ ((Trt_id2value - 0)/1)*100, 
-                                 tilltype_1 < tilltype_2 & Trt_id1value != 0 ~ ((Trt_id2value - Trt_id1value)/Trt_id1value)*100,
-                                tilltype_1 > tilltype_2 & Trt_id2value == 0 ~ ((Trt_id1value - 0)/1)*100,
-                                tilltype_1 > tilltype_2 & Trt_id2value != 0 ~ ((Trt_id1value - Trt_id2value)/Trt_id2value)*100,
-                                TRUE ~ NA_real_)) %>%
-   mutate(abundance_change = case_when(tilltype_1 < tilltype_2 & Trt_id1value == 0 & 
-                                str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") |
-                                str_detect(Response_var_units, "# | number"))) | str_detect(Response_var_units, "%") ~  (Trt_id2value - Trt_id1value),
-                                tilltype_1 > tilltype_2 & Trt_id1value == 0 & 
-                                str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") |
-                                str_detect(Response_var_units, "# | number"))) | str_detect(Response_var_units, "%") ~  (Trt_id1value - Trt_id2value),
-                                TRUE ~ NA_real_))
+  mutate(per_change = if_else(Trt1_value == 0,  ((Trt2_value - 0)/1)*100, ((Trt2_value - Trt1_value)/Trt1_value)*100)) %>%      
+  mutate(abundance_change = if_else((str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") | str_detect(Response_var_units, "# | number"))) | (str_detect(Response_var_units, "%"))), 
+                                    (Trt2_value - Trt1_value), NULL))
+#Use number change for changes in Invertebrate Pest and Predator populations
+levels(df$group_metric)
+
+#Change types
+#df$per_change <- as.numeric(as.character(df$per_change))
+#df$abundance_change <- as.numeric(as.character(df$abundance_change))
+#df$Paper_id <- as.factor(df$Paper_id)
+#df$main_group <- as.factor(df$main_group)
+
+#df <- df %>%
+#  filter(tilltype_1 != tilltype_2) %>%
+#  group_by(tilltype_1, tilltype_2) %>%
+#  mutate(per_change = case_when (tilltype_1 < tilltype_2 & Trt_id1value == 0 ~ ((Trt_id2value - 0)/1)*100, 
+#                                 tilltype_1 < tilltype_2 & Trt_id1value != 0 ~ ((Trt_id2value - Trt_id1value)/Trt_id1value)*100,
+#                                tilltype_1 > tilltype_2 & Trt_id2value == 0 ~ ((Trt_id1value - 0)/1)*100,
+#                                tilltype_1 > tilltype_2 & Trt_id2value != 0 ~ ((Trt_id1value - Trt_id2value)/Trt_id2value)*100,
+#                                TRUE ~ NA_real_)) %>%
+#   mutate(abundance_change = case_when(tilltype_1 < tilltype_2 & Trt_id1value == 0 & 
+#                                str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") |
+#                                str_detect(Response_var_units, "# | number"))) | str_detect(Response_var_units, "%") ~  (Trt_id2value - Trt_id1value),
+#                                tilltype_1 > tilltype_2 & Trt_id1value == 0 & 
+#                                str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") |
+#                                str_detect(Response_var_units, "# | number"))) | str_detect(Response_var_units, "%") ~  (Trt_id1value - Trt_id2value),
+#                                TRUE ~ NA_real_))
                                                 
 ####################Expand table to display results for all years####
 
-df <- cSplit(df, splitCols = "Year_result", sep = ";", direction = "long")
+df <- cSplit(df, splitCols = "RV_year", sep = ";", direction = "long") # all data were expanded based on list of years 
 
 
 #Change types
@@ -247,20 +242,17 @@ df$Paper_id <- as.factor(df$Paper_id)
 df$main_group <- as.factor(df$main_group)
 df$Year_result <- as.numeric(as.character(df$Year_result))
 
-
-#df$Review_specific <- as.factor(df$Review_specific)
-
-
 #determine number of years each mean represents & replicate number of rows to match # years the data represent#######
-df$Year_result <- as.numeric(df$Year_result)
 
-df <- df %>%
-  mutate(per_change_yr = ifelse(Year_result == 0, sub('.*-', '', Duration), 1))
+#df <- df %>%
+ # mutate(per_change_yr = ifelse(Year_result == 0, sub('.*-', '', Duration), 1))
+
+####For some experiments this is not calculating correctly (see #152, 154) double check all exp with multiple years that don't include all years of the experiment
   
 
 #  replicate rows so that total number of rows for that datapoint is equal to the # years the datapoint represents
-df <- df %>% 
-  uncount(as.numeric(per_change_yr))
+#df <- df %>% 
+ # uncount(as.numeric(per_change_yr))
 
 ####Legends#####
 
@@ -269,25 +261,25 @@ df <- df %>%
     Legend_1 = case_when(
       
       #Replace tilltype_1 rankings with names of tillages
-      tilltype_1 %in% 0 ~ "Conventional tillage",
-      tilltype_1 %in% 1 ~ "Moldboard plow",
-      tilltype_1 %in% 2 ~ "Disc plow",
-      tilltype_1 %in% 3 ~ "Deep ripper",
-      tilltype_1 %in% 4 ~ "Subsoil deep",
-      tilltype_1 %in% 5 ~ "Rotary tillage",
-      tilltype_1 %in% 6 ~ "Chisel plow",
-      tilltype_1 %in% 6.5 ~ "Conservation tillage",
-      tilltype_1 %in% 7 ~ "Field cultivator",
-      tilltype_1 %in% 7.5 ~ "Deep zonal tillage",
-      tilltype_1 %in% 8 ~ "Ridge till",
-      tilltype_1 %in% 9 ~ "Subsoil shallow",
-      tilltype_1 %in% 10 ~ "Vertical tillage",
-      tilltype_1 %in% 11 ~ "Reduced tillage",
-      tilltype_1 %in% 12 ~ "Mulch tillage",
-      tilltype_1 %in% 13 ~ "Stubble mulch",
-      tilltype_1 %in% 14 ~ "Strip tillage",
-      tilltype_1 %in% 15 ~ "Slot tillage",
-      tilltype_1 %in% 16 ~ "No tillage",
+      Tillage_1 %in% 0 ~ "Conventional tillage",
+      Tillage_1 %in% 1 ~ "Moldboard plow",
+      Tillage_1 %in% 2 ~ "Disc plow",
+      Tillage_1 %in% 3 ~ "Deep ripper",
+      Tillage_1 %in% 4 ~ "Subsoil deep",
+      Tillage_1 %in% 5 ~ "Rotary tillage",
+      Tillage_1 %in% 6 ~ "Chisel plow",
+      Tillage_1 %in% 6.5 ~ "Conservation tillage",
+      Tillage_1 %in% 7 ~ "Field cultivator",
+      Tillage_1 %in% 7.5 ~ "Deep zonal tillage",
+      Tillage_1 %in% 8 ~ "Ridge till",
+      Tillage_1 %in% 9 ~ "Subsoil shallow",
+      Tillage_1 %in% 10 ~ "Vertical tillage",
+      Tillage_1 %in% 11 ~ "Reduced tillage",
+      Tillage_1 %in% 12 ~ "Mulch tillage",
+      Tillage_1 %in% 13 ~ "Stubble mulch",
+      Tillage_1 %in% 14 ~ "Strip tillage",
+      Tillage_1 %in% 15 ~ "Slot tillage",
+      Tillage_1 %in% 16 ~ "No tillage",
       TRUE ~ "Albert"))
 
 df <- df %>%      
@@ -295,25 +287,25 @@ df <- df %>%
     Legend_2 = case_when(
       
       #Replace tilltype_2 rankings with names of tillages
-      tilltype_2 %in% 0 ~ "Conventional tillage",
-      tilltype_2 %in% 1 ~ "Moldboard plow",
-      tilltype_2 %in% 2 ~ "Disc plow",
-      tilltype_2 %in% 3 ~ "Deep ripper",
-      tilltype_2 %in% 4 ~ "Subsoil deep",
-      tilltype_2 %in% 5 ~ "Rotary tillage",
-      tilltype_2 %in% 6 ~ "Chisel plow",
-      tilltype_2 %in% 6.5 ~ "Conservation tillage",
-      tilltype_2 %in% 7 ~ "Field cultivator",
-      tilltype_2 %in% 7.5 ~ "Deep zonal tillage",
-      tilltype_2 %in% 8 ~ "Ridge till",
-      tilltype_2 %in% 9 ~ "Subsoil shallow",
-      tilltype_2 %in% 10 ~ "Vertical tillage",
-      tilltype_2 %in% 11 ~ "Reduced tillage",
-      tilltype_2 %in% 12 ~ "Mulch tillage",
-      tilltype_2 %in% 13 ~ "Stubble mulch",
-      tilltype_2 %in% 14 ~ "Strip tillage",
-      tilltype_2 %in% 15 ~ "Slot tillage",
-      tilltype_2 %in% 16 ~ "No tillage",
+      Tillage_2 %in% 0 ~ "Conventional tillage",
+      Tillage_2 %in% 1 ~ "Moldboard plow",
+      Tillage_2 %in% 2 ~ "Disc plow",
+      Tillage_2 %in% 3 ~ "Deep ripper",
+      Tillage_2 %in% 4 ~ "Subsoil deep",
+      Tillage_2 %in% 5 ~ "Rotary tillage",
+      Tillage_2 %in% 6 ~ "Chisel plow",
+      Tillage_2 %in% 6.5 ~ "Conservation tillage",
+      Tillage_2 %in% 7 ~ "Field cultivator",
+      Tillage_2 %in% 7.5 ~ "Deep zonal tillage",
+      Tillage_2 %in% 8 ~ "Ridge till",
+      Tillage_2 %in% 9 ~ "Subsoil shallow",
+      Tillage_2 %in% 10 ~ "Vertical tillage",
+      Tillage_2 %in% 11 ~ "Reduced tillage",
+      Tillage_2 %in% 12 ~ "Mulch tillage",
+      Tillage_2 %in% 13 ~ "Stubble mulch",
+      Tillage_2 %in% 14 ~ "Strip tillage",
+      Tillage_2 %in% 15 ~ "Slot tillage",
+      Tillage_2 %in% 16 ~ "No tillage",
       TRUE ~ "Albert"))
 
 
@@ -325,18 +317,14 @@ colnames(df_soil)
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_soil,  colour=Legend_2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 outliers <- filter(df_soil, per_change > 200 | per_change < -200)
-#304 comparisons with > 200 % change....investigate these for accuracy
+#294 comparisons with > 200 % change....investigate these for accuracy
 
 write.csv(outliers, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Soil_outliers.csv", row.names = FALSE)
 
-
-
-####NEed to rework code to handle out of order comparisons!!!
-#May need to just reorganize dataframe :(
 
 soil_summary3 <- df_soil %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3

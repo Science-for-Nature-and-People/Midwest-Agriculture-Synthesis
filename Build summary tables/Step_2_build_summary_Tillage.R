@@ -73,6 +73,7 @@ write.csv(unit_list, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/
 
 df <- df %>%
           mutate(tilltype_1 = if_else(str_detect(Group_finelevel, "conventional_"), 0,
+                                      if_else(str_detect(Group_finelevel, "MPCP_"), 6, #chisel plow treatment
                       if_else(str_detect(Group_finelevel, "MP_"), 1,
                               if_else(str_detect(Group_finelevel, "MPmini_"), 1,
                               if_else(str_detect(Group_finelevel, "disc_"), 2, 
@@ -85,6 +86,7 @@ df <- df %>%
                                                       if_else(str_detect(Group_finelevel, "rotary_"), 5, 
                       if_else(str_detect(Group_finelevel, "CP_"), 6,
                         if_else(str_detect(Group_finelevel, "CPnew_"), 6,
+                                
                               if_else(str_detect(Group_finelevel, "conservation_"), 6.5, 
                                       if_else(str_detect(Group_finelevel, "cultivator_"), 7,
                                               if_else(str_detect(Group_finelevel, "deepzone_"), 7.5,
@@ -98,8 +100,9 @@ df <- df %>%
                                                       if_else(str_detect(Group_finelevel, "slot_"), 15, 
                                                               if_else(str_detect(Group_finelevel, "NT_"), 16,
                                                                       if_else(str_detect(Group_finelevel, "NTnew_"), 16,
-                                             99999999))))))))))))))))))))))))))) %>%
+                                             99999999)))))))))))))))))))))))))))) %>%
   mutate(tilltype_2 = if_else(str_detect(Group_finelevel, "_conventional"), 0,
+                              if_else(str_detect(Group_finelevel, "_MPCP"), 6, #chisel plow treatment
                               if_else(str_detect(Group_finelevel, "_MP"), 1,
                                       if_else(str_detect(Group_finelevel, "_MPmini"), 1,
                                               if_else(str_detect(Group_finelevel, "_disc"), 2, 
@@ -111,6 +114,7 @@ df <- df %>%
                                           if_else(str_detect(Group_finelevel, "_subsoil"), 4, 
                                                   if_else(str_detect(Group_finelevel, "_rotary"), 5, 
                                                           if_else(str_detect(Group_finelevel, "_CP"), 6,
+                                                                  
         if_else(str_detect(Group_finelevel, "_CPnew"), 6,
                 if_else(str_detect(Group_finelevel, "_conservation"), 6.5, 
                        if_else(str_detect(Group_finelevel, "_cultivator"), 7,
@@ -125,37 +129,42 @@ df <- df %>%
                                           if_else(str_detect(Group_finelevel, "_slot"), 15, 
                                                   if_else(str_detect(Group_finelevel, "_NT"), 16,
                                                           if_else(str_detect(Group_finelevel, "_NTnew"), 16,
-                                                                  999999)))))))))))))))))))))))))))
+                                                                  999999))))))))))))))))))))))))))))
 
-
+df2 <- df %>% filter(Group_finelevel =="MP_MPCP")
 
 ####Use tillage rankings to reorganize comparisons where higher ranking is listed in tilltype_1########################################################################################
 df$Trt_id1 <- as.integer(df$Trt_id1)
 df$Trt_id2 <- as.integer(df$Trt_id2)
 df$Group_finelevel <- as.character(df$Group_finelevel)
+df$tilltype_1 <- as.integer(df$tilltype_1)
+df$tilltype_2 <- as.integer(df$tilltype_2)
 
 df2 <- df %>%
       mutate(Trt1 = case_when(tilltype_1 < tilltype_2 ~ Trt_id1,
-                              tilltype_1 > tilltype_2 ~ Trt_id2)) %>%
+                              tilltype_1 > tilltype_2 ~ Trt_id2,
+                              tilltype_1 == tilltype_2 ~ Trt_id1)) %>%
       mutate(Trt1_int = case_when(tilltype_1 < tilltype_2 ~ Trt1_interaction,
-                              tilltype_1 > tilltype_2 ~ Trt2_interaction)) %>%
+                              tilltype_1 > tilltype_2 ~ Trt2_interaction,
+                              tilltype_1 == tilltype_2 ~ Trt_id2)) %>%
       mutate(Trt1_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt1_interaction2,
-                                tilltype_1 > tilltype_2 ~ Trt2_interaction2)) %>%
-      mutate(Trt1_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt1_interaction2,
-                               tilltype_1 > tilltype_2 ~ Trt2_interaction2)) %>%
+                                tilltype_1 > tilltype_2 ~ Trt2_interaction2,
+                                tilltype_1 == tilltype_2 ~ Trt1_interaction2)) %>%
       mutate(Trt1_value = case_when(tilltype_1 < tilltype_2 ~ Trt_id1value,
-                               tilltype_1 > tilltype_2 ~ Trt_id2value)) %>%
-  
+                               tilltype_1 > tilltype_2 ~ Trt_id2value,
+                               tilltype_1 == tilltype_2 ~ Trt_id1value)) %>%
       mutate(Trt2 = case_when(tilltype_1 < tilltype_2 ~ Trt_id2,
-                              tilltype_1 > tilltype_2 ~ Trt_id1)) %>%
+                              tilltype_1 > tilltype_2 ~ Trt_id1,
+                              tilltype_1 == tilltype_2 ~ Trt_id2)) %>%
       mutate(Trt2_int = case_when(tilltype_1 < tilltype_2 ~ Trt2_interaction,
-                                  tilltype_1 > tilltype_2 ~ Trt1_interaction)) %>%
+                                  tilltype_1 > tilltype_2 ~ Trt1_interaction,
+                                  tilltype_1 == tilltype_2 ~ Trt2_interaction)) %>%
       mutate(Trt2_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt2_interaction2,
-                                   tilltype_1 > tilltype_2 ~ Trt1_interaction2)) %>%
-      mutate(Trt2_int2 = case_when(tilltype_1 < tilltype_2 ~ Trt2_interaction2,
-                                   tilltype_1 > tilltype_2 ~ Trt1_interaction2)) %>%
+                                   tilltype_1 > tilltype_2 ~ Trt1_interaction2,
+                                   tilltype_1 == tilltype_2 ~ Trt2_interaction2)) %>%
       mutate(Trt2_value = case_when(tilltype_1 < tilltype_2 ~ Trt_id2value,
-                                    tilltype_1 > tilltype_2 ~ Trt_id1value)) %>%
+                                    tilltype_1 > tilltype_2 ~ Trt_id1value,
+                                    tilltype_1 == tilltype_2 ~ Trt_id2value)) %>%
       mutate(significance = Sig_level) %>%
       
   #dropping Normative effect - having difficulties coercing it into the opposite value based on criteria below
@@ -166,19 +175,26 @@ df2 <- df %>%
             #                         if_else(tilltype_1 > tilltype_2 && Effect_norm %in% "1", paste("-1"),
              #                        if_else(tilltype_1 > tilltype_2 && Effect_norm %in% "-1", paste("1"), "ALBERT"))))))) %>% 
       mutate(finelevel_group = if_else(tilltype_1 < tilltype_2, Group_finelevel,
-                                    if_else(tilltype_1 > tilltype_2, paste(Group_finelevel, " reverse"), Group_finelevel))) %>%
+                                    if_else(tilltype_1 > tilltype_2, paste(Group_finelevel, " reverse"), 
+                                            if_else(tilltype_1 == tilltype_2, Group_finelevel, "Albert")))) %>%
       mutate(Trt1_name = case_when(tilltype_1 < tilltype_2 ~ Trt_id1name,
-                              tilltype_1 > tilltype_2 ~ Trt_id2name)) %>%
+                              tilltype_1 > tilltype_2 ~ Trt_id2name,
+                              tilltype_1 == tilltype_2 ~ Trt_id1name)) %>%
         mutate(Trt1_description = case_when(tilltype_1 < tilltype_2 ~ Trt_id1description,
-                                     tilltype_1 > tilltype_2 ~ Trt_id2description)) %>%
+                                     tilltype_1 > tilltype_2 ~ Trt_id2description,
+                                     tilltype_1 == tilltype_2 ~ Trt_id1description)) %>%
         mutate(Trt2_name = case_when(tilltype_1 < tilltype_2 ~ Trt_id2name,
-                                     tilltype_1 > tilltype_2 ~ Trt_id1name)) %>%
+                                     tilltype_1 > tilltype_2 ~ Trt_id1name,
+                                     tilltype_1 == tilltype_2 ~ Trt_id2name)) %>%
         mutate(Trt2_description = case_when(tilltype_1 < tilltype_2 ~ Trt_id2description,
-                                            tilltype_1 > tilltype_2 ~ Trt_id1description)) %>%
+                                            tilltype_1 > tilltype_2 ~ Trt_id1description,
+                                            tilltype_1 == tilltype_2 ~ Trt_id2description)) %>%
          mutate(Tillage_1 = case_when(tilltype_1 < tilltype_2 ~ tilltype_1,
-                                      tilltype_1 > tilltype_2 ~ tilltype_2)) %>%
+                                      tilltype_1 > tilltype_2 ~ tilltype_2,
+                                      tilltype_1 == tilltype_2 ~ tilltype_1)) %>%
         mutate(Tillage_2 = case_when(tilltype_1 < tilltype_2 ~ tilltype_2,
-                                    tilltype_1 > tilltype_2 ~ tilltype_1)) 
+                                    tilltype_1 > tilltype_2 ~ tilltype_1,
+                                    tilltype_1 == tilltype_2 ~ tilltype_2)) 
 
 df3 <- df2 %>% filter(tilltype_1 > tilltype_2) %>% select(tilltype_1, tilltype_2, Tillage_1, Tillage_2)
 
@@ -236,11 +252,10 @@ df <- cSplit(df, splitCols = "RV_year", sep = ";", direction = "long") # all dat
 
 
 #Change types
-df$per_change <- as.numeric(as.character(df$per_change))
-df$abundance_change <- as.numeric(as.character(df$abundance_change))
+#df$per_change <- as.numeric(as.character(df$per_change))
+#df$abundance_change <- as.numeric(as.character(df$abundance_change))
 df$Paper_id <- as.factor(df$Paper_id)
-df$main_group <- as.factor(df$main_group)
-df$Year_result <- as.numeric(as.character(df$Year_result))
+#df$main_group <- as.factor(df$main_group)
 
 #determine number of years each mean represents & replicate number of rows to match # years the data represent#######
 

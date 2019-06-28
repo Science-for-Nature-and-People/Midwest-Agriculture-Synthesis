@@ -254,11 +254,181 @@ df$Year_result <- as.numeric(as.character(df$Year_result))
 #df <- df %>% 
  # uncount(as.numeric(per_change_yr))
 
+
+
+######Organize soil sampling depth and year variables########
+
+unique(levels(df$RV_depth))
+
+#####soil depth groupings#####
+depth_0_25 <- c(
+  "0-10 cm",
+  "0-15 cm",
+  "0-20 cm",
+  "0-5 cm",
+  "0-25 cm",
+  "0-7.5 cm",
+  "0-16 cm",
+  "0-2 cm",
+  "0-2.5 cm",
+  "0-20 cm",
+  "0-23 cm",
+  "0-24 cm",
+  "0-25 cm",
+  "0-8 cm",
+  "16 cm",
+  "2-5 cm",
+  "2 cm",
+  "2.5-5 cm",
+  "2.5 cm",
+  "23 cm",
+  "5-10 cm",
+  "5-15 cm",
+  "5-17.5 cm",
+  "5-20 cm",
+  "5-7.5 cm",
+  "7.5-15 cm",
+  "8-16 cm",
+  "9 cm"
+)
+
+depth_10_25 <- c(
+  "10-15 cm",
+  "10-20 cm",
+  "10-25 cm",
+  "10 cm",
+  "15-20 cm",
+  "15-22.5 cm",
+  "15-25 cm",
+  "16-24 cm",
+  "20-25 cm"
+  )
+
+depth_0_50 <- c(
+  "0-35 cm",
+  "0-40 cm",
+  "0-50 cm",
+  "0-30.5 cm",
+  "0-38 cm",
+  "0-40 cm",
+  "0-45 cm",
+  "0-53 cm",
+  "0-30.5 cm",
+  "0-30 cm"
+  )
+
+depth_25_60 <- c(
+  "20-40 cm",
+  "25-50 cm",
+  "30-40 cm",
+  "30-45 cm",
+  "30-50 cm",
+  "30 cm",
+  "40-50 cm",
+  "15-45 cm",
+  "17.5-30 cm",
+  "15-30 cm",
+  "10-30 cm",
+  "25-30 cm",
+  "20-30 cm",
+  "40-60 cm",
+  "45-60 cm",
+  "30-60 cm"
+)
+
+depth_45_100 <- c(
+  "60-100 cm",
+  "50-60 cm",
+  "50-70 cm",
+  "50-75 cm",
+  "60-75 cm",
+  "45-75 cm"
+  )
+
+depth_0_120 <- c(
+  "0-60 cm",
+  "0-70 cm",
+  "0-80 cm",
+  "0-100 cm",
+  "0-120 cm",
+  "0-68 cm",
+  "0-75 cm",
+  "0-90 cm",
+  "20-100 cm"
+  )
+
+depth_60_150 <- c(
+  "60-80 cm",
+  "60-90 cm",
+  "70-90 cm",
+  "75-100 cm",
+  "75-105 cm",
+  "90-120 cm",
+  "80-100 cm",
+  "120-150 cm"
+  )
+
+depth_0_300 <- c(
+  "0-300 cm",
+  "150 cm"
+  )
+
+#####Apply soil depth groupings####
+
+df <- df %>%
+  mutate(
+    sample_depth = case_when(
+      
+      RV_depth %in% depth_0_25 ~ "0-25 cm",
+      RV_depth %in% depth_10_25 ~ "10-25 cm",
+      RV_depth %in% depth_25_60 ~ "25-60 cm",
+      RV_depth %in% depth_45_100 ~ "45-100 cm",
+      RV_depth %in% depth_60_150 ~ "60-150 cm",
+      RV_depth %in% depth_0_120 ~ "0-120 cm",
+      RV_depth %in% depth_0_300 ~ "0-300 cm"))
+
+
+#####Sampling year#####
+unique(df$RV_year)
+
+year_1 <- 1
+year_2_5 <- c(2,3,4,5)
+year_6_10 <- c(6:10)
+year_11_15 <- c(11:15)
+year_16_20 <- c(16:20)
+year_21_25 <- c(21:25)
+year_26_30 <- c(26:30)
+year_31_35 <- c(31:35)
+year_36_40 <- c(36:40)
+year_41_45 <- c(41:45)
+year_46_50 <- c(46:50)
+
+#####Apply sampling year groupings####
+
+df <- df %>%
+  mutate(
+    sample_year = case_when(
+      
+      RV_year %in% year_1 ~ "Year 1",
+      RV_year %in% year_2_5 ~ "Years 2-5",
+      RV_year %in% year_6_10 ~ "Years 6-10",
+      RV_year %in% year_11_15 ~ "Years 11-15",
+      RV_year %in% year_16_20 ~ "Years 16-20",
+      RV_year %in% year_21_25 ~ "Years 21-25",
+      RV_year %in% year_26_30 ~ "Years 26-30",
+      RV_year %in% year_31_35 ~ "Years 31-35",
+      RV_year %in% year_36_40 ~ "Years 36-40",
+      RV_year %in% year_41_45 ~ "Years 41-45",
+      RV_year %in% year_46_50 ~ "Years 46-50"
+    ))
+
+
+
 ####Legends#####
 
 df <- df %>%
   mutate(
-    Legend_1 = case_when(
+    Tillage_1name = case_when(
       
       #Replace tilltype_1 rankings with names of tillages
       Tillage_1 %in% 0 ~ "Conventional tillage",
@@ -284,7 +454,7 @@ df <- df %>%
 
 df <- df %>%      
   mutate(
-    Legend_2 = case_when(
+    Tillage_2name = case_when(
       
       #Replace tilltype_2 rankings with names of tillages
       Tillage_2 %in% 0 ~ "Conventional tillage",
@@ -308,6 +478,11 @@ df <- df %>%
       Tillage_2 %in% 16 ~ "No tillage",
       TRUE ~ "Albert"))
 
+df <- df %>%      
+  mutate(
+    Tillage_compare = str_c(Tillage_1name, Tillage_2name, sep = " - "))
+      
+
 
 ####Group_RV: Soil####
 df_soil <- df %>%
@@ -317,8 +492,8 @@ colnames(df_soil)
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_soil,  colour=Tillage_compare) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, abundance_change, data=df_soil,  colour=Tillage_compare) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 outliers <- filter(df_soil, per_change > 200 | per_change < -200)
 #294 comparisons with > 200 % change....investigate these for accuracy

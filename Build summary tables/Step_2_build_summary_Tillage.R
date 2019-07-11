@@ -131,7 +131,7 @@ df <- df %>%
                                                           if_else(str_detect(Group_finelevel, "_NTnew"), 16,
                                                                   999999))))))))))))))))))))))))))))
 
-df2 <- df %>% filter(Group_finelevel =="MP_MPCP")
+#df2 <- df %>% filter(Group_finelevel =="MP_MPCP")
 
 ####Use tillage rankings to reorganize comparisons where higher ranking is listed in tilltype_1########################################################################################
 df$Trt_id1 <- as.integer(df$Trt_id1)
@@ -139,6 +139,16 @@ df$Trt_id2 <- as.integer(df$Trt_id2)
 df$Group_finelevel <- as.character(df$Group_finelevel)
 df$tilltype_1 <- as.integer(df$tilltype_1)
 df$tilltype_2 <- as.integer(df$tilltype_2)
+df$Trt1_interaction <- as.integer(df$Trt1_interaction)
+df$Trt2_interaction <- as.integer(df$Trt2_interaction)
+df$Trt1_interaction2 <- as.integer(df$Trt1_interaction2)
+df$Trt2_interaction2 <- as.integer(df$Trt2_interaction2)
+df$Sig_level <- as.character(as.factor(df$Sig_level))
+df$Trt_id1name <- as.character(as.factor(df$Trt_id1name))
+df$Trt_id2name <- as.character(as.factor(df$Trt_id2name))
+df$Trt_id1description <- as.character(as.factor(df$Trt_id1description))
+df$Trt_id2description <- as.character(as.factor(df$Trt_id2description))
+
 
 df2 <- df %>%
       mutate(Trt1 = case_when(tilltype_1 < tilltype_2 ~ Trt_id1,
@@ -165,7 +175,7 @@ df2 <- df %>%
       mutate(Trt2_value = case_when(tilltype_1 < tilltype_2 ~ Trt_id2value,
                                     tilltype_1 > tilltype_2 ~ Trt_id1value,
                                     tilltype_1 == tilltype_2 ~ Trt_id2value)) %>%
-      mutate(significance = Sig_level) %>%
+     mutate(significance = Sig_level) %>%
       
   #dropping Normative effect - having difficulties coercing it into the opposite value based on criteria below
         #mutate(norm_effect = if_else(tilltype_1 < tilltype_2, Effect_norm,
@@ -310,7 +320,9 @@ depth_0_25 <- c(
   "5-7.5 cm",
   "7.5-15 cm",
   "8-16 cm",
-  "9 cm"
+  "9 cm",
+  "surface layer",
+  "clod"
 )
 
 depth_10_25 <- c(
@@ -335,7 +347,8 @@ depth_0_50 <- c(
   "0-45 cm",
   "0-53 cm",
   "0-30.5 cm",
-  "0-30 cm"
+  "0-30 cm",
+  "subsoil and surface layers"
   )
 
 depth_25_60 <- c(
@@ -354,7 +367,8 @@ depth_25_60 <- c(
   "20-30 cm",
   "40-60 cm",
   "45-60 cm",
-  "30-60 cm"
+  "30-60 cm",
+  "subsoil layer"
 )
 
 depth_45_100 <- c(
@@ -408,6 +422,7 @@ df <- df %>%
       RV_depth %in% depth_0_120 ~ "0-120 cm",
       RV_depth %in% depth_0_300 ~ "0-300 cm"))
 
+mssing <- df %>% filter(is.na(sample_depth) && !is.na(RV_depth))
 
 #####Sampling year#####
 unique(df$RV_year)

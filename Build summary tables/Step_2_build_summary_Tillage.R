@@ -210,7 +210,7 @@ df <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Revie
 
         
 
-#####Calculate Percent Change [(Trtmt-Control)/Control] for each row
+#####Calculate Percent Change [(Trtmt-Control)/Control] & Actual Difference [Trtment-Control] for each row
 df$Trt1_value <- as.numeric(as.character(df$Trt1_value))
 df$Trt2_value <- as.numeric(as.character(df$Trt2_value))
 
@@ -219,9 +219,15 @@ df$Trt2_value <- as.numeric(as.character(df$Trt2_value))
 
 df <- df %>%
   mutate(per_change = if_else(Trt1_value == 0,  ((Trt2_value - 0)/1)*100, ((Trt2_value - Trt1_value)/Trt1_value)*100)) %>%      
-  mutate(abundance_change = if_else((str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") | str_detect(Response_var_units, "# | number"))) | (str_detect(Response_var_units, "%"))), 
-                                    (Trt2_value - Trt1_value), NULL))
+  mutate(actual_diff = (Trt2_value - Trt1_value))
+           #if_else((str_detect(main_group,"Invertebrates") & 
+            #          (str_detect(Response_var_units, "# | number")) | (str_detect(Response_var_units, "%"))),
+             #      (Trt2_value - Trt1_value), NULL))
+         
+           #if_else((str_detect(main_group,"Weeds") & (str_detect(Response_var_units, "# | number")) | (str_detect(Response_var_units, "%")))
+                                    #(Trt2_value - Trt1_value), NULL)))
 #Use number change for changes in Invertebrate Pest and Predator populations
+levels(df$main_group)
 levels(df$group_metric)
 
 #Change types
@@ -497,7 +503,26 @@ df <- df %>%
   mutate(
     Tillage_compare = str_c(Tillage_1name, Tillage_2name, sep = " - "))
       
+levels(as.factor(df$Tillage_compare))
 
+#[1] "Chisel plow - Chisel plow"           "Chisel plow - Field cultivator"      "Chisel plow - Mulch tillage"        
+#[4] "Chisel plow - No tillage"            "Chisel plow - Ridge till"            "Chisel plow - Strip tillage"        
+#[7] "Chisel plow - Vertical tillage"      "Conventional tillage - Chisel plow"  "Conventional tillage - No tillage"  
+#[10] "Deep ripper - Chisel plow"           "Deep ripper - Deep ripper"           "Deep ripper - No tillage"           
+#[13] "Deep ripper - Ridge till"            "Deep ripper - Strip tillage"         "Disc plow - Chisel plow"            
+#[16] "Disc plow - Deep ripper"             "Disc plow - Field cultivator"        "Disc plow - Mulch tillage"          
+#[19] "Disc plow - No tillage"              "Disc plow - Ridge till"              "Disc plow - Rotary tillage"         
+#[22] "Disc plow - Strip tillage"           "Disc plow - Subsoil deep"            "Disc plow - Vertical tillage"       
+#[25] "Field cultivator - No tillage"       "Field cultivator - Ridge till"       "Field cultivator - Strip tillage"   
+#[28] "Field cultivator - Vertical tillage" "Moldboard plow - Chisel plow"        "Moldboard plow - Deep ripper"       
+#[31] "Moldboard plow - Disc plow"          "Moldboard plow - Field cultivator"   "Moldboard plow - Moldboard plow"    
+#[34] "Moldboard plow - Mulch tillage"      "Moldboard plow - No tillage"         "Moldboard plow - Ridge till"        
+#[37] "Moldboard plow - Strip tillage"      "Moldboard plow - Subsoil deep"       "Moldboard plow - Vertical tillage"  
+#[40] "Mulch tillage - No tillage"          "No tillage - No tillage"             "Ridge till - Mulch tillage"         
+#[43] "Ridge till - No tillage"             "Rotary tillage - Chisel plow"        "Rotary tillage - Field cultivator"  
+#[46] "Rotary tillage - No tillage"         "Rotary tillage - Ridge till"         "Strip tillage - No tillage"         
+#[49] "Subsoil deep - Chisel plow"          "Subsoil deep - No tillage"           "Subsoil deep - Ridge till"          
+#[52] "Vertical tillage - No tillage"       "Vertical tillage - Strip tillage"  
 
 ####Group_RV: Soil####
 df_soil <- df %>%
@@ -507,15 +532,17 @@ colnames(df_soil)
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_soil,  colour=Tillage_compare) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_soil,  colour=Tillage_compare) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_soil,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_soil[df_soil$actual_diff<1000,],  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-outliers <- filter(df_soil, per_change > 200 | per_change < -200)
-#294 comparisons with > 200 % change....investigate these for accuracy
+outliers1 <- filter(df_soil, per_change > 200 | per_change < -200)
+outliers2 <- filter(df_soil, actual_diff > 500 | actual_diff < -500)
 
-write.csv(outliers, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Soil_outliers.csv", row.names = FALSE)
+outlier_soil <- union(outliers1, outliers2)
 
+write.csv(outlier_soil, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Soil_outliers2.csv", row.names = FALSE)
 
+##################################Summary statements############################
 soil_summary3 <- df_soil %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
   #remove rows that will be used for soil summary 2
@@ -567,14 +594,18 @@ df_pest <- df %>%
 
 #Explore data distribution
 #look by Response_var
-
-qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 #[df_pest$per_change < 1000,]
-qplot(Response_var, abundance_change, data=df_pest[df_pest$abundance_change > -1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_pest,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+#[df_pest$per_change < 1000,]
+qplot(Response_var, actual_diff, data=df_pest[df_pest$actual_diff<20000,],  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 #[df_pest$abundance_change > -1000,]
-outliers <- filter(df_pest, per_change > 2000)
+outliers1 <- filter(df_pest, per_change > 500 | per_change < -500) # 53
+outliers2 <- filter(df_pest, actual_diff > 1000 | actual_diff < -1000) #80
+outlier_pest <- union(outliers2, outliers1)
 
+write.csv(outlier_pest, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Pest_outliers2.csv", row.names = FALSE)
 
+###################Summary Statements###############################
 pest_summary3 <- df_pest[df_pest$per_change < 1000,] %>% #[df_pest$per_change < 1000,]
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
   #remove rows that will be used for soil summary 2
@@ -632,13 +663,18 @@ df_yield <- df %>%
 
 #Explore data distribution
 #look by Response_var
-qplot(Response_var, per_change, data=df_yield[df_yield$per_change < 1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+#[df_yield$per_change < 1000,]
+qplot(Response_var, per_change, data=df_yield,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_yield,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
-outliers <- filter(df_yield, per_change > 500)
+outliers1 <- filter(df_yield, per_change > 500 | per_change < -500)
+outliers2 <- filter(df_yield, actual_diff > 1000 | actual_diff < -1000)
+outlier_yield <- union(outliers2, outliers1)
 
+write.csv(outlier_yield, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/yield_outliers2.csv", row.names = FALSE)
 
+###############Summary Statements###################
 
 yield_summary3 <- df_yield[df_yield$per_change < 1000,] %>% #
   select(Paper_id, Review_id, main_group, group_metric, Legend_1,  Group_finelevel, per_change, abundance_change) %>%
@@ -687,11 +723,16 @@ df_water <- df %>%
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_water,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_water,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_water,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_water,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-outliers <- filter(df_water, per_change > 100)
+outliers1 <- filter(df_water, per_change > 100 | per_change < -100)
+outliers2 <- filter(df_yield, actual_diff > 2000 | actual_diff < -2000)
+outlier_water <- union(outliers2, outliers1)
 
+write.csv(outlier_water, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/water_outliers2.csv", row.names = FALSE)
+
+##############################Summary Statements##############################
 water_summary3 <- df_water %>% 
   select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
   group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
@@ -730,6 +771,17 @@ water_summary1 <- df_water %>%
 water_summary <- left_join(water_summary1, water_summary2)
 water_summary <- left_join(water_summary, water_summary3)
 
+
+
+
+#Join Outliers into single file#
+outlier_all <- full_join(outlier_pest, outlier_soil)
+outlier_all <- full_join(outlier_all, outlier_yield)
+outlier_all <- full_join(outlier_all, outlier_water)
+
+outlier_all2 <- unique(outlier_all)
+
+write.csv(outlier_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/outliers_all.csv", row.names = FALSE)
 
 
 ####Join Summary results back into one file ####

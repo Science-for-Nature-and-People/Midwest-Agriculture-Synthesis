@@ -31,90 +31,114 @@ ui <- navbarPage(
     tags$style(type = "text/css", ".selectize-input { font-size: 11px; line-height: 11px;}"),
 
     # Set up header columns
-    fluidRow(
-      column(
-        4,
-        align = "center",
-        selectInput(
+    sidebarLayout(
+      sidebarPanel(
+        radioButtons(
           inputId = "MgmtPractice", label = "Practice",
           choices = unique(summary_all$Review) %>% sort(),
           selected = "Cover Crops"
-        )
-      ),
-      column(
-        4,
-        align = "center",
-        selectInput(
+        ),
+        checkboxGroupInput(
           inputId = "RV", label = "Outcome",
-          choices = unique(summary_all$Group_RV) %>% sort(), multiple = T,
+          choices = unique(summary_all$Group_RV), #multiple = T,
           selected = "Soil"
-        )
-      ),
-      column(
-        4,
-        align = "center",
-        selectInput(
+        ),
+        checkboxGroupInput(
           inputId = "Legend_1", label = "Grouping",
-          choices = unique(summary_all$Legend_1) %>% sort(), multiple = T,
+          choices = unique(summary_all$Legend_1) %>% sort(),# multiple = T,
           selected = "Single species"
-        )
-      )
-    ),
-    fluidRow(
-      column(
-        12,
-        align = "center",
+        ),
+        
         actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")
-      )
-    ),
-    
-    hr(),
-
-    # Set up row with plots of map and forest plot
-    fluidRow(
-      column(
-        4,
-        leafletOutput("map"),
-
-        # Filter by state
-        absolutePanel(
-          top = 10, right = 10,
-          selectInput(
-            inputId = "State", label = "State", multiple = T, selected = unique(map.data$State),
-            choices = unique(map.data$State) %>% sort()
-          )
+      ),
+    # fluidRow(
+    #   column(
+    #     4,
+    #     align = "center",
+    #     selectInput(
+    #       inputId = "MgmtPractice", label = "Practice",
+    #       choices = unique(summary_all$Review) %>% sort(),
+    #       selected = "Cover Crops"
+    #     )
+    #   ),
+    #   column(
+    #     4,
+    #     align = "center",
+    #     selectInput(
+    #       inputId = "RV", label = "Outcome",
+    #       choices = unique(summary_all$Group_RV) %>% sort(), multiple = T,
+    #       selected = "Soil"
+    #     )
+    #   ),
+    #   column(
+    #     4,
+    #     align = "center",
+    #     selectInput(
+    #       inputId = "Legend_1", label = "Grouping",
+    #       choices = unique(summary_all$Legend_1) %>% sort(), multiple = T,
+    #       selected = "Single species"
+    #     )
+    #   )
+    # ),
+    # fluidRow(
+    #   column(
+    #     12,
+    #     align = "center",
+    #     actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")
+    #   )
+    # ),
+    # 
+    # hr(),
+    mainPanel(
+      # Set up row with plots of map and forest plot
+      fluidRow(
+        # column(
+        #   4,
+        #   leafletOutput("map"),
+        #   
+        #   # Filter by state
+        #   absolutePanel(
+        #     top = 10, right = 10,
+        #     selectInput(
+        #       inputId = "State", label = "State", multiple = T, selected = unique(map.data$State),
+        #       choices = unique(map.data$State) %>% sort()
+        #     )
+        #   )
+        # ),
+        column(
+          #8,
+          12,
+          plotOutput(outputId = "forestplot")
         )
       ),
-      column(
-        8,
-        plotOutput(outputId = "forestplot")
-      )
-    ),
+      
+      hr(),
+      
+      # Set up row for text entry
+      fluidRow(
+        column(
+          12,
+          align = "center",
+          textOutput(outputId = "text_description")
+        )
+      ),
+      
+      hr(),
+      
+      fluidRow(
+        column(
+          12,
+          align = "center",
+          actionButton(inputId = "downloadData", label = "Download filtered data", style = "padding:4px; font-size:80%"),
+          actionButton(inputId = "downloadAllData", label = "Download all data", style = "padding:4px; font-size:80%"),
+          actionButton(inputId = "downloadFigure", label = "Download figure", style = "padding:4px; font-size:80%")
+        )
+      ),
+      
+      hr()      
+    )
 
-    hr(),
-
-    # Set up row for text entry
-    fluidRow(
-      column(
-        12,
-        align = "center",
-        textOutput(outputId = "text_description")
-      )
-    ),
-
-    hr(),
-    
-    fluidRow(
-      column(
-        12,
-        align = "center",
-        actionButton(inputId = "downloadData", label = "Download filtered data", style = "padding:4px; font-size:80%"),
-        actionButton(inputId = "downloadAllData", label = "Download all data", style = "padding:4px; font-size:80%"),
-        actionButton(inputId = "downloadFigure", label = "Download figure", style = "padding:4px; font-size:80%")
-      )
-    ),
-    
-    hr()
+  )
   ),
 
   tabPanel("References", tableOutput(outputId = "reference_table")),

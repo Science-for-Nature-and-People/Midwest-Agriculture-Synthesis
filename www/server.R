@@ -39,7 +39,13 @@ server <- function(input, output, session) {
     #paper_id_list1 is a string column, with comma delim lists of ints
       #so on each element/list in the column, we split the list on commas, then turn the list into a vector, convert the vector to a numeric one.
         #So now we have a list of numeric vectors. We turn this list into one long vector, and then pull out unique values
-    filtered_paper_id <- (df1() %>% filter(Legend_1 %in% input$Legend_1))$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
+    filtered_paper_id <- (df1() %>% 
+                            filter(Legend_1 %in% input$Legend_1))$paper_id_list1 %>%
+      lapply(function(x) strsplit(x, split = ",") %>%
+               unlist %>%
+               as.integer) %>% 
+      unlist %>% 
+      unique
     
     #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
     map.data %>%
@@ -155,10 +161,20 @@ server <- function(input, output, session) {
       "Early season pest management is related to pests."
     }
   })
+  
   #add reference table, filtered by the plot filters.
   output$reference_table <- renderTable({
-    plot_filtered_paper_id <- df2()$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
-    references %>% filter(Paper_id %in% plot_filtered_paper_id)
+    
+    plot_filtered_paper_id <- df2()$paper_id_list1 %>% 
+      lapply(function(x) strsplit(x, split = ",") %>%
+               unlist %>%
+               as.integer) %>% 
+      unlist %>% 
+      unique
+    
+    references %>%
+      select(-citation_short) %>%
+      filter(Paper_id %in% plot_filtered_paper_id)
   })
     
   # picks out the filtered data for download as a csv

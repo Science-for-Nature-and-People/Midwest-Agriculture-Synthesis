@@ -50,6 +50,8 @@ Results$Res_key = rownames(Results)
 
 Results <- read.csv("Tillage Review/Tillage_Results.csv", row.names = NULL)
 
+Results <- Results[Results$Paper_id != 209, ] #paper was not peer reviewed
+
 #add surrogate key to Results
 Results$Res_key = as.integer(rownames(Results))
 
@@ -2469,7 +2471,8 @@ envir_CH4 <- c(
   "soil methane oxidation (CH4-C) in in April",
   "soil methane oxidation (CH4-C) in in April ",
   "soil methane oxidation (CH4-C) in in August",
-  "soil methane oxidation (CH4-C) in in August "
+  "soil methane oxidation (CH4-C) in in August ",
+  "soil methane emission flux"
 )
 
 envir_globalwarmingpotential <- c(
@@ -2682,6 +2685,13 @@ nematode_herbivores <- c(
   "herbivore nematode density (fall)"
 )
 
+nematode_nonpredpest <- c("omnivore nematode density (fall)",
+                     "microbivore nematode density (fall)",
+                     "fungivore nematode density (fall)",
+                     "omnivore nematode density (spring)",
+                     "microbivore nematode density (spring)",
+                     "fungivore nematode density (spring)")
+
 nematode_density <- c(
   "nematode density (fall)",
   "nematode density (spring)"
@@ -2715,7 +2725,8 @@ nematode_soybeancyst <- c(
   "natural log of H. glycines egg population density at harvest (second year soybean)",
   "natural log of H. glycines egg population density at harvest (third year soybean)",
   "natural log of H. glycines egg population density at harvest (continuous soybean)",
-  "natural log of H. glycines egg population density at harvest (maize-soybean rotation)"
+  "natural log of H. glycines egg population density at harvest (maize-soybean rotation)",
+  "mean population of Heterodera glycine eggs"
 )
 
 
@@ -3148,6 +3159,7 @@ metric_labels <- Results %>%
       Response_var %in% invert_preds_soilcomm_abund ~ "Captured on Soil Surface (#)",
       Response_var %in% invert_nonpredpest ~ "Non-Predator or Pest (#)",
       
+      
       Response_var %in% invert_earthworms ~ "Earthworms (#)",
 
       Response_var %in% pathogen_soybean ~ " Prevelance (Soybean)",
@@ -3159,7 +3171,7 @@ metric_labels <- Results %>%
       Response_var %in% nematode_herbivores ~ "Pests (#)",       
       Response_var %in% nematode_density ~ "Community (#)",       
       Response_var %in% nematode_soybeancyst ~ "Soybean Cyst Nematode (#)",       
-      
+      Response_var %in% nematode_nonpredpest ~ "Non-Predator or Pest (#)",
       
       ####Crop Production####
       
@@ -3321,6 +3333,7 @@ mutate(
     Response_var %in% nematode_herbivores ~ "Nematodes",       
     Response_var %in% nematode_density ~ "Nematodes",
     Response_var %in% nematode_soybeancyst ~ "Nematodes",
+    Response_var %in% nematode_nonpredpest ~ "Nematodes",
     
     
     ####Crop Production####

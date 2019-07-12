@@ -49,20 +49,28 @@ server <- function(input, output, session) {
     
     #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
     map.data %>%
-      filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
+      #filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
+      filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
   })
 
   observeEvent(df0(), {
-    updateSelectInput(session, "RV", "Outcome",
+    updateCheckboxGroupInput(session, "RV", "Outcome",
       choices = unique(df0()$Group_RV),
       selected = unique(df0()$Group_RV)[1]
     )
   })
 
   observeEvent(df1(), {
-    updateSelectInput(session, "Legend_1", "Grouping",
+    updateCheckboxGroupInput(session, "Legend_1", "Grouping",
       choices = unique(df1()$Legend_1),
       selected = unique(df1()$Legend_1) # add [1] to select option in list, remove (as is) for Default is select all options
+    )
+  })
+  
+  observeEvent(df3(), {
+    updateSelectInput(session, "Region", "Location",
+                             choices = unique(df3()$Region),
+                             selected = unique(df3()$Region)[1]
     )
   })
   
@@ -175,7 +183,7 @@ server <- function(input, output, session) {
     references %>%
       select(-citation_short) %>%
       filter(Paper_id %in% plot_filtered_paper_id)
-  })
+  },sanitize.text.function = function(x) x)
     
   # picks out the filtered data for download as a csv
   output$downloadData <- downloadHandler(

@@ -17,8 +17,13 @@ library(RColorBrewer) #to color the plot
 library(grid) #to add annotations to the plot (using grobs)
 library(cowplot)
 
+
 #### User Interface ####
 # user interface
+
+# how to try to get download button to the navbar: 
+    # https://stackoverflow.com/questions/24705431/how-can-i-insert-an-image-into-the-navbar-on-a-shiny-navbarpage
+    # https://github.com/daattali/advanced-shiny/tree/master/navbar-add-text
 ui <- navbarPage(
   "Midwest Soil Health Evidence",
 
@@ -47,6 +52,11 @@ ui <- navbarPage(
           inputId = "Legend_1", label = "Grouping",
           choices = unique(summary_all$Legend_1) %>% sort(),# multiple = T,
           selected = "Single species"
+        ),
+        selectInput(
+          inputId = "Region", label = "Location",
+          choices = unique(map.data$Region) %>% sort(),# multiple = T,
+          selected = "Midwest"
         ),
         
         actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")
@@ -143,6 +153,7 @@ ui <- navbarPage(
 
   tabPanel("References", tableOutput(outputId = "reference_table")),
   tabPanel("Methods")
+  
 )
 
 # #### RUN THE APP ####

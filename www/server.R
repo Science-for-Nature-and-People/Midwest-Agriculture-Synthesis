@@ -56,10 +56,20 @@ server <- function(input, output, session) {
       filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
   })
 
-  observeEvent(c(df0(), input$update), {
+  #update practice on summary choice
+  observeEvent(input$summaryPractice, {
+    updateRadioButtons(session, "MgmtPractice", "Practice",
+                             choices = unique(summary_all$Review) %>% sort(),
+                             selected = input$summaryPractice
+    )
+  })
+  
+  #update Outcome on summary choice
+  observeEvent(c(df0(), input$summaryRV), {
     updateCheckboxGroupInput(session, "RV", "Outcome",
-      choices = unique(df0()$Group_RV),
-      selected = unique(df0()$Group_RV)
+      choices = unique(df0()$Group_RV) %>% sort(),
+      #selected = unique(df0()$Group_RV)
+      selected = input$summaryRV
     )
   })
 
@@ -78,6 +88,14 @@ server <- function(input, output, session) {
     )
       #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
       #cat(file = stderr(), unique(df1()$Legend_1), ': df1.', unique(df0()$Legend_1), '\n')  
+      
+      updateSelectInput(session, "summaryRV", "",
+                               #choices = unique(df1()$Legend_1),
+                               choices = unique(df0()$Group_RV) %>% sort,
+                               selected = unique(df0()$Group_RV)[1] # add [1] to select option in list, remove (as is) for Default is select all options
+                               
+                               
+      ) 
   })
   
   observeEvent(df3(), {
@@ -221,7 +239,15 @@ server <- function(input, output, session) {
       ggsave(file, width = 10, height = 15)
     }
   )
+  
+  output$intro <- renderText({
+    'I want to know the impact of '
+    })
 
+  observeEvent(input$go,{
+    updateNavbarPage(session, 'navbar', select = 'Data')
+    click('update')
+  })
   
   observe({
     # Will click the update button at the start so the app starts with a plot.

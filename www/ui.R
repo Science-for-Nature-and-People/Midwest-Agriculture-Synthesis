@@ -13,6 +13,23 @@
     # https://github.com/daattali/advanced-shiny/tree/master/navbar-add-text
 ui <- navbarPage(
   "Midwest Soil Health Evidence",
+  id = 'navbar',
+  tabPanel(
+    'Summary',
+    textOutput('intro'),
+    selectInput(
+      inputId = "summaryPractice", label = "",
+      choices = unique(summary_all$Review) %>% sort(),
+      selected = "Cover Crops"
+    ),
+    "on",
+    selectInput(
+      inputId = "summaryRV", label = '',
+      choices = unique(summary_all$Group_RV), 
+      selected = "Soil"
+    ),
+    actionButton(inputId = "go", label = "Go")
+  ),
 
   tabPanel(
     "Data",

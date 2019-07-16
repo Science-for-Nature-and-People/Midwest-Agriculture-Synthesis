@@ -7,17 +7,19 @@ server <- function(input, output, session) {
   
   
   # Reactive selection by management practice
-  df0 <- eventReactive(input$MgmtPractice, {
+  df0 <- eventReactive(c(input$update, input$MgmtPractice), {
 
     # filter dataset to display selected review and response variables
     summary_all %>%
       filter(Review %in% input$MgmtPractice)
+    
   })
 
   # Next tier selection of reactive selection of outcome grouping
-  df1 <- eventReactive(input$RV, {
+  df1 <- eventReactive(c(input$update, input$RV), {
     df0() %>%
-      filter(Group_RV %in% input$RV)
+      filter(Group_RV %in% input$RV) 
+      
   })
 
   # Merge by cover crop type
@@ -27,7 +29,8 @@ server <- function(input, output, session) {
     df1() %>%
       filter(Legend_1 %in% input$Legend_1) %>%
       group_by(Legend_1) %>%
-      mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1))
+      mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1)) %>%
+      ungroup()
   })
 
   
@@ -53,18 +56,28 @@ server <- function(input, output, session) {
       filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
   })
 
-  observeEvent(df0(), {
+  observeEvent(c(df0(), input$update), {
     updateCheckboxGroupInput(session, "RV", "Outcome",
       choices = unique(df0()$Group_RV),
-      selected = unique(df0()$Group_RV)[1]
+      selected = unique(df0()$Group_RV)
     )
   })
 
-  observeEvent(df1(), {
+  observeEvent({
+    df0()
+    #df1()
+    #input$update
+    }, {
+    
     updateCheckboxGroupInput(session, "Legend_1", "Grouping",
-      choices = unique(df1()$Legend_1),
-      selected = unique(df1()$Legend_1) # add [1] to select option in list, remove (as is) for Default is select all options
+      #choices = unique(df1()$Legend_1),
+      choices = unique(df0()$Legend_1),
+      selected = unique(df0()$Legend_1) # add [1] to select option in list, remove (as is) for Default is select all options
+    
+     
     )
+      #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
+      #cat(file = stderr(), unique(df1()$Legend_1), ': df1.', unique(df0()$Legend_1), '\n')  
   })
   
   observeEvent(df3(), {
@@ -203,11 +216,17 @@ server <- function(input, output, session) {
   
   # prints static figure
   output$downloadFigure <- downloadHandler(
-    ggsave("figure.pdf")
+    filename = 'figure.pdf',
+    content = function(file){
+      ggsave(file, width = 10, height = 15)
+    }
   )
 
-  # Will click the update button at the start so the app starts with a plot.
+  
   observe({
+    # Will click the update button at the start so the app starts with a plot.
     click("update")
+  
+    
   })
 }

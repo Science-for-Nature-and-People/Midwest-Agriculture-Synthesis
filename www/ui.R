@@ -3,19 +3,6 @@
 # Managing Soil Carbon - SNAPP Working Group
 # -------------------------------------------
 
-#### Load libraries ####
-library(readr)
-library(tidyverse) # For reading and manipulating data
-library(shiny) # for making Shiny app
-library(ggplot2) # for plotting data
-library(leaflet) # for mapping
-library(shinyjs) # for interactive clicking
-library(gdata) # reorder legends
-library(shinydashboard)
-library(here) # to deal with tehfact we are using a sub directory (www)
-library(RColorBrewer) #to color the plot
-library(grid) #to add annotations to the plot (using grobs)
-library(cowplot)
 
 
 #### User Interface ####
@@ -52,6 +39,7 @@ ui <- navbarPage(
           inputId = "Legend_1", label = "Grouping",
           choices = unique(summary_all$Legend_1) %>% sort(),# multiple = T,
           selected = "Single species"
+          #selected = unique(summary_all$Legend_1)[1]
         ),
         selectInput(
           inputId = "Region", label = "Location",
@@ -118,7 +106,9 @@ ui <- navbarPage(
         column(
           #8,
           12,
-          plotOutput(outputId = "forestplot")
+          #height of 750 to accomodate largest possible plot (cover crops, all outcomes selected.)
+            # ideally, it'll be dynamic, but height = 'auto' doesn't work.
+          plotOutput(outputId = "forestplot", height = '750px')
         )
       ),
       
@@ -139,9 +129,9 @@ ui <- navbarPage(
         column(
           12,
           align = "center",
-          actionButton(inputId = "downloadData", label = "Download filtered data", style = "padding:4px; font-size:80%"),
-          actionButton(inputId = "downloadAllData", label = "Download all data", style = "padding:4px; font-size:80%"),
-          actionButton(inputId = "downloadFigure", label = "Download figure", style = "padding:4px; font-size:80%")
+          downloadButton(outputId = "downloadData", label = "Download filtered data", style = "padding:4px; font-size:80%"),
+          downloadButton(outputId = "downloadAllData", label = "Download all data", style = "padding:4px; font-size:80%"),
+          downloadButton(outputId = "downloadFigure", label = "Download figure", style = "padding:4px; font-size:80%")
         )
       ),
       
@@ -158,3 +148,5 @@ ui <- navbarPage(
 
 # #### RUN THE APP ####
 # shinyApp(ui = ui, server = server)
+
+#runApp('www', display.mode = 'showcase')

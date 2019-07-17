@@ -16,19 +16,50 @@ ui <- navbarPage(
   id = 'navbar',
   tabPanel(
     'Summary',
-    textOutput('intro'),
-    selectInput(
-      inputId = "summaryPractice", label = "",
-      choices = unique(summary_all$Review) %>% sort(),
-      selected = "Cover Crops"
+    fluidRow(
+      column(12, offset = 0,
+             p('I want to know the impact of', style = 'font-size:30px; padding: 5px; text-align:center;')
+             )
     ),
-    "on",
-    selectInput(
-      inputId = "summaryRV", label = '',
-      choices = unique(summary_all$Group_RV), 
-      selected = "Soil"
+    fluidRow(
+      column(4, offset = 1, align = 'center',
+             div(style="display:inline-block; text-align:center; margin-left:130px",
+                 selectInput(inputId = "summaryPractice", label = "",
+                             choices = unique(summary_all$Review) %>% sort(),
+                             selected =  'Cover Crops'
+                             ))),
+      column(2, offset = 0, align = 'center', 
+             p("on", style = "font-size:30px; margin-top:15px;")),
+      column(4, offset = 1, align = 'center', 
+             div(style="display:inline-block; text-align:center; margin-right:700000px",
+                 selectInput(inputId = "summaryRV", label = '',
+                                 choices = unique(summary_all$Group_RV), 
+                                 selected = "Soil"
+                             ))
+      )
     ),
-    actionButton(inputId = "go", label = "Go")
+
+    fluidRow(
+      column(6,offset = 3, align = 'center',
+             actionButton(inputId = "go", label = "Go", 
+                          style = 'padding:5px; font-size: 200%; width: 500px; color: white; background-color: green; margin-top:100px' ))
+    ),
+    tags$head(tags$style(HTML(".selectize-input {height: 50px; width: 300px; font-size: 25px; } .selectize-dropdown { font-size: 15px; line-height: 20px; }")))
+    # p('I want to know the impact of', style = 'font-size:30px; padding: 10px; text-align:center;'),
+    # div(style="width: 300px; font-size: 100%; display:inline-block; text-align:center; display:center-align",
+    #                   selectInput(
+    #                     inputId = "summaryPractice", label = "",
+    #                     choices = unique(summary_all$Review) %>% sort(),
+    #                     selected = "Cover Crops",
+    #                   )),
+    # p("on", style = "font-size:30px; display:inline-block; vertical-align:top; padding: 20px"),
+    # div(style = 'display: inline-block; vertical-align:top; width: 150px; text-align:center', 
+    #     selectInput(
+    #       inputId = "summaryRV", label = '',
+    #       choices = unique(summary_all$Group_RV), 
+    #       selected = "Soil"
+    # )),
+    # h1(actionButton(inputId = "go", label = "Go", style = 'padding:5px; font-size: 80%; width: 500px; color: white; background-color: green; ' ))
   ),
 
   tabPanel(
@@ -37,7 +68,6 @@ ui <- navbarPage(
     # shinyjs required for the update button to initialize a plot
     useShinyjs(),
 
-    tags$style(type = "text/css", ".selectize-input { font-size: 11px; line-height: 11px;}"),
 
     # Set up header columns
     sidebarLayout(

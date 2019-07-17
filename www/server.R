@@ -88,7 +88,7 @@ server <- function(input, output, session) {
     #input$update
     }, {
     
-    #cat(file = stderr(), unique(input$Legend_1), '\n')    
+    #cat(file = stderr(), input$RV, '\n')    
       
     #new_choices is based on the selected practice (eg df0)
     new_choices <- unique(df0()$Legend_1)
@@ -112,7 +112,7 @@ server <- function(input, output, session) {
   observeEvent(df3(), {
     updateSelectInput(session, "Region", "Location",
                              choices = unique(df3()$Region),
-                             selected = unique(df3()$Region)[1]
+                             selected = input$Region
     )
   })
   
@@ -197,7 +197,7 @@ server <- function(input, output, session) {
     })
 
   output$text_description <- renderText({
-    if (df2()$Review[1] == "Cover Crop") {
+    if (input$MgmtPractice == "Cover Crops") {
       "Cover crops in all areas, on average, are positively related to soil properties, but insignificantly related to crop yield."
       # if(df()$Group_RV[1] == "Crop Production"){
       #   "This is the text we show for cover crop & crop production"

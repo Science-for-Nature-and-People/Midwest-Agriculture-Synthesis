@@ -65,11 +65,20 @@ server <- function(input, output, session) {
   })
   
   #update Outcome on summary choice
-  observeEvent(c(df0(), input$summaryRV), {
+  observeEvent(input$summaryRV, {
     updateCheckboxGroupInput(session, "RV", "Outcome",
       choices = unique(df0()$Group_RV) %>% sort(),
       #selected = unique(df0()$Group_RV)
       selected = input$summaryRV
+    )
+  })
+  
+  #update outcome on practices
+  observeEvent(df0(), {
+    updateCheckboxGroupInput(session, "RV", "Outcome",
+                             choices = unique(df0()$Group_RV) %>% sort(),
+                             #selected = unique(df0()$Group_RV)
+                             selected = input$RV
     )
   })
 
@@ -79,22 +88,24 @@ server <- function(input, output, session) {
     #input$update
     }, {
     
+    #cat(file = stderr(), unique(input$Legend_1), '\n')    
+      
+    #new_choices is based on the selected practice (eg df0)
+    new_choices <- unique(df0()$Legend_1)
     updateCheckboxGroupInput(session, "Legend_1", "Grouping",
       #choices = unique(df1()$Legend_1),
-      choices = unique(df0()$Legend_1),
-      selected = unique(df0()$Legend_1) # add [1] to select option in list, remove (as is) for Default is select all options
-    
-     
+      choices = new_choices,
+      #if groupings are the same as last groupings (old groupings are input$Legend_1)
+        #then keep the old groupings. if the groupings are new, just pick the first one
+      selected = ifelse(input$Legend_1 %in% new_choices, input$Legend_1, new_choices[1]) 
     )
       #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
-      #cat(file = stderr(), unique(df1()$Legend_1), ': df1.', unique(df0()$Legend_1), '\n')  
+      
       
       updateSelectInput(session, "summaryRV", "",
                                #choices = unique(df1()$Legend_1),
                                choices = unique(df0()$Group_RV) %>% sort,
-                               selected = unique(df0()$Group_RV)[1] # add [1] to select option in list, remove (as is) for Default is select all options
-                               
-                               
+                               selected = input$summaryRV # add [1] to select option in list, remove (as is) for Default is select all options
       ) 
   })
   

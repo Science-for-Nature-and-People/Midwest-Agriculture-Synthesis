@@ -21,7 +21,9 @@ datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/"
 df <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_ResultsGrouped.csv", row.names = NULL)
 
 #remove rows with no group metric, blank values, and something other than mean values
-df <- df[!is.na(df$group_metric) & !is.na(df$Trt_id1value) & df$Stat_type == "mean",]
+df <- df[!is.na(df$group_level1) & !is.na(df$Trt_id1value) & df$Stat_type == "mean",]
+
+df <- df %>% select(Paper_id:Review_id, Response_var:group_level3)
 
 
 #####Tillage Review ######################################################
@@ -32,10 +34,10 @@ df <- df[!is.na(df$group_metric) & !is.na(df$Trt_id1value) & df$Stat_type == "me
 #for each Review_id, Group_RV, group_metric build column of list with Response_var_units
 
 unit_list <- df %>%
-              select(Review_id, Group_RV, group_metric, Response_var_units) %>%
-              group_by(Review_id, Group_RV, group_metric) %>%
-              mutate(unit_list = case_when(!is.na(group_metric) ~ paste(unique(Response_var_units), collapse = "; "))) %>%
-              select(Review_id, Group_RV, group_metric, unit_list) %>%
+              select(Review_id, group_level1, group_level2, group_level3, Response_var_units) %>%
+              group_by(Review_id, group_level1, group_level2, group_level3) %>%
+              mutate(unit_list = case_when(!is.na(group_level1) ~ paste(unique(Response_var_units), collapse = "; "))) %>%
+              select(Review_id, group_level1, group_level2, group_level3, unit_list) %>%
               distinct()
 
 write.csv(unit_list, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Group_units.csv", row.names = FALSE)
@@ -549,13 +551,14 @@ colnames(df_soil)
 
 qplot(Response_var, per_change, data=df_soil,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 qplot(Response_var, actual_diff, data=df_soil[df_soil$actual_diff<1000,],  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_soil,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-outliers1 <- filter(df_soil, per_change > 200 | per_change < -200)
-outliers2 <- filter(df_soil, actual_diff > 500 | actual_diff < -500)
+#outliers1 <- filter(df_soil, per_change > 200 | per_change < -200)
+#outliers2 <- filter(df_soil, actual_diff > 500 | actual_diff < -500)
 
-outlier_soil <- union(outliers1, outliers2)
+#outlier_soil <- union(outliers1, outliers2)
 
-write.csv(outlier_soil, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Soil_outliers2.csv", row.names = FALSE)
+#write.csv(outlier_soil, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Soil_outliers2.csv", row.names = FALSE)
 
 ##################################Summary statements############################
 soil_summary3 <- df_soil %>% 
@@ -609,12 +612,15 @@ df_pest <- df %>%
 
 #Explore data distribution
 #look by Response_var
-#[df_pest$per_change < 1000,]
+#
+qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 qplot(Response_var, per_change, data=df_pest,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-#[df_pest$per_change < 1000,]
+
 qplot(Response_var, actual_diff, data=df_pest[df_pest$actual_diff<20000,],  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_pest,  colour=main_group) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+
 #[df_pest$abundance_change > -1000,]
-outliers1 <- filter(df_pest, per_change > 500 | per_change < -500) # 53
+outliers1 <- filter(df_pest, per_change > 500 | per_change < -500) # Extreme outlier is weed seed abundance 0 compared to 990 seeds
 outliers2 <- filter(df_pest, actual_diff > 1000 | actual_diff < -1000) #80
 outlier_pest <- union(outliers2, outliers1)
 
@@ -799,34 +805,10 @@ outlier_all2 <- unique(outlier_all)
 write.csv(outlier_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/outliers_all.csv", row.names = FALSE)
 
 
-####Join Summary results back into one file ####
-summary_all <- full_join(soil_summary, yield_summary)
-summary_all <- full_join(summary_all, pest_summary)
-summary_all <- full_join(summary_all, water_summary)    
+####Join Raw  results back into one file ####
+all_data <- full_join(df_soil, df_yield)
+all_data <- full_join(all_data, df_pest)
+all_data <- full_join(all_data, df_water)    
 
 
-#Nutrient Review
-summary_all_appsplit <- full_join(soil_summary1, yield_summary1)    
-summary_all_appvarrate <- full_join(soil_summary1, yield_summary1) 
-summary_all_placement_banding <- full_join(soil_summary1, yield_summary1) 
-summary_all_placement_subsurface <- full_join(soil_summary1, yield_summary1)
-summary_all_timing_fallspring <- full_join(soil_summary1, yield_summary1)
-summary_all_timing_fallspring <- full_join(summary_all_timing_fallspring, water_summary1)
-summary_all_timing_prepostplant <- full_join(soil_summary1, yield_summary1)
-summary_all_timing_prepostplant <- full_join(summary_all_timing_prepostplant, water_summary1)
-
-#merge all above
-summary_all <- full_join(summary_all_appsplit, summary_all_appvarrate)
-summary_all2 <- full_join(summary_all_placement_banding, summary_all_placement_subsurface)
-summary_all3 <- full_join(summary_all_timing_fallspring, summary_all_timing_prepostplant)
-summary_all <- full_join(summary_all, summary_all2)
-summary_all <- full_join(summary_all, summary_all3)
-
-summary_all$Review2 <- as.factor(paste(summary_all$Review, summary_all$Review_specific, sep = " "))
-summary_all$Review_specific <- NULL
-
-
-
-write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_FULL_Summary.csv", row.names = FALSE)
-
-write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/PestMgmt_FULL_Summary.csv", row.names = FALSE)
+write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/TillageMgmt_ALL_raw.csv", row.names = FALSE)

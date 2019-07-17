@@ -16,6 +16,7 @@ ui <- navbarPage(
   id = 'navbar',
   tabPanel(
     'Summary',
+    style = 'background-color:#F5FAFE;',
     fluidRow(
       column(12, offset = 0,
              p('I want to know the impact of', style = 'font-size:30px; padding: 5px; text-align:center;')
@@ -23,16 +24,16 @@ ui <- navbarPage(
     ),
     fluidRow(
       column(4, offset = 1, align = 'center',
-             div(style="display:inline-block; text-align:center; margin-left:130px",
+             div(style="display:inline-block; margin-left:130px; text-align:center; font-size:25px; line-height:10px;",
                  selectInput(inputId = "summaryPractice", label = "",
                              choices = unique(summary_all$Review) %>% sort(),
                              selected =  'Cover Crops'
                              ))),
       column(2, offset = 0, align = 'center', 
              p("on", style = "font-size:30px; margin-top:15px;")),
-      column(4, offset = 1, align = 'center', 
-             div(style="display:inline-block; text-align:center; margin-right:700000px",
-                 selectInput(inputId = "summaryRV", label = '',
+      column(4, offset = 0, align = 'center', 
+             div(style="display:inline-block; margin-left:-200px; text-align:center; font-size:25px; line-height:10px",
+                 selectInput(inputId = "summaryRV", label = "",
                                  choices = unique(summary_all$Group_RV), 
                                  selected = "Soil"
                              ))
@@ -44,22 +45,11 @@ ui <- navbarPage(
              actionButton(inputId = "go", label = "Go", 
                           style = 'padding:5px; font-size: 200%; width: 500px; color: white; background-color: green; margin-top:100px' ))
     ),
-    tags$head(tags$style(HTML(".selectize-input {height: 50px; width: 300px; font-size: 25px; } .selectize-dropdown { font-size: 15px; line-height: 20px; }")))
-    # p('I want to know the impact of', style = 'font-size:30px; padding: 10px; text-align:center;'),
-    # div(style="width: 300px; font-size: 100%; display:inline-block; text-align:center; display:center-align",
-    #                   selectInput(
-    #                     inputId = "summaryPractice", label = "",
-    #                     choices = unique(summary_all$Review) %>% sort(),
-    #                     selected = "Cover Crops",
-    #                   )),
-    # p("on", style = "font-size:30px; display:inline-block; vertical-align:top; padding: 20px"),
-    # div(style = 'display: inline-block; vertical-align:top; width: 150px; text-align:center', 
-    #     selectInput(
-    #       inputId = "summaryRV", label = '',
-    #       choices = unique(summary_all$Group_RV), 
-    #       selected = "Soil"
-    # )),
-    # h1(actionButton(inputId = "go", label = "Go", style = 'padding:5px; font-size: 80%; width: 500px; color: white; background-color: green; ' ))
+    #use the line below if you want to change ALL selectInputs. 
+      # I don't do much with it because there is a selectInput in two tabs, and they need different formatting
+    tags$head(tags$style(HTML(".selectize-input { width: 300px; padding: 15px} 
+                              .selectize-dropdown { font-size: 15px; line-height: 20px;}")))
+    
   ),
 
   tabPanel(
@@ -88,10 +78,13 @@ ui <- navbarPage(
           selected = "Single species"
           #selected = unique(summary_all$Legend_1)[1]
         ),
-        selectInput(
-          inputId = "Region", label = "Location",
-          choices = unique(map.data$Region) %>% sort(),# multiple = T,
-          selected = "Midwest"
+        
+        div(style = 'font-size:15px ',
+            selectInput(
+              inputId = "Region", label = "Location",
+              choices = unique(map.data$Region) %>% sort(),# multiple = T,
+              selected = "Midwest"
+            )
         ),
         
         actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")

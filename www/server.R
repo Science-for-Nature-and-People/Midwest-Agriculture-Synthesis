@@ -86,13 +86,14 @@ server <- function(input, output, session) {
 
   observeEvent({
     df1()
-    #df1()
     #input$update
     }, {
     
     #cat(file = stderr(), input$RV, '\n')    
     #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
-    #new_choices is based on the selected practice (eg df0)
+      
+    #new_choices are groupings, which depend on the selected practice and outcomes (eg df1)
+      
     new_choices <- unique(df1()$Legend_1)
     updateCheckboxGroupInput(session, "Legend_1", "Grouping",
       #choices = unique(df1()$Legend_1),
@@ -105,9 +106,10 @@ server <- function(input, output, session) {
       #cat(file = stderr(), unique(df1()$Legend_1), ':df1$legend \n')
       
       
+    # Update the summary page outcome based on the chosen practice
       updateSelectInput(session, "summaryRV", "",
                                #choices = unique(df1()$Legend_1),
-                               choices = unique(df1()$Group_RV) %>% sort,
+                               choices = unique(df0()$Group_RV) %>% sort,
                                selected = input$summaryRV # add [1] to select option in list, remove (as is) for Default is select all options
       ) 
   })

@@ -7,6 +7,7 @@ server <- function(input, output, session) {
   
   
   # Reactive selection by management practice
+    #we want this to update if the user clicks the update button, or if they click a new practice
   df0 <- eventReactive(c(input$update, input$MgmtPractice), {
 
     # filter dataset to display selected review and response variables
@@ -16,7 +17,8 @@ server <- function(input, output, session) {
   })
 
   # Next tier selection of reactive selection of outcome grouping
-  df1 <- eventReactive(c(input$update, input$RV), {
+    # we want this to update if the user clicks the update button, if they click a new outcome, or if they click a new practice (since outcome depends on practice)
+  df1 <- eventReactive(c(input$update, input$RV, input$MgmtPractice), {
     df0() %>%
       filter(Group_RV %in% input$RV) 
       
@@ -83,15 +85,15 @@ server <- function(input, output, session) {
   })
 
   observeEvent({
-    df0()
+    df1()
     #df1()
     #input$update
     }, {
     
     #cat(file = stderr(), input$RV, '\n')    
-      
+    #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
     #new_choices is based on the selected practice (eg df0)
-    new_choices <- unique(df0()$Legend_1)
+    new_choices <- unique(df1()$Legend_1)
     updateCheckboxGroupInput(session, "Legend_1", "Grouping",
       #choices = unique(df1()$Legend_1),
       choices = new_choices,
@@ -99,12 +101,13 @@ server <- function(input, output, session) {
         #then keep the old groupings. if the groupings are new, just pick the first one
       selected = ifelse(input$Legend_1 %in% new_choices, input$Legend_1, new_choices[1]) 
     )
-      #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
+      #cat(file = stderr(), new_choices, ': df0$legend \n')
+      #cat(file = stderr(), unique(df1()$Legend_1), ':df1$legend \n')
       
       
       updateSelectInput(session, "summaryRV", "",
                                #choices = unique(df1()$Legend_1),
-                               choices = unique(df0()$Group_RV) %>% sort,
+                               choices = unique(df1()$Group_RV) %>% sort,
                                selected = input$summaryRV # add [1] to select option in list, remove (as is) for Default is select all options
       ) 
   })

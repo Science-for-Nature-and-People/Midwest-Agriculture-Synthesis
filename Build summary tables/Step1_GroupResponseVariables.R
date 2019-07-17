@@ -3349,9 +3349,9 @@ grouped_table <- Results %>%
       
       Response_var %in% invert_pests_cornrootworm ~ "Invertebrate Pests",
       Response_var %in% invert_pests_seedcornmaggot ~ "Invertebrate Pests",
-      Response_var %in% invert_pests_Aglycines ~ "Invertebrates Pests",
-      Response_var %in% invert_pests_cornborer ~ "Invertebrates Pests",
-      Response_var %in% invert_pests_miscabundance ~ "Invertebrates Pests",
+      Response_var %in% invert_pests_Aglycines ~ "Invertebrate Pests",
+      Response_var %in% invert_pests_cornborer ~ "Invertebrate Pests",
+      Response_var %in% invert_pests_miscabundance ~ "Invertebrate Pests",
       
      #Pest Natural Enemies ####
       Response_var %in% invert_preds ~ "Pest Natural Enemies",

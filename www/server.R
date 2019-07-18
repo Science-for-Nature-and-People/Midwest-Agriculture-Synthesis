@@ -76,11 +76,13 @@ server <- function(input, output, session) {
   })
   
   #update outcome on practices
-  observeEvent(df0(), {
+  observeEvent(#df0(),
+    input$MgmtPractice,{
+    new_outcomes <- unique(df0()$Group_RV) %>% sort
     updateCheckboxGroupInput(session, "RV", "Outcome",
-                             choices = unique(df0()$Group_RV) %>% sort(),
+                             choices = new_outcomes,
                              #selected = unique(df0()$Group_RV)
-                             selected = input$RV
+                             selected = ifelse(input$RV %in% new_outcomes, input$RV, new_outcomes[1]) 
     )
   })
 

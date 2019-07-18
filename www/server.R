@@ -7,17 +7,21 @@ server <- function(input, output, session) {
   
   
   # Reactive selection by management practice
-  df0 <- eventReactive(input$MgmtPractice, {
+    #we want this to update if the user clicks the update button, or if they click a new practice
+  df0 <- eventReactive(c(input$update, input$MgmtPractice), {
 
     # filter dataset to display selected review and response variables
     summary_all %>%
       filter(Review %in% input$MgmtPractice)
+    
   })
 
   # Next tier selection of reactive selection of outcome grouping
-  df1 <- eventReactive(input$RV, {
+    # we want this to update if the user clicks the update button, if they click a new outcome, or if they click a new practice (since outcome depends on practice)
+  df1 <- eventReactive(c(input$update, input$RV, input$MgmtPractice), {
     df0() %>%
-      filter(Group_RV %in% input$RV)
+      filter(Group_RV %in% input$RV) 
+      
   })
 
   # Merge by cover crop type
@@ -27,7 +31,8 @@ server <- function(input, output, session) {
     df1() %>%
       filter(Legend_1 %in% input$Legend_1) %>%
       group_by(Legend_1) %>%
-      mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1))
+      mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1)) %>%
+      ungroup()
   })
 
   
@@ -39,24 +44,82 @@ server <- function(input, output, session) {
     #paper_id_list1 is a string column, with comma delim lists of ints
       #so on each element/list in the column, we split the list on commas, then turn the list into a vector, convert the vector to a numeric one.
         #So now we have a list of numeric vectors. We turn this list into one long vector, and then pull out unique values
-    filtered_paper_id <- (df1() %>% filter(Legend_1 %in% input$Legend_1))$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
+    filtered_paper_id <- (df1() %>% 
+                            filter(Legend_1 %in% input$Legend_1))$paper_id_list1 %>%
+      lapply(function(x) strsplit(x, split = ",") %>%
+               unlist %>%
+               as.integer) %>% 
+      unlist %>% 
+      unique
     
     #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
     map.data %>%
-      filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
+      #filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
+      filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
   })
 
-  observeEvent(df0(), {
-    updateSelectInput(session, "RV", "Outcome",
-      choices = unique(df0()$Group_RV),
-      selected = unique(df0()$Group_RV)[1]
+  #update practice on summary choice
+  observeEvent(input$summaryPractice, {
+    updateRadioButtons(session, "MgmtPractice", "Practice",
+                             choices = unique(summary_all$Review) %>% sort(),
+                             selected = input$summaryPractice
+    )
+  })
+  
+  #update Outcome on summary choice
+  observeEvent(input$summaryRV, {
+    updateCheckboxGroupInput(session, "RV", "Outcome",
+      choices = unique(df0()$Group_RV) %>% sort(),
+      #selected = unique(df0()$Group_RV)
+      selected = input$summaryRV
+    )
+  })
+  
+  #update outcome on practices
+  observeEvent(#df0(),
+    input$MgmtPractice,{
+    new_outcomes <- unique(df0()$Group_RV) %>% sort
+    updateCheckboxGroupInput(session, "RV", "Outcome",
+                             choices = new_outcomes,
+                             #selected = unique(df0()$Group_RV)
+                             selected = ifelse(input$RV %in% new_outcomes, input$RV, new_outcomes[1]) 
     )
   })
 
-  observeEvent(df1(), {
-    updateSelectInput(session, "Legend_1", "Grouping",
-      choices = unique(df1()$Legend_1),
-      selected = unique(df1()$Legend_1) # add [1] to select option in list, remove (as is) for Default is select all options
+  observeEvent({
+    df1()
+    #input$update
+    }, {
+    
+    #cat(file = stderr(), input$RV, '\n')    
+    #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
+      
+    #new_choices are groupings, which depend on the selected practice and outcomes (eg df1)
+      
+    new_choices <- unique(df1()$Legend_1)
+    updateCheckboxGroupInput(session, "Legend_1", "Grouping",
+      #choices = unique(df1()$Legend_1),
+      choices = new_choices,
+      #if groupings are the same as last groupings (old groupings are input$Legend_1)
+        #then keep the old groupings. if the groupings are new, just pick the first one
+      selected = ifelse(input$Legend_1 %in% new_choices, input$Legend_1, new_choices[1]) 
+    )
+      #cat(file = stderr(), new_choices, ': df0$legend \n')
+      #cat(file = stderr(), unique(df1()$Legend_1), ':df1$legend \n')
+      
+      
+    # Update the summary page outcome based on the chosen practice
+      updateSelectInput(session, "summaryRV", "",
+                               #choices = unique(df1()$Legend_1),
+                               choices = unique(df0()$Group_RV) %>% sort,
+                               selected = input$summaryRV # add [1] to select option in list, remove (as is) for Default is select all options
+      ) 
+  })
+  
+  observeEvent(df3(), {
+    updateSelectInput(session, "Region", "Location",
+                             choices = unique(df3()$Region),
+                             selected = input$Region
     )
   })
   
@@ -141,7 +204,7 @@ server <- function(input, output, session) {
     })
 
   output$text_description <- renderText({
-    if (df2()$Review[1] == "Cover Crop") {
+    if (input$MgmtPractice == "Cover Crops") {
       "Cover crops in all areas, on average, are positively related to soil properties, but insignificantly related to crop yield."
       # if(df()$Group_RV[1] == "Crop Production"){
       #   "This is the text we show for cover crop & crop production"
@@ -155,11 +218,21 @@ server <- function(input, output, session) {
       "Early season pest management is related to pests."
     }
   })
+  
   #add reference table, filtered by the plot filters.
   output$reference_table <- renderTable({
-    plot_filtered_paper_id <- df2()$paper_id_list1 %>% lapply(function(x) strsplit(x, split = ",") %>% unlist %>% as.integer) %>% unlist %>% unique
-    references %>% filter(Paper_id %in% plot_filtered_paper_id)
-  })
+    
+    plot_filtered_paper_id <- df2()$paper_id_list1 %>% 
+      lapply(function(x) strsplit(x, split = ",") %>%
+               unlist %>%
+               as.integer) %>% 
+      unlist %>% 
+      unique
+    
+    references %>%
+      select(-citation_short) %>%
+      filter(Paper_id %in% plot_filtered_paper_id)
+  },sanitize.text.function = function(x) x)
     
   # picks out the filtered data for download as a csv
   output$downloadData <- downloadHandler(
@@ -179,11 +252,25 @@ server <- function(input, output, session) {
   
   # prints static figure
   output$downloadFigure <- downloadHandler(
-    ggsave("figure.pdf")
+    filename = 'figure.pdf',
+    content = function(file){
+      ggsave(file, width = 10, height = 15)
+    }
   )
+  
+  output$intro <- renderText({
+    'I want to know the impact of '
+    })
 
-  # Will click the update button at the start so the app starts with a plot.
+  observeEvent(input$go,{
+    updateNavbarPage(session, 'navbar', select = 'Data')
+    click('update')
+  })
+  
   observe({
+    # Will click the update button at the start so the app starts with a plot.
     click("update")
+  
+    
   })
 }

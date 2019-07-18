@@ -1,4 +1,8 @@
 #### SERVER INSTRUCTIONS ####
+
+# create the 'then" operator to chain tests together
+`%then%` <- shiny:::`%OR%`
+
 server <- function(input, output, session) {
   
   #lookup table for control descriptions
@@ -26,7 +30,12 @@ server <- function(input, output, session) {
 
   # Merge by cover crop type
   df2 <- eventReactive(input$update, {
-
+    #check that an outcome and grouping are selected (chained together so that it's sequential)
+      #ie check outcome first. if there is an outcome, then check grouping
+    validate(
+      need(!is.null(input$RV), "Please select an Outcome!") %then%
+      need(!is.null(input$Legend_1), "Please select a Grouping!")
+    )
     # filter dataset to display selected review and response variables
     df1() %>%
       filter(Legend_1 %in% input$Legend_1) %>%
@@ -95,7 +104,6 @@ server <- function(input, output, session) {
     #cat(file = stderr(), unique(input$Legend_1), ': legend \n')  
       
     #new_choices are groupings, which depend on the selected practice and outcomes (eg df1)
-      
     new_choices <- unique(df1()$Legend_1)
     updateCheckboxGroupInput(session, "Legend_1", "Grouping",
       #choices = unique(df1()$Legend_1),

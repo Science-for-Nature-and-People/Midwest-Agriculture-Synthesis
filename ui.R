@@ -14,6 +14,8 @@
 ui <- navbarPage(
   "Midwest Soil Health Evidence",
   id = 'navbar',
+  footer = a(href = 'https://snappartnership.net/teams/managing-soil-organic-carbon/',
+             img(src='snapp-logo.png', align = 'right', height = 50)),
   tabPanel(
     'Summary',
     style = 'background-color:#F5FAFE;',

@@ -12,11 +12,14 @@
     # https://stackoverflow.com/questions/24705431/how-can-i-insert-an-image-into-the-navbar-on-a-shiny-navbarpage
     # https://github.com/daattali/advanced-shiny/tree/master/navbar-add-text
 
+# add path for picture (prefix is just the id for the path, which we reference in the footer)
+addResourcePath(prefix = 'pics', directoryPath = here('www'))
+
 ui <- navbarPage(
   "Midwest Soil Health Evidence",
   id = 'navbar',
   footer = a(href = 'https://snappartnership.net/teams/managing-soil-organic-carbon/',
-             img(src='snapp-logo.png', align = 'right', height = 50)),
+             img(src='pics/snapp-logo.png', align = 'right', height = 50)),
   tabPanel(
     'Summary',
     style = 'background-color:#F5FAFE;',

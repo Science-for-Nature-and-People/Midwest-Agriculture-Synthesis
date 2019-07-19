@@ -11,6 +11,7 @@
 # how to try to get download button to the navbar: 
     # https://stackoverflow.com/questions/24705431/how-can-i-insert-an-image-into-the-navbar-on-a-shiny-navbarpage
     # https://github.com/daattali/advanced-shiny/tree/master/navbar-add-text
+
 ui <- navbarPage(
   "Midwest Soil Health Evidence",
   id = 'navbar',

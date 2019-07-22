@@ -213,7 +213,7 @@ df3 <- df2 %>% filter(tilltype_1 > tilltype_2) %>% select(tilltype_1, tilltype_2
 
 #Now drop columns that these new columns replace####
 df3 <- df2 %>%
-        select(Res_key, Paper_id, Duration, Loc_multi_results, Response_var:Stat_type, Trt1:Trt2_description, Tillage_1, Tillage_2, group_level1:group_level3)
+        select(Res_key, Review_id, Paper_id, Duration, Loc_multi_results, Response_var:Stat_type, Trt1:Trt2_description, Tillage_1, Tillage_2, group_level1:group_level3)
 
 write.csv(df3, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_treatmentsorganized.csv", row.names = FALSE)
 ##################################################################################################################################
@@ -326,10 +326,7 @@ depth_0_25 <- c(
   "8-16 cm",
   "9 cm",
   "surface layer",
-  "clod"
-)
-
-depth_10_25 <- c(
+  "clod",
   "10-15 cm",
   "10-20 cm",
   "10-25 cm",
@@ -419,7 +416,6 @@ df <- df %>%
     sample_depth = case_when(
       
       RV_depth %in% depth_0_25 ~ "0-25 cm",
-      RV_depth %in% depth_10_25 ~ "10-25 cm",
       RV_depth %in% depth_25_60 ~ "25-60 cm",
       RV_depth %in% depth_45_100 ~ "45-100 cm",
       RV_depth %in% depth_60_150 ~ "60-150 cm",
@@ -468,7 +464,7 @@ df <- df %>%
 
 df <- df %>%
   mutate(
-    Tillage_1name = case_when(
+    Trt_1name = case_when(
       
       #Replace tilltype_1 rankings with names of tillages
       Tillage_1 %in% 0 ~ "Conventional tillage",
@@ -494,7 +490,7 @@ df <- df %>%
 
 df <- df %>%      
   mutate(
-    Tillage_2name = case_when(
+    Trt_2name = case_when(
       
       #Replace tilltype_2 rankings with names of tillages
       Tillage_2 %in% 0 ~ "Conventional tillage",
@@ -520,7 +516,8 @@ df <- df %>%
 
 df <- df %>%      
   mutate(
-    Tillage_compare = str_c(Tillage_1name, Tillage_2name, sep = " - "))
+    Trt_compare = str_c(Trt_1name, Trt_2name, sep = " - ")) %>%
+  mutate(Review = paste("Tillage"))
       
 levels(as.factor(df$Tillage_compare))
 
@@ -611,12 +608,7 @@ qplot(Response_var, actual_diff, data=df_waterquality,  colour=group_level2) + t
 
 
 ####Join Raw  results back into one file ####
-all_data <- full_join(df_othersoilprops, df_cropyields)
-all_data <- full_join(all_data, df_pests)
-all_data <- full_join(all_data, df_climatemitigation)
-all_data <- full_join(all_data, df_othersoilprops)
-all_data <- full_join(all_data, df_pests)
-all_data <- full_join(all_data, df_soilnutrients)
+all_data <- rbind(df_othersoilprops, df_cropyields, df_pests, df_climatemitigation, df_othersoilprops, df_pests, df_soilnutrients)
 
 
 write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/TillageMgmt_ALL_raw.csv", row.names = FALSE)

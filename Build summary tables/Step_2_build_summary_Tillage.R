@@ -460,32 +460,50 @@ df <- df %>%
 
 
 
-####Legends#####
+####Treatment Comparisons#####
+
+
+#There are very few papers for a majority of the tillage practices x outcomes in this database
+  #To maximize the amount of data we can display, Tillage practices will be merged based on similar disturbance regimes
+
 
 df <- df %>%
   mutate(
     Trt_1name = case_when(
       
       #Replace tilltype_1 rankings with names of tillages
-      Tillage_1 %in% 0 ~ "Conventional tillage",
+      
+      #Group 1: Moldboard plow
       Tillage_1 %in% 1 ~ "Moldboard plow",
-      Tillage_1 %in% 2 ~ "Disc plow",
-      Tillage_1 %in% 3 ~ "Deep ripper",
-      Tillage_1 %in% 4 ~ "Subsoil deep",
-      Tillage_1 %in% 5 ~ "Rotary tillage",
+      
+      #Group 2: Conventional Tillage <- Disc plow, Deep ripper, Dubsoil deep, Rotary tillage
+      Tillage_1 %in% 0 ~ "Conventional tillage", #name given to tillage practice in paper - no further specifications provided
+      Tillage_1 %in% 2 ~ "Conventional tillage", #"Disc plow"
+      Tillage_1 %in% 3 ~ "Conventional tillage", #"Deep ripper"
+      Tillage_1 %in% 4 ~ "Conventional tillage", #"Subsoil deep"
+      Tillage_1 %in% 5 ~ "Conventional tillage", #"Rotary tillage"
+      
+      #Group 3: Chisel plow
       Tillage_1 %in% 6 ~ "Chisel plow",
+      
+      #Group 4: Conservation tillage <- Field cultivation, Subsoil shalow, Vertical tillage, Reduced tillage, Mulch Tillage
       Tillage_1 %in% 6.5 ~ "Conservation tillage",
-      Tillage_1 %in% 7 ~ "Field cultivator",
-      Tillage_1 %in% 7.5 ~ "Deep zonal tillage",
-      Tillage_1 %in% 8 ~ "Ridge till",
-      Tillage_1 %in% 9 ~ "Subsoil shallow",
-      Tillage_1 %in% 10 ~ "Vertical tillage",
-      Tillage_1 %in% 11 ~ "Reduced tillage",
-      Tillage_1 %in% 12 ~ "Mulch tillage",
-      Tillage_1 %in% 13 ~ "Stubble mulch",
-      Tillage_1 %in% 14 ~ "Strip tillage",
-      Tillage_1 %in% 15 ~ "Slot tillage",
+      Tillage_1 %in% 7 ~ "Conservation tillage", #"Field cultivator"
+      Tillage_1 %in% 9 ~ "Conservation tillage", #"Subsoil shallow"
+      Tillage_1 %in% 10 ~ "Conservation tillage", #"Vertical tillage"
+      Tillage_1 %in% 11 ~ "Conservation tillage", #"Reduced tillage"
+      Tillage_1 %in% 12 ~ "Conservation tillage", #"Mulch tillage"
+      Tillage_1 %in% 13 ~ "Conservation tillage", #"Stubble mulch"
+      
+      #Group 5: Zonal tillage <- Deep zonal tillage, Ridge tillage, Strip tillage, 
+      Tillage_1 %in% 7.5 ~ "Zonal tillage" , #"Deep zonal tillage"
+      Tillage_1 %in% 8 ~ "Zonal tillage", #"Ridge till"
+      Tillage_1 %in% 14 ~ "Zonal tillage", #"Strip tillage"
+      
+      #Group 6: No tillage (Slot tillage)
+      Tillage_1 %in% 15 ~ "No tillage", #"Slot tillage"
       Tillage_1 %in% 16 ~ "No tillage",
+      
       TRUE ~ "Albert"))
 
 df <- df %>%      
@@ -493,33 +511,46 @@ df <- df %>%
     Trt_2name = case_when(
       
       #Replace tilltype_2 rankings with names of tillages
-      Tillage_2 %in% 0 ~ "Conventional tillage",
+      
+      #Group 1: Moldboard plow
       Tillage_2 %in% 1 ~ "Moldboard plow",
-      Tillage_2 %in% 2 ~ "Disc plow",
-      Tillage_2 %in% 3 ~ "Deep ripper",
-      Tillage_2 %in% 4 ~ "Subsoil deep",
-      Tillage_2 %in% 5 ~ "Rotary tillage",
+      
+      #Group 2: Conventional Tillage <- Disc plow, Deep ripper, Dubsoil deep, Rotary tillage
+      Tillage_2 %in% 0 ~ "Conventional tillage", #name given to tillage practice in paper - no further specifications provided
+      Tillage_2 %in% 2 ~ "Conventional tillage", #"Disc plow"
+      Tillage_2 %in% 3 ~ "Conventional tillage", #"Deep ripper"
+      Tillage_2 %in% 4 ~ "Conventional tillage", #"Subsoil deep"
+      Tillage_2 %in% 5 ~ "Conventional tillage", #"Rotary tillage"
+      
+      #Group 3: Chisel plow
       Tillage_2 %in% 6 ~ "Chisel plow",
+      
+      #Group 4: Conservation tillage <- Field cultivation, Subsoil shalow, Vertical tillage, Reduced tillage, Mulch Tillage
       Tillage_2 %in% 6.5 ~ "Conservation tillage",
-      Tillage_2 %in% 7 ~ "Field cultivator",
-      Tillage_2 %in% 7.5 ~ "Deep zonal tillage",
-      Tillage_2 %in% 8 ~ "Ridge till",
-      Tillage_2 %in% 9 ~ "Subsoil shallow",
-      Tillage_2 %in% 10 ~ "Vertical tillage",
-      Tillage_2 %in% 11 ~ "Reduced tillage",
-      Tillage_2 %in% 12 ~ "Mulch tillage",
-      Tillage_2 %in% 13 ~ "Stubble mulch",
-      Tillage_2 %in% 14 ~ "Strip tillage",
-      Tillage_2 %in% 15 ~ "Slot tillage",
+      Tillage_2 %in% 7 ~ "Conservation tillage", #"Field cultivator"
+      Tillage_2 %in% 9 ~ "Conservation tillage", #"Subsoil shallow"
+      Tillage_2 %in% 10 ~ "Conservation tillage", #"Vertical tillage"
+      Tillage_2 %in% 11 ~ "Conservation tillage", #"Reduced tillage"
+      Tillage_2 %in% 12 ~ "Conservation tillage", #"Mulch tillage"
+      Tillage_2 %in% 13 ~ "Conservation tillage", #"Stubble mulch"
+      
+      #Group 5: Zonal tillage <- Deep zonal tillage, Ridge tillage, Strip tillage, 
+      Tillage_2 %in% 7.5 ~ "Zonal tillage" , #"Deep zonal tillage"
+      Tillage_2 %in% 8 ~ "Zonal tillage", #"Ridge till"
+      Tillage_2 %in% 14 ~ "Zonal tillage", #"Strip tillage"
+      
+      #Group 6: No tillage (Slot tillage)
+      Tillage_2 %in% 15 ~ "No tillage", #"Slot tillage"
       Tillage_2 %in% 16 ~ "No tillage",
+      
       TRUE ~ "Albert"))
 
+#Lists treatments compared for each row
 df <- df %>%      
-  mutate(
-    Trt_compare = str_c(Trt_1name, Trt_2name, sep = " - ")) %>%
+  mutate(Trt_compare = str_c(Trt_1name, Trt_2name, sep = " - ")) %>%
   mutate(Review = paste("Tillage"))
       
-levels(as.factor(df$Tillage_compare))
+levels(as.factor(df$Trt_compare))
 
 #[1] "Chisel plow - Chisel plow"           "Chisel plow - Field cultivator"      "Chisel plow - Mulch tillage"        
 #[4] "Chisel plow - No tillage"            "Chisel plow - Ridge till"            "Chisel plow - Strip tillage"        

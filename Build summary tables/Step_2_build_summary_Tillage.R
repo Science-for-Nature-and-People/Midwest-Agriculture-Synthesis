@@ -338,21 +338,7 @@ depth_0_25 <- c(
   "20-25 cm"
   )
 
-depth_0_50 <- c(
-  "0-35 cm",
-  "0-40 cm",
-  "0-50 cm",
-  "0-30.5 cm",
-  "0-38 cm",
-  "0-40 cm",
-  "0-45 cm",
-  "0-53 cm",
-  "0-30.5 cm",
-  "0-30 cm",
-  "subsoil and surface layers"
-  )
-
-depth_25_60 <- c(
+depth_25_150 <- c(
   "20-40 cm",
   "25-50 cm",
   "30-40 cm",
@@ -369,31 +355,16 @@ depth_25_60 <- c(
   "40-60 cm",
   "45-60 cm",
   "30-60 cm",
-  "subsoil layer"
-)
-
-depth_45_100 <- c(
+  "subsoil layer",
+  
+  
   "60-100 cm",
   "50-60 cm",
   "50-70 cm",
   "50-75 cm",
   "60-75 cm",
-  "45-75 cm"
-  )
-
-depth_0_120 <- c(
-  "0-60 cm",
-  "0-70 cm",
-  "0-80 cm",
-  "0-100 cm",
-  "0-120 cm",
-  "0-68 cm",
-  "0-75 cm",
-  "0-90 cm",
-  "20-100 cm"
-  )
-
-depth_60_150 <- c(
+  "45-75 cm",
+  
   "60-80 cm",
   "60-90 cm",
   "70-90 cm",
@@ -405,9 +376,34 @@ depth_60_150 <- c(
   )
 
 depth_0_300 <- c(
+  "0-35 cm",
+  "0-40 cm",
+  "0-50 cm",
+  "0-30.5 cm",
+  "0-38 cm",
+  "0-40 cm",
+  "0-45 cm",
+  "0-53 cm",
+  "0-30.5 cm",
+  "0-30 cm",
+  "subsoil and surface layers",
+  
+  
+  "0-60 cm",
+  "0-70 cm",
+  "0-80 cm",
+  "0-100 cm",
+  "0-120 cm",
+  "0-68 cm",
+  "0-75 cm",
+  "0-90 cm",
+  "20-100 cm",
+  
   "0-300 cm",
   "150 cm"
-  )
+)
+
+
 
 #####Apply soil depth groupings####
 
@@ -416,10 +412,7 @@ df <- df %>%
     sample_depth = case_when(
       
       RV_depth %in% depth_0_25 ~ "0-25 cm",
-      RV_depth %in% depth_25_60 ~ "25-60 cm",
-      RV_depth %in% depth_45_100 ~ "45-100 cm",
-      RV_depth %in% depth_60_150 ~ "60-150 cm",
-      RV_depth %in% depth_0_120 ~ "0-120 cm",
+      RV_depth %in% depth_25_150 ~ "25-150 cm",
       RV_depth %in% depth_0_300 ~ "0-300 cm"))
 
 mssing <- df %>% filter(is.na(sample_depth) && !is.na(RV_depth))
@@ -427,17 +420,12 @@ mssing <- df %>% filter(is.na(sample_depth) && !is.na(RV_depth))
 #####Sampling year#####
 unique(df$RV_year)
 
-year_1 <- 1
-year_2_5 <- c(2,3,4,5)
+year_1_5 <- c(1:5)
 year_6_10 <- c(6:10)
-year_11_15 <- c(11:15)
-year_16_20 <- c(16:20)
-year_21_25 <- c(21:25)
-year_26_30 <- c(26:30)
-year_31_35 <- c(31:35)
-year_36_40 <- c(36:40)
-year_41_45 <- c(41:45)
-year_46_50 <- c(46:50)
+year_11_20 <- c(11:20)
+year_21_30 <- c(21:30)
+year_31_40 <- c(31:40)
+year_41_50 <- c(41:50)
 
 #####Apply sampling year groupings####
 
@@ -445,17 +433,12 @@ df <- df %>%
   mutate(
     sample_year = case_when(
       
-      RV_year %in% year_1 ~ "Year 1",
-      RV_year %in% year_2_5 ~ "Years 2-5",
+      RV_year %in% year_1_5 ~ "Year 1-5",
       RV_year %in% year_6_10 ~ "Years 6-10",
-      RV_year %in% year_11_15 ~ "Years 11-15",
-      RV_year %in% year_16_20 ~ "Years 16-20",
-      RV_year %in% year_21_25 ~ "Years 21-25",
-      RV_year %in% year_26_30 ~ "Years 26-30",
-      RV_year %in% year_31_35 ~ "Years 31-35",
-      RV_year %in% year_36_40 ~ "Years 36-40",
-      RV_year %in% year_41_45 ~ "Years 41-45",
-      RV_year %in% year_46_50 ~ "Years 46-50"
+      RV_year %in% year_11_20 ~ "Years 11-20",
+      RV_year %in% year_21_30 ~ "Years 21-30",
+      RV_year %in% year_31_40 ~ "Years 31-40",
+      RV_year %in% year_41_50 ~ "Years 41-50"
     ))
 
 

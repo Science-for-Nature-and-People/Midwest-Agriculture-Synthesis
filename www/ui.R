@@ -93,7 +93,10 @@ ui <- navbarPage(
         #     )
         # ),
         
-        actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")
+        actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%"),
+        #create hidden text that only shows up if there isn't enough data. should be used in conjunction with disabled update button
+        shinyjs::hidden(p(id = 'no_data', 'Not enough data (< 5 observations). Please select more Outcomes/Groupings', 
+                          style = 'color: gray'))
       ),
     # fluidRow(
     #   column(

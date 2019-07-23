@@ -3435,7 +3435,7 @@ grouped_table <- Results %>%
   
   
   
-#######group_level3 #################3
+#######group_level3 #################
 
 mutate(
   group_level3 = case_when(
@@ -3444,7 +3444,7 @@ mutate(
     
     #Soil Nutrients####
     #N####
-    Response_var %in% chem_nitrogen_SOM ~ "N content of Soil Organic Matter",
+    Response_var %in% chem_nitrogen_SOM ~ "N content of soil organic matter",
     Response_var %in% chem_crop_SON ~ "Crop derived N",
     Response_var %in% chem_totalN ~ "Total N",
     Response_var %in% chem_ammonium ~ "Ammonium (NH4)",
@@ -3470,18 +3470,18 @@ mutate(
     Response_var %in% chem_CEC ~ "CEC",
     
     #Physical Properties
-    Response_var %in% chem_som ~ "Soil Organic Matter Content",
-    Response_var %in% phy_aggregation_stability ~ "Aggregate Stability",
-    Response_var %in% phy_aggregation_diameter ~ "Aggregate Size",
+    Response_var %in% chem_som ~ "Soil organic matter content",
+    Response_var %in% phy_aggregation_stability ~ "Aggregate stability",
+    Response_var %in% phy_aggregation_diameter ~ "Aggregate size",
     
-    Response_var %in% phy_silt ~ "Silt Content",
-    Response_var %in% phy_clay ~ "Clay Content",
-    Response_var %in% phy_sand ~ "Sand Content",
+    Response_var %in% phy_silt ~ "Silt content",
+    Response_var %in% phy_clay ~ "Clay content",
+    Response_var %in% phy_sand ~ "Sand content",
     Response_var %in% phy_compaction ~ "Compaction",
-    Response_var %in% phy_bulkdensity ~ "Bulk Density",
+    Response_var %in% phy_bulkdensity ~ "Bulk density",
     
-    Response_var %in% phy_surfaceresidue ~ "Surface Residue Coverage",
-    Response_var %in% phy_surfaceresidue_decomp ~ "Decomposition Rate of Surface Residue",
+    Response_var %in% phy_surfaceresidue ~ "Surface residue coverage",
+    Response_var %in% phy_surfaceresidue_decomp ~ "Decomposition rate of surface residue",
     Response_var %in% phy_erosion ~ "Erosion", 
     Response_var %in% phy_airfilled_pores ~ "Air-filled pore space",
     Response_var %in% phy_totalpores ~ "Total pore space",
@@ -3489,7 +3489,7 @@ mutate(
     #Abiotic Factors####
     Response_var %in% envir_temp ~ "Temperature",
     Response_var %in% phy_waterinfiltration ~ "Water infiltration",
-    Response_var %in% phy_watercontent ~ "Moisture Content",
+    Response_var %in% phy_watercontent ~ "Moisture content",
     Response_var %in% phy_waterfilled_pores ~ "Water-filled pore space",
     
     #Biotic Factors#####

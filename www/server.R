@@ -63,8 +63,11 @@ server <- function(input, output, session) {
     
     #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
     map.data %>%
+      #state corresponds to the map selection
       #filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
-      filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
+      #region corresponds to the region selection in the sidebar
+      #filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
+      filter(Paper_id %in% filtered_paper_id)
   })
 
   #update practice on summary choice
@@ -124,12 +127,19 @@ server <- function(input, output, session) {
       ) 
   })
   
-  observeEvent(df3(), {
-    updateSelectInput(session, "Region", "Location",
-                             choices = unique(df3()$Region),
-                             selected = input$Region
-    )
-  })
+  # observeEvent(df3(), {
+  #   updateSelectInput(session, "Region", "Location",
+  #                            choices = unique(df3()$Region),
+  #                            selected = input$Region
+  #   )
+  # })
+  
+  # observeEvent(input$update,{
+  #   cat(file = stderr(), 'number of rows:', nrow(df2()), '\n')
+  #   validate(
+  #     need(nrow(df2()) > 5, "Not enough data. Please select more Outcomes/Groupings!")
+  #   )
+  # })
   
   
 

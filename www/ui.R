@@ -85,13 +85,13 @@ ui <- navbarPage(
           #selected = unique(summary_all$Legend_1)[1]
         ),
         
-        div(style = 'font-size:15px ',
-            selectInput(
-              inputId = "Region", label = "Location",
-              choices = unique(map.data$Region) %>% sort(),# multiple = T,
-              selected = "Midwest"
-            )
-        ),
+        # div(style = 'font-size:15px ',
+        #     selectInput(
+        #       inputId = "Region", label = "Location",
+        #       choices = unique(map.data$Region) %>% sort(),# multiple = T,
+        #       selected = "Midwest"
+        #     )
+        # ),
         
         actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")
       ),

@@ -63,8 +63,11 @@ server <- function(input, output, session) {
     
     #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
     map.data %>%
+      #state corresponds to the map selection
       #filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
-      filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
+      #region corresponds to the region selection in the sidebar
+      #filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
+      filter(Paper_id %in% filtered_paper_id)
   })
 
   #update practice on summary choice
@@ -124,14 +127,39 @@ server <- function(input, output, session) {
       ) 
   })
   
-  observeEvent(df3(), {
-    updateSelectInput(session, "Region", "Location",
-                             choices = unique(df3()$Region),
-                             selected = input$Region
-    )
+  # observeEvent(df3(), {
+  #   updateSelectInput(session, "Region", "Location",
+  #                            choices = unique(df3()$Region),
+  #                            selected = input$Region
+  #   )
+  # })
+  
+  
+  observeEvent(c(input$MgmtPractice, input$RV, input$Legend_1),{
+    #count the number of observations in our final dataset.
+      #num_obs is equivalent to df2(),but made separately so it can be updated without clicking the update button
+      #this is super inefficient, but the easiest way I could think to add an error message BEFORE clicking the update button 
+      #since the datasets (df1, df2, ect.) only change after update is clicked.
+      #the reason this works is that the event is reactive on the inputs individually, NOT the update button
+  num_obs <- summary_all %>%
+       filter(Review %in% input$MgmtPractice) %>%
+       filter(Group_RV %in% input$RV) %>%
+       filter(Legend_1 %in% input$Legend_1) %>%
+       group_by(Legend_1) %>%
+       mutate(group_metric_facet = fct_reorder(group_metric_facet, mean_per_change1)) %>%
+       ungroup() %>%
+       nrow
+  #if there are less than 5 rows, then we disable the update button and show an error message
+    # otherwise we hide the error message
+    if(num_obs < 5){
+      shinyjs::disable('update')
+      shinyjs::show('no_data')
+    }else{
+      shinyjs::enable('update')
+      shinyjs::hide('no_data')
+    }
+    
   })
-  
-  
 
   observe({
 

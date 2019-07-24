@@ -13,7 +13,7 @@ server <- function(input, output, session) {
   # Reactive selection by management practice
     #we want this to update if the user clicks the update button, or if they click a new practice
   df0 <- eventReactive(input$MgmtPractice, {
-    cat(file = stderr(), 'df0 is updated \n ')
+    #cat(file = stderr(), 'df0 is updated \n ')
     # filter dataset to display selected review and response variables
     summary_all %>%
       filter(Review %in% input$MgmtPractice)
@@ -24,7 +24,7 @@ server <- function(input, output, session) {
   # Next tier selection of reactive selection of outcome grouping
     # we want this to update if the user clicks the update button, if they click a new outcome, or if they click a new practice (since outcome depends on practice)
   df1 <- eventReactive(c(df0(),input$RV), {
-    cat(file = stderr(), 'df1 is updated \n')
+    #cat(file = stderr(), 'df1 is updated \n')
     df0() %>%
       filter(Group_RV %in% input$RV) 
     
@@ -35,7 +35,7 @@ server <- function(input, output, session) {
   df2 <- eventReactive(c(df1(), input$Legend_1), {
     
     
-    cat(file = stderr(), 'df2 is updated \n \n')
+    #cat(file = stderr(), 'df2 is updated \n \n')
     # filter dataset to display selected review and response variables
     df1() %>%
       filter(Legend_1 %in% input$Legend_1) %>%

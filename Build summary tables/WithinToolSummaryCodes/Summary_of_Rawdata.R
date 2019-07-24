@@ -5,11 +5,12 @@ library(tidyverse)
 library(stringr) #string detection/ working with strings
 library(plotrix) # for standard error calculations
 library(forcats)
+library(here)
 
 #In App Summary statements for on-the-fly analysis
 
 #datapath <- "/Users/LWA/Desktop/github/midwesternag_synthesis/" 
-df <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/TillageMgmt_ALL_raw.csv", row.names = NULL)
+df <- read_csv(here("www/data/TillageMgmt_ALL_raw.csv"))
 
 
 #calulates mean per change, sem per change, actual change, sem change, num papers, num comparisons, and list of papers for each grouping

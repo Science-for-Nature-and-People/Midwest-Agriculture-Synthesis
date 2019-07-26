@@ -29,23 +29,26 @@ ui <- navbarPage(
              )
     ),
     fluidRow(
-      column(4, offset = 1, align = 'center',
-             div(style="display:inline-block; margin-left:130px; text-align:center; font-size:25px; line-height:10px;",
+      column(4, offset = 0, align = 'center',
+             #div(style="display:inline-block; margin-left:130px; text-align:center; font-size:25px; line-height:10px;",
+             div(style="display:inline-block;  text-align:center; font-size:25px; line-height:10px;",    
                  selectInput(inputId = "summaryPractice", label = "",
                              choices = unique(summary_all$Review) %>% sort(),
                              selected =  'Cover Crops'
                              ))),
-      column(2, offset = 0, align = 'center', 
-             p("on", style = "font-size:30px; margin-top:15px;")),
-      column(4, offset = 0, align = 'center', 
-             div(style="display:inline-block; margin-left:-200px; text-align:center; font-size:25px; line-height:10px",
+      column(1, br()),
+      column(2, offset = 0, align = 'center',
+            p("on", style = "font-size:30px; margin-top:15px;")),
+      column(1, br()),
+      column(4, offset = 0, align = 'center',
+             #div(style="display:inline-block; margin-left:-200px; text-align:center; font-size:25px; line-height:10px",
+             div(style="display:inline-block; text-align:center; font-size:25px; line-height:10px;",
                  selectInput(inputId = "summaryRV", label = "",
-                                 choices = unique(summary_all$Group_RV), 
+                                 choices = unique(summary_all$Group_RV),
                                  selected = "Soil"
                              ))
       )
     ),
-
     fluidRow(
       column(6,offset = 3, align = 'center',
              actionButton(inputId = "go", label = "Go", 

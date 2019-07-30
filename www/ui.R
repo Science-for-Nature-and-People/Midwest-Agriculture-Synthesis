@@ -32,10 +32,10 @@ ui <- navbarPage(
     fluidRow(
       column(4, offset = 0, align = 'center',
              #div(style="display:inline-block; margin-left:130px; text-align:center; font-size:25px; line-height:10px;",
-             div(style="display:inline-block;  text-align:center; font-size:25px; line-height:10px;",    
+             div(style="display:inline-block;  text-align:center; font-size:25px; line-height:10px;width: 300px; ",    
                  selectInput(inputId = "summaryPractice", label = "",
                              choices = unique(tillage_results$Review) %>% sort(),
-                             selected =  'Cover Crops'
+                             selected =  'Tillage'
                              ))),
       column(1, br()),
       column(2, offset = 0, align = 'center',
@@ -43,10 +43,10 @@ ui <- navbarPage(
       column(1, br()),
       column(4, offset = 0, align = 'center',
              #div(style="display:inline-block; margin-left:-200px; text-align:center; font-size:25px; line-height:10px",
-             div(style="display:inline-block; text-align:center; font-size:25px; line-height:10px;",
+             div(style="display:inline-block; text-align:center; font-size:25px; line-height:10px;width: 300px;",
                  selectInput(inputId = "summaryRV", label = "",
                                  choices = unique(tillage_results$group_level1),
-                                 selected = "Soil"
+                                 selected = "Climate Mitigation"
                              ))
       )
     ),
@@ -57,7 +57,7 @@ ui <- navbarPage(
     ),
     #use the line below if you want to change ALL selectInputs. 
       # I don't do much with it because there is a selectInput in two tabs, and they need different formatting
-    tags$head(tags$style(HTML(".selectize-input { width: 300px; padding: 15px} 
+    tags$head(tags$style(HTML(".selectize-input {padding: 15px} 
                               .selectize-dropdown { font-size: 15px; line-height: 20px;}")))
     
   ),
@@ -82,7 +82,7 @@ ui <- navbarPage(
           radioButtons(
             inputId = 'TillageType1', label = 'Tillage Type #1',
             choices = unique(tillage_results$Trt_1name) %>% sort(),
-            selected = 'Moldboard plow'
+            selected = 'Chisel plow'
           )),
           column(6,
           radioButtons(
@@ -126,10 +126,10 @@ ui <- navbarPage(
         #     )
         # ),
         
-        actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")#,
-        # #create hidden text that only shows up if there isn't enough data. should be used in conjunction with disabled update button
-        # shinyjs::hidden(p(id = 'no_data', 'Not enough data (< 5 comparisons). Please select more options',
-        #                   style = 'color: gray'))
+        actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%"),
+        #create hidden text that only shows up if there isn't enough data. should be used in conjunction with disabled update button
+        shinyjs::hidden(p(id = 'no_data', 'Not enough data (< 5 comparisons). Please select more options',
+                          style = 'color: gray'))
       ),
     # fluidRow(
     #   column(

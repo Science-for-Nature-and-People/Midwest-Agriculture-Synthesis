@@ -22,15 +22,31 @@ server <- function(input, output, session) {
   
   #
   df_filter1 <- eventReactive(c(df_practice(), input$Filter1), {
-    cat(filr = stderr(), 'df_filter1 is updated\n')
-    df_practice() %>%
-      filter(Trt_1name == input$Filter1)
+    cat(file = stderr(), 'df_filter1 is updated\n')
+    if(input$MgmtPractice %in% c('Tillage', 'Cover crop')){
+      df_practice() %>%
+        filter(Trt_1name == input$Filter1)
+    }
+    else if(input$MgmtPractice == 'Nutrient Management'){
+      df_practice() %>%
+        filter(nutrient_groups == input$Filter1)
+    }
+    else if(input$MgmtPractice == 'Early Season Pest Management'){
+      df_practice() %>%
+        filter(Trt_2name == input$Filter1)
+    }
   })
   
   df_filter2 <- eventReactive(c(df_filter1(), input$Filter2), {
     cat(file = stderr(), 'dftillage2 is updated\n')
-    df_filter1() %>%
-      filter(Trt_2name == input$Filter2)
+    if(input$MgmtPractice %in% c('Tillage', 'Cover crop', 'Nutrient Management')){
+      df_filter1() %>%
+        filter(Trt_2name == input$Filter2)
+    }
+    else if(input$MgmtPractice == 'Early Season Pest Management'){
+      df_filter1() %>%
+        filter(trt_specifics == input$Filter2)
+    }
   })
   
 
@@ -47,7 +63,7 @@ server <- function(input, output, session) {
   
   # filter by soil sampling depth (if outcome is Soil Nutrients or Other Soil Properties)
   df_depth <- eventReactive(c(df_outcome(), input$SoilDepth),{
-    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties')){
+    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation')){
       df_outcome() %>%
         filter(sample_depth %in% input$SoilDepth)
     }
@@ -107,6 +123,19 @@ server <- function(input, output, session) {
       filter(Paper_id %in% filtered_paper_id)
   })
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   #update practice on summary choice
     #this changes MgmtPractice, triggering change in df_practice -> df_outcome -> df_years
   observeEvent(input$summaryPractice, {
@@ -124,10 +153,36 @@ server <- function(input, output, session) {
       #selected = unique(df_practice()$group_level1)
       selected = input$summaryRV
     )
+    
+    # #change the filter1/2 options as well. this requires using the filter ordering review -> outcome -> filter1 -> filter2
+    #   #which is different from the regular order review -> filter1 -> filter2 -> outcome
+    # if(input$MgmtPractice %in% c('Tillage', 'Cover crop')){
+    #   new_filter1 <- (df_practice() %>% filter(group_level1 == input$summaryRV))$Trt_1name %>% unique %>% sort
+    # }
+    # else if(input$MgmtPractice == 'Early Season Pest Management'){
+    #   new_filter1 <- (df_practice() %>% filter(group_level1 == input$summaryRV))$Trt_2name %>% unique %>% sort
+    # }
+    # else if(input$MgmtPractice == 'Nutrient Management'){
+    #   new_filter1 <- (df_practice() %>% filter(group_level1 == input$summaryRV))$nutrient_groups %>% unique %>% sort
+    # }
+    # 
+    # updateRadioButtons(session, 'Filter1', 
+    #                    choices = new_filter1,
+    #                    selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1])
+    #                    )
   })
   
-  #update 1st tillage type based on practice
+  #update summary outcome choices and tillage type based on practice
   observeEvent(input$MgmtPractice,{
+    
+    # Update the summary page outcome based on the chosen practice
+    new_summaryrv <- unique(df_practice()$group_level1) %>% sort
+    updateSelectInput(session, "summaryRV", "",
+                      #choices = unique(df_outcome()$sample_year),
+                      choices = new_summaryrv,
+                      selected = ifelse(input$summaryRV %in% new_summaryrv, input$summaryRV, new_summaryrv[1])
+    )
+    
     cat(file = stderr(), 'tillage type should update\n\n')
     # case_when(
     #   input$MgmtPractice %in% c('Tillage', 'Cover Crops') ~ updateRadioButtons(session, 'Filter1',
@@ -137,7 +192,9 @@ server <- function(input, output, session) {
     #                                                                                              sort(unique(df_practice()$Trt_1name))[1])),
     #   TRUE ~ input$MgmtPractice
     #     )
-    
+    validate(
+      need(df_practice()$Trt_1name, 'no trt_1name')
+    )
     if(input$MgmtPractice == 'Tillage'){
       new_filter1 <- unique(df_practice()$Trt_1name) %>% sort()
       updateRadioButtons(session, 'Filter1', 'Tillage Type #1',
@@ -166,12 +223,17 @@ server <- function(input, output, session) {
                          selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
       shinyjs::hide('years')
     }
+    
+    
 
   })
   
 
   #update 2nd tillage type based on first
-  observeEvent(input$Filter1,{
+  observeEvent(c(input$MgmtPractice, input$Filter1),{
+    # validate(
+    #   need(df_filter1()$Trt_2name, 'no filter2')
+    # )
     if(input$MgmtPractice == 'Tillage'){
       new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
       updateRadioButtons(session, 'Filter2', 'Tillage Type #2',
@@ -182,7 +244,8 @@ server <- function(input, output, session) {
       new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
       updateRadioButtons(session, 'Filter2', 'Cover Crop Species',
                          choices = new_filter2,
-                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
+                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1])
+                         )
     }
     else if(input$MgmtPractice == 'Nutrient Management'){
       new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
@@ -196,7 +259,7 @@ server <- function(input, output, session) {
                          choices = new_filter2,
                          selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
     }
-    
+    cat(file = stderr(), 'newfilter2 is ', paste(new_filter2, collapse = ','), '\n')
     
   })
 
@@ -239,14 +302,6 @@ server <- function(input, output, session) {
     )
       #cat(file = stderr(), new_choices, ': df_practice$legend \n')
       #cat(file = stderr(), unique(df_outcome()$sample_year), ':df_outcome$legend \n')
-
-
-    # Update the summary page outcome based on the chosen practice
-      updateSelectInput(session, "summaryRV", "",
-                               #choices = unique(df_outcome()$sample_year),
-                               choices = unique(df_practice()$group_level1) %>% sort,
-                               selected = input$summaryRV # add [1] to select option in list, remove (as is) for Default is select all options
-      )
   })
 
   # observeEvent(df_map(), {
@@ -276,8 +331,13 @@ server <- function(input, output, session) {
     #see this link for an idea of how to do bidirectional filtering
   # https://groups.google.com/forum/#!topic/shiny-discuss/Q1ZvnjDCzUM
   observeEvent(df_outcome(),{
-    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties')){
+    
+    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation')){
+      validate(
+        need(df_outcome()$sample_depth, 'no sample depth')
+      )
       new_depths <- df_outcome()$sample_depth %>% unique %>% sort
+      cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
       updateCheckboxGroupInput(session, inputId = 'SoilDepth',
                                choices = new_depths,
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
@@ -377,7 +437,7 @@ server <- function(input, output, session) {
 
   #the text description at the bottom only depends on managementPractice
   output$text_description <- renderText({
-    if (input$MgmtPractice == "Cover Crops") {
+    if (input$MgmtPractice == "Cover crop") {
       "Cover crops in all areas, on average, are positively related to soil properties, but insignificantly related to crop yield."
       # if(df()$group_level1[1] == "Crop Production"){
       #   "This is the text we show for cover crop & crop production"

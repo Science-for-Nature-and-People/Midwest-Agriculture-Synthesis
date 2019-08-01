@@ -34,7 +34,7 @@ ui <- navbarPage(
              #div(style="display:inline-block; margin-left:130px; text-align:center; font-size:25px; line-height:10px;",
              div(style="display:inline-block;  text-align:center; font-size:25px; line-height:10px;width: 300px; ",    
                  selectInput(inputId = "summaryPractice", label = "",
-                             choices = unique(tillage_results$Review) %>% sort(),
+                             choices = unique(summary_data$Review) %>% sort(),
                              selected =  'Tillage'
                              ))),
       column(1, br()),
@@ -45,7 +45,7 @@ ui <- navbarPage(
              #div(style="display:inline-block; margin-left:-200px; text-align:center; font-size:25px; line-height:10px",
              div(style="display:inline-block; text-align:center; font-size:25px; line-height:10px;width: 300px;",
                  selectInput(inputId = "summaryRV", label = "",
-                                 choices = unique(tillage_results$group_level1),
+                                 choices = unique(summary_data$group_level1),
                                  selected = "Climate Mitigation"
                              ))
       )
@@ -74,28 +74,28 @@ ui <- navbarPage(
       sidebarPanel(
         selectInput(
           inputId = "MgmtPractice", label = "Practice",
-          choices = unique(tillage_results$Review) %>% sort(),
+          choices = unique(summary_data$Review) %>% sort(),
           selected = "Tillage"
         ),
         fluidRow(
           column(6,
           radioButtons(
             inputId = 'Filter1', label = 'Tillage Type #1',
-            choices = unique(tillage_results$Trt_1name) %>% sort(),
+            choices = unique(summary_data$Trt_1name) %>% sort(),
             selected = 'Chisel plow'
           )),
           column(6,
           radioButtons(
             inputId = 'Filter2', label = 'Tillage Type #2', 
-            choices = unique(tillage_results$Trt_2name) %>% sort(),
-            selected = 'Chisel plow'
+            choices = unique(summary_data$Trt_2name) %>% sort()#,
+            #selected = 'Chisel plow'
           ))
           ),
         fluidRow(
           column(6,
             radioButtons(
               inputId = "RV", label = "Outcome",
-              choices = unique(tillage_results$group_level1), #multiple = T,
+              choices = unique(summary_data$group_level1), #multiple = T,
               selected = "Climate Mitigation"
             )
           ),
@@ -103,18 +103,18 @@ ui <- navbarPage(
                  shinyjs::hidden(
                     checkboxGroupInput(
                       inputId = "SoilDepth", label = "Soil Sampling Depth",
-                      choices = unique(tillage_results$sample_depth) %>% sort(),# multiple = T,
+                      choices = unique(summary_data$sample_depth) %>% sort(),# multiple = T,
                       selected = "0-25 cm"
-                      #selected = unique(tillage_results$Legend_1)[1]
+                      #selected = unique(summary_data$Legend_1)[1]
                     )
                  )
             )
           ),
         shinyjs::hidden(checkboxGroupInput(
           inputId = "years", label = "Years of Implementation",
-          choices = unique(tillage_results$sample_year) %>% sort(),# multiple = T,
+          choices = unique(summary_data$sample_year) %>% sort(),# multiple = T,
           selected = "Year 1-5"
-          #selected = unique(tillage_results$Legend_1)[1]
+          #selected = unique(summary_data$Legend_1)[1]
         )
         ),
 
@@ -138,7 +138,7 @@ ui <- navbarPage(
     #     align = "center",
     #     selectInput(
     #       inputId = "MgmtPractice", label = "Practice",
-    #       choices = unique(tillage_results$Review) %>% sort(),
+    #       choices = unique(summary_data$Review) %>% sort(),
     #       selected = "Cover Crops"
     #     )
     #   ),
@@ -147,7 +147,7 @@ ui <- navbarPage(
     #     align = "center",
     #     selectInput(
     #       inputId = "RV", label = "Outcome",
-    #       choices = unique(tillage_results$group_level1) %>% sort(), multiple = T,
+    #       choices = unique(summary_data$group_level1) %>% sort(), multiple = T,
     #       selected = "Soil"
     #     )
     #   ),
@@ -156,7 +156,7 @@ ui <- navbarPage(
     #     align = "center",
     #     selectInput(
     #       inputId = "Legend_1", label = "Grouping",
-    #       choices = unique(tillage_results$Legend_1) %>% sort(), multiple = T,
+    #       choices = unique(summary_data$Legend_1) %>% sort(), multiple = T,
     #       selected = "Single species"
     #     )
     #   )

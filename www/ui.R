@@ -80,13 +80,13 @@ ui <- navbarPage(
         fluidRow(
           column(6,
           radioButtons(
-            inputId = 'TillageType1', label = 'Tillage Type #1',
+            inputId = 'Filter1', label = 'Tillage Type #1',
             choices = unique(tillage_results$Trt_1name) %>% sort(),
             selected = 'Chisel plow'
           )),
           column(6,
           radioButtons(
-            inputId = 'TillageType2', label = 'Tillage Type #2', 
+            inputId = 'Filter2', label = 'Tillage Type #2', 
             choices = unique(tillage_results$Trt_2name) %>% sort(),
             selected = 'Chisel plow'
           ))
@@ -110,11 +110,12 @@ ui <- navbarPage(
                  )
             )
           ),
-        checkboxGroupInput(
+        shinyjs::hidden(checkboxGroupInput(
           inputId = "years", label = "Years of Implementation",
           choices = unique(tillage_results$sample_year) %>% sort(),# multiple = T,
           selected = "Year 1-5"
           #selected = unique(tillage_results$Legend_1)[1]
+        )
         ),
 
         
@@ -128,7 +129,7 @@ ui <- navbarPage(
         
         actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%"),
         #create hidden text that only shows up if there isn't enough data. should be used in conjunction with disabled update button
-        shinyjs::hidden(p(id = 'no_data', 'Not enough data (< 5 comparisons). Please select more options',
+        shinyjs::hidden(p(id = 'no_data', 'No Data! Please change your selection',
                           style = 'color: gray'))
       ),
     # fluidRow(

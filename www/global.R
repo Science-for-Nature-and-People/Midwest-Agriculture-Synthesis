@@ -16,7 +16,7 @@ library(plotrix)
 library(forcats)
 
 # Main data sets
-tillage_data <- read_csv(here("www/data/TillageMgmt_ALL_raw.csv"), col_types = cols(Trt2_int = col_integer(),
+raw_data <- read_csv(here("www/data/TillageMgmt_ALL_raw.csv"), col_types = cols(Trt2_int = col_integer(),
                                                                                     Trt1_int2 = col_integer(),
                                                                                     Trt2_int2 = col_integer(),
                                                                                     Trt1_details = col_character(),
@@ -25,7 +25,7 @@ tillage_data <- read_csv(here("www/data/TillageMgmt_ALL_raw.csv"), col_types = c
                                                                                     nutrient_groups = col_character()))
 
 
-tillage_results <- tillage_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
+summary_data <- raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
                                                fct_explicit_na,
                                                na_level = "NA") %>%
   #the selection list below will need to be responsive to the user inputs
@@ -47,19 +47,19 @@ tillage_results <- tillage_data %>% mutate_if(is.factor,  #converts blank cells 
 
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)
 #SEMS based on 1 value reuslt in NA <- this converts NA to Infinity to variability in the data  
-tillage_results$sem_per_change <- if_else(is.na(tillage_results$sem_per_change), Inf, tillage_results$sem_per_change)
-tillage_results$sem_per_change <- if_else(is.na(tillage_results$sem_actual_diff), Inf, tillage_results$sem_actual_diff)
+summary_data$sem_per_change <- if_else(is.na(summary_data$sem_per_change), Inf, summary_data$sem_per_change)
+summary_data$sem_per_change <- if_else(is.na(summary_data$sem_actual_diff), Inf, summary_data$sem_actual_diff)
 
 
-tillage_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
-                           fct_explicit_na,
-                           na_level = "NA") %>%
-  #the selection list below will need to be responsive to the user inputs
-  select(Paper_id, Review, group_level1, group_level2, group_level3, Trt1_details, Trt2_details, trt_specifics, nutrient_groups, sample_depth, sample_year, Trt_1name, Trt_2name, Trt_compare, per_change, actual_diff) %>%
-  #adjust grouping order based on order of selections in webtool. these will vary by review.
-  group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, Trt_compare, Trt_1name, Trt_2name,
-           Trt1_details, Trt2_details, trt_specifics, nutrient_groups) %>%
-  summarise(n = n()) %>% View
+# raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
+#                            fct_explicit_na,
+#                            na_level = "NA") %>%
+#   #the selection list below will need to be responsive to the user inputs
+#   select(Paper_id, Review, group_level1, group_level2, group_level3, Trt1_details, Trt2_details, trt_specifics, nutrient_groups, sample_depth, sample_year, Trt_1name, Trt_2name, Trt_compare, per_change, actual_diff) %>%
+#   #adjust grouping order based on order of selections in webtool. these will vary by review.
+#   group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, Trt_compare, Trt_1name, Trt_2name,
+#            Trt1_details, Trt2_details, trt_specifics, nutrient_groups) %>%
+#   summarise(n = n())
 
 
 

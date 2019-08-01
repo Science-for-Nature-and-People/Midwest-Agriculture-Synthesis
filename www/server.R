@@ -6,7 +6,7 @@
 server <- function(input, output, session) {
   
   #lookup table for control descriptions
-  # control_lookup <- data.frame(review_name = tillage_results$Review %>% as.factor() %>% levels(), 
+  # control_lookup <- data.frame(review_name = summary_data$Review %>% as.factor() %>% levels(), 
   #                              control_descrip = c("No Cover Crops", "No Pesticides", "Single Application", "Uniform Application", "Broadcast Application", "Applied to Surface", "Applied in Fall", "Applied Preplant"))
   # 
   
@@ -15,31 +15,31 @@ server <- function(input, output, session) {
   df_practice <- eventReactive(input$MgmtPractice, {
     cat(file = stderr(), 'df_practice is updated \n ')
     # filter dataset to display selected review and response variables
-    tillage_results %>%
+    summary_data %>%
       filter(Review %in% input$MgmtPractice)
   })
   
   
   #
-  df_tillage1 <- eventReactive(c(df_practice(), input$TillageType1), {
-    cat(filr = stderr(), 'df_tillage1 is updated\n')
+  df_filter1 <- eventReactive(c(df_practice(), input$Filter1), {
+    cat(filr = stderr(), 'df_filter1 is updated\n')
     df_practice() %>%
-      filter(Trt_1name == input$TillageType1)
+      filter(Trt_1name == input$Filter1)
   })
   
-  df_tillage2 <- eventReactive(c(df_tillage1(), input$TillageType2), {
+  df_filter2 <- eventReactive(c(df_filter1(), input$Filter2), {
     cat(file = stderr(), 'dftillage2 is updated\n')
-    df_tillage1() %>%
-      filter(Trt_2name == input$TillageType2)
+    df_filter1() %>%
+      filter(Trt_2name == input$Filter2)
   })
   
 
   
   # Next tier selection of reactive selection of outcome grouping
     # we want this to update if the user clicks the update button, if they click a new outcome, or if they click a new practice (since outcome depends on practice)
-  df_outcome <- eventReactive(c(df_tillage2(),input$RV), {
+  df_outcome <- eventReactive(c(df_filter2(),input$RV), {
     cat(file = stderr(), input$RV,'df_outcome is updated \n')
-    df_tillage2() %>%
+    df_filter2() %>%
       filter(group_level1 %in% input$RV) 
     
     
@@ -62,12 +62,20 @@ server <- function(input, output, session) {
     
     
     cat(file = stderr(), 'df_years is updated \n \n')
-    # filter dataset to display selected review and response variables
-    df_depth() %>%
-      filter(sample_year %in% input$years) %>%
-      group_by(sample_year) %>%
-      mutate(group_facet_level32 = fct_reorder(group_facet_level32, mean_per_change)) %>%
-      ungroup()
+    
+    #year is tillage specific, so ignore it if management practice isn't tillage
+    if(input$MgmtPractice == 'Tillage'){
+      # filter dataset to display selected review and response variables
+      df_depth() %>%
+        filter(sample_year %in% input$years) %>%
+        group_by(sample_year) %>%
+        mutate(group_facet_level32 = fct_reorder(group_facet_level32, mean_per_change)) %>%
+        ungroup()
+    }
+    else{
+      df_depth()
+    }
+    
       
   })
   
@@ -103,7 +111,7 @@ server <- function(input, output, session) {
     #this changes MgmtPractice, triggering change in df_practice -> df_outcome -> df_years
   observeEvent(input$summaryPractice, {
     updateSelectInput(session, "MgmtPractice", "Practice",
-                             choices = unique(tillage_results$Review) %>% sort(),
+                             choices = unique(summary_data$Review) %>% sort(),
                              selected = input$summaryPractice
     )
   })
@@ -112,7 +120,7 @@ server <- function(input, output, session) {
     #this changes RV, which triggers change in df_outcome -> df_years
   observeEvent(input$summaryRV, {
     updateRadioButtons(session, "RV", "Outcome",
-      choices = unique(df_tillage2()$group_level1) %>% sort(),
+      choices = unique(df_filter2()$group_level1) %>% sort(),
       #selected = unique(df_practice()$group_level1)
       selected = input$summaryRV
     )
@@ -120,31 +128,84 @@ server <- function(input, output, session) {
   
   #update 1st tillage type based on practice
   observeEvent(input$MgmtPractice,{
-    new_tillage_types <- unique(df_practice()$Trt_1name) %>% sort()
     cat(file = stderr(), 'tillage type should update\n\n')
-    updateRadioButtons(session, 'TillageType1',
-                       choices = new_tillage_types,
-                       selected = ifelse(input$TillageType1 %in% new_tillage_types, input$TillageType1, new_tillage_types[1])
-                       )
+    # case_when(
+    #   input$MgmtPractice %in% c('Tillage', 'Cover Crops') ~ updateRadioButtons(session, 'Filter1',
+    #                                                                            choices = unique(df_practice()$Trt_1name) %>% sort,
+    #                                                                            selected = ifelse(input$Filter1 %in% sort(unique(df_practice()$Trt_1name)),
+    #                                                                                              input$Filter1,
+    #                                                                                              sort(unique(df_practice()$Trt_1name))[1])),
+    #   TRUE ~ input$MgmtPractice
+    #     )
+    
+    if(input$MgmtPractice == 'Tillage'){
+      new_filter1 <- unique(df_practice()$Trt_1name) %>% sort()
+      updateRadioButtons(session, 'Filter1', 'Tillage Type #1',
+                         choices = new_filter1,
+                         selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
+      shinyjs::show('years')
+    }
+    else if(input$MgmtPractice == 'Cover crop'){
+      new_filter1 <- unique(df_practice()$Trt_1name) %>% sort()
+      updateRadioButtons(session, 'Filter1', 'Cover Crop Mixture',
+                         choices = new_filter1,
+                         selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
+      shinyjs::hide('years')
+    }
+    else if(input$MgmtPractice == 'Nutrient Management'){
+      new_filter1 <- unique(df_practice()$nutrient_groups) %>% sort()
+      updateRadioButtons(session, 'Filter1', 'Management Details',
+                         choices = new_filter1,
+                         selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
+      shinyjs::hide('years')
+    }
+    else if(input$MgmtPractice == 'Early Season Pest Management'){
+      new_filter1 <- unique(df_practice()$Trt_2name) %>% sort()
+      updateRadioButtons(session, 'Filter1', 'Pesticide Type',
+                         choices = new_filter1,
+                         selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
+      shinyjs::hide('years')
+    }
+
   })
   
 
   #update 2nd tillage type based on first
-  observeEvent(input$TillageType1,{
-    new_tillage_types <- unique(df_tillage1()$Trt_2name) %>% sort
-    #cat(file = stderr(), new_tillage_types,' \n')
-    updateRadioButtons(session, inputId = 'TillageType2',
-                       choices = new_tillage_types,
-                       selected = ifelse(input$TillageType2 %in% new_tillage_types, input$TillageType2, new_tillage_types[1]))
-
+  observeEvent(input$Filter1,{
+    if(input$MgmtPractice == 'Tillage'){
+      new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
+      updateRadioButtons(session, 'Filter2', 'Tillage Type #2',
+                         choices = new_filter2,
+                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
+    }
+    else if(input$MgmtPractice == 'Cover crop'){
+      new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
+      updateRadioButtons(session, 'Filter2', 'Cover Crop Species',
+                         choices = new_filter2,
+                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
+    }
+    else if(input$MgmtPractice == 'Nutrient Management'){
+      new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
+      updateRadioButtons(session, 'Filter2', 'Application Specifics',
+                         choices = new_filter2,
+                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
+    }
+    else if(input$MgmtPractice == 'Early Season Pest Management'){
+      new_filter2 <- unique(df_filter1()$trt_specifics) %>% sort()
+      updateRadioButtons(session, 'Filter2', 'Pesticide Application Site',
+                         choices = new_filter2,
+                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
+    }
+    
+    
   })
 
   #update outcome on practices
     #if the old RV isn't an option in the new practice, this changes RV, which triggers change in df_outcome -> df_years
   observeEvent(#df_practice(),
-    c(input$MgmtPractice, input$TillageType1, input$TillageType2),{
+    c(input$MgmtPractice, input$Filter1, input$Filter2),{
       #cat(file = stderr(), 'outcome should be updated \n')
-    new_outcomes <- unique(df_tillage2()$group_level1) %>% sort
+    new_outcomes <- unique(df_filter2()$group_level1) %>% sort
     updateRadioButtons(session, "RV", "Outcome",
                              choices = new_outcomes,
                              #selected = unique(df_practice()$group_level1)
@@ -261,6 +322,7 @@ server <- function(input, output, session) {
   #this shows all the data in the current plot, and is NOT sensitive to changes in the radio/select inputs
     #ie df_years() changes whenever an input changes (eg input$RV). But the plot doesn't change when input$RV changes.
     #df_plot will reflect the data in the plot, not the current df_years()
+  #maybe isolate() is a more elegant way to do this?
   df_plot <- eventReactive(input$update,{
     df_years()
   })
@@ -268,7 +330,7 @@ server <- function(input, output, session) {
   #forestplot will change whenever makeplot changes (so whenever the update button is pressed)
   output$forestplot <- renderPlot({
     #control_text <- control_lookup[which(control_lookup$review_name == df_plot()$Review[1]),2]
-    control_text <- input$TillageType1
+    control_text <- input$Filter1
 
     #we use this dataframe to make sure that we only plot the control text on the bottom facet (not all the facets)
     control_labels <- data.frame(group_level2 = factor(tail(sort(df_plot()$group_level2),1),       #the facets are sorted alphabetically, so this pulls out the bottom one
@@ -293,7 +355,7 @@ server <- function(input, output, session) {
       coord_flip(clip = "off") + # flip coordinates (puts labels on y axis)
       # clip = "off" allows for plot annotations outside the plot area (used for the control annotations below the x axis)
       labs(
-        title = paste0('Effects of ', input$TillageType1, ' compared to ', input$TillageType2),
+        title = paste0('Effects of ', input$Filter1, ' compared to ', input$Filter2),
         #  subtitle = df_plot()$group_level1[1],
         x = "",
         y = "Percent difference between treatment and control (%)"
@@ -357,7 +419,7 @@ server <- function(input, output, session) {
   output$downloadAllData <- downloadHandler(
     filename = "all_app_data.csv",
     content = function(file) {
-      write.csv(tillage_results, file, row.names = FALSE)
+      write.csv(summary_data, file, row.names = FALSE)
     }
   )
 

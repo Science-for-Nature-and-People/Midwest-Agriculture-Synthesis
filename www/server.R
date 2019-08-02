@@ -101,9 +101,9 @@ server <- function(input, output, session) {
   
   # filter by soil sampling depth (if outcome is Soil Nutrients or Other Soil Properties)
   df_depth <- eventReactive(c(df_outcome(), input$SoilDepth),{
-    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation')){
-      df_outcome() %>%
-        filter(sample_depth %in% input$SoilDepth)
+    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !any(is.na(df_outcome()$sample_depth))){
+        df_outcome() %>%
+          filter(sample_depth %in% input$SoilDepth)
     }
     else{
       df_outcome()
@@ -445,7 +445,7 @@ server <- function(input, output, session) {
   #forestplot will change whenever makeplot changes (so whenever the update button is pressed)
   output$forestplot <- renderPlot({
     #control_text <- control_lookup[which(control_lookup$review_name == df_plot()$Review[1]),2]
-    control_text <- df_plot()$Trt_1name
+    control_text <- paste(unique(df_plot()$Trt_1name), collapse = 'and')
 
     #we use this dataframe to make sure that we only plot the control text on the bottom facet (not all the facets)
     control_labels <- data.frame(group_level2 = factor(tail(sort(df_plot()$group_level2),1),       #the facets are sorted alphabetically, so this pulls out the bottom one

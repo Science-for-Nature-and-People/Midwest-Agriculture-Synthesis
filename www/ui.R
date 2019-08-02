@@ -82,13 +82,13 @@ ui <- navbarPage(
           radioButtons(
             inputId = 'Filter1', label = 'Tillage Type #1',
             choices = unique(summary_data$Trt_1name) %>% sort(),
-            selected = 'Chisel plow'
+            selected = 'Moldboard plow'
           )),
           column(6,
           radioButtons(
             inputId = 'Filter2', label = 'Tillage Type #2', 
-            choices = unique(summary_data$Trt_2name) %>% sort()#,
-            #selected = 'Chisel plow'
+            choices = unique(summary_data$Trt_2name) %>% sort(),
+            selected = 'No tillage'
           ))
           ),
         fluidRow(

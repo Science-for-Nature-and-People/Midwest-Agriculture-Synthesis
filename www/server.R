@@ -466,6 +466,14 @@ server <- function(input, output, session) {
       select(-citation_short) %>%
       filter(Paper_id %in% plot_filtered_paper_id)
   },sanitize.text.function = function(x) x)
+  
+  
+  output$current_table <- renderTable({
+    df_plot()
+  })
+  
+  
+  
 
   # picks out the filtered data for download as a csv
   output$downloadData <- downloadHandler(

@@ -209,6 +209,11 @@ ui <- navbarPage(
       hr(),
       
       fluidRow(
+        column(12,
+               tableOutput(outputId = 'current_table'))
+      ),
+      
+      fluidRow(
         column(
           12,
           align = "center",
@@ -217,6 +222,7 @@ ui <- navbarPage(
           downloadButton(outputId = "downloadFigure", label = "Download figure", style = "padding:4px; font-size:80%")
         )
       ),
+    
       
       hr()      
     )

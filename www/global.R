@@ -88,7 +88,7 @@ citation_with_hyperlink <- function(citation){
     #get everything after 'DOI: '
     str_extract('(?<=DOI: ).*')
   #turn into html links
-  doi_link <- paste0('<a href=http://dx.doi.org/', doi, '>', citation, '</a>')
+  doi_link <- paste0('<a target=_blank href=http://dx.doi.org/', doi, '>', citation, '</a>')
   return(doi_link)
 }
 

@@ -100,8 +100,9 @@ server <- function(input, output, session) {
   })
   
   # filter by soil sampling depth (if outcome is Soil Nutrients or Other Soil Properties)
+    # also check that there's at least one non-NA value in sample_depth
   df_depth <- eventReactive(c(df_outcome(), input$SoilDepth),{
-    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !any(is.na(df_outcome()$sample_depth))){
+    if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !all(is.na(df_outcome()$sample_depth))){
         df_outcome() %>%
           filter(sample_depth %in% input$SoilDepth)
     }

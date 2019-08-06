@@ -47,8 +47,8 @@ summary_data <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
 
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)
 #SEMS based on 1 value reuslt in NA <- this converts NA to Infinity to variability in the data  
-summary_data$sem_per_change <- if_else(is.na(summary_data$sem_per_change), Inf, summary_data$sem_per_change)
-summary_data$sem_per_change <- if_else(is.na(summary_data$sem_actual_diff), Inf, summary_data$sem_actual_diff)
+summary_data$sem_per_change <- ifelse(is.na(summary_data$sem_per_change), Inf, summary_data$sem_per_change)
+summary_data$sem_actual_diff <- ifelse(is.na(summary_data$sem_actual_diff), Inf, summary_data$sem_actual_diff)
 
 
 # raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs

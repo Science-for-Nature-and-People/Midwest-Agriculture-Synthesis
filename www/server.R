@@ -308,7 +308,8 @@ server <- function(input, output, session) {
     #                      selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
     # }
     
-    new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
+    #new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
+    new_filter2 <- sort(unique(df_filter1()$filter2))
     updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
                        choices = new_filter2,
                        selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1])

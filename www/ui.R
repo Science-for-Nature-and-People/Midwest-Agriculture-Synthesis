@@ -82,7 +82,7 @@ ui <- navbarPage(
           radioButtons(
             inputId = 'Filter1', label = 'Tillage Type #1',
             choices = unique(summary_data$Trt_1name) %>% sort(),
-            selected = 'Moldboard plow'
+            selected = 'Conventional tillage'
           )),
           column(6,
           radioButtons(
@@ -101,7 +101,7 @@ ui <- navbarPage(
           ),
           column(6,
                  shinyjs::hidden(
-                    checkboxGroupInput(
+                    radioButtons(
                       inputId = "SoilDepth", label = "Soil Sampling Depth",
                       choices = unique(summary_data$sample_depth) %>% sort(),# multiple = T,
                       selected = "0-25 cm"
@@ -110,7 +110,7 @@ ui <- navbarPage(
                  )
             )
           ),
-        shinyjs::hidden(checkboxGroupInput(
+        shinyjs::hidden(radioButtons(
           inputId = "years", label = "Years of Implementation",
           choices = unique(summary_data$sample_year) %>% sort(),# multiple = T,
           selected = "Year 1-5"

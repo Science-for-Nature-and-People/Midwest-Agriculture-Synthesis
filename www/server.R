@@ -33,8 +33,8 @@ server <- function(input, output, session) {
                filter2_name = 'Cover Crop Species')
     } else if(input$MgmtPractice == 'Tillage'){
       filtered_by_practice %>%
-        mutate(filter1 = Trt_1name,
-               filter2 = Trt_2name,
+        mutate(filter1 = factor(Trt_1name, levels = c('Conventional tillage', 'Conservation tillage', 'Zonal tillage')),
+               filter2 = factor(Trt_2name, levels = c('Conservation tillage', 'Zonal tillage', 'No tillage')),
                filter1_name = 'Tillage Type #1',
                filter2_name = 'Tillage Type #2')
     } else if(input$MgmtPractice %in% c('Nutrient Management')){
@@ -308,8 +308,8 @@ server <- function(input, output, session) {
     #                      selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
     # }
     
-    #new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
-    new_filter2 <- sort(unique(df_filter1()$filter2))
+    # new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
+    new_filter2 <- sort(unique(df_filter1()$filter2)) %>% setdiff(input$Filter1)
     updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
                        choices = new_filter2,
                        selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1])
@@ -350,7 +350,7 @@ server <- function(input, output, session) {
     validate(
       need(new_choices, 'There are no available years of implementation')
     )
-    updateCheckboxGroupInput(session, "years", "Years of Implementation",
+    updateRadioButtons(session, "years", "Years of Implementation",
       #choices = unique(df_outcome()$sample_year),
       choices = new_choices,
       #if groupings are the same as last groupings (old groupings are input$years)
@@ -395,7 +395,7 @@ server <- function(input, output, session) {
       )
       new_depths <- df_outcome()$sample_depth %>% unique %>% sort
       cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
-      updateCheckboxGroupInput(session, inputId = 'SoilDepth',
+      updateRadioButtons(session, inputId = 'SoilDepth',
                                choices = new_depths,
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
       shinyjs::show('SoilDepth')

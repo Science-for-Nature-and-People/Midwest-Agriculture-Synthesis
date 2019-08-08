@@ -17,12 +17,16 @@ library(forcats)
 
 # Main data sets
 raw_data <- read_csv(here("www/data/TillageMgmt_ALL_raw.csv"), col_types = cols(Trt2_int = col_integer(),
-                                                                                    Trt1_int2 = col_integer(),
-                                                                                    Trt2_int2 = col_integer(),
-                                                                                    Trt1_details = col_character(),
-                                                                                    Trt2_details = col_character(),
-                                                                                    trt_specifics = col_character(),
-                                                                                    nutrient_groups = col_character()))
+                                                                                Trt1 = col_character(),
+                                                                                Trt2 = col_character(),
+                                                                                Trt1_int2 = col_character(),
+                                                                                Trt2_int2 = col_character(),
+                                                                                Trt1_details = col_character(),
+                                                                                Trt2_details = col_character(),
+                                                                                trt_specifics = col_character(),
+                                                                                Tillage_1 = col_character(),
+                                                                                Tillage_2 = col_character(),
+                                                                                nutrient_groups = col_character()))
 
 
 summary_data <- raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
@@ -42,7 +46,8 @@ summary_data <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
             paper_id_list = paste(unique(Paper_id), collapse = ";")) %>% #List of unique papers for each summry
   ungroup %>%
   mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
-  filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0)
+  filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
+  filter(Trt_1name != 'No tillage')
             
 
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)

@@ -491,10 +491,11 @@ server <- function(input, output, session) {
   )
 
   # picks out all data for download as a csv
+    # this is pre-grouping
   output$downloadAllData <- downloadHandler(
     filename = "all_app_data.csv",
     content = function(file) {
-      write.csv(summary_data, file, row.names = FALSE)
+      write.csv(raw_data, file, row.names = FALSE)
     }
   )
 

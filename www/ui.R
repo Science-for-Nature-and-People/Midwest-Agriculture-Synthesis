@@ -104,7 +104,7 @@ ui <- navbarPage(
                     checkboxGroupInput(
                       inputId = "SoilDepth", label = "Soil Sampling Depth",
                       choices = unique(summary_data$sample_depth) %>% sort(),# multiple = T,
-                      selected = "0-25 cm"
+                      selected = "0-30 cm"
                       #selected = unique(summary_data$Legend_1)[1]
                     )
                  )

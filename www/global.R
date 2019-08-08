@@ -47,7 +47,7 @@ summary_data <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
   ungroup %>%
   mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
   filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
-  filter(Trt_1name != 'No tillage')
+  filter(Trt_1name != Trt_2name)
             
 
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)

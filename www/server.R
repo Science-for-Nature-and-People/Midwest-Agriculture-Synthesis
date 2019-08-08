@@ -58,15 +58,27 @@ server <- function(input, output, session) {
   df_filter1 <- eventReactive(c(df_practice(), input$Filter1), {
     cat(file = stderr(), 'df_filter1 is updated\n')
  
-    df_practice() %>% 
+    new_df <- df_practice() %>% 
       filter(filter1 == input$Filter1)
+    
+    #need to write special case to make sure filter1 = zonal tillage => fitler2 = no tillage only 
+      #note that we could've also done this in df_filter2 assignment, but putting it here updates the choices as well
+    if(input$Filter1 == 'Zonal tillage'){
+      new_df <- new_df %>% 
+        filter(filter2 == 'No tillage') 
+    }
+    
+    new_df
   })
   
+  
+  #do the next filter
   df_filter2 <- eventReactive(c(df_filter1(), input$Filter2), {
     cat(file = stderr(), 'dftillage2 is updated\n')
 
     df_filter1() %>%
       filter(filter2 == input$Filter2)
+    
   })
   
 
@@ -85,8 +97,18 @@ server <- function(input, output, session) {
     # also check that there's at least one non-NA value in sample_depth
   df_depth <- eventReactive(c(df_outcome(), input$SoilDepth),{
     if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !all(is.na(df_outcome()$sample_depth))){
+      #sort the sample depths options NUMERICALLY
+      # sample_depth_options <- df_outcome()$sample_depth %>% 
+      #   unique %>% 
+      #   stringr::str_sort(numeric = T)
+      # 
+      # #this will pull out all the previous choices (eg if input$SoilDepth = '0-60 cm', we want to pull out c('0-25 cm', '0-30 cm', '0-60 cm'))
+      # cumulative_sample_depth_choices <- sample_depth_options[1:which(sample_depth_options == input$SoilDepth)]
+      # 
         df_outcome() %>%
           filter(sample_depth %in% input$SoilDepth)
+          #filter(sample_depth %in% cumulative_sample_depth_choices)
+        
     }
     else{
       df_outcome()
@@ -213,7 +235,8 @@ server <- function(input, output, session) {
     #df_practice()$filter1_name is the same for all rows in a practice, so doing unique is just a way to grab one of them
     updateRadioButtons(session, 'Filter1', unique(df_practice()$filter1_name),
                        choices = new_filter1,
-                       selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
+                       #as.character is needed when we have the filter1 is a factor (tillage)
+                       selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, as.character(new_filter1[1])))
     
     #tillage only has the year filter
     if(input$MgmtPractice == 'Tillage'){
@@ -231,10 +254,11 @@ server <- function(input, output, session) {
   observeEvent(c(input$MgmtPractice, input$Filter1),{
     
     # new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
-    new_filter2 <- sort(unique(df_filter1()$filter2)) %>% setdiff(input$Filter1)
+    new_filter2 <- sort(unique(df_filter1()$filter2))
     updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
                        choices = new_filter2,
-                       selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1])
+                       #as.character is needed when we have the filter2 is a factor (tillage)
+                       selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2[1]))
                        )
     
     cat(file = stderr(), 'newfilter2 is ', paste(new_filter2, collapse = ','), '\n')
@@ -272,7 +296,7 @@ server <- function(input, output, session) {
     validate(
       need(new_choices, 'There are no available years of implementation')
     )
-    updateRadioButtons(session, "years", "Years of Implementation",
+    updateCheckboxGroupInput(session, "years", "Years of Implementation",
       #choices = unique(df_outcome()$sample_year),
       choices = new_choices,
       #if groupings are the same as last groupings (old groupings are input$years)
@@ -317,7 +341,7 @@ server <- function(input, output, session) {
       )
       new_depths <- df_outcome()$sample_depth %>% unique %>% sort
       cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
-      updateRadioButtons(session, inputId = 'SoilDepth',
+      updateCheckboxGroupInput(session, inputId = 'SoilDepth',
                                choices = new_depths,
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
       shinyjs::show('SoilDepth')

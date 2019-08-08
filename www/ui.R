@@ -101,7 +101,7 @@ ui <- navbarPage(
           ),
           column(6,
                  shinyjs::hidden(
-                    radioButtons(
+                    checkboxGroupInput(
                       inputId = "SoilDepth", label = "Soil Sampling Depth",
                       choices = unique(summary_data$sample_depth) %>% sort(),# multiple = T,
                       selected = "0-25 cm"
@@ -110,7 +110,7 @@ ui <- navbarPage(
                  )
             )
           ),
-        shinyjs::hidden(radioButtons(
+        shinyjs::hidden(checkboxGroupInput(
           inputId = "years", label = "Years of Implementation",
           choices = unique(summary_data$sample_year) %>% sort(),# multiple = T,
           selected = "Year 1-5"

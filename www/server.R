@@ -57,32 +57,14 @@ server <- function(input, output, session) {
   #
   df_filter1 <- eventReactive(c(df_practice(), input$Filter1), {
     cat(file = stderr(), 'df_filter1 is updated\n')
-    # if(input$MgmtPractice %in% c('Tillage', 'Cover crop')){
-    #   df_practice() %>%
-    #     filter(Trt_1name == input$Filter1)
-    # }
-    # else if(input$MgmtPractice == 'Nutrient Management'){
-    #   df_practice() %>%
-    #     filter(nutrient_groups == input$Filter1)
-    # }
-    # else if(input$MgmtPractice == 'Early Season Pest Management'){
-    #   df_practice() %>%
-    #     filter(Trt_2name == input$Filter1)
-    # }
+ 
     df_practice() %>% 
       filter(filter1 == input$Filter1)
   })
   
   df_filter2 <- eventReactive(c(df_filter1(), input$Filter2), {
     cat(file = stderr(), 'dftillage2 is updated\n')
-    # if(input$MgmtPractice %in% c('Tillage', 'Cover crop', 'Nutrient Management')){
-    #   df_filter1() %>%
-    #     filter(Trt_2name == input$Filter2)
-    # }
-    # else if(input$MgmtPractice == 'Early Season Pest Management'){
-    #   df_filter1() %>%
-    #     filter(trt_specifics == input$Filter2)
-    # }
+
     df_filter1() %>%
       filter(filter2 == input$Filter2)
   })
@@ -224,38 +206,6 @@ server <- function(input, output, session) {
     
     cat(file = stderr(), 'tillage type should update\n\n')
     
-    # validate(
-    #   need(df_practice()$Trt_1name, 'no trt_1name')
-    # )
-    # if(input$MgmtPractice == 'Tillage'){
-    #   new_filter1 <- unique(df_practice()$Trt_1name) %>% sort()
-    #   updateRadioButtons(session, 'Filter1', 'Tillage Type #1',
-    #                      choices = new_filter1,
-    #                      selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
-    #   shinyjs::show('years')
-    # }
-    # else if(input$MgmtPractice == 'Cover crop'){
-    #   new_filter1 <- unique(df_practice()$Trt_1name) %>% sort()
-    #   updateRadioButtons(session, 'Filter1', 'Cover Crop Mixture',
-    #                      choices = new_filter1,
-    #                      selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
-    #   shinyjs::hide('years')
-    # }
-    # else if(input$MgmtPractice == 'Nutrient Management'){
-    #   new_filter1 <- unique(df_practice()$nutrient_groups) %>% sort()
-    #   updateRadioButtons(session, 'Filter1', 'Management Details',
-    #                      choices = new_filter1,
-    #                      selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
-    #   shinyjs::hide('years')
-    # }
-    # else if(input$MgmtPractice == 'Early Season Pest Management'){
-    #   new_filter1 <- unique(df_practice()$Trt_2name) %>% sort()
-    #   updateRadioButtons(session, 'Filter1', 'Pesticide Type',
-    #                      choices = new_filter1,
-    #                      selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1[1]))
-    #   shinyjs::hide('years')
-    # }
-    
     validate(
       need(df_practice()$filter1, 'no filter1')
     )
@@ -279,34 +229,6 @@ server <- function(input, output, session) {
 
   #update 2nd tillage type based on first
   observeEvent(c(input$MgmtPractice, input$Filter1),{
-    # validate(
-    #   need(df_filter1()$Trt_2name, 'no filter2')
-    # )
-    # if(input$MgmtPractice == 'Tillage'){
-    #   new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
-    #   updateRadioButtons(session, 'Filter2', 'Tillage Type #2',
-    #                      choices = new_filter2,
-    #                      selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
-    # }
-    # else if(input$MgmtPractice == 'Cover crop'){
-    #   new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
-    #   updateRadioButtons(session, 'Filter2', 'Cover Crop Species',
-    #                      choices = new_filter2,
-    #                      selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1])
-    #                      )
-    # }
-    # else if(input$MgmtPractice == 'Nutrient Management'){
-    #   new_filter2 <- unique(df_filter1()$Trt_2name) %>% sort()
-    #   updateRadioButtons(session, 'Filter2', 'Application Specifics',
-    #                      choices = new_filter2,
-    #                      selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
-    # }
-    # else if(input$MgmtPractice == 'Early Season Pest Management'){
-    #   new_filter2 <- unique(df_filter1()$trt_specifics) %>% sort()
-    #   updateRadioButtons(session, 'Filter2', 'Pesticide Application Site',
-    #                      choices = new_filter2,
-    #                      selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, new_filter2[1]))
-    # }
     
     # new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
     new_filter2 <- sort(unique(df_filter1()$filter2)) %>% setdiff(input$Filter1)

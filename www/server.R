@@ -428,7 +428,7 @@ server <- function(input, output, session) {
       ) +
       # scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +
       theme_bw() +
-      geom_point(aes(colour = sample_depth), size = 3) + # color labeling of fine level groupings
+      geom_point(aes(colour = sample_year), size = 3) + # color labeling of fine level groupings
       scale_color_brewer(palette = "Set2") +          # change colors using RColorBrewer package to be ok for red-green colorblind
       # see all options using RColorBrewer::display.brewer.all(colorblindFriendly = TRUE)
       facet_grid(group_level2 ~ ., scales = "free", space = "free") +

@@ -28,8 +28,10 @@ raw_data <- read_csv(here("www/data/TillageMgmt_ALL_raw.csv"), col_types = cols(
                                                                                 Tillage_2 = col_character(),
                                                                                 nutrient_groups = col_character()))
 
+sample_year_ordered <- raw_data$sample_year %>% unique %>% str_sort(numeric = T, na_last = NA)
 
-summary_data <- raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
+#base summary data. this will be transformed later
+summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
                                                fct_explicit_na,
                                                na_level = "NA") %>%
   #the selection list below will need to be responsive to the user inputs
@@ -46,10 +48,44 @@ summary_data <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
             num_comparisons = length(Paper_id), #Number of comparisons for each summary
             paper_id_list = paste(unique(Paper_id), collapse = ";")) %>% #List of unique papers for each summry
   ungroup %>%
+  #combining them makes sorting a bit easier (only have to do one column instead of 2)
   mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
+  #get rid of rows with not enough data (no standard error means ?)
   filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
+  #we don't care about comparing a treatment to itself for the app
   filter(Trt_1name != Trt_2name)
-            
+
+
+#' using summary_base, create new means/standard errors based on cumulative age grouping
+#' this relies on both summary_data and sample_year_ordered (both created above)
+#' @param year_group should be an element of sample_year
+cum_year_avg <- function(year_group){
+  summary_base %>%
+    #takes all the year groupings before
+    filter(sample_year %in% sample_year_ordered[1:which(sample_year_ordered == year_group)]) %>%
+    #group by everything except year, so that we can add the cumulative part
+    group_by(Review, group_level1, group_level2, group_level3, sample_depth, Trt_compare, Trt_1name, Trt_2name, trt_specifics, nutrient_groups) %>%
+    #weigh means by number of observations
+    mutate(new_mean_per = weighted.mean(mean_per_change, num_comparisons),
+           new_sem_per = weighted.mean(sem_per_change, num_comparisons),
+           new_mean_actual = weighted.mean(mean_actual_diff, num_comparisons),
+           new_sem_actual = weighted.mean(sem_actual_diff, num_comparisons)) %>%
+    filter(sample_year == year_group)
+}
+
+#this combines the result of cum_avg for ALL of the age groups
+cum_data <- purrr::map_df(sample_year_ordered, ~cum_year_avg(.x))
+
+#combine the two dataframes, and replace the old means/SE with the new ones.
+#this is the final summary data, used on the table
+summary_data <- summary_base %>% 
+  left_join(cum_data, by = names(summary_data)) %>%
+  select(-c(mean_per_change, sem_per_change, mean_actual_diff, sem_actual_diff)) %>%
+  rename('mean_per_change' = new_mean_per,
+         'sem_per_change' = new_sem_per,
+         'mean_actual_diff' = new_mean_actual,
+         'sem_actual_diff' = new_sem_actual)
+
 
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)
 #SEMS based on 1 value reuslt in NA <- this converts NA to Infinity to variability in the data  

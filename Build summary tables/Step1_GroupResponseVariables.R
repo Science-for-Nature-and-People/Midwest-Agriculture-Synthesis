@@ -972,13 +972,129 @@ mutate(
     
     
       
-########################Cover Crops Review####################################################
+
+    
+    ########################Cover Crops Review####################################################
 #Bulk groupings####
 
-                ####Soils####
-                ##Soil Chemical Properties####
-                chem_som <- c(
-                  "particulate organic carbon",
+    ####Climate Mitigation####
+        ##Carbon Emissions#####
+    
+    chem_carbon <-  c(
+      "soil organic carbon in topsoil",
+      "particulate organic carbon",
+      "water extractable organic carbon (0-5 cm)",
+      "water extractable organic carbon (5-20 cm)",
+      "soil organic carbon (SOC) in fall following cover crop, 0-15cm",
+      "organic carbon (0-15 cm)",
+      "soil organic carbon in soybean (0-5 cm soil depth)",                                                               
+      "soil organic carbon in maize (0-5 cm soil depth)",                                                                 
+      "soil organic carbon in soybean (5-15 cm soil depth)",                                                              
+      "soil organic carbon (0-10 cm depth)",                                                                             
+      "soil organic carbon (10-20 cm depth)",
+      "soil carbon concentration (0-5 cm depth)",
+      "soil organic carbon (0-5 cm depth)",
+      "soil organic carbon (0-15 cm)",
+      "soil organic carbon (15-75 cm)",
+      "soil organic carbon (20-40 cm depth)",                                                                             
+      "soil organic carbon (40-60 cm depth)",
+      "total carbon",
+      "total carbon (0-50 cm depth)",
+      "total carbon (0-30 cm depth)",
+      "total carbon (0-45 cm depth)",
+      "soil organic carbon (0-75 cm)",
+      "soil organic carbon 0-30 cm depth (spring)",
+      "soil organic carbon (SOC), spring sample (0-60 cm depth)"
+    )
+    
+    envir_CO2 <- c("carbon dioxide emissions (CO2-C)")
+    
+        ##Nitrogen emissions####
+    envir_N2O <- c(
+      "N2O emissions when cover crop present",
+      "N2O emissions over entire year",
+      "cumulative N2O-N emissions from soil",
+      "cumulative nitrous oxide flux from soil April 2003-Mar 2004",
+      "cumulative nitrous oxide flux from soil April 2004 - Feb 2004",
+      "nitrous oxide emissions (N2O-N)"
+    )
+    
+    
+    
+    
+    #####Other Soil Properties####
+            
+        ##Physical properties####
+    phy_erosion <- c(
+      "soil loss",
+      "interrill erosion rate",
+      "rill erosion rate",
+      "erodible fraction from the top 50 mm of soil (soil aggregates < 0.84 mm)",
+      "sediment load following fall manure",
+      "sediment load following spring manure"
+      
+    )
+    
+    phy_compaction <- c(
+      "soil penetration resistance",
+      "soil penetration resistance (Spring)",
+      "soil penetration resistance (Fall)"
+    )
+    
+    phy_totalpores <- c(
+      "total pore spaces"
+      )
+    
+    phy_airpores <- c(
+    "air filled pore space",
+    "volumetric air content",
+    "pore tortuosity factor",
+    "relative gas diffusion coefficient")
+    
+    phy_waterpores <- c("water filled pore space")
+    
+    phy_aggregatestability <- c(
+      "mean weight diameter of water stable aggregates",
+      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates < 0.42 mm)",               
+      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",
+      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)", 
+      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",  
+      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)", 
+      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates > 19.2 mm)"               
+    )
+    phy_aggregatesize <- c(
+      "water aggregate stability",
+      "water stable aggregates in soybean",
+      "water stable aggregates in maize",                                                                                 
+      "water stable mean weight diameter (0-10 cm depth)",                                                                 
+      "water stable mean weight diameter (10-20 cm depth)",                                                                
+      "water stable mean weight diameter (20-40 cm depth)",                                                               
+      "water stable mean weight diameter (40-60 cm depth)"
+    ) 
+    phy_bulkdensity <- c(
+      "bulk density (0-15 cm depth)",                                                                                            
+      "bulk density (15-30 cm depth)",                                                                                           
+      "bulk density 0-30 cm depth (spring)",
+      "bulk density",
+      "bulk density (0-10 cm depth)",                                                                                
+      "bulk density (10-20 cm depth)",                                                                               
+      "bulk density (20-40 cm depth)",                                                                               
+      "bulk density (40-60 cm depth)"
+    )
+    
+    
+    phy_sand <- c(
+      "percent sand  (0-15 cm depth)",                                                                                    
+      "percent sand  (15-30 cm depth)")
+    phy_silt <- c(
+      "percent silt  (0-15 cm depth)",                                                                                  
+      "percent silt  (15-30 cm depth)")
+    phy_clay <- c(
+      "percent clay  (0-15 cm depth)",                                                                                  
+      "percent clay  (15-30 cm depth)"                                                                                   
+    ) 
+    
+    phy_som <- c(
                   "total POM",
                   "particulate organic matter (fPOM) including macro orgnaic matter fractions",
                   "particulate organic matter (oPOM)",
@@ -1002,44 +1118,15 @@ mutate(
                   "total particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",           
                   "total particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)"                         
                 )
-                
-                chem_carbon_020 <-  c(
-                  "soil organic carbon in topsoil",
-                  "water extractable organic carbon (0-5 cm)",
-                  "water extractable organic carbon (5-20 cm)",
-                  "soil organic carbon (SOC) in fall following cover crop, 0-15cm",
-                  "organic carbon (0-15 cm)",
-                  "soil organic carbon in soybean (0-5 cm soil depth)",                                                               
-                  "soil organic carbon in maize (0-5 cm soil depth)",                                                                 
-                  "soil organic carbon in soybean (5-15 cm soil depth)",                                                              
-                  "soil organic carbon (0-10 cm depth)",                                                                             
-                  "soil organic carbon (10-20 cm depth)",
-                  "soil carbon concentration (0-5 cm depth)",
-                  "soil organic carbon (0-5 cm depth)",
-                  "soil organic carbon (0-15 cm)"
-                )
-                
-                #datatoexplore <- filter(Results,Response_var %in% chem_carbon_020)
-                #write.xlsx(datatoexplore, file="C:/Users/LWA/Desktop/CC_SOC020.xlsx", row.names=FALSE, append=TRUE)
-                #colnames(Results)
-                
-                chem_carbon_2060<-  c(
-                  "soil organic carbon (15-75 cm)",
-                  "soil organic carbon (20-40 cm depth)",                                                                             
-                  "soil organic carbon (40-60 cm depth)"
-                )
-                
-                chem_carbon_075<-  c(  
-                  "total carbon",
-                  "total carbon (0-50 cm depth)",
-                  "total carbon (0-30 cm depth)",
-                  "total carbon (0-45 cm depth)",
-                  "soil organic carbon (0-75 cm)",
-                  "soil organic carbon 0-30 cm depth (spring)",
-                  "soil organic carbon (SOC), spring sample (0-60 cm depth)"
-                )
-                
-                
+    
+        ##Chemical Properties#####
+    
+            chem_acidity <- c(
+              "pH",
+              "pH (0-15 cm)")
+            
+    #####Soil Nutrients####                
+        ###Nitrogen#######
                 chem_nitrate_spring <- c(
                   "soil nitrate (NO3-N)",
                   "soil nitrate (NO3--N) preceeding maize",
@@ -1111,7 +1198,9 @@ mutate(
                   "soil inorganic nitrogen concentrations, after maize planting (3-6 in. depth)"
                   
                 )
-                
+            
+            
+        ##Phosphorus#####
                 chem_phosphorus <- c(
                   "plant available phosphorus",
                   "phosphorus removal",
@@ -1123,7 +1212,8 @@ mutate(
                   "Olsen phosphorus (Olsen P) concentration in Spring, 0-60 cm"
                   
                 )
-                
+          
+        ##Potassium####    
                 chem_potassium <- c(
                   "potassium removal",
                   "potassium inputs",
@@ -1131,74 +1221,9 @@ mutate(
                   "exchangable potassium (K)"
                 )
                 
-                chem_acidity <- c(
-                  "pH",
-                  "pH (0-15 cm)")
                 
-                
-                ##Soil Physical Properties####
-                
-                phy_erosion <- c(
-                  "soil loss",
-                  "interrill erosion rate",
-                  "rill erosion rate",
-                  "erodible fraction from the top 50 mm of soil (soil aggregates < 0.84 mm)",
-                  "sediment load following fall manure",
-                  "sediment load following spring manure"
-                  
-                )
-                
-                phy_compaction <- c(
-                  "soil penetration resistance",
-                  "soil penetration resistance (Spring)",
-                  "soil penetration resistance (Fall)"
-                )
-                
-                phy_pores <- c(
-                  "total pore spaces",
-                  "air filled pore space",
-                  "volumetric air content",
-                  "water filled pore space",
-                  "pore tortuosity factor",
-                  "relative gas diffusion coefficient"
-                )
-                
-                phy_aggregates <- c(
-                  "mean weight diameter of water stable aggregates",
-                  "water aggregate stability",
-                  "water stable aggregates in soybean",
-                  "water stable aggregates in maize",                                                                                 
-                  "water stable mean weight diameter (0-10 cm depth)",                                                                 
-                  "water stable mean weight diameter (10-20 cm depth)",                                                                
-                  "water stable mean weight diameter (20-40 cm depth)",                                                               
-                  "water stable mean weight diameter (40-60 cm depth)",                                                                
-                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates < 0.42 mm)",               
-                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",
-                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)", 
-                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",  
-                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)", 
-                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates > 19.2 mm)"               
-                )
-                
-                phy_bulkdensity <- c(
-                  "bulk density (0-15 cm depth)",                                                                                            
-                  "bulk density (15-30 cm depth)",                                                                                           
-                  "bulk density 0-30 cm depth (spring)",
-                  "bulk density",
-                  "bulk density (0-10 cm depth)",                                                                                
-                  "bulk density (10-20 cm depth)",                                                                               
-                  "bulk density (20-40 cm depth)",                                                                               
-                  "bulk density (40-60 cm depth)"
-                )
-                
-                phy_texture <- c(
-                  "percent sand  (0-15 cm depth)",                                                                                    
-                  "percent sand  (15-30 cm depth)",                                                                                   
-                  "percent silt  (0-15 cm depth)",                                                                                  
-                  "percent silt  (15-30 cm depth)",                                                                                   
-                  "percent clay  (0-15 cm depth)",                                                                                  
-                  "percent clay  (15-30 cm depth)"                                                                                   
-                )
+    ####Soil Physical Properties####
+        ##Abiotic Factors######          
                 
                 phy_watercontent <- c(
                   "volumetric water content",
@@ -1222,41 +1247,31 @@ mutate(
                   "soil water content, after maize planting (0-3 in. depth)",
                   "soil water content, after maize planting (3-6 in. depth)",
                   "soil water content, after maize planting (6-12 in. depth)",
-                  "soil water content, after maize planting (12-24 in. depth)"
-                  
-                )
-                
-                ##Soil Biological Properties####
-                
-                biol_microbes <- c(
-                  "microbial biomass",
-                  "microbial biomass nitrogen (MBN)",
-                  "enzyme activity in soybean (Hydrolysis of Fluroescein Diacetate)",                                                 
-                  "enzyme activity in maize (Hydrolysis of Fluroescein Diacetate)"                                                   
+                  "soil water content, after maize planting (12-24 in. depth)",
+                  "average annual soil water storage (maize)",
+                  "average annual soil water storage (soybean)"
+        
                 )
                 
                 
-                
-                ##Soil Environmental Properties####
                 
                 envir_temp <- c("soil temperature")
                 
-                envir_CO2 <- c("carbon dioxide emissions (CO2-C)")
+                
+        ##Biotic Factors####
+                biol_microbes <- c(
+                  "microbial biomass",
+                  "microbial biomass nitrogen (MBN)"
+                              )
+                biol_enzymeactivity <- c(
+                  "enzyme activity in soybean (Hydrolysis of Fluroescein Diacetate)",                                                 
+                  "enzyme activity in maize (Hydrolysis of Fluroescein Diacetate)" 
+                  )
                 
                 
-                envir_N2O <- c(
-                  "N2O emissions when cover crop present",
-                  "N2O emissions over entire year",
-                  "cumulative N2O-N emissions from soil",
-                  "cumulative nitrous oxide flux from soil April 2003-Mar 2004",
-                  "cumulative nitrous oxide flux from soil April 2004 - Feb 2004",
-                  "nitrous oxide emissions (N2O-N)"
-                )
                 
-                
-                
-                ####Pest Regulation####
-                ## Weeds ####
+    ####Pests####
+        ## Weeds ####
                 weed_Palmeramaranth <-
                   c(
                     "control of Palmer amaranth (21 days post planting)",
@@ -1305,7 +1320,7 @@ mutate(
                   "weed biomass after termination of cover crops"
                 )
                 
-                ## Invertebrates ####
+        ## Invertebrates ####
                 
                 invert_pests_SCN <-
                   c(
@@ -1339,6 +1354,7 @@ mutate(
                 invert_pests_seedcornmaggot_damage <-
                   c(  "seedcorn maggot damage on crops (Y-plants)")
                 
+        ##Pest Natural Enemies####
                 invert_preds<-
                   c(
                     "total abundance of spiders (Araneae) on aboveground tissue (sweep net in soybean)",
@@ -1399,15 +1415,16 @@ mutate(
                     
                   )
                 
+        ##Pathogens####
                 pathogen <- c(
                   "soybean root rot (general)"                                                                                                                             
                 )
                 
                 
-                ####Crop Production####
+    ####Crop Yields####
                 
-                ## Yields ####
-                
+        ## Grain production####
+            ##Soybean####        
                 yields_grainsoy <- c(
                   "soybean grain yield per 1.8 m row",
                   "soybean grain yield (years 5 & 6)",
@@ -1416,7 +1433,7 @@ mutate(
                   "soybean grain yield (4 year average)",
                   "soybean yield (3 year average)"
                 )
-                
+            ##Corn####   
                 yields_grainmaize <- c(
                   "maize grain yield",
                   "maize grain yield after soybean overseeded with cc (years 5 & 6)",
@@ -1428,7 +1445,8 @@ mutate(
                   "Harvest Index (maize)",
                   "maize grain dry weight (3 year average)"
                 )
-                
+        ##Crop Growth####
+            ##Corn####
                 yields_biomass_abvgrd <- c(
                   "maize silage dry matter yield",
                   "aboveground dry biomass (maize) at harvest",
@@ -1445,8 +1463,8 @@ mutate(
                 
                 yields_biomass_blwgrd <- c("maize root biomass (0-100 cm)")
                 
-                ##Crop Nitrogen Content ####
-                
+        ##Crop Nitrogen Content ####
+            ##Corn####        
                 crop_N_maizestalk <- c(
                   "maize stalk nitrate",
                   "total aboveground N uptake (maize)",
@@ -1454,42 +1472,54 @@ mutate(
                   "maize stover nitrogen uptake" ,
                   "total nitrogen uptake by maize stover (3 year average)",
                   "aboveground plant nitrogen uptake")
+             
+            ##Soybean####   
+                crop_N_soybean <- c(  
+                  "total aboveground N uptake (soybean)"
+                )
                 
+        ##Grain Quality####
+            ##Corn####
                 crop_N_maizegrain <- c( 
                   "maize grain nitrogen uptake",
                   "maize nitrogen uptake",                                     
                   "total nitrogen uptake by maize grain (3 year average)")
                 
-                crop_N_soybean <- c(  
-                  "total aboveground N uptake (soybean)"
-                )
                 
-                ##Crop seedling density####
                 
-                seedling_density <- c(
-                  "soybean stand count",                                       
+        ##Stand Count####
+            ##Corn####    
+                standcount_corn <- c(
                   "maize stand count (4 year average)",                   
                   "maize stand count"
                 )
-                
-                ####Water Movement####
-                
-                ## Drainage ####
-                
-                drainage <- c(
-                  "average drainage",
-                  "infiltration rate",
-                  "runoff rate",
-                  "drainage discharge (maize)",
-                  "drainage discharge (soybean)",
-                  "average annual subsurface drainage (maize)",
-                  "average annual subsurface drainage (soybean)",
-                  "average annual soil water storage (maize)",
-                  "average annual soil water storage (soybean)"
+            
+            ##Soybean####
+                standcount_soybean <- c(
+                  "soybean stand count"
                 )
                 
-                ## Runoff ####
+    ####Water Quality####
                 
+        ## Flow Quantity####
+            ##Water####  
+                water_discharge <- c(
+                  "runoff rate",
+                  "drainage discharge (maize)",
+                  "drainage discharge (soybean)"
+                )
+                
+               water_drainage <- c(
+                 "average drainage",
+                "infiltration rate",
+                "average annual subsurface drainage (maize)",
+                "average annual subsurface drainage (soybean)"
+               )
+                
+               
+                
+        ##Nutrient Runoff####
+            ##Nitrate####
                 runoff_nitrate <-
                   c(
                     "subsurface drainage nitrate (NO3-N) annual yields",
@@ -1514,7 +1544,7 @@ mutate(
                     "time to runoff following spring manure"
                     
                   )
-                
+            ##Phosphorus####
                 runoff_phosphorus <-
                   c(
                     "subsurface drainage total reactive phosphorus (TRP) annual yields",
@@ -1526,231 +1556,466 @@ mutate(
                     "total phosphorus load runoff following spring manure"
                     
                   )
-                
-                
-                
-
-
-
-                
+ 
+               
+               
 ###Apply metric & grouping labels to dataframe#####################################
 
 
               metric_labels <- Results %>%
                 select(Response_var, Res_key) %>%
-                mutate(
-                  group_metric = case_when(
-                    
-                    #Soils####
-                    #Chemical Properties####
-                    
-                    Response_var %in% chem_nitrate_spring ~ "Nitrate (Preplant)",
-                    Response_var %in% chem_nitrate_maize ~ "Nitrate (Maize)",
-                    Response_var %in% chem_nitrate_soybean ~ "Nitrate (Soybean)",
-                    Response_var %in% chem_nitrate_fall ~ "Nitrate (Post Harvest)",
-                    Response_var %in% chem_ammonium_spring ~ "Ammonium (Preplant)",
-                    Response_var %in% chem_totalN ~ "Total Nitrogen",
-                    Response_var %in% chem_phosphorus ~ "phosphorus",
-                    Response_var %in% chem_potassium ~ "Postassium",
-                    Response_var %in% chem_acidity ~ "pH",
-                    Response_var %in% chem_carbon_020 ~ "Soil Carbon, 0-20 cm depth",
-                    Response_var %in% chem_carbon_2060 ~ "Soil Carbon, 20-60 cm depth",
-                    Response_var %in% chem_carbon_075 ~ "Soil Carbon, 0-75 cm depth",
-                    Response_var %in% chem_som ~ "Soil Organic Matter",
-                    
-                    #Physical Properties####
-                    Response_var %in% phy_compaction ~ "Compaction",
-                    Response_var %in% phy_pores ~ "Soil Pores",
-                    Response_var %in% phy_aggregates ~ "Soil Aggregates",
-                    Response_var %in% phy_bulkdensity ~ "Soil Bulk Density",
-                    Response_var %in% phy_texture ~ "Soil Texture",
-                    Response_var %in% phy_watercontent ~ "Soil Water Content",
-                    
-                    #Biological Properties####
-                    
-                    Response_var %in% biol_microbes ~ "Microbial Biomass",
-                    
-                    
-                    #Environmental Properties####
-                    Response_var %in% envir_temp ~ "Soil Temperature",
-                    Response_var %in% envir_CO2 ~ "Carbon Dioxide Emissions",
-                    Response_var %in% envir_N2O ~ "Nitrous Oxide Emissions",
-                    Response_var %in% phy_erosion ~ "Erosion",
-                    
-                    #Pest Regulation####
-                    #Weeds####
-                    Response_var %in% weed_waterhemp ~ "Waterhemp",
-                    Response_var %in% weed_deadnettle ~ "Deadnettle",
-                    Response_var %in% weed_cocklebur ~ "Cocklebur",
-                    Response_var %in% weed_foxtail ~ "Giant Foxtail",
-                    Response_var %in% weed_Palmeramaranth ~ "Pigweed",
-                    
-                    
-                    Response_var %in% weed_community_biomass ~ "Weed community (Aboveground Growth)",
-                    Response_var %in% weed_community_density ~ "Weed community (Abundance)",
-                    
-                    #Invertebrates####
-                    Response_var %in% invert_pests_cornrootworm ~ "Corn Rootworm (#)",
-                    Response_var %in% invert_pests_seedcornmaggot ~ "Seedcorn Maggot (#)",
-                    Response_var %in% invert_pests_Aglycines ~ "Soybean Aphid (#)",
-                    Response_var %in% invert_pests_SCN ~ "Soybean Cyst Nematode (#)",  
-                    
-                    Response_var %in% invert_pests_seedcornmaggot_damage ~ "Seedcorn Maggot (Crop Damage)",
-                    Response_var %in% invert_pests_cornrootworm_damage ~ "Corn Rootworm (Crop Damage)",
-                    
-                    Response_var %in% invert_preds ~ "Predators (#)",
-                    
-                    Response_var %in% invert_preds_vegcomm_div ~ "Predator community in Foliage (#)",
-                    Response_var %in% invert_preds_vegcomm_abund ~ "Predator community in Foliage (#)",
-                    Response_var %in% invert_preds_soilcomm_div ~ "Predator community in Soils (Diversity)",
-                    Response_var %in% invert_preds_soilcomm_abund ~ "Predator community in Soils (#)",
-                    
-                    Response_var %in% invert_preds_activity ~ "Predator Activity",
-                    Response_var %in% invert_nonpredpest ~ "Non-predators & Non-pests",
-                    Response_var %in% pathogen ~ "Pathogens",
-                    
-                    #Crop Production####
-                    #Yields####
-                    Response_var %in% yields_grainsoy ~ "Grain (Soybean)",
-                    Response_var %in% yields_grainmaize ~ "Grain (Maize)",
-                    Response_var %in% yields_biomass_abvgrd ~ "Stover Biomass",
-                    Response_var %in% yields_biomass_blwgrd ~ "Root biomass",
-                    
-                    #Crop Nitrogen Yields####
-                    Response_var %in% crop_N_maizegrain ~ "Grain (Maize)",
-                    Response_var %in% crop_N_maizestalk ~ "Stalk/Stover (Maize)",
-                    Response_var %in% crop_N_soybean ~ "Grain (Soybean)",
-                    
-                    #Crop Seedling Density####
-                    Response_var %in% seedling_density ~ "Seedling Density",
-                    
-                    
-                    #Water Movement####
-                    #Drainage####
-                    Response_var %in% drainage ~ "Drainage",
-                    
-                    #Runoff####
-                    Response_var %in% runoff_nitrate ~ "Nitrate",
-                    Response_var %in% runoff_phosphorus ~ "phosphorus"
-                    # TRUE                      ~  "other"
-                               ) ) %>%
-                     
-                
-                                
-                  
-                  
-                  
-  #Create Main Groupings ############################################
-   
-mutate(
-        main_group = case_when(
-      
-                  #Soils####
-                    #Chemical Properties####
-                    
-                    Response_var %in% chem_nitrate_spring ~ "Chemical",
-                    Response_var %in% chem_nitrate_maize ~ "Chemical",
-                    Response_var %in% chem_nitrate_soybean ~ "Chemical",
-                    Response_var %in% chem_nitrate_fall ~ "Chemical",
-                    Response_var %in% chem_ammonium_spring ~ "Chemical",
-                    Response_var %in% chem_totalN ~ "Chemical",
-                    Response_var %in% chem_phosphorus ~ "Chemical",
-                    Response_var %in% chem_potassium ~ "Chemical",
-                    Response_var %in% chem_acidity ~ "Chemical",
-                    Response_var %in% chem_carbon_020 ~ "Chemical",
-                    Response_var %in% chem_carbon_075 ~ "Chemical",
-                    Response_var %in% chem_carbon_2060 ~ "Chemical",
-                    Response_var %in% chem_som ~ "Chemical",
-                    
-                    #Physical Properties####
-                    Response_var %in% phy_compaction ~ "Physical",
-                    Response_var %in% phy_pores ~ "Physical",
-                    Response_var %in% phy_aggregates ~ "Physical",
-                    Response_var %in% phy_bulkdensity ~ "Physical",
-                    Response_var %in% phy_texture ~ "Physical",
-                    Response_var %in% phy_watercontent ~ "Physical",
-                    
-                    #Biological Properties####
-                    
-                    Response_var %in% biol_microbes ~ "Biological",
-                    
-                    
-                    #Environmental Properties####
-                    Response_var %in% envir_temp ~ "Environmental",
-                    Response_var %in% envir_CO2 ~ "Environmental",
-                    Response_var %in% envir_N2O ~ "Environmental",
-                    Response_var %in% phy_erosion ~ "Environmental",
+                  #Group_level1####    
+                  mutate(
+                    group_level1 = case_when( 
+                      
+                      
+                      ####Climate Mitigation####
+                      ##Carbon Emissions#####
+                      Response_var %in% chem_carbon ~ "Climate Mitigation",      
+                      ##Carbon Emissions####
+                      Response_var %in% envir_CO2 ~ "Climate Mitigation",       
+                      ##Nitrogen emissions####
+                      Response_var %in% envir_N2O ~ "Climate Mitigation",       
                         
-                    #Pest Regulation####
-                        
-                    #Weeds####
-                    Response_var %in% weed_waterhemp ~ "Weeds",
-                    Response_var %in% weed_deadnettle ~ "Weeds",
-                    Response_var %in% weed_cocklebur ~ "Weeds",
-                    Response_var %in% weed_foxtail ~ "Weeds",
-                    Response_var %in% weed_Palmeramaranth ~ "Weeds",
-                    
-                    
-                    Response_var %in% weed_community_biomass ~ "Weeds",
-                    Response_var %in% weed_community_density ~ "Weeds",
-                    
-                    #Invertebrates####
-                    Response_var %in% invert_pests_cornrootworm ~ "Invertebrates",
-                    Response_var %in% invert_pests_seedcornmaggot ~ "Invertebrates",
-                    Response_var %in% invert_pests_Aglycines ~ "Invertebrates",
-                    Response_var %in% invert_pests_SCN ~ "Invertebrates",  
-                    
-                    Response_var %in% invert_pests_seedcornmaggot_damage ~ "Invertebrates",
-                    Response_var %in% invert_pests_cornrootworm_damage ~ "Invertebrates",
-                    
-                    Response_var %in% invert_preds ~ "Invertebrates",
-                    
-                    Response_var %in% invert_preds_vegcomm_div ~ "Invertebrates",
-                    Response_var %in% invert_preds_vegcomm_abund ~ "Invertebrates",
-                    Response_var %in% invert_preds_soilcomm_div ~ "Invertebrates",
-                    Response_var %in% invert_preds_soilcomm_abund ~ "Invertebrates",
-                    
-                    Response_var %in% invert_preds_activity ~ "Invertebrates",
-                    Response_var %in% invert_nonpredpest ~ "Invertebrates",
-                    Response_var %in% pathogen ~ "Pathogens",
-                        
-                    
-                    
-                    #Crop Production####
-                    #Yields####
-                    Response_var %in% yields_grainsoy ~ "Yields",
-                    Response_var %in% yields_grainmaize ~ "Yields",
-                    Response_var %in% yields_biomass_abvgrd ~ "Yields",
-                    Response_var %in% yields_biomass_blwgrd ~ "Yields",
-                    
-                    #Crop Nitrogen Yields####
-                    Response_var %in% crop_N_maizegrain ~ "Crop Nitrogen Uptake",
-                    Response_var %in% crop_N_maizestalk ~ "Crop Nitrogen Uptake",
-                    Response_var %in% crop_N_soybean ~ "Crop Nitrogen Uptake",
-                    
-                    #Crop Seedling Density####
-                    Response_var %in% seedling_density ~ "Stand Count",
-                    
-                        
-                    #Water Movement####
-                    #Drainage####
-                    Response_var %in% drainage ~ "Drainage",
-                    
-                    #Runoff####
-                    Response_var %in% runoff_nitrate ~ "Runoff",
-                    Response_var %in% runoff_phosphorus ~ "Runoff"
-                    # TRUE                      ~  "other"
-                ))
-              
-              
+      #####Other Soil Properties####
+                      
+                      ##Physical properties####
+                      Response_var %in% phy_erosion ~ "Other Soil Properties",       
+                      Response_var %in% phy_compaction ~ "Other Soil Properties",       
+                      Response_var %in% phy_totalpores ~ "Other Soil Properties",       
+                      Response_var %in% phy_airpores ~ "Other Soil Properties",
+                      Response_var %in% phy_waterpores ~ "Other Soil Properties", 
+                      Response_var %in% phy_aggregatestability ~ "Other Soil Properties",                
+                      Response_var %in% phy_aggregatesize ~ "Other Soil Properties",                
+                      Response_var %in% phy_bulkdensity ~ "Other Soil Properties",                
+                      Response_var %in% phy_sand ~ "Other Soil Properties",                
+                      Response_var %in% phy_silt ~ "Other Soil Properties",                
+                      Response_var %in% phy_clay ~ "Other Soil Properties",                
+                      Response_var %in% phy_som ~ "Other Soil Properties",                
+                                      
+                      ##Chemical Properties#####
+      Response_var %in% chem_acidity ~ "Other Soil Properties",                
+                      
+      #####Soil Nutrients####                
+                      ###Nitrogen#######
+     ##Nitrate####
+       Response_var %in% chem_nitrate_spring ~ "Other Soil Properties",                
+      Response_var %in% chem_nitrate_maize ~ "Other Soil Properties",                                 
+      Response_var %in% chem_nitrate_soybean ~ "Other Soil Properties",                                 
+      Response_var %in% chem_nitrate_fall ~ "Other Soil Properties",                                 
+    ##Ammonium####                  
+    Response_var %in% chem_ammonium_spring ~ "Other Soil Properties",                                 
+    
+    ##Total Nitrogen####
+    Response_var %in% chem_totalN ~ "Other Soil Properties",                                                    
                 
-                
-                
-                #Attach column to Results######
+                      
+                      ##Phosphorus#####
+    Response_var %in% chem_phosphorus ~ "Other Soil Properties",                                                    
+                       
+                      ##Potassium####    
+    Response_var %in% chem_potassium ~ "Other Soil Properties",                                                    
+                      
+    ####Soil Physical Properties####
+    
+    ##Abiotic Factors######          
+    Response_var %in% phy_watercontent ~ "Soil Physical Properties",                                                    
+    Response_var %in% envir_temp ~ "Soil Physical Properties",                                                    
+    
+    ##Biotic Factors####
+    Response_var %in% biol_microbes ~ "Soil Physical Properties",                                                    
+    Response_var %in% biol_enzymeactivity ~ "Soil Physical Properties",                  
+                      
+                      
+                      ####Pests####
+                      ## Weeds ####
+    ##Broadleaves####
+    Response_var %in% weed_Palmeramaranth ~ "Pests",
+    Response_var %in% weed_cocklebur ~ "Pests",
+    Response_var %in% weed_deadnettle ~ "Pests",                  
+    Response_var %in% weed_waterhemp ~ "Pests",                                    
+    
+    #Grassess#####
+    Response_var %in% weed_foxtail ~ "Pests",
+    
+    ###Weed community####
+    Response_var %in% weed_community_density ~ "Pests",                  
+    Response_var %in% weed_community_biomass ~ "Pests",                                    
+                      
+    ## Nematodes ####
+    Response_var %in% invert_pests_SCN ~ "Pests",                                    
+    ## Invertebrates ####                  
+    Response_var %in% invert_pests_Aglycines ~ "Pests",                                    
+    Response_var %in% invert_pests_seedcornmaggot ~ "Pests",                                    
+    Response_var %in% invert_pests_cornrootworm ~ "Pests",                                    
+    
+    ##Invertebrate Damage####
+    Response_var %in% invert_pests_cornrootworm_damage ~ "Pests",                                                       
+    Response_var %in% invert_pests_seedcornmaggot_damage ~ "Pests",                                                                         
+                       
+    
+    ##Pest Natural Enemies####
+    Response_var %in% invert_preds ~ "Pests",                                                                         
+    Response_var %in% invert_preds_soilcomm_abund ~ "Pests", #found in soil                                                                         
+    Response_var %in% invert_preds_soilcomm_div ~ "Pests", #found in soil                                                                         
+    Response_var %in% invert_preds_vegcomm_abund ~ "Pests", #found on leaves
+    Response_var %in% invert_preds_vegcomm_div ~ "Pests", #found on leaves
+    Response_var %in% invert_preds_activity ~ "Pests", 
+    Response_var %in% invert_nonpredpest ~ "Pests",                   
+                       
+                      ##Pathogens####
+    Response_var %in% pathogen ~ "Pests",                                     
+                      
+                      
+                      ####Crop Yields####
+                      
+                      ## Grain production####
+                      ##Soybean####        
+    Response_var %in% yields_grainsoy ~ "Crop Yields",                                     
+    
+                      ##Corn####   
+    Response_var %in% yields_grainmaize ~ "Crop Yields",                                     
+    
+                      ##Crop Growth####
+                      ##Corn####
+    Response_var %in% yields_biomass_abvgrd ~ "Crop Yields",                                     
+    Response_var %in% yields_biomass_blwgrd ~ "Crop Yields",                                     
+                      
+                      ##Crop Nitrogen Content ####
+                      ##Corn####        
+    Response_var %in% crop_N_maizestalk ~ "Crop Yields",                                     
+                       
+                      ##Soybean####   
+    Response_var %in% crop_N_soybean ~ "Crop Yields",                                     
+    
+                      ##Grain Quality####
+                      ##Corn####
+    Response_var %in% crop_N_maizegrain ~ "Crop Yields",                                     
+    
+                      ##Stand Count####
+                      ##Corn####    
+    Response_var %in% standcount_corn ~ "Crop Yields",                                     
+    
+                      ##Soybean####
+    Response_var %in% standcount_soybean ~ "Crop Yields",                                                       
+                      
+                      ####Water Quality####
+                      
+                      ## Flow Quantity####
+                      ##Water####  
+    Response_var %in% water_discharge ~ "Water Quality",                                                       
+    Response_var %in% water_drainage ~ "Water Quality",                                                       
+    
+                      ##Nutrient Runoff####
+                      ##Nitrate####
+    Response_var %in% runoff_nitrate ~ "Water Quality" ,                                                     
+                      ##Phosphorus####
+    Response_var %in% runoff_phosphorus ~ "Water Quality"                                                       
+                            )) %>%
+                 #Group_level2####    
+               mutate(group_level2 = case_when( 
+                   
+                   
+                   ####Climate Mitigation####
+                   ##Carbon Mitigation#####
+                   Response_var %in% chem_carbon ~ "Carbon Mitigation",      
+                   Response_var %in% envir_CO2 ~ "Carbon Mitigation",       
+                   ##Nitrogen Mitigation####
+                   Response_var %in% envir_N2O ~ "Nitrogen Mitigation",       
+                   
+                   #####Other Soil Properties####
+                   
+                   ##Physical properties####
+                   Response_var %in% phy_erosion ~ "Physical Properties",       
+                   Response_var %in% phy_compaction ~ "Physical Properties",              
+                   Response_var %in% phy_totalpores ~ "Physical Properties",         
+                   Response_var %in% phy_airpores ~ "Physical Properties",       
+                   Response_var %in% phy_waterpores ~ "Physical Properties",       
+                   Response_var %in% phy_aggregatestability ~ "Physical Properties",                       
+                   Response_var %in% phy_aggregatesize ~ "Physical Properties",                      
+                   Response_var %in% phy_bulkdensity ~ "Physical Properties",                
+                   Response_var %in% phy_sand ~ "Physical Properties",           
+                   Response_var %in% phy_silt ~ "Physical Properties",                  
+                   Response_var %in% phy_clay ~ "Physical Properties",                  
+                   Response_var %in% phy_som ~ "Physical Properties",                 
+                   
+                   ##Chemical Properties#####
+                   Response_var %in% chem_acidity ~ "Chemical Properties",                       
+                   
+                   #####Soil Nutrients####                
+                   ###Nitrogen#######
+                   ##Nitrate####
+                   Response_var %in% chem_nitrate_spring ~ "Nitrogen",                
+                   Response_var %in% chem_nitrate_maize ~ "Nitrogen",                                 
+                   Response_var %in% chem_nitrate_soybean ~ "Nitrogen",                                 
+                   Response_var %in% chem_nitrate_fall ~ "Nitrogen",                                 
+                   ##Ammonium####                  
+                   Response_var %in% chem_ammonium_spring ~ "Nitrogen",                                 
+                   
+                   ##Total Nitrogen####
+                   Response_var %in% chem_totalN ~ "Nitrogen",                                                    
+                   
+                   
+                   ##Phosphorus#####
+                   Response_var %in% chem_phosphorus ~ "P & K",                                                    
+                   
+                   ##Potassium####    
+                   Response_var %in% chem_potassium ~ "P & K",                                                    
+                   
+                   ####Soil Physical Properties####
+                   ##Abiotic Factors######          
+                   Response_var %in% phy_watercontent ~ "Soil Physical Properties",                                                    
+                   Response_var %in% envir_temp ~ "Soil Physical Properties",                                                    
+                   
+                   ##Biotic Factors####
+                   Response_var %in% biol_microbes ~ "Soil Physical Properties",                                                    
+                   Response_var %in% biol_enzymeactivity ~ "Soil Physical Properties",
+                   
+                   ####Pests####
+                   ## Weeds ####
+                   ##Broadleaves####
+                   Response_var %in% weed_Palmeramaranth ~ "Weeds",
+                   Response_var %in% weed_cocklebur ~ "Weeds",
+                   Response_var %in% weed_deadnettle ~ "Weeds",                  
+                   Response_var %in% weed_waterhemp ~ "Weeds",                                    
+                   
+                   #Grasses#####
+                   Response_var %in% weed_foxtail ~ "Weeds",
+                   
+                   ###Weed community####
+                   Response_var %in% weed_community_density ~ "Weeds",                  
+                   Response_var %in% weed_community_biomass ~ "Weeds",                                    
+                   
+                   ## Nematodes ####
+                   Response_var %in% invert_pests_SCN ~ "Nematodes",                                    
+                   ## Invertebrates ####                  
+                   Response_var %in% invert_pests_Aglycines ~ "Invertebrate Pests",                                    
+                   Response_var %in% invert_pests_seedcornmaggot ~ "Invertebrate Pests",                                    
+                   Response_var %in% invert_pests_cornrootworm ~ "Invertebrate Pests",                                    
+                   
+                   ##Crop Damage####
+                   Response_var %in% invert_pests_cornrootworm_damage ~ "Crop Damage",                                                       
+                   Response_var %in% invert_pests_seedcornmaggot_damage ~ "Crop Damage",                                                                         
+                   
+                   
+                   ##Pest Natural Enemies####
+                   Response_var %in% invert_preds ~ "Pest Natural Enemies",                                                                         
+                   Response_var %in% invert_preds_soilcomm_abund ~ "Pest Natural Enemies", #found in soil                                                                         
+                   Response_var %in% invert_preds_soilcomm_div ~ "Pest Natural Enemies", #found in soil                                                                         
+                   Response_var %in% invert_preds_vegcomm_abund ~ "Pest Natural Enemies", #found on leaves
+                   Response_var %in% invert_preds_vegcomm_div ~ "Pest Natural Enemies", #found on leaves
+                   Response_var %in% invert_preds_activity ~ "Pest Natural Enemies", 
+                   Response_var %in% invert_nonpredpest ~ "Pest Natural Enemies",                   
+                   
+                   ##Pathogens####
+                   Response_var %in% pathogen ~ "Pathogens",                                     
+                   
+                   
+                   ####Crop Yields####
+                   
+                   ## Grain production####
+                   ##Soybean####        
+                   Response_var %in% yields_grainsoy ~ "Grain Production",                                     
+                   
+                   ##Corn####   
+                   Response_var %in% yields_grainmaize ~ "Grain Production",                                     
+                   
+                   ##Crop Growth####
+                   ##Corn####
+                   Response_var %in% yields_biomass_abvgrd ~ "Crop Growth",                                     
+                   Response_var %in% yields_biomass_blwgrd ~ "Crop Growth",                                     
+                   
+                   ##Crop Nitrogen Content ####
+                   ##Corn####        
+                   Response_var %in% crop_N_maizestalk ~ "Crop Nitrogen Content",                                     
+                   
+                   ##Soybean####   
+                   Response_var %in% crop_N_soybean ~ "Crop Nitrogen Content",                                     
+                   
+                   ##Grain Quality####
+                   ##Corn####
+                   Response_var %in% crop_N_maizegrain ~ "Grain Quality",                                     
+                   
+                   ##Stand Count####
+                   ##Corn####    
+                   Response_var %in% standcount_corn ~ "Stand Count",                                     
+                   
+                   ##Soybean####
+                   Response_var %in% standcount_soybean ~ "Stand Count",                                                       
+                   
+                   ####Water Quality####
+                   
+                   ## Flow Quantity####
+                   ##Water####  
+                 Response_var %in% water_discharge ~ "Flow Quantity",                                                       
+                   Response_var %in% water_drainage ~ "Flow Quantity",                                                       
+                   
+                   ##Nutrient Runoff####
+                   ##Nitrate####
+                 Response_var %in% runoff_nitrate ~ "Nutrient Runoff" ,
+                   ##Phosphorus####
+                   Response_var %in% runoff_phosphorus ~ "Nutrient Runoff"                                                       
+                 )) %>%
+                 #Group_level3####    
+               mutate(
+                 group_level3 = case_when( 
+                   
+                   
+                   ####Climate Mitigation####
+                   ##Carbon Mitigation#####
+                   Response_var %in% chem_carbon ~ "Soil organic carbon",      
+                   Response_var %in% envir_CO2 ~ "Carbon dioxide emissions",       
+                   ##Nitrogen Mitigation####
+                   Response_var %in% envir_N2O ~ "Nitrogen dioxide emissions",       
+                   
+                   #####Other Soil Properties####
+                   
+                   ##Physical properties####
+                   Response_var %in% phy_erosion ~ "Erosion",       
+                   Response_var %in% phy_compaction ~ "Compaction",              
+                   Response_var %in% phy_totalpores ~ "Total pore space",         
+                   Response_var %in% phy_airpores ~ "Air-filled pores",       
+                   Response_var %in% phy_waterpores ~ "Water-filled pores",       
+                   Response_var %in% phy_aggregatestability ~ "Aggregate stability",                       
+                   Response_var %in% phy_aggregatesize ~ "Aggregate size",                      
+                   Response_var %in% phy_bulkdensity ~ "Soil bulk density",                
+                   Response_var %in% phy_sand ~ "Sand content",           
+                   Response_var %in% phy_silt ~ "Silt content",                  
+                   Response_var %in% phy_clay ~ "Clay content",                  
+                   Response_var %in% phy_som ~ "Soil organic matter content",                 
+                   
+                   ##Chemical Properties#####
+                   Response_var %in% chem_acidity ~ "pH",                       
+                   
+                   #####Soil Nutrients####                
+                   ###Nitrogen#######
+                   ##Nitrate####
+                   Response_var %in% chem_nitrate_spring ~ "Nitrate (NO3)",                
+                   Response_var %in% chem_nitrate_maize ~ "Nitrate (NO3)",                                 
+                   Response_var %in% chem_nitrate_soybean ~ "Nitrate (NO3)",                                 
+                   Response_var %in% chem_nitrate_fall ~ "Nitrate (NO3)",                                 
+                   ##Ammonium####                  
+                   Response_var %in% chem_ammonium_spring ~ "Ammonium (NH4)",                                 
+                   
+                   ##Total Nitrogen####
+                   Response_var %in% chem_totalN ~ "Total nitrogen",                                                    
+                   
+                   
+                   ##Phosphorus#####
+                   Response_var %in% chem_phosphorus ~ "Phosphorus",                                                    
+                   
+                   ##Potassium####    
+                   Response_var %in% chem_potassium ~ "Potassium",                                                    
+                   
+                   ####Soil Physical Properties####
+                   ##Abiotic Factors######          
+                   Response_var %in% phy_watercontent ~ "Soil moisture",                                                    
+                   Response_var %in% envir_temp ~ "Soil temperature",                                                    
+                   
+                   ##Biotic Factors####
+                   Response_var %in% biol_microbes ~ "Microbial biomass",                                                    
+                   Response_var %in% biol_enzymeactivity ~ "Enzyme activity",
+                   
+                   ####Pests####
+                   ## Weeds ####
+                   ##Broadleaves####
+                   Response_var %in% weed_Palmeramaranth ~ "Pigweed (#)",
+                   Response_var %in% weed_cocklebur ~ "Cocklebur (#)",
+                   Response_var %in% weed_deadnettle ~ "Dead nettle (#)",                  
+                   Response_var %in% weed_waterhemp ~ "Waterhemp (#)",                                    
+                   
+                   #Grasses#####
+                   Response_var %in% weed_foxtail ~ "Foxtail (#)",
+                   
+                   ###Weed community####
+                   Response_var %in% weed_community_density ~ "Weed community (#)",                  
+                   Response_var %in% weed_community_biomass ~ "Weeed community (biomass)",                                    
+                   
+                   ## Nematodes ####
+                   Response_var %in% invert_pests_SCN ~ "Soybean cyst nematode (#)",                                    
+                   ## Invertebrates ####                  
+                   Response_var %in% invert_pests_Aglycines ~ "Soybean aphid (#)",                                    
+                   Response_var %in% invert_pests_seedcornmaggot ~ "Seedcorn maggot (#)",                                    
+                   Response_var %in% invert_pests_cornrootworm ~ "Corn rootworm (#)",                                    
+                   
+                   ##Crop Damage####
+                   Response_var %in% invert_pests_cornrootworm_damage ~ "Damage caused by corn rootworm",                                                       
+                   Response_var %in% invert_pests_seedcornmaggot_damage ~ "Damage caused by seed corn maggot",                                                                         
+                   
+                   
+                   ##Pest Natural Enemies####
+                   Response_var %in% invert_preds ~ "Invertebrate predator (#)",                                                                         
+                   Response_var %in% invert_preds_soilcomm_abund ~ "Invertebrate soil community (#)", #found in soil                                                                         
+                   Response_var %in% invert_preds_soilcomm_div ~ "Invertebrate soil community (diversity)", #found in soil                                                                         
+                   Response_var %in% invert_preds_vegcomm_abund ~ "Invertebrate foliar community (#)", #found on leaves
+                   Response_var %in% invert_preds_vegcomm_div ~ "Invertebrate foliar community (diversity)", #found on leaves
+                   Response_var %in% invert_preds_activity ~ "Invertebrate predator (activity)", 
+                   Response_var %in% invert_nonpredpest ~ "Invertebrate non-predator & pests (#)",                   
+                   
+                   ##Pathogens####
+                   Response_var %in% pathogen ~ "Pathogens",                                     
+                   
+                   
+                   ####Crop Yields####
+                   
+                   ## Grain production####
+                   ##Soybean####        
+                   Response_var %in% yields_grainsoy ~ "Soybean",                                     
+                   
+                   ##Corn####   
+                   Response_var %in% yields_grainmaize ~ "Corn",                                     
+                   
+                   ##Crop Growth####
+                   ##Corn####
+                   Response_var %in% yields_biomass_abvgrd ~ "Corn stalk biomass",                                     
+                   Response_var %in% yields_biomass_blwgrd ~ "Corn root biomass",                                     
+                   
+                   ##Crop Nitrogen Content ####
+                   ##Corn####        
+                   Response_var %in% crop_N_maizestalk ~ "Corn stalk nitrogen content",                                     
+                   
+                   ##Soybean####   
+                   Response_var %in% crop_N_soybean ~ "Soybean stalk nitrogen content",                                     
+                   
+                   ##Grain Quality####
+                   ##Corn####
+                   Response_var %in% crop_N_maizegrain ~ "Corn nitrogen content",                                     
+                   
+                   ##Stand Count####
+                   ##Corn####    
+                   Response_var %in% standcount_corn ~ "Corn",                                     
+                   
+                   ##Soybean####
+                   Response_var %in% standcount_soybean ~ "Soybean",                                                       
+                   
+                   ####Water Quality####
+                   
+                   ## Flow Quantity####
+                   ##Water####  
+                   Response_var %in% water_discharge ~ "Water discharge",                                                       
+                   Response_var %in% water_drainage ~ "Drainage",                                                       
+                   
+                   ##Nutrient Runoff####
+                   ##Nitrate####
+                   Response_var %in% runoff_nitrate ~ "Nitrate" ,
+                   ##Phosphorus####
+                   Response_var %in% runoff_phosphorus ~ "Phosphorus"                                                       
+                 )) 
+                      
+                                    #Attach column to Results######
                 Results <-
                   left_join(Results, metric_labels, by = c("Res_key", "Response_var"))
                 
-                
+
+               missing <- Results[is.na(Results$group_level1),] #check to see if all rows have an assigned group_level1
+               missing <- Results[is.na(Results$group_level2),] #check to see if all rows have an assigned group_level2
+               missing <- Results[is.na(Results$group_level3),] #check to see if all rows have an assigned group_level3
+               
+               
+               ####Save Results file with added Group names
+               write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Cover Crop Review/CC_ResultsGrouped.csv", row.names = FALSE)
+               
+                               
 
 
 #############################################################################################
@@ -3608,7 +3873,7 @@ mutate(
     Response_var %in% chem_crop_SON ~ "Crop derived N",
     Response_var %in% chem_totalN ~ "Total N",
     Response_var %in% chem_ammonium ~ "Ammonium (NH4)",
-    Response_var %in% chem_nitrate ~ "Nitrate (NO4)",
+    Response_var %in% chem_nitrate ~ "Nitrate (NO3)",
     Response_var %in% chem_CNratio ~ "C to N ratio",
     
     #P & K####

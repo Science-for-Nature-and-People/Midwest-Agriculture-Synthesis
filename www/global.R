@@ -51,7 +51,7 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
   #combining them makes sorting a bit easier (only have to do one column instead of 2)
   mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
   #get rid of rows with not enough data (no standard error means ?)
-  filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
+  #filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
   #we don't care about comparing a treatment to itself for the app
   filter(Trt_1name != Trt_2name)
 
@@ -65,11 +65,12 @@ cum_year_avg <- function(year_group){
     filter(sample_year %in% sample_year_ordered[1:which(sample_year_ordered == year_group)]) %>%
     #group by everything except year, so that we can add the cumulative part
     group_by(Review, group_level1, group_level2, group_level3, sample_depth, Trt_compare, Trt_1name, Trt_2name, trt_specifics, nutrient_groups) %>%
-    #weigh means by number of observations
-    mutate(new_mean_per = weighted.mean(mean_per_change, num_comparisons),
-           new_sem_per = weighted.mean(sem_per_change, num_comparisons),
-           new_mean_actual = weighted.mean(mean_actual_diff, num_comparisons),
-           new_sem_actual = weighted.mean(sem_actual_diff, num_comparisons)) %>%
+    #create a simple mean between years. there are more observations in the eariler groups, but we are claiming that the different grouping are still of equal importanec
+      # this is equivalent to putting some extra weight on the later groupings.
+    mutate(new_mean_per = mean(mean_per_change),
+           new_sem_per = mean(sem_per_change),
+           new_mean_actual = mean(mean_actual_diff),
+           new_sem_actual = mean(sem_actual_diff)) %>%
     filter(sample_year == year_group)
 }
 

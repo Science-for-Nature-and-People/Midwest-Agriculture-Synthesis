@@ -79,7 +79,7 @@ cum_data <- purrr::map_df(sample_year_ordered, ~cum_year_avg(.x))
 #combine the two dataframes, and replace the old means/SE with the new ones.
 #this is the final summary data, used on the table
 summary_data <- summary_base %>% 
-  left_join(cum_data, by = names(summary_data)) %>%
+  left_join(cum_data, by = names(summary_base)) %>%
   select(-c(mean_per_change, sem_per_change, mean_actual_diff, sem_actual_diff)) %>%
   rename('mean_per_change' = new_mean_per,
          'sem_per_change' = new_sem_per,

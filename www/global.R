@@ -57,35 +57,33 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
 
 
 #' using summary_base, create new means/standard errors based on cumulative age grouping
+#' note that this only applies to tillage, since it's the only one that has year information
 #' this relies on both summary_data and sample_year_ordered (both created above)
 #' @param year_group should be an element of sample_year
 cum_year_avg <- function(year_group){
   summary_base %>%
-    #takes all the year groupings before
-    filter(sample_year %in% sample_year_ordered[1:which(sample_year_ordered == year_group)]) %>%
+    #takes all the year groupings before, filter tillage only
+    filter(sample_year %in% sample_year_ordered[1:which(sample_year_ordered == year_group)],
+           Review == 'Tillage') %>%
     #group by everything except year, so that we can add the cumulative part
     group_by(Review, group_level1, group_level2, group_level3, sample_depth, Trt_compare, Trt_1name, Trt_2name, trt_specifics, nutrient_groups) %>%
     #create a simple mean between years. there are more observations in the eariler groups, but we are claiming that the different grouping are still of equal importanec
       # this is equivalent to putting some extra weight on the later groupings.
-    mutate(new_mean_per = mean(mean_per_change),
-           new_sem_per = mean(sem_per_change),
-           new_mean_actual = mean(mean_actual_diff),
-           new_sem_actual = mean(sem_actual_diff)) %>%
+    mutate(mean_per_change = mean(mean_per_change),
+           sem_per_change = mean(sem_per_change),
+           mean_actual_diff = mean(mean_actual_diff),
+           sem_actual_diff = mean(sem_actual_diff)) %>%
     filter(sample_year == year_group)
 }
 
 #this combines the result of cum_avg for ALL of the age groups
-cum_data <- purrr::map_df(sample_year_ordered, ~cum_year_avg(.x))
+tillage_cum_data <- purrr::map_df(sample_year_ordered, ~cum_year_avg(.x))
 
-#combine the two dataframes, and replace the old means/SE with the new ones.
+# replace the tillage data with the new cumulative data
 #this is the final summary data, used on the table
 summary_data <- summary_base %>% 
-  left_join(cum_data, by = names(summary_base)) %>%
-  select(-c(mean_per_change, sem_per_change, mean_actual_diff, sem_actual_diff)) %>%
-  rename('mean_per_change' = new_mean_per,
-         'sem_per_change' = new_sem_per,
-         'mean_actual_diff' = new_mean_actual,
-         'sem_actual_diff' = new_sem_actual)
+  filter(Review != 'Tillage') %>%
+  bind_rows(tillage_cum_data)
 
 
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)

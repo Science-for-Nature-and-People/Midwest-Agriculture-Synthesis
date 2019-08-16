@@ -1021,110 +1021,6 @@ mutate(
     
     
     
-    
-    #####Other Soil Properties####
-            
-        ##Physical properties####
-    phy_erosion <- c(
-      "soil loss",
-      "interrill erosion rate",
-      "rill erosion rate",
-      "erodible fraction from the top 50 mm of soil (soil aggregates < 0.84 mm)",
-      "sediment load following fall manure",
-      "sediment load following spring manure"
-      
-    )
-    
-    phy_compaction <- c(
-      "soil penetration resistance",
-      "soil penetration resistance (Spring)",
-      "soil penetration resistance (Fall)"
-    )
-    
-    phy_totalpores <- c(
-      "total pore spaces"
-      )
-    
-    phy_airpores <- c(
-    "air filled pore space",
-    "volumetric air content",
-    "pore tortuosity factor",
-    "relative gas diffusion coefficient")
-    
-    phy_waterpores <- c("water filled pore space")
-    
-    phy_aggregatestability <- c(
-      "mean weight diameter of water stable aggregates",
-      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates < 0.42 mm)",               
-      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",
-      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)", 
-      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",  
-      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)", 
-      "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates > 19.2 mm)"               
-    )
-    phy_aggregatesize <- c(
-      "water aggregate stability",
-      "water stable aggregates in soybean",
-      "water stable aggregates in maize",                                                                                 
-      "water stable mean weight diameter (0-10 cm depth)",                                                                 
-      "water stable mean weight diameter (10-20 cm depth)",                                                                
-      "water stable mean weight diameter (20-40 cm depth)",                                                               
-      "water stable mean weight diameter (40-60 cm depth)"
-    ) 
-    phy_bulkdensity <- c(
-      "bulk density (0-15 cm depth)",                                                                                            
-      "bulk density (15-30 cm depth)",                                                                                           
-      "bulk density 0-30 cm depth (spring)",
-      "bulk density",
-      "bulk density (0-10 cm depth)",                                                                                
-      "bulk density (10-20 cm depth)",                                                                               
-      "bulk density (20-40 cm depth)",                                                                               
-      "bulk density (40-60 cm depth)"
-    )
-    
-    
-    phy_sand <- c(
-      "percent sand  (0-15 cm depth)",                                                                                    
-      "percent sand  (15-30 cm depth)")
-    phy_silt <- c(
-      "percent silt  (0-15 cm depth)",                                                                                  
-      "percent silt  (15-30 cm depth)")
-    phy_clay <- c(
-      "percent clay  (0-15 cm depth)",                                                                                  
-      "percent clay  (15-30 cm depth)"                                                                                   
-    ) 
-    
-    phy_som <- c(
-                  "total POM",
-                  "particulate organic matter (fPOM) including macro orgnaic matter fractions",
-                  "particulate organic matter (oPOM)",
-                  "soil organic matter",
-                  "soil organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                                      
-                  "soil organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",                       
-                  "soil organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",                        
-                  "soil organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",                         
-                  "soil organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",                        
-                  "soil organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                                      
-                  "fine particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                          
-                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",           
-                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",            
-                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",             
-                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",            
-                  "fine particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                          
-                  "total particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                         
-                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",          
-                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",           
-                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",            
-                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",           
-                  "total particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)"                         
-                )
-    
-        ##Chemical Properties#####
-    
-            chem_acidity <- c(
-              "pH",
-              "pH (0-15 cm)")
-            
     #####Soil Nutrients####                
         ###Nitrogen#######
                 chem_nitrate_spring <- c(
@@ -1221,8 +1117,109 @@ mutate(
                   "exchangable potassium (K)"
                 )
                 
+      #####Other Soil Properties####
                 
-    ####Soil Physical Properties####
+                ##Physical properties####
+                phy_erosion <- c(
+                  "soil loss",
+                  "interrill erosion rate",
+                  "rill erosion rate",
+                  "erodible fraction from the top 50 mm of soil (soil aggregates < 0.84 mm)",
+                  "sediment load following fall manure",
+                  "sediment load following spring manure"
+                  
+                )
+                
+                phy_compaction <- c(
+                  "soil penetration resistance",
+                  "soil penetration resistance (Spring)",
+                  "soil penetration resistance (Fall)"
+                )
+                
+                phy_totalpores <- c(
+                  "total pore spaces"
+                )
+                
+                phy_airpores <- c(
+                  "air filled pore space",
+                  "volumetric air content",
+                  "pore tortuosity factor",
+                  "relative gas diffusion coefficient")
+                
+                phy_waterpores <- c("water filled pore space")
+                
+                phy_aggregatestability <- c(
+                  "mean weight diameter of water stable aggregates",
+                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates < 0.42 mm)",               
+                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",
+                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)", 
+                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",  
+                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)", 
+                  "fraction of dry soil aggregate size distribution from the top 50 mm of soil (aggregates > 19.2 mm)"               
+                )
+                phy_aggregatesize <- c(
+                  "water aggregate stability",
+                  "water stable aggregates in soybean",
+                  "water stable aggregates in maize",                                                                                 
+                  "water stable mean weight diameter (0-10 cm depth)",                                                                 
+                  "water stable mean weight diameter (10-20 cm depth)",                                                                
+                  "water stable mean weight diameter (20-40 cm depth)",                                                               
+                  "water stable mean weight diameter (40-60 cm depth)"
+                ) 
+                phy_bulkdensity <- c(
+                  "bulk density (0-15 cm depth)",                                                                                            
+                  "bulk density (15-30 cm depth)",                                                                                           
+                  "bulk density 0-30 cm depth (spring)",
+                  "bulk density",
+                  "bulk density (0-10 cm depth)",                                                                                
+                  "bulk density (10-20 cm depth)",                                                                               
+                  "bulk density (20-40 cm depth)",                                                                               
+                  "bulk density (40-60 cm depth)"
+                )
+                
+                
+                phy_sand <- c(
+                  "percent sand  (0-15 cm depth)",                                                                                    
+                  "percent sand  (15-30 cm depth)")
+                phy_silt <- c(
+                  "percent silt  (0-15 cm depth)",                                                                                  
+                  "percent silt  (15-30 cm depth)")
+                phy_clay <- c(
+                  "percent clay  (0-15 cm depth)",                                                                                  
+                  "percent clay  (15-30 cm depth)"                                                                                   
+                ) 
+                
+                phy_som <- c(
+                  "total POM",
+                  "particulate organic matter (fPOM) including macro orgnaic matter fractions",
+                  "particulate organic matter (oPOM)",
+                  "soil organic matter",
+                  "soil organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                                      
+                  "soil organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",                       
+                  "soil organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",                        
+                  "soil organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",                         
+                  "soil organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",                        
+                  "soil organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                                      
+                  "fine particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                          
+                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",           
+                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",            
+                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",             
+                  "fine particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",            
+                  "fine particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)",                          
+                  "total particulate organic matter level from the top 50 mm of soil (aggregates < 0.42 mm)",                         
+                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.42 and 0.84 mm)",          
+                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 0.84 and 2.0 mm)",           
+                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 2.0 and 6.4 mm)",            
+                  "total particulate organic matter level from the top 50 mm of soil (aggregates between 6.4 and 19.2 mm)",           
+                  "total particulate organic matter level from the top 50 mm of soil (aggregates > 19.2 mm)"                         
+                )
+                
+                ##Chemical Properties#####
+                
+                chem_acidity <- c(
+                  "pH",
+                  "pH (0-15 cm)")            
+                
         ##Abiotic Factors######          
                 
                 phy_watercontent <- c(
@@ -1592,40 +1589,38 @@ mutate(
                       Response_var %in% phy_silt ~ "Other Soil Properties",                
                       Response_var %in% phy_clay ~ "Other Soil Properties",                
                       Response_var %in% phy_som ~ "Other Soil Properties",                
-                                      
-                      ##Chemical Properties#####
+      
+      ##Abiotic Factors######          
+      Response_var %in% phy_watercontent ~ "Other Soil Properties",                                                    
+      Response_var %in% envir_temp ~ "Other Soil Properties",                                                    
+      
+      ##Biotic Factors####
+      Response_var %in% biol_microbes ~ "Other Soil Properties",                                                    
+      Response_var %in% biol_enzymeactivity ~ "Other Soil Properties",                  
+      
+      ##Chemical Properties#####
       Response_var %in% chem_acidity ~ "Other Soil Properties",                
                       
+      
       #####Soil Nutrients####                
                       ###Nitrogen#######
      ##Nitrate####
-       Response_var %in% chem_nitrate_spring ~ "Other Soil Properties",                
-      Response_var %in% chem_nitrate_maize ~ "Other Soil Properties",                                 
-      Response_var %in% chem_nitrate_soybean ~ "Other Soil Properties",                                 
-      Response_var %in% chem_nitrate_fall ~ "Other Soil Properties",                                 
+       Response_var %in% chem_nitrate_spring ~ "Soil Nutrients",                
+      Response_var %in% chem_nitrate_maize ~ "Soil Nutrients",                                 
+      Response_var %in% chem_nitrate_soybean ~ "Soil Nutrients",                                 
+      Response_var %in% chem_nitrate_fall ~ "Soil Nutrients",                                 
     ##Ammonium####                  
-    Response_var %in% chem_ammonium_spring ~ "Other Soil Properties",                                 
+    Response_var %in% chem_ammonium_spring ~ "Soil Nutrients",                                 
     
     ##Total Nitrogen####
-    Response_var %in% chem_totalN ~ "Other Soil Properties",                                                    
+    Response_var %in% chem_totalN ~ "Soil Nutrients",                                                    
                 
                       
                       ##Phosphorus#####
-    Response_var %in% chem_phosphorus ~ "Other Soil Properties",                                                    
+    Response_var %in% chem_phosphorus ~ "Soil Nutrients",                                                    
                        
                       ##Potassium####    
-    Response_var %in% chem_potassium ~ "Other Soil Properties",                                                    
-                      
-    ####Soil Physical Properties####
-    
-    ##Abiotic Factors######          
-    Response_var %in% phy_watercontent ~ "Soil Physical Properties",                                                    
-    Response_var %in% envir_temp ~ "Soil Physical Properties",                                                    
-    
-    ##Biotic Factors####
-    Response_var %in% biol_microbes ~ "Soil Physical Properties",                                                    
-    Response_var %in% biol_enzymeactivity ~ "Soil Physical Properties",                  
-                      
+    Response_var %in% chem_potassium ~ "Soil Nutrients",                                                    
                       
                       ####Pests####
                       ## Weeds ####
@@ -1741,7 +1736,16 @@ mutate(
                    
                    ##Chemical Properties#####
                    Response_var %in% chem_acidity ~ "Chemical Properties",                       
+              
+                   ##Abiotic Factors######          
+                   Response_var %in% phy_watercontent ~ "Abiotic Factors",                                                    
+                   Response_var %in% envir_temp ~ "Abiotic Factors",                                                    
                    
+                   ##Biotic Factors####
+                   Response_var %in% biol_microbes ~ "Biotic Factors",                                                    
+                   Response_var %in% biol_enzymeactivity ~ "Biotic Factors",
+                   
+                        
                    #####Soil Nutrients####                
                    ###Nitrogen#######
                    ##Nitrate####
@@ -1762,14 +1766,6 @@ mutate(
                    ##Potassium####    
                    Response_var %in% chem_potassium ~ "P & K",                                                    
                    
-                   ####Soil Physical Properties####
-                   ##Abiotic Factors######          
-                   Response_var %in% phy_watercontent ~ "Soil Physical Properties",                                                    
-                   Response_var %in% envir_temp ~ "Soil Physical Properties",                                                    
-                   
-                   ##Biotic Factors####
-                   Response_var %in% biol_microbes ~ "Soil Physical Properties",                                                    
-                   Response_var %in% biol_enzymeactivity ~ "Soil Physical Properties",
                    
                    ####Pests####
                    ## Weeds ####
@@ -1887,6 +1883,15 @@ mutate(
                    ##Chemical Properties#####
                    Response_var %in% chem_acidity ~ "pH",                       
                    
+                   
+                   ##Abiotic Factors######          
+                   Response_var %in% phy_watercontent ~ "Soil moisture",                                                    
+                   Response_var %in% envir_temp ~ "Soil temperature",                                                    
+                   
+                   ##Biotic Factors####
+                   Response_var %in% biol_microbes ~ "Microbial biomass",                                                    
+                   Response_var %in% biol_enzymeactivity ~ "Enzyme activity",
+                   
                    #####Soil Nutrients####                
                    ###Nitrogen#######
                    ##Nitrate####
@@ -1906,15 +1911,6 @@ mutate(
                    
                    ##Potassium####    
                    Response_var %in% chem_potassium ~ "Potassium",                                                    
-                   
-                   ####Soil Physical Properties####
-                   ##Abiotic Factors######          
-                   Response_var %in% phy_watercontent ~ "Soil moisture",                                                    
-                   Response_var %in% envir_temp ~ "Soil temperature",                                                    
-                   
-                   ##Biotic Factors####
-                   Response_var %in% biol_microbes ~ "Microbial biomass",                                                    
-                   Response_var %in% biol_enzymeactivity ~ "Enzyme activity",
                    
                    ####Pests####
                    ## Weeds ####

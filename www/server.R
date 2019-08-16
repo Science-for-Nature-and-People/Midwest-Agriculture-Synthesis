@@ -107,7 +107,7 @@ server <- function(input, output, session) {
       # 
         df_outcome() %>%
         #if NA is a selected choice, it shows up as a empty string in input$SoilDepth, so we gotta adjust
-          filter(sample_depth %in% input$SoilDepth | (is.na(sample_depth) & "" %in% input$SoilDepth))
+          filter(sample_depth %in% input$SoilDepth | (is.na(sample_depth) & "Soil Surface" %in% input$SoilDepth))
           #filter(sample_depth %in% cumulative_sample_depth_choices)
         
     }
@@ -127,7 +127,8 @@ server <- function(input, output, session) {
     if(input$MgmtPractice == 'Tillage'){
       # filter dataset to display selected review and response variables
       df_depth() %>%
-        filter(sample_year %in% input$years) %>%
+        #if NA is a selected choice, it shows up as a empty string in input$year, so we gotta check
+        filter(sample_year %in% input$years | (is.na(sample_year) & input$years %in% "")) %>%
         group_by(sample_year) %>%
         mutate(group_facet_level32 = fct_reorder(group_facet_level32, mean_per_change)) %>%
         ungroup()
@@ -299,7 +300,7 @@ server <- function(input, output, session) {
     )
     updateCheckboxGroupInput(session, "years", "Years of Implementation",
       #choices = unique(df_outcome()$sample_year),
-      choices = new_choices,
+      choices = c(new_choices, NA),
       #if groupings are the same as last groupings (old groupings are input$years)
         #then keep the old groupings. if the groupings are new, just pick the first one
       selected = ifelse(input$years %in% new_choices, input$years, new_choices[1])
@@ -343,7 +344,7 @@ server <- function(input, output, session) {
       new_depths <- df_outcome()$sample_depth %>% unique %>% sort
       cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
       updateCheckboxGroupInput(session, inputId = 'SoilDepth',
-                               choices = c(new_depths, NA),
+                               choices = c(new_depths, 'Soil Surface'),
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
       shinyjs::show('SoilDepth')
     }

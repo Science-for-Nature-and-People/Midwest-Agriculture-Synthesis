@@ -103,7 +103,7 @@ ui <- navbarPage(
                  shinyjs::hidden(
                     checkboxGroupInput(
                       inputId = "SoilDepth", label = "Soil Sampling Depth",
-                      choices = c(sort(unique(summary_data$sample_depth)), NA),# multiple = T,
+                      choices = c(sort(unique(summary_data$sample_depth)), 'Soil Surface'),# multiple = T,
                       selected = "0-30 cm"
                       #selected = unique(summary_data$Legend_1)[1]
                     )
@@ -112,7 +112,7 @@ ui <- navbarPage(
           ),
         shinyjs::hidden(checkboxGroupInput(
           inputId = "years", label = "Years of Implementation",
-          choices = unique(summary_data$sample_year) %>% sort(),# multiple = T,
+          choices = c(sort(unique(summary_data$sample_year)), NA),# multiple = T,
           selected = "Year 1-5"
           #selected = unique(summary_data$Legend_1)[1]
         )

@@ -121,10 +121,22 @@ server <- function(input, output, session) {
   df_years <- eventReactive(c(df_depth(), input$years), {
     
     
-    cat(file = stderr(), 'df_years is updated \n \n')
+    cat(file = stderr(), is.null(input$years), 'df_years is updated \n \n')
     
+    # validate(
+    #   need(input$years, 'no year selected'),
+    #   need(nrow(df_depth())>0, 'df_depth is empty' )
+    # )
     #year is tillage specific, so ignore it if management practice isn't tillage
     if(input$MgmtPractice == 'Tillage'){
+      if(is.null(input$years)){
+        #return an empty tibble, which will disable the update button
+        return(tibble())
+      }
+      # Check if there are checked years that don't exist in our data (include empty string for NA)
+      if(length(setdiff(input$years, c('', unique(df_depth()$sample_year)))) > 0){
+        return(tibble())
+      }
       # filter dataset to display selected review and response variables
       df_depth() %>%
         #if NA is a selected choice, it shows up as a empty string in input$year, so we gotta check
@@ -286,27 +298,27 @@ server <- function(input, output, session) {
 #update year legend based on previous buttons
   #if  the old selected legend isn't an option in thew new practice/outcomes, then this changes sample_year, triggeirng change in df_years
   observeEvent({
-    df_outcome()
+    df_depth()
     #input$update
     }, {
 
     #cat(file = stderr(), input$RV, '\n')
     #cat(file = stderr(), unique(input$years), ': legend \n')
 
-    #new_choices are groupings, which depend on the selected practice and outcomes (eg df_outcome)
-    new_choices <- unique(df_outcome()$sample_year) %>% sort
+    #new_choices are groupings, which depend on the selected practice and depths (eg df_depth)
+    new_choices <- unique(df_depth()$sample_year) %>% sort(na.last = TRUE)
     validate(
       need(new_choices, 'There are no available years of implementation')
     )
     updateCheckboxGroupInput(session, "years", "Years of Implementation",
-      #choices = unique(df_outcome()$sample_year),
-      choices = c(new_choices, NA),
-      #if groupings are the same as last groupings (old groupings are input$years)
+      #choices = unique(df_depth()$sample_year),
+      choices = new_choices,
+      #if groupings are the same as last groupings (old groupings are input$years + empty string for NA)
         #then keep the old groupings. if the groupings are new, just pick the first one
-      selected = ifelse(input$years %in% new_choices, input$years, new_choices[1])
+      selected = ifelse(input$years %in% c(new_choices, ""), input$years, new_choices[1])
     )
       #cat(file = stderr(), new_choices, ': df_practice$legend \n')
-      #cat(file = stderr(), unique(df_outcome()$sample_year), ':df_outcome$legend \n')
+      #cat(file = stderr(), unique(df_depth()$sample_year), ':df_depth$legend \n')
   })
 
   # observeEvent(df_map(), {
@@ -341,10 +353,10 @@ server <- function(input, output, session) {
       validate(
         need(df_outcome()$sample_depth, 'no sample depth')
       )
-      new_depths <- df_outcome()$sample_depth %>% unique %>% sort
+      new_depths <- df_outcome()$sample_depth %>% unique %>% sort(na.last = TRUE) %>% tidyr::replace_na('Soil Surface')
       cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
       updateCheckboxGroupInput(session, inputId = 'SoilDepth',
-                               choices = c(new_depths, 'Soil Surface'),
+                               choices = c(new_depths),
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
       shinyjs::show('SoilDepth')
     }

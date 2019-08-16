@@ -3,7 +3,8 @@ filter_1 <- 'Conventional tillage'
 filter_2 <- 'No tillage'
 rv <- 'Climate Mitigation'
 depth <- c('0-30 cm', '0-60 cm', '0-150 cm', '0-100 cm', NA)
-yrs <- c('Year 1-5', 'Years 1-10','Years 1-20', 'Years 1-30', 'Years 1-40', 'Years 1-50')
+#yrs <- c('Year 1-5', 'Years 1-10','Years 1-20', 'Years 1-30', 'Years 1-40', 'Years 1-50')
+yrs <- ''
 
 #df_practice
 df_practice <- function(MgmtPractice){
@@ -93,7 +94,7 @@ df_years <- function(years){
     
     # filter dataset to display selected review and response variables
     df %>%
-      filter(sample_year %in% years) %>%
+      filter(sample_year %in% years| (is.na(sample_year) & years %in% "")) %>%
       group_by(sample_year) %>%
       mutate(group_facet_level32 = fct_reorder(group_facet_level32, mean_per_change)) %>%
       ungroup()

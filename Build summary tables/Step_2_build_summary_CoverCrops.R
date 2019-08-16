@@ -6,6 +6,7 @@ library(dplyr)
 library(tidyverse)
 library(stringr) #string detection/ working with strings
 library(plotrix) # for standard error calculations
+library(splitstackshape) #expanding results by # of years the data recorded represent
 
 
 #This file:
@@ -22,466 +23,284 @@ df <-  read.csv(file.path(datapath, "Cover Crop Review/CC_ResultsGrouped.csv"), 
 
 #####Filter######################################################################
 
-df <- filter(df,!(Trt_id1 > 0), Group_finelevel != "none", Stat_type == "mean", !is.na(Trt_id1value) & !is.na(Trt_id2value)) 
+#Rename review_id to Review
+df <- rename(df, finelevel_group = Group_finelevel, Review = Review_id, Trt1_value = Trt_id1value, Trt2_value = Trt_id2value)
+
+###Keep all comparisons - use Trt_id1name and Trt_id2name to make comparisons
+
+#keep rows only with Stat_type == mean
+df <- df %>% filter(Stat_type == "mean", !is.na(Trt1_value) & !is.na(Trt2_value),
+#remove rows with comparisons not suited for this analysis, where finelevel_group = mgmt, termination, none
+ !(finelevel_group == "mgmt"), !(finelevel_group == "termination"), !(finelevel_group == "none"),
+!(Trt_id1name == c("oat (corn), clover (soybean)" ,"tillage", "winter rye (corn), hairy vetch (soybean)"))) %>% droplevels()
+
+df <- df %>% filter(!(Trt_id2name == c("hairy vetch (corn) / winter rye (soybean)", 
+                                          "hairy vetch + winter rye (corn) / winter rye (soybean)",
+                                          "herbicide (no tillage)", "mowing", "oat (corn), clover (soybean)",
+                                          "oat, Italian ryegrass, or forage radish",
+                                          "slender wheatgrass (corn), winter lentils (soybean)",
+                                          "winter rye (corn), hairy vetch (soybean)")),
+              Trt_id1 == 0)  %>% droplevels()
+
+#Build list of units for each grouping variable #####
+
+#for each Review_id, Group_RV, group_metric build column of list with Response_var_units
+
+unit_list <- df %>%
+  select(Review, group_level1, group_level2, group_level3, Response_var_units) %>%
+  group_by(Review, group_level1, group_level2, group_level3) %>%
+  mutate(unit_list = case_when(!is.na(group_level1) ~ paste(unique(Response_var_units), collapse = "; "))) %>%
+  select(Review, group_level1, group_level2, group_level3, unit_list) %>%
+  distinct()
+
+
+write.csv(unit_list, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Cover Crop Review/CC_Group_units.csv", row.names = FALSE)
 
 
 
 #####Calculate Percent Change [(Trtmt-Control)/Control] for each row
-df$Trt_id1value <- as.numeric(as.character(df$Trt_id1value))
-df$Trt_id2value <- as.numeric(as.character(df$Trt_id2value))
+df$Trt1_value <- as.numeric(as.character(df$Trt1_value))
+df$Trt2_value <- as.numeric(as.character(df$Trt2_value))
 
 
 df <- df %>%
-  mutate(per_change = if_else(Trt_id1value == 0,  ((Trt_id2value - 0)/1)*100, ((Trt_id2value - Trt_id1value)/Trt_id1value)*100)) %>%      
-  mutate(abundance_change = if_else((str_detect(main_group,"Invertebrates") & ((str_detect(group_metric, "#") | str_detect(Response_var_units, "# | number"))) | (str_detect(Response_var_units, "%"))), 
-                                    (Trt_id2value - Trt_id1value), NULL))
+  mutate(per_change = if_else(Trt1_value == 0,  ((Trt2_value - 0)/1)*100, ((Trt2_value - Trt1_value)/Trt1_value)*100)) %>%      
+  mutate(actual_diff = (Trt2_value - Trt1_value))
+
+
+
 #Use number change for changes in Invertebrate Pest and Predator populations
-levels(df$group_metric)
+levels(df$group_level1)
+levels(df$group_level2)
+levels(df$group_level3)
 
-#Change types
-df$per_change <- as.numeric(as.character(df$per_change))
-df$abundance_change <- as.numeric(as.character(df$abundance_change))
-df$Paper_id <- as.factor(df$Paper_id)
-df$main_group <- as.factor(df$main_group)
+###Apply treatment name groups to tillage_1 and tillage_2 columns#####
 
-#df$Review_specific <- as.factor(df$Review_specific)
+levels(df$finelevel_group)
 
-#Adjust data so values representing multiple years are replicated within the dataframe####
-#Weight means so they reflect # of years those data represent
-
-#Create column that shows total number of years project was conducted (duration.yr )
-df <- df %>%
-  mutate(duration.yr = sub('.*-', '', df$Duration)) 
-
-df$duration.yr <- as.numeric(df$duration.yr)
-
-#determine number of years each mean represents
-df$Year_result <- as.numeric(df$Year_result)
-
-df <- df %>%
-  mutate(per_change_yr = if_else(Year_result < 1, duration.yr, 1))
-
-
-#  replicate rows so that total number of rows for that datapoint is equal to the # years the datapoint represents
-df <- df %>% 
-  uncount(per_change_yr)
-
-
-####Replace group_finelevel with a more descriptive description########################
-
-nonlegume <- c("rye", "canola", "rapeseed", "radish", "triticale", "wheat", "oat", "mustard", "buckwheat", "barley")
-legume <- c("hairy vetch", "vetch", "red clover", "white clover", "crimson clover", "alfalfa", "Austrian winter peas")      
-
+##########################################Start HERRE##################################################################
 
 df <- df %>%
   mutate(
-    Legend_1 = case_when(
-      Group_finelevel %in% "mono" ~ "Single species", 
-      Group_finelevel %in% "mix_2" ~ "Two species",
-      Group_finelevel %in% "mix_3" ~ "Three or more species",
-      Group_finelevel %in% "none" ~ "Exclude")
-  ) %>%
-  filter(Legend_1 != "Exclude")  %>%
-  mutate(
-    Legend_2 = case_when(
-      #Monoculture: Rotation of Legume and Non-Legume
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Non-legume/Legume Rotation",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2name, "rye") &  str_detect(Trt_id2name, "vetch") ~ "Non-legume/Legume Rotation",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rape")  ~ "Non-Legume",
+    ##Cover crop diversity####  
+    Tillage_1 = case_when(
       
-      #Monocultures of Non-Legume
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rye") ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "canola") ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rapeseed")  ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "radish")  ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "triticale" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "tritical" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "wheat" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "oat" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "mustard" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "buckwheat" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "barley" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "bluegrass" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "chickweed" ) ~ "Non-Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "brome" ) ~ "Non-Legume",
+      #single species####
+      finelevel_group %in% "mono"  ~ "Single species",    
       
-      #Moncultures of Legumes
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "hairy vetch") ~ "Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "vetch") ~ "Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "clover") ~ "Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "alfalfa") ~ "Legume",
-      Group_finelevel %in% "mono" & str_detect(Trt_id2description, "peas") ~ "Legume",
+      #Two species####
+      finelevel_group %in% "mix_2"  ~ "Two species",
       
-      #Mixtures
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Non-Legume & Legume",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "vetch") ~ "Non-Legume & Legume",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "pea") ~ "Non-Legume & Legume",
-      Group_finelevel %in% "mix_3" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Non-Legume & Legume",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "buckwheat") ~ "Multiple Non-Legumes",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "oat") ~ "Multiple Non-Legumes",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "radish") ~ "Multiple Non-Legumes",
-      Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "triticale") ~ "Multiple Non-Legumes",
-      TRUE ~ "remove"
+      #Three or more species####
+      finelevel_group %in% "mix_3"  ~ "Three or more species"
+      
+#      #Mixture comparisons####
+      
+#      finelevel_group %in% "mono_mono"  ~ "Mixture comparisons",
+#      finelevel_group %in% "mono_mix_2"  ~ "Mixture comparisons",
+#      finelevel_group %in% "mix_2_mix_2"  ~ "Mixture comparisons",
+#      finelevel_group %in% "mono_mix_3"  ~ "Mixture comparisons",
+#      finelevel_group %in% "mix_2_mix_3"  ~ "Mixture comparisons"
     )) %>%
-  filter(Legend_2 != "remove") %>%
   
-  mutate( Legend_3 = case_when(
-    #Monoculture: Rotation of Legume and Non-Legume
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Cereal Rye/Vetch Rotation",
-    #Group_finelevel %in% "mono" & str_detect(Trt_id2name, "rye") &  str_detect(Trt_id2name, "vetch") ~ "Non-legume/Legume Rotation",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rape")  ~ "Rapeseed",
-    
-    #Monocultures of Non-Legume
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rye") ~ "Cereal Rye",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "canola") ~ "Canola",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "rapeseed")  ~ "Rapeseed",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "radish")  ~ "Tillage Radish",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "triticale" ) ~ "Winter Triticale",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "tritical" ) ~ "Winter Triticale",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "wheat" ) ~ "Winter Wheat",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "oat" ) ~ "Oat",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "mustard" ) ~ "Mustard",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "buckwheat" ) ~ "Buckwheat",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "barley" ) ~ "Barley",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "bluegrass" ) ~ "Canada Bluegrass",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "chickweed" ) ~ "Chickweed",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "brome" ) ~ "Downy Brome",
-    
-    #Moncultures of Legumes
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "hairy vetch") ~ "Vetch",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "vetch") ~ "Vetch",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "clover") ~ "Clover",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "alfalfa") ~ "Alfalfa",
-    Group_finelevel %in% "mono" & str_detect(Trt_id2description, "peas") ~ "Austrian Winter Peas",
-    
-    #Mixtures
-    Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") ~ "Cereal Rye/Vetch",
-    Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "vetch") ~ "Radish/Vetch",
-    Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "pea") ~ "Cereal Rye/Austrian Winter Pea",
-    Group_finelevel %in% "mix_3" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "vetch") &  str_detect(Trt_id2description, "radish") ~ "Rye/Vetch/Tillage Radish",
-    Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "buckwheat") ~ "Tillage Radish/Buckwheat",
-    Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "oat") ~ "Cereal Rye/Oat",
-    Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "rye") &  str_detect(Trt_id2description, "radish") ~ "Cereal Rye/TillageRadish",
-    Group_finelevel %in% "mix_2" & str_detect(Trt_id2description, "radish") &  str_detect(Trt_id2description, "triticale") ~ "Tillage Radish/Winter Triticale"
-    #TRUE ~ "inspect"
-  ))
+  mutate(
+    ##Functional diversity####  
+    Tillage_2 = case_when(
+      
+      #Non-legume + Legume Mixture####
+      Trt_id2name %in% "forage radish + hairy vetch + winter rye"  ~ "Non-legume + Legume Mixture",    
+      Trt_id2name %in% "winter rye + hairy vetch"  ~ "Non-legume + Legume Mixture",    
+      Trt_id2name %in% "winter rye + Austrian winter pea"  ~ "Non-legume + Legume Mixture",    
+      Trt_id2name %in% "forage radish + hairy vetch"  ~ "Non-legume + Legume Mixture",    
+      
+            
+      #Non-legume Mixture####
+      Trt_id2name %in% "forage radish + buckwheat"  ~ "Non-legume Mixture",    
+      Trt_id2name %in% "forage radish + winter triticale"  ~ "Non-legume Mixture",    
+      Trt_id2name %in% "winter rye + forage radish"  ~ "Non-legume Mixture",                                
+      Trt_id2name %in% "winter rye + oat"  ~ "Non-legume Mixture",    
+       
+      #Cover crop rotation####
+      Trt_id2name %in% "hairy vetch (corn) / winter rye (soybean)"  ~ "Rotation of Cover Crops",    
+      Trt_id2name %in% "hairy vetch + winter rye (corn) / winter rye (soybean)"  ~ "Rotation of Cover Crops",    
+      Trt_id2name %in% "oat (corn), clover (soybean)"   ~ "Rotation of Cover Crops",    
+      Trt_id2name %in% "slender wheatgrass (corn), winter lentils (soybean)"  ~ "Rotation of Cover Crops",    
+      Trt_id2name %in% "winter rye (corn), hairy vetch (soybean)"  ~ "Rotation of Cover Crops",    
+      
+      #Non-legumes####
+      Trt_id2name %in% "barley"  ~ "Non-legume",    
+      Trt_id2name %in% "Canada bluegrass"  ~ "Non-legume",    
+      Trt_id2name %in% "canola"  ~ "Non-legume",    
+      Trt_id2name %in% "chickweed"  ~ "Non-legume",    
+      Trt_id2name %in% "downy brome"  ~ "Non-legume",    
+      Trt_id2name %in% "forage radish"  ~ "Non-legume",    
+      Trt_id2name %in% "forage rape"  ~ "Non-legume",    
+      Trt_id2name %in% "Italian ryegrass"  ~ "Non-legume",    
+      Trt_id2name %in% "mustard"  ~ "Non-legume",    
+      Trt_id2name %in% "oat"  ~ "Non-legume",    
+      Trt_id2name %in% "oat, Italian ryegrass, or forage radish"  ~ "Non-legume",    
+      Trt_id2name %in% "perennial ryegrass"  ~ "Non-legume",    
+      Trt_id2name %in% "rapeseed"  ~ "Non-legume",    
+      Trt_id2name %in% "wheatgrass"  ~ "Non-legume",    
+      Trt_id2name %in% "winter rye"  ~ "Non-legume",    
+      Trt_id2name %in% "winter triticale"  ~ "Non-legume",                                          
+      Trt_id2name %in% "winter wheat"  ~ "Non-legume",       
 
-##Monoculture Groupings ####
+      #Legumes####
+      Trt_id2name %in% "alfalfa"  ~ "Legume",    
+      Trt_id2name %in% "Austrian winter pea"  ~ "Legume",
+      Trt_id2name %in% "clover"  ~ "Legume",
+      Trt_id2name %in% "hairy vetch"  ~ "Legume"))
+      
+          
+missing <- df %>% filter(is.na(Tillage_1))
+missing <- df %>% filter(is.na(Tillage_2))
+                           
 
-####Add broad groupings of monocultured cover crops####
-# Mismatches for descriptions of rotated monocultures of cover crops
-#levels(df$Trt_id2name)
-#str_view(df$Trt_id2name, "rye")
-
-
-
-#   df2 <- df %>%
-#             mutate(
-#                     monocultures = case_when(
-#                            Trt_id2name %in% str_match(Trt_id2name, nonlegume & legume) & 
-#                                      Cover_crop_diversity %in% "Monoculture" ~ "Rotation of Non-Legume & Legume", 
-#                            Trt_id2name %in% str_match(Trt_id2name, "rye") & Cover_crop_diversity %in% "Monoculture" ~ "Winter Rye", 
-#                            Trt_id2name %in% str_match(Trt_id2name, legume) &
-#                                      Cover_crop_diversity %in% "Monoculture" ~ "Legume", 
-#                            Cover_crop_diversity %in% "Monoculture" ~ "Non-Legume", 
-#                            TRUE ~ ""
-#                        ))
-
-#   rm(df2)
+      
+df <- cSplit(df, splitCols = "RV_year", sep = ",", direction = "long") # all data were expanded based on list of years 
 
 
-####Group_RV: Soil####
-df_soil <- df %>%
-  filter (Group_RV == "Soil")
-colnames(df_soil)
+######Organize soil sampling depth and year variables########
 
-#Explore data distribution
-#look by Response_var
+unique(levels(df$RV_depth))
 
-qplot(Response_var, per_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_soil,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+#####soil depth groupings#####
+#These will display such that it is always displying the results from more shallow sampling depths + deepest depth
+#Organized by means of sampling depth
 
-outliers <- filter(df_soil, per_change > 90)
-outliers <- filter(df_soil, per_change < -90)
+depth_0_30 <- c(
+  "0-5 cm" ,
+  "0-7.6 cm",
+  "0-10 cm",
+  "0-15 cm",
+  "0-20 cm",
+  "0-30 cm",
+  "10-20 cm",
+  "10 cm",
+  "15-30 cm",
+  "15.2-30.5 cm",
+  "20-40 cm",
+  "20 cm",
+  "20 cm ",
+  "5-15 cm",
+  "5-20 cm",
+  "7.6-15.2 cm",
+  "topsoil"
+)
 
+depth_0_60 <- c(
+  "0-45 cm",
+  "0-46 cm",
+  "0-50 cm",
+  "0-60 cm",
+  "15-75 cm",
+  "30-60 cm",
+  "30.5-61 cm",
+  "40-60 cm",
+  "60-90 cm"
+)
+  
 
-soil_summary3 <- df_soil %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
-  #adjust grouping level to finest level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  mutate(mean_per_change3 = mean(per_change, na.rm = TRUE),
-            sem_per_change3 = sd(per_change, na.rm = TRUE)/sqrt(length(per_change[!is.na(per_change)])),
-            num_papers3 = n_distinct(Paper_id), 
-            num_comparisons3 =length(Paper_id),
-            paper_id_list3 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_3, mean_per_change3, sem_per_change3, num_papers3, num_comparisons3, paper_id_list3)
+depth_0_100 <- c(
+  "0-75 cm",
+  "0-80 cm",
+  "0-90 cm",
+  "0-100 cm",
+  "80 cm"
+)
 
-#Isolate distinct rows within table
-soil_summary3 <- distinct(soil_summary3)
-
-soil_summary2 <- df_soil %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2) %>%
-  mutate(mean_per_change2 = mean(per_change, na.rm = TRUE),
-            sem_per_change2 = std.error(per_change, na.rm = TRUE),
-            num_papers2 = n_distinct(Paper_id), 
-            num_comparisons2 =length(Paper_id),
-            paper_id_list2 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_2, mean_per_change2, sem_per_change2, num_papers2, num_comparisons2, paper_id_list2)
-
-#Isolate distinct rows within table
-soil_summary2 <- distinct(soil_summary2)
-
-
-soil_summary1 <- df_soil %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level to most coarse
-  group_by(Review_id, main_group, group_metric, Legend_1) %>%
-  summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
-            sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id),
-            paper_id_list1 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_1, mean_per_change1, sem_per_change1, num_papers1, num_comparisons1, paper_id_list1) %>%
-  mutate(Group_RV = "Soil") %>%
-  mutate(Review = "Cover Crops") 
-
-#Isolate distinct rows within table
-soil_summary1 <- distinct(soil_summary1)
-
-
-#Need to embed data tables into a column rather than join
-soil_summary <- left_join(soil_summary1, soil_summary2)
-soil_summary <- left_join(soil_summary, soil_summary3)
+depth_0_150 <- c(
+  "0-120 cm", 
+  "0-150 cm"
+  )
 
 
 
-####Group_RV: Pest Regulation####
-df_pest <- df %>%
-  filter (Group_RV == "Pest Regulation")      
+#####Apply soil depth groupings####
+
+df <- df %>%
+  mutate(
+    sample_depth = case_when(
+      
+      RV_depth %in% depth_0_30 ~ "0-30 cm",
+      RV_depth %in% depth_0_60 ~ "0-60 cm",
+      RV_depth %in% depth_0_100 ~ "0-100 cm",
+      RV_depth %in% depth_0_150 ~ "0-150 cm"))
+
+
+####Group_RV: Other Soil Properties####
+df_othersoilprops <- df %>%
+  filter (group_level1 == "Other Soil Properties")
 
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_pest[df_pest$per_change < 1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-#[df_pest$per_change < 1000,]
-qplot(Response_var, abundance_change, data=df_pest[df_pest$abundance_change > -1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-#[df_pest$abundance_change > -1000,]
-outliers <- filter(df_pest, per_change > 200)
+qplot(Response_var, per_change, data=df_othersoilprops,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_othersoilprops[df_othersoilprops$actual_diff<1000,],  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_othersoilprops,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
-pest_summary3 <- df_pest[df_pest$per_change < 1000,] %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
-  #adjust grouping level to finest level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  mutate(mean_per_change3 = mean(per_change, na.rm = TRUE),
-         sem_per_change3 = std.error(per_change, na.rm = TRUE),
-         num_papers3 = n_distinct(Paper_id), 
-         num_comparisons3 =length(Paper_id),
-         paper_id_list3 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_3, mean_per_change3, sem_per_change3, num_papers3, num_comparisons3, paper_id_list3)
-
-#Isolate distinct rows within table
-pest_summary3 <- distinct(pest_summary3)
-
-pest_summary2 <- df_pest[df_pest$per_change < 1000,] %>%  
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2) %>%
-  mutate(mean_per_change2 = mean(per_change, na.rm = TRUE),
-         sem_per_change2 = std.error(per_change, na.rm = TRUE),
-         num_papers2 = n_distinct(Paper_id), 
-         num_comparisons2 =length(Paper_id),
-         paper_id_list2 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_2, mean_per_change2, sem_per_change2, num_papers2, num_comparisons2, paper_id_list2)
-
-#Isolate distinct rows within table
-pest_summary2 <- distinct(pest_summary2)
-
-pest_summary1 <- df_pest[df_pest$per_change < 1000,] %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level to most coarse
-  group_by(Review_id, main_group, group_metric, Legend_1) %>%
-  summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
-            sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id),
-            paper_id_list1 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_1, mean_per_change1, sem_per_change1, num_papers1, num_comparisons1, paper_id_list1) %>%
-  mutate(Group_RV = "Pest Regulation") %>%
-  mutate(Review = "Cover Crops") 
-
-#Isolate distinct rows within table
-pest_summary1 <- distinct(pest_summary1)
-
-
-#Need to embed data tables into a column rather than join
-pest_summary <- left_join(pest_summary1, pest_summary2)
-pest_summary <- left_join(pest_summary, pest_summary3)
-
-summary(pest_summary$mean_abundance_change)
-
-#Explore data distribution
-#look by Response_var
-#cc_pest_summary2 <- cc_pest_summary %>%
-#                filter(!is.na(per_change > 1000))
-test <- df_pest[!is.na(df_pest$abundance_change),]
-
-
-####Group_RV: Crop Production####
-df_yield <- df %>%
-  filter (Group_RV == "Crop Production")      
-
-#Explore data distribution
-#look by Response_var
-qplot(Response_var, per_change, data=df_yield[df_yield$per_change < 1000,],  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_yield,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-
-
-outliers <- filter(df_yield, per_change > 100)
-
-
-
-yield_summary3 <- df_yield[df_yield$per_change < 1000,] %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
-  #adjust grouping level to finest level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  mutate(mean_per_change3 = mean(per_change, na.rm = TRUE),
-         sem_per_change3 = std.error(per_change, na.rm = TRUE),
-         num_papers3 = n_distinct(Paper_id), 
-         num_comparisons3 =length(Paper_id),
-         paper_id_list3 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_3, mean_per_change3, sem_per_change3, num_papers3, num_comparisons3, paper_id_list3)
-
-#Isolate distinct rows within table
-yield_summary3 <- distinct(yield_summary3)
-
-yield_summary2 <- df_yield[df_yield$per_change < 1000,] %>%  
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2) %>%
-  mutate(mean_per_change2 = mean(per_change, na.rm = TRUE),
-         sem_per_change2 = std.error(per_change, na.rm = TRUE),
-         num_papers2 = n_distinct(Paper_id), 
-         num_comparisons2 =length(Paper_id),
-         paper_id_list2 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_2, mean_per_change2, sem_per_change2, num_papers2, num_comparisons2, paper_id_list2)
-
-#Isolate distinct rows within table
-yield_summary2 <- distinct(yield_summary2)
-
-yield_summary1 <- df_yield[df_yield$per_change < 1000,] %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level to most coarse
-  group_by(Review_id, main_group, group_metric, Legend_1) %>%
-  summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
-            sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id),
-            paper_id_list1 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_1, mean_per_change1, sem_per_change1, num_papers1, num_comparisons1, paper_id_list1) %>%
-  mutate(Group_RV = "Crop Production") %>%
-  mutate(Review = "Cover Crops") 
-
-#Isolate distinct rows within table
-yield_summary1 <- distinct(yield_summary1)
-
-#Need to embed data tables into a column rather than join
-yield_summary <- left_join(yield_summary1, yield_summary2)
-yield_summary <- left_join(yield_summary, yield_summary3)
-
-
-
-####Group_RV: Water####
-df_water <- df %>%
-  filter (Group_RV == "Water")      
+####Group_RV: Crop Yields####
+df_cropyields <- df %>%
+  filter (group_level1 == "Crop Yields")
 
 #Explore data distribution
 #look by Response_var
 
-qplot(Response_var, per_change, data=df_water,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
-qplot(Response_var, abundance_change, data=df_water,  colour=Legend_1) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, per_change, data=df_cropyields,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_cropyields,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
-outliers <- filter(df_water, per_change > 100)
+####Group_RV: Climate Mitigation####
+df_climatemitigation <- df %>%
+  filter (group_level1 == "Climate Mitigation")
 
-water_summary3 <- df_water %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>% #Legend_2, Legend_3
-  #adjust grouping level to finest level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-  mutate(mean_per_change3 = mean(per_change, na.rm = TRUE),
-         sem_per_change3 = std.error(per_change, na.rm = TRUE),
-         num_papers3 = n_distinct(Paper_id), 
-         num_comparisons3 =length(Paper_id),
-         paper_id_list3 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_3, mean_per_change3, sem_per_change3, num_papers3, num_comparisons3, paper_id_list3)
+#Explore data distribution
+#look by Response_var
 
-#Isolate distinct rows within table
-water_summary3 <- distinct(water_summary3)
-
-water_summary2 <- df_water[df_water$per_change < 1000,] %>%  
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level
-  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2) %>%
-  mutate(mean_per_change2 = mean(per_change, na.rm = TRUE),
-         sem_per_change2 = std.error(per_change, na.rm = TRUE),
-         num_papers2 = n_distinct(Paper_id), 
-         num_comparisons2 =length(Paper_id),
-         paper_id_list2 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_2, mean_per_change2, sem_per_change2, num_papers2, num_comparisons2, paper_id_list2)
-
-#Isolate distinct rows within table
-water_summary2 <- distinct(water_summary2)
-
-water_summary1 <- df_water[df_water$per_change < 1000,] %>% 
-  select(Paper_id, Review_id, main_group, group_metric, Legend_1, Group_finelevel, per_change, abundance_change) %>%
-  #adjust grouping level to most coarse
-  group_by(Review_id, main_group, group_metric, Legend_1) %>%
-  summarise(mean_per_change1 = mean(per_change, na.rm = TRUE),
-            sem_per_change1 = std.error(per_change, na.rm = TRUE),
-            num_papers1 = n_distinct(Paper_id), num_comparisons1 =length(Paper_id),
-            paper_id_list1 = paste(unique(Paper_id), collapse = ",")) %>%
-  ungroup() %>%
-  select(Review_id, main_group, group_metric, Legend_1, mean_per_change1, sem_per_change1, num_papers1, num_comparisons1, paper_id_list1) %>%
-  mutate(Group_RV = "Water") %>%
-  mutate(Review = "Cover Crops") 
-
-#Isolate distinct rows within table
-water_summary1 <- distinct(water_summary1)
-
-#Need to embed data tables into a column rather than join
-water_summary <- left_join(water_summary1, water_summary2)
-water_summary <- left_join(water_summary, water_summary3)
+qplot(Response_var, per_change, data=df_climatemitigation,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_climatemitigation,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
-####Join Summary results back into one file ####
-summary_all <- full_join(soil_summary, yield_summary)
-summary_all <- full_join(summary_all, pest_summary)
-summary_all <- full_join(summary_all, water_summary) 
+####Group_RV: Soil Nutrients####
+df_soilnutrients <- df %>%
+  filter (group_level1 == "Soil Nutrients")
+
+#Explore data distribution
+#look by Response_var
+
+qplot(Response_var, per_change, data=df_soilnutrients,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_soilnutrients,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+
+####Group_RV: Pests####
+df_pests <- df %>%
+  filter (group_level1 == "Pests")
+
+#Explore data distribution
+#look by Response_var
+
+qplot(Response_var, per_change, data=df_pests,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_pests,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+
+####Group_RV: Water Quality####
+df_waterquality <- df %>%
+  filter (group_level1 == "Water Quality")
+
+#Explore data distribution
+#look by Response_var
+
+qplot(Response_var, per_change, data=df_waterquality,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
+qplot(Response_var, actual_diff, data=df_waterquality,  colour=group_level2) + theme_bw(base_size=16) + stat_smooth(aes(group=1), method="lm", se=FALSE)
 
 
-#summary_all <- slice(summary_all, 1:12)
+####Join Raw  results back into one file ####
+all_data <- rbind(df_othersoilprops, 
+                  df_cropyields, 
+                  df_climatemitigation,
+                  df_pests,
+                  df_soilnutrients,
+                  df_waterquality)
 
-write.csv(summary_all, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
-
-
-
-
-###################Mean Abundance code
-
-#pest_summary0 <- df_pest[df_pest$abundance_change > -1000,] %>% #[df_pest$abundance_change > -1000,]
-# select(Paper_id, Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3, Group_finelevel, abundance_change) %>%
-#  filter(!is.na(abundance_change)) %>%
-#  group_by(Review_id, main_group, group_metric, Legend_1, Legend_2, Legend_3) %>%
-#  summarise(mean_abundance_change = mean(abundance_change, na.rm = TRUE), sem_abundance_change = std.error(abundance_change, na.rm = TRUE), num_papers_abund = n_distinct(Paper_id), num_comparisons_abund =length(Paper_id)) %>%
-#  mutate(Group_RV = "Pest Regulation") %>%
-#  mutate(Review = "Cover Crop")
+####Export CSV#####
+write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
 

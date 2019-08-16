@@ -28,7 +28,7 @@ raw_data <- read_csv(here("www/data/TillageMgmt_ALL_raw.csv"), col_types = cols(
                                                                                 Tillage_2 = col_character(),
                                                                                 nutrient_groups = col_character()))
 
-sample_year_ordered <- raw_data$sample_year %>% unique %>% str_sort(numeric = T, na_last = NA)
+
 
 #base summary data. this will be transformed later
 summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
@@ -55,35 +55,34 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
   #we don't care about comparing a treatment to itself for the app
   filter(Trt_1name != Trt_2name)
 
+sample_depth_ordered <- raw_data$sample_depth %>% unique %>% str_sort(numeric = T, na_last = NA)
 
-#' using summary_base, create new means/standard errors based on cumulative age grouping
-#' note that this only applies to tillage, since it's the only one that has year information
+#' using summary_base, create new means/standard errors based on cumulative depth grouping
 #' this relies on both summary_data and sample_year_ordered (both created above)
 #' @param year_group should be an element of sample_year
-cum_year_avg <- function(year_group){
+cum_depth_avg <- function(depth_group){
   summary_base %>%
-    #takes all the year groupings before, filter tillage only
-    filter(sample_year %in% sample_year_ordered[1:which(sample_year_ordered == year_group)],
-           Review == 'Tillage') %>%
-    #group by everything except year, so that we can add the cumulative part
-    group_by(Review, group_level1, group_level2, group_level3, sample_depth, Trt_compare, Trt_1name, Trt_2name, trt_specifics, nutrient_groups) %>%
-    #create a simple mean between years. there are more observations in the eariler groups, but we are claiming that the different grouping are still of equal importanec
-      # this is equivalent to putting some extra weight on the later groupings.
+    #takes all the depth groupings before, filter only non-na sample depth
+    filter(sample_depth %in% sample_depth_ordered[1:which(sample_depth_ordered == depth_group)],
+           !is.na(sample_depth)) %>%
+    #group by everything except depth, so that we can add the cumulative part
+    group_by(Review, group_level1, group_level2, group_level3, sample_year, Trt_compare, Trt_1name, Trt_2name, trt_specifics, nutrient_groups) %>%
+    #create a simple mean between depths. there are more observations in the eariler groups, but we are claiming that the different grouping are still of equal importance
     mutate(mean_per_change = mean(mean_per_change),
            sem_per_change = mean(sem_per_change),
            mean_actual_diff = mean(mean_actual_diff),
            sem_actual_diff = mean(sem_actual_diff)) %>%
-    filter(sample_year == year_group)
+    filter(sample_depth == depth_group)
 }
 
-#this combines the result of cum_avg for ALL of the age groups
-tillage_cum_data <- purrr::map_df(sample_year_ordered, ~cum_year_avg(.x))
+#this combines the result of cum_avg for ALL of the depth groups
+depth_cum_data <- purrr::map_df(sample_depth_ordered, ~cum_depth_avg(.x))
 
-# replace the tillage data with the new cumulative data
+# replace the non-NA data with the new cumulative data
 #this is the final summary data, used on the table
 summary_data <- summary_base %>% 
-  filter(Review != 'Tillage') %>%
-  bind_rows(tillage_cum_data)
+  filter(is.na(sample_depth)) %>%
+  bind_rows(depth_cum_data)
 
 
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)

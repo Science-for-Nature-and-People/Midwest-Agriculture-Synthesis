@@ -2,8 +2,8 @@ practice <- 'Tillage'
 filter_1 <- 'Conventional tillage'
 filter_2 <- 'No tillage'
 rv <- 'Climate Mitigation'
-depth <- '0-30 cm'
-yrs <- 'Year 1-5'
+depth <- c('0-30 cm', '0-60 cm', '0-150 cm', '0-100 cm')
+yrs <- c('Year 1-5', 'Years 1-10','Years 1-20', 'Years 1-30', 'Years 1-40', 'Years 1-50')
 
 #df_practice
 df_practice <- function(MgmtPractice){
@@ -66,7 +66,9 @@ df_outcome <- function(RV){
 }
 
 df_depth <- function(SoilDepth){
-  if(RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !all(is.na(df_outcome(rv)$sample_depth))){
+  df <- df_outcome(rv)
+  
+  if(rv %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !all(is.na(df$sample_depth))){
     #sort the sample depths options NUMERICALLY
     # sample_depth_options <- df_outcome()$sample_depth %>% 
     #   unique %>% 
@@ -75,13 +77,13 @@ df_depth <- function(SoilDepth){
     # #this will pull out all the previous choices (eg if SoilDepth = '0-60 cm', we want to pull out c('0-25 cm', '0-30 cm', '0-60 cm'))
     # cumulative_sample_depth_choices <- sample_depth_options[1:which(sample_depth_options == SoilDepth)]
     # 
-    df_outcome(rv) %>%
-      filter(sample_depth %in% SoilDepth)
+    df %>%
+      filter(sample_depth %in% SoilDepth | (is.na(sample_depth) & "" %in% SoilDepth))
     #filter(sample_depth %in% cumulative_sample_depth_choices)
     
   }
   else{
-    df_outcome(rv)
+    df
   }
 }
 

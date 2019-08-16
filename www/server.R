@@ -106,7 +106,8 @@ server <- function(input, output, session) {
       # cumulative_sample_depth_choices <- sample_depth_options[1:which(sample_depth_options == input$SoilDepth)]
       # 
         df_outcome() %>%
-          filter(sample_depth %in% input$SoilDepth)
+        #if NA is a selected choice, it shows up as a empty string in input$SoilDepth, so we gotta adjust
+          filter(sample_depth %in% input$SoilDepth | (is.na(sample_depth) & "" %in% input$SoilDepth))
           #filter(sample_depth %in% cumulative_sample_depth_choices)
         
     }
@@ -342,7 +343,7 @@ server <- function(input, output, session) {
       new_depths <- df_outcome()$sample_depth %>% unique %>% sort
       cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
       updateCheckboxGroupInput(session, inputId = 'SoilDepth',
-                               choices = new_depths,
+                               choices = c(new_depths, NA),
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
       shinyjs::show('SoilDepth')
     }

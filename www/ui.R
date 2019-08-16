@@ -103,7 +103,7 @@ ui <- navbarPage(
                  shinyjs::hidden(
                     checkboxGroupInput(
                       inputId = "SoilDepth", label = "Soil Sampling Depth",
-                      choices = unique(summary_data$sample_depth) %>% sort(),# multiple = T,
+                      choices = c(sort(unique(summary_data$sample_depth)), NA),# multiple = T,
                       selected = "0-30 cm"
                       #selected = unique(summary_data$Legend_1)[1]
                     )

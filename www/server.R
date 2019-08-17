@@ -109,6 +109,8 @@ server <- function(input, output, session) {
         #if NA is a selected choice, it shows up as a empty string in input$SoilDepth, so we gotta adjust
           filter(sample_depth %in% input$SoilDepth | (is.na(sample_depth) & "Soil Surface" %in% input$SoilDepth))
           #filter(sample_depth %in% cumulative_sample_depth_choices)
+      
+      
         
     }
     else{
@@ -358,13 +360,31 @@ server <- function(input, output, session) {
       updateCheckboxGroupInput(session, inputId = 'SoilDepth',
                                choices = c(new_depths),
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
+
       shinyjs::show('SoilDepth')
+      shinyjs::show('AllDepths')
     }
     else{
       shinyjs::hide('SoilDepth')
+      shinyjs::hide('AllDepths')
     }
   })
 
+  ### ?????
+  observeEvent(c(input$AllDepths, input$SoilDepth),{
+    new_depths <- df_outcome()$sample_depth %>% unique %>% sort(na.last = TRUE) %>% tidyr::replace_na('Soil Surface')
+    updateCheckboxGroupInput(session, inputId = 'SoilDepth',
+                        selected = if(input$AllDepths) new_depths #else ""
+                        )
+    updateCheckboxInput(session, inputId = 'AllDepths',
+                        value = if(!(identical(input$SoilDepth, new_depths) & input$AllDepths)) FALSE
+                        )
+
+    
+  })
+
+  
+  
   observe({
 
     # Function to define multi-line labels

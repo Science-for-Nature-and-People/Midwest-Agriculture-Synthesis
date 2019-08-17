@@ -106,7 +106,8 @@ ui <- navbarPage(
                       choices = c(sort(unique(summary_data$sample_depth)), 'Soil Surface'),# multiple = T,
                       selected = "0-30 cm"
                       #selected = unique(summary_data$Legend_1)[1]
-                    )
+                    ),
+                    checkboxInput(inputId = 'AllDepths', label = 'All/None', value = TRUE)
                  )
             )
           ),

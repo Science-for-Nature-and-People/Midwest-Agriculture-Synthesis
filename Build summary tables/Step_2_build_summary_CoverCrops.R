@@ -301,6 +301,14 @@ all_data <- rbind(df_othersoilprops,
                   df_soilnutrients,
                   df_waterquality)
 
+#Rename columns to match column names in other reviews####
+all_data <- all_data %>% rename(Trt1 = Trt_id1, Trt1_int = Trt1_interaction, Trt1_int2 = Trt1_interaction2,
+                           Trt2 = Trt_id2, Trt2_int = Trt2_interaction, Trt2_int2 = Trt2_interaction2,
+                           significance = Sig_level, 
+                           Trt_1name = Trt_id1name, Trt1_details = Trt_id1description,
+                           Trt_2name = Trt_id2name, Trt2_details = Trt_id2description)
+
+
 ####Export CSV#####
 write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
 

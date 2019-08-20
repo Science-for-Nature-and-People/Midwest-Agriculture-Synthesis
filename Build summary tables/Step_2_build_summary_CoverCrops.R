@@ -74,7 +74,7 @@ levels(df$group_level1)
 levels(df$group_level2)
 levels(df$group_level3)
 
-###Apply treatment name groups to tillage_1 and tillage_2 columns#####
+###Apply treatment name groups to cc_group1 & cc_group2 columns#####
 
 levels(df$finelevel_group)
 
@@ -83,7 +83,7 @@ levels(df$finelevel_group)
 df <- df %>%
   mutate(
     ##Cover crop diversity####  
-    Tillage_1 = case_when(
+    cc_group1 = case_when(
       
       #single species####
       finelevel_group %in% "mono"  ~ "Single species",    
@@ -105,7 +105,7 @@ df <- df %>%
   
   mutate(
     ##Functional diversity####  
-    Tillage_2 = case_when(
+    cc_group2 = case_when(
       
       #Non-legume + Legume Mixture####
       Trt_id2name %in% "forage radish + hairy vetch + winter rye"  ~ "Non-legume + Legume Mixture",    
@@ -153,8 +153,8 @@ df <- df %>%
       Trt_id2name %in% "hairy vetch"  ~ "Legume"))
       
           
-missing <- df %>% filter(is.na(Tillage_1))
-missing <- df %>% filter(is.na(Tillage_2))
+missing <- df %>% filter(is.na(cc_group1))
+missing <- df %>% filter(is.na(cc_group2))
                            
 
       
@@ -306,7 +306,8 @@ all_data <- all_data %>% rename(Trt1 = Trt_id1, Trt1_int = Trt1_interaction, Trt
                            Trt2 = Trt_id2, Trt2_int = Trt2_interaction, Trt2_int2 = Trt2_interaction2,
                            significance = Sig_level, 
                            Trt_1name = Trt_id1name, Trt1_details = Trt_id1description,
-                           Trt_2name = Trt_id2name, Trt2_details = Trt_id2description)
+                           Trt_2name = Trt_id2name, Trt2_details = Trt_id2description) %>%
+                mutate(trt_specific = Trt_2name)
 
 
 ####Export CSV#####

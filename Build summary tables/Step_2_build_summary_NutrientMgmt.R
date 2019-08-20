@@ -80,7 +80,7 @@ levels(df$group_level3)
 
 df <- df %>%
   mutate(
-    trt_1name = case_when(
+    Trt_1name = case_when(
       #Fertilizer Application####
       
       #Broadcast - Variable rate
@@ -126,7 +126,7 @@ df <- df %>%
       finelevel_group %in% "timing_preplant_splitv4"  ~ "Single Application")) %>%
   
   mutate(
-    trt_2name = case_when(
+    Trt_2name = case_when(
       #Fertilizer Application####
       
       #Broadcast - Variable rate
@@ -302,8 +302,11 @@ all_data <- rbind(df_othersoilprops,
                   df_soilnutrients,
                   df_waterquality)
 
+
+
 write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_ALL_raw.csv", row.names = FALSE)
 
+df <- read.csv(file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_ALL_raw.csv", row.names = NULL)
 
 
 

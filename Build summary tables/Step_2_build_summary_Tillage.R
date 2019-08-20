@@ -269,6 +269,9 @@ levels(df$group_level3)
 ####################Expand table to display results for all years####
 
 df <- cSplit(df, splitCols = "RV_year", sep = ";", direction = "long") # all data were expanded based on list of years 
+levels(as.factor(df$RV_year))
+
+df2 <- df %>% filter(RV_year > 0) %>% droplevels() #removes rows where data were collected prior to the adoption of the practice
 
 
 #Change types
@@ -410,13 +413,12 @@ depth_0_60 <- c(
 df <- df %>%
   mutate(
     sample_depth = case_when(
-      
+     # RV_depth %in% NA_real_  ~ "Soil Surface",
       RV_depth %in% depth_0_30 ~ "0-30 cm",
       RV_depth %in% depth_0_60 ~ "0-60 cm",
       RV_depth %in% depth_0_100 ~ "0-100 cm",
       RV_depth %in% depth_0_150 ~ "0-150 cm"))
 
-mssing <- df %>% filter(is.na(sample_depth) && !is.na(RV_depth))
 
 #####Sampling year#####
 unique(df$RV_year)
@@ -436,14 +438,12 @@ df <- df %>%
     sample_year = case_when(
       
       RV_year %in% year_1_5 ~ "Year 1-5",
-      RV_year %in% year_6_10 ~ "Years 1-10",
-      RV_year %in% year_11_20 ~ "Years 1-20",
-      RV_year %in% year_21_30 ~ "Years 1-30",
-      RV_year %in% year_31_40 ~ "Years 1-40",
-      RV_year %in% year_41_50 ~ "Years 1-50"
+      RV_year %in% year_6_10 ~ "Years 6-10",
+      RV_year %in% year_11_20 ~ "Years 11-20",
+      RV_year %in% year_21_30 ~ "Years 21-30",
+      RV_year %in% year_31_40 ~ "Years 31-40",
+      RV_year %in% year_41_50 ~ "Years 41-50"
     ))
-
-
 
 ####Treatment Comparisons#####
 
@@ -560,8 +560,9 @@ qplot(Response_var, actual_diff, data=df_cropyields,  colour=group_level2) + the
 
 ####Group_RV: Climate Mitigation####
 df_climatemitigation <- df %>%
-  filter (group_level1 == "Climate Mitigation")
-
+  filter (group_level1 == "Climate Mitigation") %>% droplevels()
+levels(df_climatemitigation$group_level2)
+levels(df_climatemitigation$group_level3)
 #Explore data distribution
 #look by Response_var
 
@@ -616,12 +617,6 @@ all_data$Trt2 <- as.factor(all_data$Trt2)
 all_data$Trt2_int2 <- as.factor(all_data$Trt2_int2)
 all_data$nutrient_groups <- as.factor(all_data$nutrient_groups)
 
-
-all_data <- full_join(all_data, df3)
-
-
-
-df3 <-  read.csv("/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_ALL_raw.csv", row.names = NULL)
 
 
 write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/TillageMgmt_ALL_raw.csv", row.names = FALSE)

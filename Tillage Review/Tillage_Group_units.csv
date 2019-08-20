@@ -10,7 +10,7 @@
 "Tillage","Climate Mitigation","Carbon Mitigation","Soil organic carbon","g/100 g; g C/kg soil; %; kg C/ soil layer; Mt/ha; Mg C/ha in depth; mg C in fraction/kg soil; Mg/ha; Mg/m; g/kg; kg/sq m; 0/00; Cmax, kg/ha; t/ha; Mg/kg; g/kg soil; o/oo; Mg C/ha; g C/kg; kg C/ha; SOC flux; kg/ha; C/N; passive carbon/active carbon; mg C/kg; kg/m^2; g soil/cm^2; g C/ kg soil"
 "Tillage","Soil Nutrients","N","Ammonium (NH4)","mg/kg; kg/ha; mg N/kg; mg N/kg soil"
 "Tillage","Soil Nutrients","P & K","Phosphorus","mg/kg; mmol/kg; ppm; kg/ha; mg/L; ug/g; g/m^2"
-"Tillage","Soil Nutrients","N","Nitrate (NO4)","mg/kg; ; kg/ha; ppm; C/N; g/kg soil; mg N/kg; g N/kg day; mg N/kg soil"
+"Tillage","Soil Nutrients","N","Nitrate (NO3)","mg/kg; ; kg/ha; ppm; C/N; g/kg soil; mg N/kg; g N/kg day; mg N/kg soil"
 "Tillage","Other Soil Properties","Chemical Properties","pH","; pH; g/kg"
 "Tillage","Other Soil Properties","Chemical Properties","CEC","meq/100 g; cmole/kg; CEC; cmol/kg; ; cmolc/kg; dS/m; Cmol/kg; microsec/cm; us/cm; uS/m; uS/cm"
 "Tillage","Soil Nutrients","P & K","Potassium","mg/kg; mmol/kg; ppm; cmolc/kg; %; kg/ha; ug/g; g/kg; g/m^2"

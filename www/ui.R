@@ -85,11 +85,13 @@ ui <- navbarPage(
             selected = 'Conventional tillage'
           )),
           column(6,
-          radioButtons(
-            inputId = 'Filter2', label = 'Tillage Type #2', 
-            choices = unique(summary_data$Trt_2name) %>% sort(),
-            selected = 'No tillage'
-          ))
+                 uiOutput('filter_two')
+          # radioButtons(
+          #   inputId = 'Filter2', label = 'Tillage Type #2',
+          #   choices = unique(summary_data$Trt_2name) %>% sort(),
+          #   selected = 'No tillage'
+          # ))
+          )
           ),
         fluidRow(
           column(6,
@@ -113,7 +115,8 @@ ui <- navbarPage(
           ),
         shinyjs::hidden(checkboxGroupInput(
           inputId = "years", label = "Years of Implementation",
-          choices = c(sort(unique(summary_data$sample_year)), NA),# multiple = T,
+          #choices = c(sort(unique(summary_data$sample_year)), NA),# multiple = T,
+          choices = c(stringr::str_sort(unique(summary_data$sample_year), na_last = T, numeric = TRUE)),
           selected = "Year 1-5"
           #selected = unique(summary_data$Legend_1)[1]
         )

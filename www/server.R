@@ -27,7 +27,8 @@ server <- function(input, output, session) {
     
     if(input$MgmtPractice == 'Cover crop'){
       filtered_by_practice %>%
-        mutate(filter1 = Trt_1name,
+        #we have to change filter1 based on whether the choice was in cc_group1 or cc_group2, so this filter1 is a dummy
+        mutate(filter1 = cc_group1,
                filter2 = Trt_2name,
                filter1_name = 'Cover Crop Mixture',
                filter2_name = 'Cover Crop Species')
@@ -54,11 +55,23 @@ server <- function(input, output, session) {
   })
   
   
+  
+  
   #
   df_filter1 <- eventReactive(c(df_practice(), input$Filter1), {
     cat(file = stderr(), 'df_filter1 is updated\n')
- 
-    new_df <- df_practice() %>% 
+    # write special case for cover crop, since filter1 can belong to either cc_group1 or cc_group2
+    if((input$MgmtPractice == 'Cover crop') & (input$Filter1 %in% df_practice()$cc_group1)){
+      new_df <- df_practice() %>%
+        mutate(filter1 = cc_group1)
+    } else if ((input$MgmtPractice == 'Cover crop') & (input$Filter1 %in% df_practice()$cc_group2)){
+      new_df <- df_practice() %>%
+        mutate(filter1 = cc_group2)
+    } else {
+      new_df <- df_practice()
+    }
+    
+    new_df <- new_df %>% 
       filter(filter1 == input$Filter1)
     
     #need to write special case to make sure filter1 = zonal tillage => fitler2 = no tillage only 
@@ -74,10 +87,10 @@ server <- function(input, output, session) {
   
   #do the next filter
   df_filter2 <- eventReactive(c(df_filter1(), input$Filter2), {
-    cat(file = stderr(), 'dftillage2 is updated\n')
+    cat(file = stderr(), input$Filter2, 'dftillage2 is updated\n')
 
     df_filter1() %>%
-      filter(filter2 == input$Filter2)
+      filter(filter2 %in% input$Filter2)
     
   })
   
@@ -247,7 +260,12 @@ server <- function(input, output, session) {
     validate(
       need(df_practice()$filter1, 'no filter1')
     )
-    new_filter1 <- unique(df_practice()$filter1) %>% sort
+    # write special case for cover crop, since the first filter looks at 2 columns
+    if(input$MgmtPractice == 'Cover crop'){
+      new_filter1 <- c(unique(df_practice()$cc_group1), unique(df_practice()$cc_group2))
+    } else {
+      new_filter1 <- unique(df_practice()$filter1) %>% sort
+    }
     #df_practice()$filter1_name is the same for all rows in a practice, so doing unique is just a way to grab one of them
     updateRadioButtons(session, 'Filter1', unique(df_practice()$filter1_name),
                        choices = new_filter1,
@@ -265,22 +283,49 @@ server <- function(input, output, session) {
 
   })
   
+  # Filter2 changes between a checkboxGroupInput or a radioButton depending on the practice
+  output$filter_two <- renderUI({
+    new_filter2 <- sort(unique(df_filter1()$filter2))
+    if(input$MgmtPractice == 'Cover crop'){
+      cat('hi')
+      checkboxGroupInput('Filter2', label = 'Cover Crop Species',
+                         choices = new_filter2,
+                         #as.character is needed when we have the filter2 is a factor (tillage)
+                         selected = new_filter2[1]
+      )
+    } else {
+      cat('bye')
+      radioButtons('Filter2', unique(df_filter1()$filter2_name),
+                   choices = new_filter2,
+                   #as.character is needed when we have the filter2 is a factor (tillage)
+                   selected = new_filter2[1]
+      )
+    }
+  })
 
   #update 2nd tillage type based on first
   observeEvent(c(input$MgmtPractice, input$Filter1),{
-    
+
     # new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
     new_filter2 <- sort(unique(df_filter1()$filter2))
-    updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
-                       choices = new_filter2,
-                       #as.character is needed when we have the filter2 is a factor (tillage)
-                       selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2[1]))
-                       )
-    
+    # Cover crop is a group checkbox input, so we gotta account for that
+    if(input$MgmtPractice == 'Cover crop'){
+      updateCheckboxGroupInput(session, 'Filter2', unique(df_filter1()$filter2_name),
+                               choices = new_filter2,
+                               selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2[1])))
+    } else {
+      updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
+                         choices = new_filter2,
+                         #as.character is needed when we have the filter2 is a factor (tillage)
+                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2[1], as.character(new_filter2[1]))
+                         )
+    }
+
     cat(file = stderr(), 'newfilter2 is ', paste(new_filter2, collapse = ','), '\n')
-    
-    
+
+
   })
+
 
   #update outcome on practices
     #if the old RV isn't an option in the new practice, this changes RV, which triggers change in df_outcome -> df_years
@@ -308,7 +353,7 @@ server <- function(input, output, session) {
     #cat(file = stderr(), unique(input$years), ': legend \n')
 
     #new_choices are groupings, which depend on the selected practice and depths (eg df_depth)
-    new_choices <- unique(df_depth()$sample_year) %>% sort(na.last = TRUE)
+    new_choices <- unique(df_depth()$sample_year) %>% stringr::str_sort(na_last = TRUE, numeric = TRUE)
     validate(
       need(new_choices, 'There are no available years of implementation')
     )
@@ -355,7 +400,7 @@ server <- function(input, output, session) {
       validate(
         need(df_outcome()$sample_depth, 'no sample depth')
       )
-      new_depths <- df_outcome()$sample_depth %>% unique %>% sort(na.last = TRUE) %>% tidyr::replace_na('Soil Surface')
+      new_depths <- df_outcome()$sample_depth %>% unique %>% str_sort(na_last = TRUE, numeric = TRUE) %>% tidyr::replace_na('Soil Surface')
       cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
       updateCheckboxGroupInput(session, inputId = 'SoilDepth',
                                choices = c(new_depths),
@@ -421,7 +466,10 @@ server <- function(input, output, session) {
     #df_plot will reflect the data in the plot, not the current df_years()
   #maybe isolate() is a more elegant way to do this?
   df_plot <- eventReactive(input$update,{
+    cat(stderr(), "years has dim", dim(df_years()))
+    cat(stderr(), 'filter2 looks like ', unique(df_years()$filter2))
     df_years()
+    
   })
 
   #forestplot will change whenever makeplot changes (so whenever the update button is pressed)
@@ -541,15 +589,19 @@ server <- function(input, output, session) {
     }
   )
 
+  # Updates when the user clicks the go button in the landing page
   observeEvent(input$go,{
     updateNavbarPage(session, 'navbar', select = 'Data')
-    click('update')
+    # delay makes it so that the renderUI statements have time to adjust
+    delay(10,click('update'))
   })
 
-  observe({
-    # Will click the update button at the start so the app starts with a plot.
-    click("update")
+  # This originally made sure that the app started with a plot. This is no longer necessary witht he addition of the landing page
+  # observe({
+  #   delay(500, click("update"))
+  # 
+  # })
+  # 
+  
 
-
-  })
 }

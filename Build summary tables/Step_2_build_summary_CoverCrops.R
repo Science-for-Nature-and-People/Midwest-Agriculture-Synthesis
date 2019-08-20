@@ -310,5 +310,5 @@ all_data <- all_data %>% rename(Trt1 = Trt_id1, Trt1_int = Trt1_interaction, Trt
 
 
 ####Export CSV#####
-write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_FULL_Summary.csv", row.names = FALSE)
+write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/CC_All_raw.csv", row.names = FALSE)
 

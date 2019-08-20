@@ -109,7 +109,7 @@ ui <- navbarPage(
                       selected = "0-30 cm"
                       #selected = unique(summary_data$Legend_1)[1]
                     ),
-                    checkboxInput(inputId = 'AllDepths', label = 'All/None', value = TRUE)
+                    checkboxInput(inputId = 'AllDepths', label = 'All/No Depths', value = TRUE)
                  )
             )
           ),

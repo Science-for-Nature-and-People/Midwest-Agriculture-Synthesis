@@ -287,14 +287,16 @@ server <- function(input, output, session) {
   output$filter_two <- renderUI({
     new_filter2 <- sort(unique(df_filter1()$filter2))
     if(input$MgmtPractice == 'Cover crop'){
-      cat('hi')
-      checkboxGroupInput('Filter2', label = 'Cover Crop Species',
-                         choices = new_filter2,
-                         #as.character is needed when we have the filter2 is a factor (tillage)
-                         selected = new_filter2[1]
+      list(
+        checkboxGroupInput('Filter2', label = 'Cover Crop Species',
+                           choices = new_filter2,
+                           #as.character is needed when we have the filter2 is a factor (tillage)
+                           selected = new_filter2[1]
+        ),
+        checkboxInput(inputId = 'AllSpecies', label = 'All/No Species')
       )
+      
     } else {
-      cat('bye')
       radioButtons('Filter2', unique(df_filter1()$filter2_name),
                    choices = new_filter2,
                    #as.character is needed when we have the filter2 is a factor (tillage)
@@ -415,18 +417,24 @@ server <- function(input, output, session) {
     }
   })
 
-  ### ?????
-  observeEvent(c(input$AllDepths, input$SoilDepth),{
+  ### add "All/None" checkbox for the soil depths to select all/none
+  observeEvent(input$AllDepths,{
     new_depths <- df_outcome()$sample_depth %>% unique %>% sort(na.last = TRUE) %>% tidyr::replace_na('Soil Surface')
     updateCheckboxGroupInput(session, inputId = 'SoilDepth',
-                        selected = if(input$AllDepths) new_depths #else ""
+                        selected = if(input$AllDepths) new_depths else character(0)
                         )
-    updateCheckboxInput(session, inputId = 'AllDepths',
-                        value = if(!(identical(input$SoilDepth, new_depths) & input$AllDepths)) FALSE
-                        )
-
     
   })
+  
+  ### add "All/None" checkbox for the Cover Crop Species to select all/none (only appears if practice is cover crops)
+  observeEvent(input$AllSpecies,{
+    new_species <- df_filter1()$filter2 %>% unique %>% sort(na.last = TRUE)
+    updateCheckboxGroupInput(session, inputId = 'Filter2',
+                             selected = if(input$AllSpecies) new_species else character(0)
+    )
+    
+  })
+  
 
   
   
@@ -593,7 +601,7 @@ server <- function(input, output, session) {
   observeEvent(input$go,{
     updateNavbarPage(session, 'navbar', select = 'Data')
     # delay makes it so that the renderUI statements have time to adjust
-    delay(10,click('update'))
+    delay(50,click('update'))
   })
 
   # This originally made sure that the app started with a plot. This is no longer necessary witht he addition of the landing page

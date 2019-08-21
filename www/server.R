@@ -88,9 +88,9 @@ server <- function(input, output, session) {
   #do the next filter
   df_filter2 <- eventReactive(c(df_filter1(), input$Filter2), {
     cat(file = stderr(), input$Filter2, 'dftillage2 is updated\n')
-
+    
     df_filter1() %>%
-      filter(filter2 %in% input$Filter2)
+        filter(filter2 %in% input$Filter2)
     
   })
   
@@ -288,12 +288,19 @@ server <- function(input, output, session) {
     new_filter2 <- sort(unique(df_filter1()$filter2))
     if(input$MgmtPractice == 'Cover crop'){
       list(
-        checkboxGroupInput('Filter2', label = 'Cover Crop Species',
+        shinyWidgets::pickerInput('Filter2', label = 'Cover Crop Species',
                            choices = new_filter2,
                            #as.character is needed when we have the filter2 is a factor (tillage)
-                           selected = new_filter2[1]
-        ),
-        checkboxInput(inputId = 'AllSpecies', label = 'All/No Species')
+                           selected = new_filter2,
+                           multiple = TRUE,
+                           options = list(
+                             `actions-box` = TRUE,
+                             `select-all-text` = 'All Species',
+                             `deselect-all-text` = "No Species",
+                             size = 5
+                           )
+        )
+        
       )
       
     } else {
@@ -312,8 +319,8 @@ server <- function(input, output, session) {
     new_filter2 <- sort(unique(df_filter1()$filter2))
     # Cover crop is a group checkbox input, so we gotta account for that
     if(input$MgmtPractice == 'Cover crop'){
-      updateCheckboxGroupInput(session, 'Filter2', unique(df_filter1()$filter2_name),
-                               choices = new_filter2,
+      updatePickerInput(session, 'Filter2', unique(df_filter1()$filter2_name),
+                               choices =  new_filter2,
                                selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2[1])))
     } else {
       updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
@@ -378,12 +385,12 @@ server <- function(input, output, session) {
   # })
 
 
-  #df_years() is what shows up in the forest plot. We choose not to plot if there are less than 5 rows
-  observeEvent(df_years(),{
+  #df_years() is what shows up in the forest plot
+  observeEvent(c(input$Filter2,df_years()),{
 
     # otherwise we hide the error message
     #cat(file = stderr(), 'nrow df_years = ', nrow(df_years()), '\n')
-    if(nrow(df_years()) == 0){
+    if(nrow(df_years()) == 0 | is.null(input$Filter2)){
       shinyjs::disable('update')
       shinyjs::show('no_data')
     }else{
@@ -426,14 +433,6 @@ server <- function(input, output, session) {
     
   })
   
-  ### add "All/None" checkbox for the Cover Crop Species to select all/none (only appears if practice is cover crops)
-  observeEvent(input$AllSpecies,{
-    new_species <- df_filter1()$filter2 %>% unique %>% sort(na.last = TRUE)
-    updateCheckboxGroupInput(session, inputId = 'Filter2',
-                             selected = if(input$AllSpecies) new_species else character(0)
-    )
-    
-  })
   
 
   
@@ -476,7 +475,22 @@ server <- function(input, output, session) {
   df_plot <- eventReactive(input$update,{
     cat(stderr(), "years has dim", dim(df_years()))
     cat(stderr(), 'filter2 looks like ', unique(df_years()$filter2))
-    df_years()
+    #can pick any element of Review, since it was already filtered by input$MgmtPratice.
+      # I do it this way just to keep the dependency only on df_years
+    practice <- df_years()$Review[1]
+    if(input$MgmtPractice == 'Cover crop'){
+      df_years() %>%
+        group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year) %>% 
+        summarize(mean_per_change = mean(mean_per_change), 
+                  sem_per_change = mean(sem_per_change), 
+                  paper_id_list = paste(paper_id_list, collapse = ";"), 
+                  Trt_1name = Trt_1name[1], 
+                  group_facet_level32 = group_facet_level32[1], 
+                  Trt_2name = paste(Trt_2name, collapse = ","))
+    } else {
+      df_years()
+    }
+    
     
   })
 

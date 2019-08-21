@@ -1,6 +1,17 @@
-practice <- 'Tillage'
-filter_1 <- 'Conventional tillage'
-filter_2 <- 'No tillage'
+practice <- 'Cover crop'
+filter_1 <- 'Single species'
+filter_2 <- c("winter rye", "winter rye + oat", "forage radish", "hairy vetch", 
+              "Italian ryegrass", "winter rye + hairy vetch", "oat", "alfalfa", 
+              "clover", "forage radish + buckwheat", "forage radish + hairy vetch + winter rye", 
+              "forage rape", "perennial ryegrass", "winter rye (corn), hairy vetch (soybean)", 
+              "winter triticale", "winter wheat", "barley", "Canada bluegrass", 
+              "canola", "chickweed", "downy brome", "forage radish + hairy vetch", 
+              "forage radish + winter triticale", "hairy vetch (corn) / winter rye (soybean)", 
+              "hairy vetch + winter rye (corn) / winter rye (soybean)", "mustard", 
+              "oat (corn), clover (soybean)", "rapeseed", "winter rye + forage radish", 
+              "wheatgrass", "winter rye + Austrian winter pea", "oat, Italian ryegrass, or forage radish", 
+              "Austrian winter pea", "slender wheatgrass (corn), winter lentils (soybean)"
+)
 rv <- 'Climate Mitigation'
 depth <- c('0-30 cm', '0-60 cm', '0-150 cm', '0-100 cm', NA)
 #yrs <- c('Year 1-5', 'Years 1-10','Years 1-20', 'Years 1-30', 'Years 1-40', 'Years 1-50')
@@ -41,7 +52,18 @@ df_practice <- function(MgmtPractice){
 
 
 df_filter1 <- function(Filter1){
-  new_df <- df_practice(practice) %>% 
+  
+  if((practice == 'Cover crop') & (Filter1 %in% df_practice(practice)$cc_group1)){
+    new_df <- df_practice(practice) %>%
+      mutate(filter1 = cc_group1)
+  } else if ((practice == 'Cover crop') & (Filter1 %in% df_practice(practice)$cc_group2)){
+    new_df <- df_practice(practice) %>%
+      mutate(filter1 = cc_group2)
+  } else {
+    new_df <- df_practice(practice)
+  }
+  
+  new_df <- new_df %>% 
     filter(filter1 == Filter1)
   
   #need to write special case to make sure filter1 = zonal tillage => fitler2 = no tillage only 
@@ -57,7 +79,7 @@ df_filter1 <- function(Filter1){
 
 df_filter2 <- function(Filter2){
   df_filter1(filter_1) %>%
-    filter(filter2 == Filter2)
+    filter(filter2 %in% Filter2)
 }
 
 
@@ -89,8 +111,8 @@ df_depth <- function(SoilDepth){
 }
 
 df_years <- function(years){
+  df <- df_depth(depth)
   if(practice == 'Tillage'){
-    df <- df_depth(depth)
     
     # filter dataset to display selected review and response variables
     df %>%
@@ -104,7 +126,22 @@ df_years <- function(years){
   }
 }
 
-
+df_plot <- function(){
+  df <- df_years(yrs)
+  if(df$Review[1] == 'Cover crop'){
+    df %>% 
+      group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year) %>% 
+      summarize(mean_per_change = mean(mean_per_change), 
+                sem_per_change = mean(sem_per_change), 
+                paper_id_list = paste(paper_id_list, collapse = ";"), 
+                Trt_1name = Trt_1name[1], 
+                group_facet_level32 = group_facet_level32[1], 
+                Trt_2name = paste(Trt_2name, collapse = ","))
+  } else {
+    df
+  }
+  
+}
 
 #### Run all the functions above =================================
 dfp <- df_practice(practice)
@@ -113,6 +150,7 @@ dff2<- df_filter2(filter_2)
 dfo <- df_outcome(rv)
 dfd <- df_depth(depth)
 dfy <- df_years(yrs)
+dfplot <- df_plot()
 
 
 

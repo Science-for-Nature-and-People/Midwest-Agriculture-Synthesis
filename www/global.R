@@ -18,19 +18,21 @@ library(forcats)
 
 # Main data sets
 raw_data <- read_csv(here("www/data/ALL_raw.csv"), col_types = cols(Trt2_int = col_integer(),
-                                                                                Trt1 = col_character(),
-                                                                                Trt2 = col_character(),
-                                                                                Trt1_int2 = col_character(),
-                                                                                Trt2_int2 = col_character(),
-                                                                                Trt1_details = col_character(),
-                                                                                Trt2_details = col_character(),
-                                                                                trt_specifics = col_character(),
-                                                                                Tillage_1 = col_character(),
-                                                                                Tillage_2 = col_character(),
-                                                                                nutrient_groups = col_character(),
-                                                                                cc_group1 = col_character(),
-                                                                                cc_group2 = col_character()
-                                                                    )
+                                                                    Trt1 = col_character(),
+                                                                    Trt2 = col_character(),
+                                                                    Trt1_int2 = col_character(),
+                                                                    Trt2_int2 = col_character(),
+                                                                    Trt1_details = col_character(),
+                                                                    Trt2_details = col_character(),
+                                                                    trt_specifics = col_character(),
+                                                                    Tillage_1 = col_character(),
+                                                                    Tillage_2 = col_character(),
+                                                                    nutrient_groups = col_character(),
+                                                                    cc_group1 = col_character(),
+                                                                    cc_group2 = col_character(),
+                                                                    pm_group1 = col_character(),
+                                                                    pm_group2 = col_character()
+)
                      )
 
 
@@ -57,8 +59,8 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
   mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
   #get rid of rows with not enough data (no standard error means ?)
   #filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
-  #we don't care about comparing a treatment to itself for the app
-  filter(Trt_1name != Trt_2name)
+  #we don't care about comparing a treatment to itself for the app (as long as both aren't NA)
+  filter((Trt_1name != Trt_2name) | (is.na(Trt_1name) & is.na(Trt_2name)))
 
 sample_depth_ordered <- raw_data$sample_depth %>% unique %>% str_sort(numeric = T, na_last = NA)
 

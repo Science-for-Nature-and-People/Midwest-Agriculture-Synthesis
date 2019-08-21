@@ -238,8 +238,6 @@ single_split <- c("timing_plant_plantV6",
 
 
 #Create Main Groupings #####
-groups_added <- Results %>%
-  select(Group_finelevel, Response_var_org, Res_key) %>%
   
   
   ##Nutrient groups####
@@ -476,11 +474,6 @@ mutate(
     ##Drainage####
     Response_var_org %in% drainage ~ "Discharge amount"
   )) 
-
-
-
-
-###also need to add Trt1_name & Trt2_name########################
 
 
 

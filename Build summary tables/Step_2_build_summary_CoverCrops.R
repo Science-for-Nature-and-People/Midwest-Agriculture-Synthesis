@@ -26,7 +26,6 @@ df <-  read.csv(file.path(datapath, "Cover Crop Review/CC_ResultsGrouped.csv"), 
 #Rename review_id to Review
 df <- rename(df, finelevel_group = Group_finelevel, Review = Review_id, Trt1_value = Trt_id1value, Trt2_value = Trt_id2value)
 
-###Keep all comparisons - use Trt_id1name and Trt_id2name to make comparisons
 
 #keep rows only with Stat_type == mean
 df <- df %>% filter(Stat_type == "mean", !is.na(Trt1_value) & !is.na(Trt2_value),

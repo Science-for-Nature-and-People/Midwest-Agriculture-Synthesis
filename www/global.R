@@ -8,6 +8,7 @@ library(leaflet) # for mapping
 library(shinyjs) # for interactive clicking
 library(gdata) # reorder legends
 library(shinydashboard)
+library(shinyWidgets)
 library(here) # helps us keep the files in order (www)
 library(RColorBrewer) #to color the plot
 library(grid) #to add annotations to the plot (using grobs)

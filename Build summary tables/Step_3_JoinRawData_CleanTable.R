@@ -1,5 +1,6 @@
 ###Join all raw data files
-
+library("readr", lib.loc="~/R/win-library/3.5")
+library("dplyr", lib.loc="~/R/win-library/3.5")
 
 
 # Main data sets
@@ -68,7 +69,6 @@ pestmgmt_data <- read_csv (file = "/Users/LWA/Desktop/github/midwesternag_synthe
 
 pestmgmt_data$Res_key <- NULL
 pestmgmt_data$Review_id <- "Early Season Pest Management"
-#pestmgmt_data$RV_depth <- NULL #Removed because dataset currently has 0 entries in this column
 
 all_data <- full_join(tillage_data, covercrop_data)
 
@@ -80,7 +80,7 @@ all_data$Res_key <- rownames(all_data)
 
 
 
-unique(all_data2$Review)
+unique(all_data$Review)
 
 all_data2 <- all_data %>% 
               select (Res_key,

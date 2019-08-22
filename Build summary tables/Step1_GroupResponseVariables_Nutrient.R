@@ -239,7 +239,8 @@ single_split <- c("timing_plant_plantV6",
 
 #Create Main Groupings #####
   
-  
+groups_added <-   Results %>%
+                  select(Paper_id, Response_var_org, Group_finelevel, Res_key) %>%
   ##Nutrient groups####
 mutate(
   nutrient_groups = case_when( 
@@ -479,7 +480,7 @@ mutate(
 
 #Attach column to Results######
 Results <-
-  left_join(Results, groups_added, by = c("Res_key", "Response_var_org", "Group_finelevel"))
+  left_join(Results, groups_added) 
 
 Results <- Results %>% select(Res_key,
                               Paper_id,

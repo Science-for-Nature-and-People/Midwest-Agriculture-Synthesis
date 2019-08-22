@@ -1942,14 +1942,14 @@ mutate(
     #Carbon Mitigation####
     Response_var %in% chem_maize_SOC ~ "Soil organic carbon derived from corn",
     Response_var %in% chem_SOC ~ "Soil organic carbon",
-    Response_var %in% envir_CO2 ~ "Carbon dioxide emissions",
-    Response_var %in% envir_CH4 ~ "Methane emissions",
+    Response_var %in% envir_CO2 ~ "Carbon dioxide (CO2)",
+    Response_var %in% envir_CH4 ~ "Methane (CH4)",
     
     #Nitrogen Mitigation
-    Response_var %in% envir_N2O ~ "Nitrous oxide emissions",
+    Response_var %in% envir_N2O ~ "Nitrous oxide (N2O)",
     
     #Global Warming Potential#####
-    Response_var %in% envir_globalwarmingpotential ~ "Methane and carbon dioxide emissions",
+    Response_var %in% envir_globalwarmingpotential ~ "Methane and carbon dioxide (CH4 + CO2)",
     
     
     ###Pests####

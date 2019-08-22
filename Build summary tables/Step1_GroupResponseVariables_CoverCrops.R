@@ -922,9 +922,9 @@ Results$Res_key = rownames(Results)
                    ####Climate Mitigation####
                    ##Carbon Mitigation#####
                    Response_var %in% chem_carbon ~ "Soil organic carbon",      
-                   Response_var %in% envir_CO2 ~ "Carbon dioxide emissions",       
+                   Response_var %in% envir_CO2 ~ "Carbon dioxide (CO2)",       
                    ##Nitrogen Mitigation####
-                   Response_var %in% envir_N2O ~ "Nitrogen dioxide emissions",       
+                   Response_var %in% envir_N2O ~ "Nitrous oxide (N2O)",       
                    
                    #####Other Soil Properties####
                    

@@ -306,8 +306,6 @@ all_data <- rbind(df_othersoilprops,
 
 write.csv(all_data, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_ALL_raw.csv", row.names = FALSE)
 
-df <- read.csv(file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/NutrientMgmt_ALL_raw.csv", row.names = NULL)
-
 
 
 ###################Mean Abundance code

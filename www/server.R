@@ -568,7 +568,8 @@ server <- function(input, output, session) {
     #can pick any element of Review, since it was already filtered by input$MgmtPratice.
       # I do it this way just to keep the dependency only on df_years
     practice <- df_years()$Review[1]
-    if(input$MgmtPractice == 'Cover crop'){
+    # for practices where the user can select multiple inputs in filter1/filter2, we want to create a grouped mean for the different selections the user makes 
+    if(input$MgmtPractice %in% c('Cover crop', 'Early Season Pest Management')){
       df_years() %>%
         group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year) %>% 
         summarize(mean_per_change = mean(mean_per_change), 

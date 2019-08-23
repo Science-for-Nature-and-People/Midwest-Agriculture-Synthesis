@@ -615,9 +615,9 @@ Results <- rename(Results,
                   Trt2_value = Trt_id2value,
                   significance = Sig_level,
                   finelevel_group = Group_finelevel,
-                  Trt1_name = Trt_id1name,
+                  Trt_1name = Trt_id1name,
                   Trt1_details = Trt_id1description,
-                  Trt2_name = Trt_id2name,
+                  Trt_2name = Trt_id2name,
                   Trt2_details = Trt_id2description)
 
 

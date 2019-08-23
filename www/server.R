@@ -46,8 +46,8 @@ server <- function(input, output, session) {
                filter2_name = 'Application Specifics')
     } else if(input$MgmtPractice %in% c('Early Season Pest Management')){
       filtered_by_practice %>% 
-        mutate(filter1 = Trt_2name,
-               filter2 = trt_specifics,
+        mutate(filter1 = pm_group1,
+               filter2 = pm_group2,
                filter1_name = 'Pesticide Type',
                filter2_name = 'Pesticide Application Site')
     }
@@ -59,6 +59,10 @@ server <- function(input, output, session) {
   
   #
   df_filter1 <- eventReactive(c(df_practice(), input$Filter1), {
+    # validate(
+    #   need(input$Filter1, 'no filter1')
+    # )
+    req(input$Filter1)
     cat(file = stderr(), 'df_filter1 is updated\n')
     # write special case for cover crop, since filter1 can belong to either cc_group1 or cc_group2
     if((input$MgmtPractice == 'Cover crop') & (input$Filter1 %in% df_practice()$cc_group1)){
@@ -72,7 +76,7 @@ server <- function(input, output, session) {
     }
     
     new_df <- new_df %>% 
-      filter(filter1 == input$Filter1)
+      filter(filter1 %in% input$Filter1)
     
     #need to write special case to make sure filter1 = zonal tillage => fitler2 = no tillage only 
       #note that we could've also done this in df_filter2 assignment, but putting it here updates the choices as well
@@ -220,6 +224,11 @@ server <- function(input, output, session) {
   #update Outcome on summary choice
     #this changes RV, which triggers change in df_outcome -> df_years
   observeEvent(input$summaryRV, {
+    validate(
+      need(df_filter2(), 'no df_filter2'),
+      need(input$summaryRV, "no summary output?"),
+      need(df_filter2()$group_level1, "no grouplevel1")
+    )
     updateRadioButtons(session, "RV", "Outcome",
       choices = unique(df_filter2()$group_level1) %>% sort(),
       #selected = unique(df_practice()$group_level1)
@@ -244,6 +253,41 @@ server <- function(input, output, session) {
     #                    )
   })
   
+  
+  # Filter1 changes between a checkboxGroupInput or a radio butotn depending on practice
+  output$filter_one <- renderUI({
+    validate(
+      need(input$MgmtPractice, "no management practice")
+    )
+    # write special case for cover crop, where the first selection can filter on two different columns
+    if(input$MgmtPractice == 'Cover crop'){
+      new_filter1 <- c(unique(df_practice()$cc_group1), unique(df_practice()$cc_group2))
+    } else {
+      new_filter1 <- unique(df_practice()$filter1) %>% sort
+    }
+    
+    # write special case for early season pest management, where we allow multiple inputs for filter1
+    if(input$MgmtPractice == 'Early Season Pest Management'){
+      list(
+        checkboxGroupInput('Filter1', unique(df_practice()$filter1_name),
+                           choices = new_filter1,
+                           #as.character is needed when we have the filter1 is a factor (tillage)
+                           selected = new_filter1),
+        checkboxInput('AllPesticideTypes', "All Types", value = TRUE)
+      )
+      
+    } else {
+      radioButtons('Filter1', unique(df_practice()$filter1_name),
+                   choices = new_filter1,
+                   #as.character is needed when we have the filter1 is a factor (tillage)
+                   selected = new_filter1[1])
+    }
+  })
+  
+  
+  
+  
+  
   #update summary outcome choices and tillage type based on practice
   observeEvent(input$MgmtPractice,{
     
@@ -258,7 +302,8 @@ server <- function(input, output, session) {
     cat(file = stderr(), 'tillage type should update\n\n')
     
     validate(
-      need(df_practice()$filter1, 'no filter1')
+      need(df_practice()$filter1, 'no filter1'),
+      need(input$Filter1, "no filter1")
     )
     # write special case for cover crop, since the first filter looks at 2 columns
     if(input$MgmtPractice == 'Cover crop'){
@@ -266,11 +311,22 @@ server <- function(input, output, session) {
     } else {
       new_filter1 <- unique(df_practice()$filter1) %>% sort
     }
-    #df_practice()$filter1_name is the same for all rows in a practice, so doing unique is just a way to grab one of them
-    updateRadioButtons(session, 'Filter1', unique(df_practice()$filter1_name),
-                       choices = new_filter1,
-                       #as.character is needed when we have the filter1 is a factor (tillage)
-                       selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, as.character(new_filter1[1])))
+    
+    # write special case for early season pest management, since we want filter1 to allow multiple selections
+    if(input$MgmtPractice == 'Early Season Pest Management'){
+      updateCheckboxGroupInput(session, 'Filter1', unique(df_practice()$filter1_name),
+                               choices = new_filter1,
+                               #as.character is needed when we have the filter1 is a factor (tillage)
+                               selected = new_filter1#ifelse(input$Filter1 %in% new_filter1, input$Filter1, new_filter1)
+                               )
+    } else {
+    
+      #df_practice()$filter1_name is the same for all rows in a practice, so doing unique is just a way to grab one of them
+      updateRadioButtons(session, 'Filter1', unique(df_practice()$filter1_name),
+                         choices = new_filter1,
+                         #as.character is needed when we have the filter1 is a factor (tillage)
+                         selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, as.character(new_filter1[1])))
+    }
     
     #tillage only has the year filter
     if(input$MgmtPractice == 'Tillage'){
@@ -282,6 +338,8 @@ server <- function(input, output, session) {
     
 
   })
+  
+  
   
   # Filter2 changes between a checkboxGroupInput or a radioButton depending on the practice
   output$filter_two <- renderUI({
@@ -303,6 +361,15 @@ server <- function(input, output, session) {
         
       )
       
+    } else if(input$MgmtPractice == 'Early Season Pest Management'){
+      list(
+        checkboxGroupInput('Filter2', unique(df_filter1()$filter2_name),
+                   choices = new_filter2,
+                   #as.character is needed when we have the filter2 is a factor (tillage)
+                   selected = new_filter2),
+       checkboxInput('AllPesticideSites', 'All Sites',
+                     value = TRUE) 
+      )
     } else {
       radioButtons('Filter2', unique(df_filter1()$filter2_name),
                    choices = new_filter2,
@@ -322,6 +389,11 @@ server <- function(input, output, session) {
       updatePickerInput(session, 'Filter2', unique(df_filter1()$filter2_name),
                                choices =  new_filter2,
                                selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2[1])))
+    } else if(input$MgmtPractice == "Early Season Pest Management"){
+      updateCheckboxGroupInput(session, 'Filter2', unique(df_filter1()$filter2_name),
+                               choices = new_filter2,
+                               #as.character is needed when we have the filter2 is a factor (tillage)
+                               selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2)))
     } else {
       updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
                          choices = new_filter2,
@@ -393,6 +465,7 @@ server <- function(input, output, session) {
     if(nrow(df_years()) == 0 | is.null(input$Filter2)){
       shinyjs::disable('update')
       shinyjs::show('no_data')
+  
     }else{
       shinyjs::enable('update')
       shinyjs::hide('no_data')
@@ -433,6 +506,23 @@ server <- function(input, output, session) {
     
   })
   
+  ### add "All/None" checkbox for the early season pest management filter1 to select all/none
+  observeEvent(input$AllPesticideTypes,{
+    new_types <- df_practice()$filter1 %>% unique %>% sort(na.last = TRUE)# %>% tidyr::replace_na('Soil Surface')
+    updateCheckboxGroupInput(session, inputId = 'Filter1',
+                             selected = if(input$AllPesticideTypes) new_types else character(0)
+    )
+
+  })
+  
+  ### add "All/None" checkbox for the early season pest management filter2 to select all/none
+  observeEvent(input$AllPesticideSites,{
+    new_sites <- df_filter1()$filter2 %>% unique %>% sort(na.last = TRUE)# %>% tidyr::replace_na('Soil Surface')
+    updateCheckboxGroupInput(session, inputId = 'Filter2',
+                             selected = if(input$AllPesticideSites) new_sites else character(0)
+    )
+    
+  })
   
 
   
@@ -486,15 +576,23 @@ server <- function(input, output, session) {
                   paper_id_list = paste(paper_id_list, collapse = ";"), 
                   Trt_1name = Trt_1name[1], 
                   group_facet_level32 = group_facet_level32[1], 
-                  Trt_2name = paste(Trt_2name, collapse = ","))
+                  Trt_2name = paste(Trt_2name, collapse = ","),
+                  filter1 = paste(unique(filter1), collapse = ","),
+                  filter2 = paste(unique(filter2), collapse = ","))
     } else {
       df_years()
     }
     
     
   })
+  
+  ## let's try to do the same "isolate" mimicry with filter1. need this to get the choices for the title text in plot
+  df_filter1_for_plot <- eventReactive(input$update, {
+    df_filter1()
+  })
 
-  #forestplot will change whenever makeplot changes (so whenever the update button is pressed)
+  #forestplot will change whenever df_plot changes (so whenever the update button is pressed)
+  # to achieve this, we need no calls to input$* in this function
   output$forestplot <- renderPlot({
     #control_text <- control_lookup[which(control_lookup$review_name == df_plot()$Review[1]),2]
     control_text <- paste(unique(df_plot()$Trt_1name), collapse = 'and')
@@ -506,6 +604,35 @@ server <- function(input, output, session) {
                                  mean_per_change = 0,                                      #mean_per_change is the y axis on the plot, so this plots the control text at y = 0
                                  sem_per_change = 0)                                       #this is just needed because the ggplot below uses this to calculate the error bars. number doesn't matter I think
 
+    
+    # we only want to make the plot react on the title, so we gotta isolate all the inputs to kill reactivity
+    practice <- isolate(input$MgmtPractice)
+    filter1 <- isolate(input$Filter1)
+  
+   
+    filter2_all_choices <- unique(df_filter1_for_plot()$Trt_2name) %>% sort 
+    #isolate makes sure we don't have reactivity
+    filter2_selected <- isolate(input$Filter2)
+    cat(stderr(), "filter2_all:", filter2_all_choices, "\n selected:", filter2_selected)
+    # Write special cases for cover crop and Early Season Pest Management, where the user can select multiple Trt_2names
+    if(practice %in% 'Cover crop'){
+      if(length(filter2_all_choices) == length(filter2_selected)){
+        title_text <- paste0('Effects of All Species compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+      } else if (length(filter2_selected) > 1){
+        title_text <- paste0('Effects of Multiple "', filter1 ,'" compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+      } else{
+        title_text <- paste0('Effects of ', paste(unique(df_plot()$Trt_2name), collapse = 'and'), ' compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+      }
+    } else if (practice %in% "Early Season Pest Management"){
+      if(isolate(input$AllPesticideTypes)){
+        title_text <- paste0('Effects of All Species compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+      } else {
+        title_text <- paste0("Effects of ", paste(unique(df_plot()$pm_group1), collapse = ","), " compared to ", paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+      }
+
+    } else {
+      title_text <- paste0('Effects of ', paste(unique(df_plot()$Trt_2name), collapse = 'and'), ' compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+    }
 
     ggplot(df_plot(), aes(group_facet_level32, mean_per_change, # remember that group_facet_level32 is the column ordered by group_level3 and group_level2
                       ymin = mean_per_change - sem_per_change,
@@ -525,7 +652,7 @@ server <- function(input, output, session) {
         #adding the extra paste(unique(....., collapse = ..)) to catch cases where there are multiple trt_2name or trt_1name
           # this is only a problem when the user doesn't get to select Trt_1name (like Early Season pest management)
           # by default, if you have a vector in paste0, it will only pull out the first element.
-        title = paste0('Effects of ', paste(unique(df_plot()$Trt_2name), collapse = 'and'), ' compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and')),
+        title = title_text,
         #  subtitle = df_plot()$group_level1[1],
         x = "",
         y = "Percent difference between treatment and control (%)"
@@ -615,7 +742,7 @@ server <- function(input, output, session) {
   observeEvent(input$go,{
     updateNavbarPage(session, 'navbar', select = 'Data')
     # delay makes it so that the renderUI statements have time to adjust
-    delay(50,click('update'))
+    delay(500,click('update'))
   })
 
   # This originally made sure that the app started with a plot. This is no longer necessary witht he addition of the landing page

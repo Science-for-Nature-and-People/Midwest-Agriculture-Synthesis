@@ -42,8 +42,8 @@ df_practice <- function(MgmtPractice){
              filter2_name = 'Application Specifics')
   } else if(MgmtPractice %in% c('Early Season Pest Management')){
     filtered_by_practice %>% 
-      mutate(filter1 = Trt_2name,
-             filter2 = trt_specifics,
+      mutate(filter1 = pm_group1,
+             filter2 = pm_group2,
              filter1_name = 'Pesticide Type',
              filter2_name = 'Pesticide Application Site')
   }
@@ -136,7 +136,9 @@ df_plot <- function(){
                 paper_id_list = paste(paper_id_list, collapse = ";"), 
                 Trt_1name = Trt_1name[1], 
                 group_facet_level32 = group_facet_level32[1], 
-                Trt_2name = paste(Trt_2name, collapse = ","))
+                Trt_2name = paste(Trt_2name, collapse = ","),
+                filter1 = paste(unique(filter1), collapse = ','),
+                filter2 = paste(unique(filter2), collapse = ","))
   } else {
     df
   }

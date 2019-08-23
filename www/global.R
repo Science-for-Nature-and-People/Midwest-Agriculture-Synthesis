@@ -42,11 +42,11 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
                                                fct_explicit_na,
                                                na_level = "NA") %>%
   #the selection list below will need to be responsive to the user inputs
-  select(Paper_id, Review, group_level1, group_level2, group_level3, Trt1_details, Trt2_details, trt_specifics, nutrient_groups, cc_group1, cc_group2, sample_depth, sample_year, Trt_1name, Trt_2name, Trt_compare, per_change, actual_diff) %>%
+  #select(Paper_id, Review, group_level1, group_level2, group_level3, Trt1_details, Trt2_details, trt_specifics, nutrient_groups, cc_group1, cc_group2, sample_depth, sample_year, Trt_1name, Trt_2name, Trt_compare, per_change, actual_diff) %>%
   #adjust grouping order based on order of selections in webtool. these will vary by review.
   group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, Trt_compare, Trt_1name, Trt_2name,
            #Trt1_details, Trt2_details, trt_specifics, nutrient_groups) %>%
-           trt_specifics, nutrient_groups, cc_group1, cc_group2) %>%
+           trt_specifics, nutrient_groups, cc_group1, cc_group2, pm_group1, pm_group2) %>%
   summarise(mean_per_change = mean(per_change, na.rm = TRUE), #means of differences of percent change ((trt-control)/control)
             sem_per_change = std.error(per_change, na.rm = TRUE), #if results in NA then that needs to go to infinity
             mean_actual_diff = mean(actual_diff, na.rm = TRUE), #mean of differences in values

@@ -609,11 +609,15 @@ server <- function(input, output, session) {
     practice <- isolate(input$MgmtPractice)
     filter1 <- isolate(input$Filter1)
   
-   
+    pm1_all_choices <- summary_data %>%
+      filter(Review == practice) %>%
+      select(pm_group1) %>%
+      unique %>%
+      deframe
     filter2_all_choices <- unique(df_filter1_for_plot()$Trt_2name) %>% sort 
     #isolate makes sure we don't have reactivity
     filter2_selected <- isolate(input$Filter2)
-    cat(stderr(), "filter2_all:", filter2_all_choices, "\n selected:", filter2_selected)
+    #cat(stderr(), "\n pm1_all_chocies:", pm1_all_choices, "\n filter1:", isolate(input$Filter1))
     # Write special cases for cover crop and Early Season Pest Management, where the user can select multiple Trt_2names
     if(practice %in% 'Cover crop'){
       if(length(filter2_all_choices) == length(filter2_selected)){
@@ -624,8 +628,10 @@ server <- function(input, output, session) {
         title_text <- paste0('Effects of ', paste(unique(df_plot()$Trt_2name), collapse = 'and'), ' compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
       }
     } else if (practice %in% "Early Season Pest Management"){
-      if(isolate(input$AllPesticideTypes)){
-        title_text <- paste0('Effects of All Species compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+      if(length(pm1_all_choices) == length(isolate(input$Filter1))){
+        title_text <- paste0('Effects of All Pesticide Types compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+      } else if (length(filter1) > 1) {
+        title_text <- paste0('Effects of Multiple Pesticide Types compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
       } else {
         title_text <- paste0("Effects of ", paste(unique(df_plot()$pm_group1), collapse = ","), " compared to ", paste(unique(df_plot()$Trt_1name), collapse = 'and'))
       }

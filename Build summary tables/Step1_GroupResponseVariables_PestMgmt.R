@@ -182,251 +182,98 @@ preds_abundance_soybeans <- c("predator taxa abundance (Anthocoridae) in soybean
 
 ##Groups of Pesticide Type###
 
-unique(Results_filtered$Trt_id2name)
+unique(Results$Trt_id2name)
 
-type_fungicide <- c("ApronMaxx",                                                                                                                                                                                                                                    
-                    "ApronMaxx (AM)",                                                                                                                                                                                                                               
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] early June planting",                                                                                                                                
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] early May planting",                                                                                                                                 
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] late May planting",                                                                                                                                  
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] planted at a seeding rate of 148,200 seeds/ha",                                                                                                      
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] planted at a seeding rate of 197,600 seeds/ha",                                                                                                      
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] planted at a seeding rate of 247,000 seeds/ha",                                                                                                      
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] planted at a seeding rate of 296,400 seeds/ha",                                                                                                      
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] planted at a seeding rate of 345,800 seeds/ha",                                                                                                      
-                    "ApronMAXX RFC [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed)] planted at a seeding rate of 95,800 seeds/ha",                                                                                                       
-                    "Captan",   
-                    "Captan + PCNB + TBZ",                                                                                                                                                                                                                          
-                    "EverGol Energy (EVG)",                                                                                                                                                                                                                         
-                    "Fludioxonil",                                                                                                                                                                                                                                  
-                    "maize (sweet) treated with chlorothalonil (1.0 g ai/kg) seed treatment",                                                                                                                                                                       
-                    "maize (sweet) treated with fluazinam (0.6 g ai/kg) seed treatment",                                                                                                                                                                            
-                    "maize (sweet) treated with imazalil (0.1 g ai/kg) seed treatment",                                                                                                                                                                             
-                    "maize (sweet) treated with metalaxyl (0.1 g ai/kg) seed treatment",                                                                                                                                                                            
-                    "maize (sweet) treated with metalaxyl/captan 400D (0.1 g ai/kg + 0.4 g ai/kg) seed treatment",                                                                                                                                                  
-                    "maize (sweet) treated with triadimefon (2.4 g ai/kg) seed treatment",                                                                                                                                                                          
-                    "mefenoxam (0.0057 mg a.i. per seed) and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety AG1403 [Monsanto, St. Louis, MO]",                                                                                                       
-                    "mefenoxam (0.0057 mg a.i. per seed) and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety HS2025 [Growmark, Inc., Bloomington, IL]",                                                                                               
-                    "mefenoxam (0.0057 mg a.i. per seed) and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety HS20R80 [Growmark, Inc., Bloomington, IL]",                                                                                              
-                    "mefenoxam (0.0057 mg a.i. per seed) and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety KB177RR [Kaltenberg Seed Farms, Waunakee, WI]",                                                                                          
-                    "mefenoxam (0.0057 mg a.i. per seed) and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety KB194RR [Kaltenberg Seed Farms, Waunakee, WI]",                                                                                          
-                    "mefenoxam (0.0057 mg a.i. per seed) and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety P91Y70 [Pioneer Hi-Bred Intl., Inc., Johnston, IA]",                                                                                     
-                    "mefenoxam (0.0057 mg a.i. per seed) and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety P91Y90 [Pioneer Hi-Bred Intl., Inc., Johnston, IA]",                                                                                    
-                    "PCNB", 
-                    "soybean seed (cv. 2834RR) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                   
-                    "soybean seed (cv. 2834RR) treated with mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",                                                                                              
-                    "soybean seed (cv. Archer) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                   
-                    "soybean seed (cv. Archer) treated with mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",                                                                                              
-                    "soybean seed (cv. Conrad) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                   
-                    "soybean seed (cv. Cult A) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                   
-                    "soybean seed (cv. General) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                  
-                    "soybean seed (cv. Kaltenberg KB153RR) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                           
-                    "soybean seed (cv. Kaltenberg KB161RR) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                           
-                    "soybean seed (cv. Kaltenberg KB172RR) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                           
-                    "soybean seed (cv. Kottman) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                  
-                    "soybean seed (cv. NK S19-V2) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                                    
-                    "soybean seed (cv. Pioneer 91B64) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                                
-                    "soybean seed (cv. Pioneer 91B91) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                                
-                    "soybean seed (cv. Pioneer 92B05) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                                
-                    "soybean seed (cv. S27-T7) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                   
-                    "soybean seed (cv. S27-T7) treated with mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",                                                                                              
-                    "soybean seed (cv. S31-V3) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                   
-                    "soybean seed (cv. S31-V3) treated with mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",                                                                                              
-                    "soybean seed (cv. Sandusky) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                 
-                    "soybean seed (cv. SD1081RR) treated with metalaxyl (0.94 g a.i./kg seed)",                                                                                                                                                                     
-                    "soybean seed (cv. Sloan) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                    
-                    "soybean seed (cv. Sloan) treated with mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",                                                                                               
-                    "soybean seed (cv. Stine 2402) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                               
-                    "soybean seed (cv. Stine 2402) treated with mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",                                                                                          
-                    "soybean seed (cv. Williams) treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                 
-                    "soybean seed (cv. Williams) treated with mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",                                                                                            
-                    "soybean seed mefenoxam (3.75 g a.i./100 kg seed and 11.25 g a.i./100 kg seed) and fludixonil (2.5 g a.i./100 kg seed)",
-                    "soybean seed mefenoxam (3.75 g a.i./100 kg) plus fludioxonil (2.5 g a.i./100 kg seed)",                                                                                                                                                        
-                    "soybean seed treated with mefenoxam (15.0 g a.i./100 kg seed)",                                                                                                                                                                                
-                    "soybean with azoxystrobin (4.1 g ai/100 kg seed) and metalaxyl (5.4 g ai/100 kg seed) seed treatment",                                                                                                                                         
-                    "soybean with Bacillus pumilus GB 34 (1.74 x 10 ^4 CFU/100 kg seed) seed treatment",                                                                                                                                                            
-                    "soybean with Bacillus subtilis MB1600 (biofungicide) and Bradyrhizobium japonicum RCR3407 (nitrogen fixin bacteria) in a peat carrier inoculant (chisel plow)",                                                                                
-                    "soybean with Bacillus subtilis MB1600 (biofungicide) and Bradyrhizobium japonicum RCR3407 (nitrogen fixin bacteria) in a peat carrier inoculant (moldboard plow)",                                                                             
-                    "soybean with Bacillus subtilis MB1600 (biofungicide) and Bradyrhizobium japonicum RCR3407 {nitrogen fixin bacteria) in a peat carrier inoculant",                                                                                              
-                    "soybean with fludioxonil (0.037 g a.i. kg/seed) and mefenoxam (0.025 g a.i. kg/seed) seed treatment",                                                                                                                                          
-                    "soybean with fludioxonil (0.037 g a.i. kg/seed) and mefenoxam (0.025 g a.i. kg/seed) seed treatment, fumigated soil",                                                                                                                          
-                    "soybean with fludioxonil (0.037 g a.i. kg/seed) and mefenoxam (0.025 g a.i. kg/seed) seed treatment, non-fumigated soil",                                                                                                                      
-                    "soybean with fludioxonil (0.07 g a.i. kg/seed) seed treatment",                                                                                                                                                                                
-                    "soybean with fludioxonil (0.07 g a.i. kg/seed) seed treatment, fumigated soil",                                                                                                                                                                
-                    "soybean with fludioxonil (0.07 g a.i. kg/seed) seed treatment, non-fumigated soil",                                                                                                                                                            
-                    "soybean with fludioxonil (2.5 g ai/100 kg seed) and mefenoxam (7.5 g ai/100 kg seed) seed treatment",                                                                                                                                          
-                    "soybean with mefenoxam (0.05 g a.i. kg/seed) seed treatment",                                                                                                                                                                                  
-                    "soybean with mefenoxam (0.05 g a.i. kg/seed) seed treatment, fumigated soil",                                                                                                                                                                 
-                    "soybean with mefenoxam (0.05 g a.i. kg/seed) seed treatment, non-fumigated soil",                                                                                                                                                              
-                    "soybean with thiamethoxam (50 g ai/100 kg of seed) seed treatment",                                                                                                                                                                            
-                    "TBZ" ,
-                    "Trilex 2000 (T2000)"
+type_fungicide <- c("mefenoxam; fludioxonil (ApronMaxx)",                                                                                         
+                    "azoxystrobin; metalaxyl",                                                                                                    
+                    "captan",                                                                                                                     
+                    "pyraclostrobin; metalaxyl (Accerleron)",                                                                                     
+                    "captan; pentachloronitrobenzene; thiabendazole",                                                                             
+                    "Bacillus pumilus GB 34",                                                                                                     
+                    "Bacillus subtilis MB1600 (biofungicide); Bradyrhizobium japonicum RCR3407 (nitrogen fixing bacteria)",                       
+                    "chlorothalonil",                                                                                                             
+                    "diazinon; lindane; captan (Agrox D-L Plus)",                                                                                 
+                    "fluazinam",                                                                                                                  
+                    "metalaxyl",                                                                                                                  
+                    "metalaxyl; Captan 400D",                                                                                                     
+                    "fludioxonil",                                                                                                                
+                    "mefenoxam",                                                                                                                  
+                    "mefenoxam; fludioxonil",                                                                                                     
+                    "mefenoxam; fludioxonil (ApronMAXX RFC)",                                                                                     
+                    "imazalil",                                                                                                                   
+                    "trifloxystrobin; metalaxyl (Trilex 2000)", 
+                    "triadimefon",                                                                                                                
+                    "thiabendazole",                                                                                                              
+                    "pentachloronitrobenzene",                                                                                                    
+                    "prothioconazole; penflufen; metalaxyl (EverGol Energy)"                                                                     
                     )
 
-type_organo_pyrethroid_fungi <- c("Agrox D-L Plus",                                                                                                                                                                                                                               
-                                 "Agrox D-L Plus, first planting",                                                                                                                                                                                                               
-                                 "Agrox D-L Plus, second planting",                                                                                                                                                                                                              
-                                 "Agrox D-L Plus, third planting",                                                                                                                                                                                                               
-                                 "soybean prophlactically sprayed with pyraclostrobin ( 89.6 g ai/ha) and lambda-cyhalothrin (28.0 g ai/ha)"                                                                                                                                    
-                                  )
+type_organo_pyrethroid_fungi <- c("pyraclostrobin; lambda-cyhalothrin"                                                                                         
+)
 
 
-type_neonic_fungi <- c("Accerleron (AC1)",                                                                                                                                                                                                                             
-                       "Accerleron (AC2)",                                                                                                                                                                                                                             
-                       "Accerleron (AC3)",                                                                                                                                                                                                                             
-                       "Accerleron (AC4)",                                                                                                                                                                                                                             
-                       "Avicta Complete + Beans 500 (CMA)",                                                                                                                                                                                                            
-                       "CruiserMaxx",
-                       "CruiserMaxx (CM)",                                                                                                                                                                                                                             
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] early June planting",                                                                                         
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] early May planting",                                                                                          
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] late May planting",                                                                                           
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] planted at a seeding rate of 148,200 seeds/ha",                                                               
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] planted at a seeding rate of 197,600 seeds/ha",                                                               
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] planted at a seeding rate of 247,000 seeds/ha",                                                               
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] planted at a seeding rate of 296,400 seeds/ha",                                                               
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] planted at a seeding rate of 345,800 seeds/ha",                                                               
-                       "CruiserMaxx [mefenoxam (0.0057 mg ai per seed) and fludioxonil (0.0039 mg ai per seed) and thiamethoxam (0.0762 mg ai per seed)] planted at a seeding rate of 95,800 seeds/ha",                                                                
-                       "EverGol Energy + Poncho/VOTiVO (EPV)",                                                                                                                                                                                                         
-                       "high rate clothianidin + fungicide",                                                                                                                                                                                                           
-                       "low rate clothianidin + fungicide",                                                                                                                                                                                                            
-                       "maize treated with azoxystrobin, fludioxonil, mefenoxam, and thiamethoxam (Cruiser Extreme 250) sampled at R6 stage",                                                                                                                          
-                       "maize treated with azoxystrobin, fludioxonil, mefenoxam, and thiamethoxam (Cruiser Extreme 250) sampled at V2 stage",                                                                                                                          
-                       "maize treated with azoxystrobin, fludioxonil, mefenoxam, and thiamethoxam (Cruiser Extreme 250) sampled at V4 stage",                                                                                                                          
-                       "soybean treated with thiamethoxam (56.3 g ai/100 kg seed) and mefenoxam and fludioxonil (CruiserMaxx)",                                                                                                                                        
-                       "thiamethoxam (0.0762 mg a.i. per seed), mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety AG1403 [Monsanto, St. Louis, MO]",                                                              
-                       "thiamethoxam (0.0762 mg a.i. per seed), mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety HS2025 [Growmark, Inc., Bloomington, IL]",                                                      
-                       "thiamethoxam (0.0762 mg a.i. per seed), mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety HS20R80 [Growmark, Inc., Bloomington, IL]",                                                     
-                       "thiamethoxam (0.0762 mg a.i. per seed), mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety KB177RR [Kaltenberg Seed Farms, Waunakee, WI]",                                                 
-                       "thiamethoxam (0.0762 mg a.i. per seed), mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety KB194RR [Kaltenberg Seed Farms, Waunakee, WI]",                                                 
-                       "thiamethoxam (0.0762 mg a.i. per seed), mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety P91Y70 [Pioneer Hi-Bred Intl., Inc., Johnston, IA]",                                            
-                       "thiamethoxam (0.0762 mg a.i. per seed), mefenoxam (0.0057 mg a.i. per seed), and fludioxonil (0.0039 mg a.i. per seed) treated soybean variety P91Y90 [Pioneer Hi-Bred Intl., Inc., Johnston, IA]"                                            
-                        )
+type_neonic_fungi <- c("clothianidin; fungicide",                                                                                                    
+                       "imidacloprid; mefenoxam; fludioxonil (ApronMaxx; Leverage)",                                                                 
+                       "mefenoxam; fludioxonil; thiamethoxam; other fungicide; imidacloprid (CruiserMaxx; fungicides; Leverage)",                    
+                       "mefenoxam; fludioxonil; thiamethoxam; other fungicides (CruiserMaxx)",                                                       
+                       "thiamethoxam; mefenoxam; fludioxonil",                                                                                       
+                       "thiamethoxam; mefenoxam; fludioxonil (CruiserMaxx)",                                                                         
+                       "azoxystrobin; fludioxonil; mefenoxam; thiamethoxam (Cruiser Extreme 250)",                                                   
+                       "abamectin; thiamethoxam; mefenoxam; fludioxonil (Avicta Complete Beans 500)",                                                
+                       "imidicloprid; clothianidin; trifloxystrobin; metalaxyl; biofungicide (Trilex 2000; Yield Shield; Gaucho 600; Poncho/VOTiVO)",
+                       "mefenoxam; fludioxonil; thiamethoxam (CruiserMaxx)",                                                                         
+                       "prothioconazole; penflufen; metalaxyl; clothianidin; Bacillus firmus (EverGol Energy; Poncho/VOTiVO)"                       
+                       )
 
-type_otherinsecticide <- c("foliar application of carbaryl (0.818 kg ai/ha, Sevin) at V4 stage",                                                                                                                                                                           
-                           "foliar application of spinosad (0.101 kg ai/ha)  at V4 stage",                                                                                                                                                                                 
-                           "foliar insecticide"                                                                                                                                                                                                                           
-                          )
+type_otherinsecticide <- c("carbofurans",                                                                                                                
+                           "spinosad",                                                                                                                   
+                           "carbaryl (Sevin)",                                                                                                           
+                           "unidentified insecticide"                                                                                                   
+)
 
-type_pyrethroid <- c("in-furrow, tefluthrin (226 g ai/ha, Force 1.5G)",
-                     "banded, bifenthrin (44.8 g ai/ha, Capture 2EC)",                                                                                                                                                                                               
-                     "banded, permethrin (168 g ai/ha, Ambush 2E)",
-                     "banded, pyrethroid (16.8 g ai/ha, ICIA0321 1E)",
-                     "banded, tefluthrin (226 g ai/ha, Force 1.5G",
-                                         "broadcast, permethrin (168 g ai/ha, Ambush 2E)",
-                                         "broadcast, pyrethroid (16.8 g ai/ha, ICIA0321 1E)", 
-                                         "foliar application of permethrin (0.168 kg ai/ha, Pounce) at V4 stage",                                                                                                                                                                        
-                                         "lamda-cyhalothrin, bifenthrin, or chlorpyrifos applied to foliage at full label rates (Warrior II with Zeon Technology, Tundra EC, or Lorsban Adcanced) when soybean aphids reached economic threshold and soybean line susceptible to aphids",
-                                         "lamda-cyhalothrin, bifenthrin, or chlorpyrifos applied to foliage at full label rates (Warrior II with Zeon Technology, Tundra EC, or Lorsban Adcanced) when soybean aphids reached economic threshold, soybean lien with Rag1 and Rag2 genes",
-                                         "lamda-cyhalothrin, bifenthrin, or chlorpyrifos applied to foliage at full label rates (Warrior II with Zeon Technology, Tundra EC, or Lorsban Adcanced) when soybean aphids reached economic threshold, soybean line with Rag2",               
-                                         "lamda-cyhalothrin, bifenthrin, or chlorpyrifos applied to foliage at full label rates (Warrior II with Zeon Technology, Tundra EC, or Lorsban Adcanced) when soybean aphids reached economic threshold, soybean with Rag1",                    
-                                         "soil applied pyrethroid (11.8 ml of liquid Force CS / 304.8 m) 100:0 mCry3A and eCry3.1Ab seed blend",                                                                                                                                         
-                                         "soil applied pyrethroid (11.8 ml of liquid Force CS / 304.8 m) 95:5 mCry3A and eCry3.1Ab seed blend",                                                                                                                                          
-                                         "soil applied pyrethroid (11.8 ml of liquid Force CS / 304.8 m) Isoline seeds",                                                                                                                                                                 
-                                         "soybean foliage sprayed with esfenvalerate (2 applications, 43.74 g ai/ha + 54.69 g ai/ha)",                                                                                                                                                   
-                                         "soybean foliage sprayed with lambda-cyhalothrin (16.83 or 21.91 g ai/ha)",                                                                                                                                                                          
-                                         "soybean foliage sprayed with lambda-cyhalothrin (2 applications, 16.83 or 21.91 g ai/ha + 28.05 g ai/ha)",                                                                                                                                          
-                                         "soybean foliage sprayed with lambda-cyhalothrin (28.05 g ai/ha)",                                                                                                                                                                                   
-                                         "soybean managed under IPM where lambda-cyhalothrin (28.0 g ai/ha [Headline]) was foliarly applied when aphids reached economic threshold",                                                                                                     
-                                         "soybean managed under IPM where lambda-cyhalothrin (28.0 g ai/ha) was sprayed when soybean aphids reached economic threshold",                                                                                                                 
-                                         "soybean treated with lambda-cyhalothrin (foliar application) at emergence of first bean leaf beetle generation",                                                                                                                               
-                                         "soybean treated with lambda-cyhalothrin (foliar application) at soybean emergence",                                                                                                                                                            
-                                         "soybean treated with two lambda-cyhalothrin foliar applications (once at soybean emergence and one at emergence of first bean leaf beetle generation)"                                                                                        
-                     )
+type_pyrethroid <- c("flucythrinate; phorate (Astar 15G)",                                                                                         
+                     "bifenthrin (Capture 2EC)",                                                                                                   
+                     "lambda-cyhalothrin",                                                                                                         
+                     "lambda-cyhalothrin (Headline)",                                                                                              
+                     "lamda-cyhalothrin, bifenthrin, or chlorpyrifos (Warrior II with Zeon Technology, Tundra EC, or Lorsban Advanced)",           
+                     "permethrin (Ambush 2E)",                                                                                                     
+                     "permethrin (Pounce)",                                                                                                        
+                     "phorate",                                                                                                                    
+                     "esfenvalerate",                                                                                                              
+                     "fonofos; pyrethroid (Dyfonate II; ICIA0321 20.2G)",                                                                          
+                     "pyrethroid (Force CS)",                                                                                                      
+                     "pyrethroid (ICIA0321 1E)"                                                                                                   
+)
 
-type_organophosphate <- c("banded, fonofos (340 g ai/ha, Dyfonate II 10G)",                                                                                                                                                                                               
-                           "banded, organophosphate (113 g ai/ha, XRM-4901)",
-                           "banded, organophosphate (212 g ai/ha, ICIA8882 10G)",
-                           "banded, organophosphate (255 g ai/ha, ICIA8882 10G)",
-                           "banded, terbufos (226 g ai/ha, Couter 15G)",  
-                           "foliar application of chlorpyrifos (0.56 kg ai/ha, Lorsban) at V4 stage",                                                                                                                                                                      
-                           "in-furrow organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                 
-                           "in-furrow organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                                
-                           "in-furrow organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 70 g/ha herbicide (Nicosulfuron)",                                                                                                                                
-                           "in-furrow organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 0 g/ha herbicide (Nicosulfuron)",                                                                                                              
-                           "in-furrow organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 35 g/ha herbicide (Nicosulfuron)",                                                                                                             
-                           "in-furrow organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 70 g/ha herbicide (Nicosulfuron)",                                                                                                             
-                           "in-furrow organophosphate (carbofurans 15% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                               
-                           "in-furrow organophosphate (carbofurans 15% ai granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                              
-                           "in-furrow organophosphate (chlorethoxyfos 5% ai granule applied at 0.028 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                            
-                           "in-furrow organophosphate (chlorethoxyfos 5% ai granule applied at 0.028 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                           
-                           "in-furrow organophosphate (chylorpyrifos 15% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                             
-                           "in-furrow organophosphate (chylorpyrifos 15% ai granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                            
-                           "in-furrow organophosphate (fonofos 20% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                   
-                           "in-furrow organophosphate (fonofos 20% ai granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                                  
-                           "in-furrow organophosphate (phorate 20% ai controlled release granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                
-                           "in-furrow organophosphate (phorate 20% ai controlled release granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                               
-                           "in-furrow organophosphate (phorate 20% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                   
-                           "in-furrow organophosphate (phorate 20% ai granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                                  
-                           "in-furrow organophosphate (tefluthrin 1.5% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                               
-                           "in-furrow organophosphate (tefluthrin 1.5% ai granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                              
-                           "in-furrow organophosphate (Terbufos 15% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                  
-                           "in-furrow organophosphate (Terbufos 15% ai granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                                 
-                           "in-furrow organophosphate (Terbufos 20% ai controlled release granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                               
-                           "in-furrow organophosphate (Terbufos 20% ai controlled release granule applied at 0.11 g ai/m), 35 g/ha herbicide (Nicosulfuron)",                                                                                                              
-                           "in-furrow, terbufos (226 g ai/ha, Counter 15G)", 
-                           "Phorate",                                                                                                                                                                                                                                      
-                           "Phorate, first planting",                                                                                                                                                                                                                      
-                           "Phorate, second planting",                                                                                                                                                                                                                     
-                           "Phorate, third planting",                                                                                                                                                                                                                      
-                           "surface band organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                              
-                           "surface band organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                             
-                           "surface band organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 70 g/ha herbicide (Nicosulfuron)",                                                                                                                             
-                           "surface band organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 0 g/ha herbicide (Nicosulfuron)",                                                                                                           
-                           "surface band organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 35 g/ha herbicide (Nicosulfuron)",                                                                                                          
-                           "surface band organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 70 g/ha herbicide (Nicosulfuron)",                                                                                                          
-                           "T-band organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                    
-                           "T-band organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                                   
-                           "T-band organophosphate (15% ai granule applied at 0.11 g ai/m, Terbufos), 70 g/ha herbicide (Nicosulfuron)",                                                                                                                                   
-                           "T-band organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                 
-                           "T-band organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 35 g/ha herbicide (Nicosulfuron)",                                                                                                                
-                           "T-band organophosphate (20% ai controlled release granule applied at 0.11 g ai/m, Terbufos), 70 g/ha herbicide (Nicosulfuron)",                                                                                                                
-                           "T-band organophosphate (carbofurans 15% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                  
-                           "T-band organophosphate (chlorethoxyfos 5% ai granule applied at 0.028 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                               
-                           "T-band organophosphate (chylorpyrifos 15% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                
-                           "T-band organophosphate (fonofos 20% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                      
-                           "T-band organophosphate (phorate 20% ai controlled release granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                   
-                           "T-band organophosphate (phorate 20% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                      
-                           "T-band organophosphate (tefluthrin 1.5% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                  
-                           "T-band organophosphate (Terbufos 15% ai granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)",                                                                                                                                     
-                           "T-band organophosphate (Terbufos 20% ai controlled release granule applied at 0.11 g ai/m), 0 g/ha herbicide (Nicosulfuron)"                                                                                                                  
-                          )
+type_organophosphate <- c("chlorethoxyfos",                                                                                                             
+                          "fonofos",                                                                                                                    
+                          "fonofos (Dyfonate II 15CG)",                                                                                                 
+                          "fonofos (Dyfonate II 20G)",                                                                                                  
+                          "terbufos",                                                                                                                   
+                          "terbufos (Counter 15G)",                                                                                                     
+                          "tefluthrin",                                                                                                                 
+                          "tefluthrin (Force 1.5G)",                                                                                                    
+                          "chlorphyrifos (Lorsban 15G)",                                                                                                
+                          "chlorphyrifos (Lorsban)",                                                                                                    
+                          "chylorpyrifos",                                                                                                              
+                          "organophosphate (ICIA8882 10G)",                                                                                             
+                          "organophosphate (XRM-4901)"                                                                                                 
+)
 
-type_neonicotinoid <- c("clothianidan (1.25 mg ai per seed) seed treatment on maize planted in early June",                                                                                                                                                             
-                        "clothianidan (1.25 mg ai per seed) seed treatment on maize planted in early May",                                                                                                                                                              
-                        "clothianidan (1.25 mg ai per seed) seed treatment on maize planted in late May",                                                                                                                                                               
-                        "Cruiser 5 FS",                                                                                                                                                                                                                                 
-                        "Cruiser 5 FS and soybean line susceptible to aphids",                                                                                                                                                                                          
-                        "Cruiser 5 FS, soybean line with Rag1 and Rag2 genes",                                                                                                                                                                                          
-                        "Cruiser 5 FS, soybean line with Rag1 gene",                                                                                                                                                                                                    
-                        "Cruiser 5 FS, soybean line with Rag2 gene",                                                                                                                                                                                                    
-                        "Cruiser FS",   
-                        "Gaucho",
-                        "Poncho",
-                        "soybean seed treated with clothianidin (47.32 ml ai/kg)",                                                                                                                                                                                      
-                        "soybean seed treated with thiamethoxam (0.3 or 0.5 g ai/kg)",                                                                                                                                                                                  
-                        "soybean treated with thiamethoxam (seed applied)",                                                                                                                                                                                             
-                        "soybean with imidacloprid (62.5 g ai/100 kg of seed) seed treatment",                                                                                                                                                                          
-                        "thiamethoxam treated commercial soybean cultivar with no resistance to soybean aphids (GR-2332)"                                                                                                                                              
-                        )
+type_neonicotinoid <- c( "clothianidin (Poncho)",                                                                                                      
+                         "thiamethoxam (Cruiser FS)",                                                                                                  
+                         "imidacloprid (Gaucho)",                                                                                                      
+                         "thiamethoxam",                                                                                                               
+                         "thiamethoxam (Cruiser 5 FS)",                                                                                                
+                         "clothianidin",                                                                                                               
+                         "imidacloprid"                                                                                                               
+)
 
-type_neonic_pyrethroid <- c("soybean seed treated with thiamethoxam and foliage sprayed with lambda-cyhalothrin (.03 or 0.5 g ai/kg seed + 28.05 g ai/ha)",                                                                                                                      
-                            "soybean seed treated with thiamethoxam and foliage sprayed with lambda-cyhalothrin (0.5 or g ai/kg seed + 21.91 g ai/ha)",                                                                                                                          
-                            "soybean treated with thiamethoxam seed treatment plus lambda-cyhalothrin (foliar application) at emergence of first bean leaf beetle generation"                                                                                              
-                            )
+type_neonic_pyrethroid <- c("thiamethoxam; lambda-cyhalothrin"                                                                                           
+)
 
-type_organo_pyrethroid <- c("banded, fonofos/pyrethroid (170 g ai/ha, Dyfonate II + ICIA0321 20.4G)",  
-                            "banded, fonofos/pyrethroid (170 g ai/ha, Dyfonate II + ICIA0321 20.2G)", 
-                            "banded, flucythrinate/phorate (226 g ai/ha, Astar 15G)"
-                          )
-
-type_exclude <- c("maize (sweet) treated with Addamax (growth hormones + nutrient mixture applied at 0.8 g ai/kg) seed treatment" #surfactant, not a pesticide                                                                                                                               
-                  )
-
-Results <- Results %>% filter(!(Trt_id2name == "maize (sweet) treated with Addamax (growth hormones + nutrient mixture applied at 0.8 g ai/kg) seed treatment" #surfactant, not a pesticide                                                                                                                               
-                              )) %>% 
-                        droplevels()
-
+type_organo_pyrethroid <- c( "ethoprop; phorate (Holdem 20G)"                                                                                             
+)
 
 ##Groups of Pesticide Placement####
 unique(Results$Group_finelevel)
@@ -778,5 +625,11 @@ Results <- rename(Results,
 missing <- Results[is.na(Results$group_level1),] #check to see if all rows have an assigned group_level1
 missing <- Results[is.na(Results$group_level2),] #check to see if all rows have an assigned group_level2
 missing <- Results[is.na(Results$group_level3),] #check to see if all rows have an assigned group_level3
+missing <- Results[is.na(Results$pm_group1),] #check to see if all rows have an assigned pm_group1
+missing <- Results[is.na(Results$pm_group2),] #check to see if all rows have an assigned pm_group2
+
+Results <- Results %>% filter(Trt2_name  != "growth hormones; nutrient mixture (Addamax)") %>% droplevels()
+
+
 ###Export CSV####################
 write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review/PestMgmt_ResultsGrouped.csv", row.names = FALSE)

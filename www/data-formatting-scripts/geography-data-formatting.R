@@ -3,31 +3,43 @@
 ###################################################
 
 library(readxl)
+library(readr)
 library(tigris)
 library(sp)
+library(dplyr)
 
 setwd("~/Box Sync/Work/Code/Midwest-Agriculture-Synthesis/www/data/mapping")
 #setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/mapping")
 
 counties <- counties(cb=TRUE)
 
-covercrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx", 
-                        sheet = "ExpD_Location")
-covercrop$Review <- paste("Cover Crops")
-nutrient <- read_excel("Nutrient_Synthesis_Database_Atwood.xlsx", 
-                        sheet = "ExpD_Location")
+covercrop <- read_csv("CC_ExpD.csv",
+                      col_types = cols(Trtmt_main_levels = col_character(), 
+                                       Reps = col_character()))
+covercrop$Review <- paste("Cover Crop")
+
+nutrient <- read_csv("Nutrient_ExpD.csv",
+                     col_types = cols(Trtmt_main_levels = col_character(), 
+                                      Reps = col_character()))
 nutrient$Review <- paste("Nutrient Management")
-pest <- read_excel("PestMgmt_Review_Atwood.xlsx", 
-                       sheet = "ExpD_Location")
+
+pest <- read_csv("PestMgmt_ExpD.csv",
+                 col_types = cols(Trtmt_main_levels = col_character(),
+                                  Trtmt_splitC = col_character(), 
+                                  Reps = col_character())) 
+                      
 pest$Review <- paste("Early Season Pest Management")
 
-tillage <- read_excel("Tillage_Review_Atwood.xlsx", 
-                   sheet = "ExpD_Location")
-pest$Review <- paste("Tillage")
+tillage <- read_csv("Tillage_ExpD.csv", 
+                    col_types = cols(Trtmt_main_levels = col_character(), 
+                                     Reps = col_character()))
+tillage$Review <- paste("Tillage")
 
 
-
-all.data <- rbind(covercrop, nutrient, pest)
+                                            
+all.data <- full_join(covercrop, nutrient)
+all.data <- full_join(all.data, tillage)
+all.data <- full_join(all.data, pest)
 
 coordinates(all.data) <- ~Longitude+Latitude
 

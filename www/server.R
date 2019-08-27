@@ -573,8 +573,16 @@ server <- function(input, output, session) {
     #can pick any element of Review, since it was already filtered by input$MgmtPratice.
       # I do it this way just to keep the dependency only on df_years
     practice <- df_years()$Review[1]
+    filter1_selections <- df_years()$filter1 %>% unique
+    pm1_all_choices <- summary_data %>%
+      filter(Review == practice) %>%
+      select(pm_group1) %>%
+      unique %>%
+      deframe
+    
     # for practices where the user can select multiple inputs in filter1/filter2, we want to create a grouped mean for the different selections the user makes 
-    if(input$MgmtPractice == 'Cover crop'){
+    # We want to group up Pesticide Type (eg filter1/pm_group1 for Early Season Pest Mgmt) ONLY if all pesticide types are selected
+    if((input$MgmtPractice == 'Cover crop') | ((input$MgmtPractice == 'Early Season Pest Management') & (length(pm1_all_choices) == length(filter1_selections)))){
       df_years() %>%
         group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year) %>% 
         summarize(mean_per_change = mean(mean_per_change), 
@@ -585,7 +593,7 @@ server <- function(input, output, session) {
                   Trt_2name = paste(Trt_2name, collapse = ","),
                   filter1 = paste(unique(filter1), collapse = ","),
                   filter2 = paste(unique(filter2), collapse = ","))
-      # Early Season Pest Management is slightly different from Cover Crop because we don't want to group by filter1.
+      # Early Season Pest Management is slightly different from Cover Crop because we don't want to group by filter1 (unless all filter1 is selected)
     } else if(input$MgmtPractice == "Early Season Pest Management") {
       df_years() %>%
         group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, filter1) %>%
@@ -662,7 +670,8 @@ server <- function(input, output, session) {
     
     # Write special case for plot color variable (should be sample year for tillage, and pesticide type for early season pest management)
       # The others don't have color, but I'll make em sample_year to check that there aren't any rogue years in the rest of the data
-    if(practice == "Early Season Pest Management"){
+      # We also don't want to color if all pesticide types are selected (since in this case, we consolidate all the different types into 1 mean)
+    if(practice == "Early Season Pest Management" & length(pm1_all_choices) != length(isolate(input$Filter1))){
       color_var <- sym('filter1')
     } else {
       color_var <- sym('sample_year')

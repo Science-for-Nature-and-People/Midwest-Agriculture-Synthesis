@@ -175,19 +175,19 @@ server <- function(input, output, session) {
 
   
   # Filter by geography (separate dataset for the map, filtered by above)
-  df_map <- eventReactive(input$State,  {
+  df_map <- eventReactive(input$update,  {
+    
     
     #pick out all the paper ids in the filtered dataset df_outcome() is prefiltered for practice/outcome
       #the filter command in the line below filters the "grouping" seleciton
     #paper_id_list is a string column, with comma delim lists of ints
       #so on each element/list in the column, we split the list on commas, then turn the list into a vector, convert the vector to a numeric one.
         #So now we have a list of numeric vectors. We turn this list into one long vector, and then pull out unique values
-    filtered_paper_id <- (df_depth() %>% 
-                            filter(sample_year %in% input$years))$paper_id_list %>%
-      lapply(function(x) strsplit(x, split = ",") %>%
+    filtered_paper_id <- df_years()$paper_id_list %>%
+      lapply(function(x) strsplit(x, split = ";") %>%
                unlist %>%
                as.integer) %>% 
-      unlist %>% 
+      unlist %>%
       unique
     
     #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
@@ -537,7 +537,7 @@ server <- function(input, output, session) {
     # Function to define multi-line labels
     labs <- lapply(seq(nrow(df_map())), function(i) {
       paste0(
-        "State: ", df_map()[i, "State"], "<p>", "County: ", df_map()[i, "NAME"],
+        "State: ", df_map()[i, "State"], "<p>", #"County: ", df_map()[i, "NAME"],
         "<p>", "Treatment: ", df_map()[i, "Review"], "<p>", "DOI: ", df_map()[i, "DOI"]
       )
     })

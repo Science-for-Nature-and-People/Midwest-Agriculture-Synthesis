@@ -16,6 +16,18 @@
   #we need this because the app is in the www directory, so the paths are all mixed up
 addResourcePath(prefix = 'pics', directoryPath = here('www'))
 
+
+# Cool method for getting something (the object "out") to show up underneath a sidebarPanel
+  # It basically makes a sidebar panel from scratch using HTML. See link below for details
+  # https://stackoverflow.com/questions/52544228/r-shiny-display-static-text-outside-sidebar-panel
+sidebarPanel2 <- function (..., out = NULL, width = 4) 
+{
+  div(class = paste0("col-sm-", width), 
+      tags$form(class = "well", ...),
+      out
+  )
+}
+
 ui <- navbarPage(
   "Midwest Soil Health Evidence",
   id = 'navbar',
@@ -71,7 +83,7 @@ ui <- navbarPage(
 
     # Set up header columns
     sidebarLayout(
-      sidebarPanel(
+      sidebarPanel2(
         selectInput(
           inputId = "MgmtPractice", label = "Practice",
           choices = unique(summary_data$Review) %>% sort(),
@@ -136,7 +148,8 @@ ui <- navbarPage(
         actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%"),
         #create hidden text that only shows up if there isn't enough data. should be used in conjunction with disabled update button
         shinyjs::hidden(p(id = 'no_data', 'No Data! Please change your selection',
-                          style = 'color: gray'))
+                          style = 'color: gray')),
+        out = leafletOutput("map")
       ),
     # fluidRow(
     #   column(
@@ -182,7 +195,7 @@ ui <- navbarPage(
         # column(
         #   4,
         #   leafletOutput("map"),
-        #   
+        # 
         #   # Filter by state
         #   absolutePanel(
         #     top = 10, right = 10,
@@ -237,7 +250,8 @@ ui <- navbarPage(
   ),
 
   tabPanel("References", tableOutput(outputId = "reference_table")),
-  tabPanel("Methods")
+  tabPanel("Methods")#,
+  #tabPanel("Map", leafletOutput('map'))
   
 )
 

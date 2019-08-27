@@ -16,10 +16,16 @@ covercrop <- read_excel("CCdiversity_Synthesis_Database_Atwood.xlsx",
 covercrop$Review <- paste("Cover Crops")
 nutrient <- read_excel("Nutrient_Synthesis_Database_Atwood.xlsx", 
                         sheet = "ExpD_Location")
-nutrient$Review <- paste("Fertility Management")
+nutrient$Review <- paste("Nutrient Management")
 pest <- read_excel("PestMgmt_Review_Atwood.xlsx", 
                        sheet = "ExpD_Location")
-pest$Review <- paste("Pest Management")
+pest$Review <- paste("Early Season Pest Management")
+
+tillage <- read_excel("Tillage_Review_Atwood.xlsx", 
+                   sheet = "ExpD_Location")
+pest$Review <- paste("Tillage")
+
+
 
 all.data <- rbind(covercrop, nutrient, pest)
 

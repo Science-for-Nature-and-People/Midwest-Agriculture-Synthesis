@@ -572,17 +572,29 @@ server <- function(input, output, session) {
       # I do it this way just to keep the dependency only on df_years
     practice <- df_years()$Review[1]
     # for practices where the user can select multiple inputs in filter1/filter2, we want to create a grouped mean for the different selections the user makes 
-    if(input$MgmtPractice %in% c('Cover crop', 'Early Season Pest Management')){
+    if(input$MgmtPractice == 'Cover crop'){
       df_years() %>%
         group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year) %>% 
         summarize(mean_per_change = mean(mean_per_change), 
                   sem_per_change = mean(sem_per_change), 
-                  paper_id_list = paste(paper_id_list, collapse = ";"), 
+                  paper_id_list = paste(unique(paper_id_list), collapse = ";"), 
                   Trt_1name = Trt_1name[1], 
                   group_facet_level32 = group_facet_level32[1], 
                   Trt_2name = paste(Trt_2name, collapse = ","),
                   filter1 = paste(unique(filter1), collapse = ","),
                   filter2 = paste(unique(filter2), collapse = ","))
+      # Early Season Pest Management is slightly different from Cover Crop because we don't want to group by filter1.
+    } else if(input$MgmtPractice == "Early Season Pest Management") {
+      df_years() %>%
+        group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, filter1) %>%
+          summarize(mean_per_change = mean(mean_per_change), 
+                    sem_per_change = mean(sem_per_change), 
+                    paper_id_list = paste(unique(paper_id_list), collapse = ";"), 
+                    Trt_1name = Trt_1name[1], 
+                    group_facet_level32 = group_facet_level32[1], 
+                    Trt_2name = paste(Trt_2name, collapse = ","),
+                    filter2 = paste(unique(filter2), collapse = ","))
+        
     } else {
       df_years()
     }
@@ -622,6 +634,7 @@ server <- function(input, output, session) {
     #isolate makes sure we don't have reactivity
     filter2_selected <- isolate(input$Filter2)
     #cat(stderr(), "\n pm1_all_chocies:", pm1_all_choices, "\n filter1:", isolate(input$Filter1))
+    
     # Write special cases for cover crop and Early Season Pest Management, where the user can select multiple Trt_2names
     if(practice %in% 'Cover crop'){
       if(length(filter2_all_choices) == length(filter2_selected)){
@@ -643,6 +656,17 @@ server <- function(input, output, session) {
     } else {
       title_text <- paste0('Effects of ', paste(unique(df_plot()$Trt_2name), collapse = 'and'), ' compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
     }
+    
+    
+    # Write special case for plot color variable (should be sample year for tillage, and pesticide type for early season pest management)
+      # The others don't have color, but I'll make em sample_year to check that there aren't any rogue years in the rest of the data
+    if(practice == "Early Season Pest Management"){
+      color_var <- sym('filter1')
+    } else {
+      color_var <- sym('sample_year')
+    }
+    
+    
 
     ggplot(df_plot(), aes(group_facet_level32, mean_per_change, # remember that group_facet_level32 is the column ordered by group_level3 and group_level2
                       ymin = mean_per_change - sem_per_change,
@@ -669,7 +693,7 @@ server <- function(input, output, session) {
       ) +
       # scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +
       theme_bw() +
-      geom_point(aes(colour = sample_year), size = 3) + # color labeling of fine level groupings
+      geom_point(aes(colour = !!color_var), size = 3) + # color labeling of fine level groupings
       scale_color_brewer(palette = "Set2") +          # change colors using RColorBrewer package to be ok for red-green colorblind
       # see all options using RColorBrewer::display.brewer.all(colorblindFriendly = TRUE)
       facet_grid(group_level2 ~ ., scales = "free", space = "free") +

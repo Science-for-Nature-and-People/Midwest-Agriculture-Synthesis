@@ -14,18 +14,21 @@ setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/www/data")
 ref_cc <- read.csv("CoverCrop_References.csv",row.names = NULL)
 ref_pest <- read.csv("PestMgmt_References.csv",row.names = NULL)
 ref_nutrient <- read.csv("NutrientMgmt_References.csv",row.names = NULL)
-#ref_till <- read.csv("Tillage_References.csv")
+ref_tillage <- read.csv("Tillage_References.csv")
 
 ref_cc$DateRead <- NULL
 ref_pest$DateRead <- NULL
 ref_nutrient$DateRead <- NULL
-
+ref_tillage$DateRead <- NULL
 
 ref_cc$Notes <- NULL
 ref_pest$Notes <- NULL
 ref_nutrient$Notes <- NULL
+ref_tillage$Notes <- NULL
 
-df <- full_join(ref_cc, ref_pest)
+df <- rbind(ref_cc, ref_nutrient, ref_pest, ref_tillage)
+  
+  full_join(ref_cc, ref_pest)
 df <- full_join(df, ref_nutrient)
 
 

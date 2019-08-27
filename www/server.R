@@ -259,6 +259,16 @@ server <- function(input, output, session) {
     validate(
       need(input$MgmtPractice, "no management practice")
     )
+   # First, (this is kinda unrelated to filter_one), we want to show/hide the year filter for tillage
+    if(input$MgmtPractice == 'Tillage'){
+      shinyjs::show('years')
+    } else{
+      shinyjs::hide('years')
+    }
+    
+    
+    
+    
     # write special case for cover crop, where the first selection can filter on two different columns
     if(input$MgmtPractice == 'Cover crop'){
       new_filter1 <- c(unique(df_practice()$cc_group1), unique(df_practice()$cc_group2))
@@ -326,13 +336,6 @@ server <- function(input, output, session) {
                          choices = new_filter1,
                          #as.character is needed when we have the filter1 is a factor (tillage)
                          selected = ifelse(input$Filter1 %in% new_filter1, input$Filter1, as.character(new_filter1[1])))
-    }
-    
-    #tillage only has the year filter
-    if(input$MgmtPractice == 'Tillage'){
-      shinyjs::show('years')
-    } else{
-      shinyjs::hide('years')
     }
     
     

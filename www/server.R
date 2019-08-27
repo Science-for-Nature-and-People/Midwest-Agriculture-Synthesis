@@ -637,7 +637,7 @@ server <- function(input, output, session) {
       } else if (length(filter1) > 1) {
         title_text <- paste0('Effects of Multiple Pesticide Types compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
       } else {
-        title_text <- paste0("Effects of ", paste(unique(df_plot()$pm_group1), collapse = ","), " compared to ", paste(unique(df_plot()$Trt_1name), collapse = 'and'))
+        title_text <- paste0("Effects of ", paste(unique(df_plot()$filter1), collapse = ","), " compared to ", paste(unique(df_plot()$Trt_1name), collapse = 'and'))
       }
 
     } else {

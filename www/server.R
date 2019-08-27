@@ -18,7 +18,7 @@ server <- function(input, output, session) {
     
     #we also add new columns to the data frame to help us filter the app
     #need to deselect these columns before letting the user download the filtered data
-  df_practice <- eventReactive(input$MgmtPractice, {
+  df_practice <- eventReactive(c(input$MgmtPractice, input$summaryPractice), {
     cat(file = stderr(), 'df_practice is updated \n ')
     # filter dataset to display selected review and response variables
     
@@ -224,13 +224,13 @@ server <- function(input, output, session) {
   #update Outcome on summary choice
     #this changes RV, which triggers change in df_outcome -> df_years
   observeEvent(input$summaryRV, {
-    validate(
-      need(df_filter2(), 'no df_filter2'),
-      need(input$summaryRV, "no summary output?"),
-      need(df_filter2()$group_level1, "no grouplevel1")
-    )
+    # validate(
+    #   need(df_filter2(), 'no df_filter2'),
+    #   need(input$summaryRV, "no summary output?"),
+    #   need(df_filter2()$group_level1, "no grouplevel1")
+    # )
     updateRadioButtons(session, "RV", "Outcome",
-      choices = unique(df_filter2()$group_level1) %>% sort(),
+      #choices = unique(df_filter2()$group_level1) %>% sort(),
       #selected = unique(df_practice()$group_level1)
       selected = input$summaryRV
     )
@@ -346,7 +346,8 @@ server <- function(input, output, session) {
   
   # Filter2 changes between a checkboxGroupInput or a radioButton depending on the practice
   output$filter_two <- renderUI({
-    new_filter2 <- sort(unique(df_filter1()$filter2))
+    new_filter2 <- sort(unique(as.character(df_filter1()$filter2)))
+    cat(stderr(), 'filter2 init selected is ', new_filter2[1], ". \n")
     if(input$MgmtPractice == 'Cover crop'){
       list(
         shinyWidgets::pickerInput('Filter2', label = 'Cover Crop Species',
@@ -386,7 +387,8 @@ server <- function(input, output, session) {
   observeEvent(c(input$MgmtPractice, input$Filter1),{
 
     # new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
-    new_filter2 <- sort(unique(df_filter1()$filter2))
+    new_filter2 <- sort(unique(as.character(df_filter1()$filter2)))
+
     # Cover crop is a group checkbox input, so we gotta account for that
     if(input$MgmtPractice == 'Cover crop'){
       updatePickerInput(session, 'Filter2', unique(df_filter1()$filter2_name),
@@ -400,12 +402,12 @@ server <- function(input, output, session) {
     } else {
       updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
                          choices = new_filter2,
-                         #as.character is needed when we have the filter2 is a factor (tillage)
-                         selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2[1], as.character(new_filter2[1]))
+                         #&& is a hack to make sure null is evaluated correctly
+                         selected = ifelse((input$Filter2 %in% new_filter2) && (!is.null(input$Filter2)), as.character(input$Filter2), new_filter2[1])
                          )
     }
 
-    cat(file = stderr(), 'newfilter2 is ', paste(new_filter2, collapse = ','), '\n')
+    cat(file = stderr(), 'newfilter2 is ', paste(new_filter2, collapse = ','), '. \n')
 
 
   })

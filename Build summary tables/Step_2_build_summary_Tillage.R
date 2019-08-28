@@ -271,7 +271,7 @@ levels(df$group_level3)
 df <- cSplit(df, splitCols = "RV_year", sep = ";", direction = "long") # all data were expanded based on list of years 
 levels(as.factor(df$RV_year))
 
-df2 <- df %>% filter(RV_year > 0) %>% droplevels() #removes rows where data were collected prior to the adoption of the practice
+df <- df %>% filter(RV_year > 0) %>% droplevels() #removes rows where data were collected prior to the adoption of the practice
 
 
 #Change types

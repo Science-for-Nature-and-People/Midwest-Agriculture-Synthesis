@@ -2,6 +2,17 @@
 library("readr", lib.loc="~/R/win-library/3.5")
 library("dplyr", lib.loc="~/R/win-library/3.5")
 
+##join unit datasets####
+tillage <- read_csv(file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Group_units.csv")
+pest <- read_csv(file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review/Pest_Group_units.csv")
+covercrop <- read_csv(file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Cover Crop Review/CC_Group_units.csv")
+nutrient <- read_csv(file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/Nutrient Review/Nutrient_Group_units.csv")
+
+units <- full_join(tillage, pest)
+units <- full_join(units, covercrop)
+units <- full_join(units, nutrient)
+
+write.csv(units, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/units.csv", row.names = FALSE)
 
 # Main data sets
 tillage_data <- read_csv(file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/TillageMgmt_ALL_raw.csv",
@@ -54,6 +65,8 @@ covercrop_data$Review_id <- "Cover Crop"
 
 pestmgmt_data <- read_csv (file = "/Users/LWA/Desktop/github/midwesternag_synthesis/www/data/PestMgmt_ALL_raw.csv", 
                             col_types = cols(RV_depth = col_character(),
+                                             Trt1_name = col_character(),
+                                             Trt2_name = col_character(),
                                              Trt2_int = col_integer(),
                                              Trt1 = col_character(),
                                              Trt2 = col_character(),

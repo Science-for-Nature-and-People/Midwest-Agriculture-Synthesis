@@ -17,7 +17,7 @@ library(plotrix)
 library(forcats)
 
 # Main data sets
-raw_data <- read_csv(here("www/data/ALL_raw.csv"), col_types = cols(Trt2_int = col_integer(),
+raw_data <- read_csv(here("www","data","ALL_raw.csv"), col_types = cols(Trt2_int = col_integer(),
                                                                     Trt1 = col_character(),
                                                                     Trt2 = col_character(),
                                                                     Trt1_int2 = col_character(),

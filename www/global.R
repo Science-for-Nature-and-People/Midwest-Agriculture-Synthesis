@@ -76,7 +76,7 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
   #combining them makes sorting a bit easier (only have to do one column instead of 2)
   mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
   #get rid of rows with not enough data
-  #filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
+  filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
   # We don't care about comparing a treatment to itself for the app (as long as both aren't NA)
   filter((Trt_1name != Trt_2name) | (is.na(Trt_1name) & is.na(Trt_2name)))
 

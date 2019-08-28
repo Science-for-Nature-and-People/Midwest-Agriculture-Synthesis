@@ -528,7 +528,7 @@ server <- function(input, output, session) {
 
   ### add "All/None" checkbox for the soil depths to select all/none
   observeEvent(input$AllDepths,{
-    new_depths <- df_outcome()$sample_depth %>% unique %>% sort(na.last = TRUE) 
+    new_depths <- df_outcome()$sample_depth %>% unique %>% str_sort(numeric = T, na_last = TRUE) 
     updateCheckboxGroupInput(session, inputId = 'SoilDepth',
                         selected = if(input$AllDepths) new_depths else character(0)
                         )
@@ -711,12 +711,16 @@ server <- function(input, output, session) {
       # We also don't want to color if all pesticide types are selected (since in this case, we consolidate all the different types into 1 mean)
     if(practice == "Early Season Pest Management" & length(pm1_all_choices) != length(isolate(input$Filter1))){
       color_var <- sym('filter1')
-    } else if (practice == "Cover crop") {
-      color_var <- sym("sample_depth")
     } else {
-      color_var <- sym('sample_year')
+      color_var <- sym('sample_depth')
     }
-    
+
+    # Write special case for tillage, where we want two legends (one for year, one for sample depth)
+    if(practice == 'Tillage'){
+      shape_var <- sym('sample_year')
+    } else {
+      shape_var <- NULL
+    }
     
 
     ggplot(df_plot(), aes(group_facet_level32, mean_per_change, # remember that group_facet_level32 is the column ordered by group_level3 and group_level2
@@ -724,7 +728,7 @@ server <- function(input, output, session) {
                       ymax = mean_per_change + sem_per_change
     )) +
       scale_x_discrete("", breaks = df_plot()$group_facet_level32, label = df_plot()$group_level3) + # this line relabels the x from "group_facet_level32" to just "group_level2"
-      geom_pointrange() +
+      #geom_pointrange(size = 0.01) +
       geom_errorbar(aes(
         ymin = mean_per_change - sem_per_change,
         ymax = mean_per_change + sem_per_change,
@@ -744,7 +748,7 @@ server <- function(input, output, session) {
       ) +
       # scale_fill_discrete(breaks=c("Monoculture","Mixture (2 Spp.)","Mixture (3+ Spp.)")) +
       theme_bw() +
-      geom_point(aes(colour = !!color_var), size = 3) + # color labeling of fine level groupings
+      geom_point(aes(shape = !!shape_var, colour = !!color_var), size = 3) + # color labeling of fine level groupings
       scale_color_brewer(palette = "Set2") +          # change colors using RColorBrewer package to be ok for red-green colorblind
       # see all options using RColorBrewer::display.brewer.all(colorblindFriendly = TRUE)
       facet_grid(group_level2 ~ ., scales = "free", space = "free") +

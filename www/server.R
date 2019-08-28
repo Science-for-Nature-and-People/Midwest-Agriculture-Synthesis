@@ -77,7 +77,7 @@ server <- function(input, output, session) {
     
     #need to write special case to make sure filter1 = zonal tillage => fitler2 = no tillage only 
       #note that we could've also done this in df_filter2 assignment, but putting it here updates the choices as well
-    if(input$Filter1 == 'Zonal tillage'){
+    if('Zonal tillage' %in% input$Filter1){
       new_df <- new_df %>% 
         filter(filter2 == 'No tillage') 
     }
@@ -110,12 +110,10 @@ server <- function(input, output, session) {
   })
   
   # filter by soil sampling depth (if outcome is Soil Nutrients or Other Soil Properties)
-    # also check that there's at least one non-NA value in sample_depth
   df_depth <- eventReactive(c(df_outcome(), input$SoilDepth),{
     if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !all(is.na(df_outcome()$sample_depth))){
         df_outcome() %>%
-        #if NA is a selected choice, it shows up as a empty string in input$SoilDepth, so we gotta expliticly account for NA
-          filter(sample_depth %in% input$SoilDepth | (is.na(sample_depth) & "Soil Surface" %in% input$SoilDepth))
+          filter(sample_depth %in% input$SoilDepth)
     }
     # else basically says "if there isn't any information on soil, skip this filter"
     else{ 
@@ -503,8 +501,14 @@ server <- function(input, output, session) {
       )
       new_depths <- df_outcome()$sample_depth %>% 
         unique %>% 
-        str_sort(na_last = TRUE, numeric = TRUE) %>% 
-        tidyr::replace_na('Soil Surface')
+        str_sort(numeric = TRUE) 
+      # If soil surface is there, it will show up last in the sort, but we want it to be first (since it's 0 cm)
+      if("Soil Surface" %in% new_depths){
+        new_depths <- new_depths %>%
+          setdiff("Soil Surface") %>%
+          c("Soil Surface", .)
+      }
+       
       
       # # Cat statements are debugging messages
       # cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
@@ -524,7 +528,7 @@ server <- function(input, output, session) {
 
   ### add "All/None" checkbox for the soil depths to select all/none
   observeEvent(input$AllDepths,{
-    new_depths <- df_outcome()$sample_depth %>% unique %>% sort(na.last = TRUE) %>% tidyr::replace_na('Soil Surface')
+    new_depths <- df_outcome()$sample_depth %>% unique %>% sort(na.last = TRUE) 
     updateCheckboxGroupInput(session, inputId = 'SoilDepth',
                         selected = if(input$AllDepths) new_depths else character(0)
                         )
@@ -533,7 +537,7 @@ server <- function(input, output, session) {
   
   ### add "All/None" checkbox for the early season pest management filter1 to select all/none
   observeEvent(input$AllPesticideTypes,{
-    new_types <- df_practice()$filter1 %>% unique %>% sort(na.last = TRUE)# %>% tidyr::replace_na('Soil Surface')
+    new_types <- df_practice()$filter1 %>% unique %>% sort(na.last = TRUE)
     updateCheckboxGroupInput(session, inputId = 'Filter1',
                              selected = if(input$AllPesticideTypes) new_types else character(0)
     )
@@ -542,7 +546,7 @@ server <- function(input, output, session) {
   
   ### add "All/None" checkbox for the early season pest management filter2 to select all/none
   observeEvent(input$AllPesticideSites,{
-    new_sites <- df_filter1()$filter2 %>% unique %>% sort(na.last = TRUE)# %>% tidyr::replace_na('Soil Surface')
+    new_sites <- df_filter1()$filter2 %>% unique %>% sort(na.last = TRUE)
     updateCheckboxGroupInput(session, inputId = 'Filter2',
                              selected = if(input$AllPesticideSites) new_sites else character(0)
     )
@@ -755,7 +759,8 @@ server <- function(input, output, session) {
 
   
   
-  # Text Description right below the forest plot
+  # Text Description right below the forest plot. 
+  # We aren't using this now (it's commented in ui.R)
   output$text_description <- renderText({
     if (input$MgmtPractice == "Cover crop") {
       "Cover crops in all areas, on average, are positively related to soil properties, but insignificantly related to crop yield."

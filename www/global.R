@@ -74,7 +74,8 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
             paper_id_list = paste(unique(Paper_id), collapse = ";")) %>% #List of unique papers for each summry
   ungroup %>%
   #combining them makes sorting a bit easier (only have to do one column instead of 2)
-  mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
+  mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_"),
+         sample_depth = ifelse(is.na(sample_depth), "Soil Surface", sample_depth)) %>%
   #get rid of rows with not enough data
   filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
   # We don't care about comparing a treatment to itself for the app (as long as both aren't NA)
@@ -91,8 +92,7 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
 cum_depth_avg <- function(depth_group){
   summary_base %>%
     #takes all the depth groupings before, filter only non-na sample depth
-    filter(sample_depth %in% sample_depth_ordered[1:which(sample_depth_ordered == depth_group)],
-           !is.na(sample_depth)) %>%
+    filter(sample_depth %in% sample_depth_ordered[1:which(sample_depth_ordered == depth_group)]) %>%
     #group by everything except depth, so that we can add the cumulative part
     group_by(Review, group_level1, group_level2, group_level3, sample_year, Trt_compare, Trt_1name, Trt_2name, trt_specifics, nutrient_groups) %>%
     #create a simple mean between depths. there are more observations in the eariler groups, but we are claiming that the different grouping are still of equal importance
@@ -100,22 +100,23 @@ cum_depth_avg <- function(depth_group){
            sem_per_change = mean(sem_per_change),
            mean_actual_diff = mean(mean_actual_diff),
            sem_actual_diff = mean(sem_actual_diff)) %>%
-    filter(sample_depth == depth_group)
+    filter(sample_depth == depth_group) %>%
+    ungroup()
 }
 
 # This is just a list of all the possible sample depths. It's used in the function cum_depth_avg to make the mean/se cumulative.
-sample_depth_ordered <- raw_data$sample_depth %>% 
+# Soil surface should be first in the list, but str_sort puts it last. We do operations to get it in front
+sample_depth_ordered <- summary_base$sample_depth %>% 
   unique %>% 
-  str_sort(numeric = T, na_last = NA)
+  str_sort(numeric = T) %>%
+  setdiff('Soil Surface') %>%
+  c('Soil Surface', .)
 
 #this combines the result of cum_avg for ALL of the depth groups
-depth_cum_data <- purrr::map_df(sample_depth_ordered, ~cum_depth_avg(.x))
+summary_data <- purrr::map_df(sample_depth_ordered, ~cum_depth_avg(.x))
 
-# replace the non-NA data with the new cumulative data
-#this is the final summary data, used on the table
-summary_data <- summary_base %>% 
-  filter(is.na(sample_depth)) %>%
-  bind_rows(depth_cum_data)
+#quick check to make sure we didn't lose any rows. see debug_app.R for more extensive tests
+#nrow(summary_data) == nrow(summary_base)
 
 
 #statements to convert SEMs=0 to Inf (unnecessary if we have a filter statement to get rid of 0 sem/small number of comparisons)

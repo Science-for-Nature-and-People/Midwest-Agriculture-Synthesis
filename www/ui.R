@@ -123,8 +123,8 @@ ui <- navbarPage(
                  shinyjs::hidden(
                     checkboxGroupInput(
                       inputId = "SoilDepth", label = "Soil Sampling Depth",
-                      choices = c(sort(unique(summary_data$sample_depth)), 'Soil Surface'),# multiple = T,
-                      selected = c(sort(unique(summary_data$sample_depth)), 'Soil Surface')
+                      choices = sample_depth_ordered,
+                      selected = sample_depth_ordered
                       #selected = unique(summary_data$Legend_1)[1]
                     ),
                     checkboxInput(inputId = 'AllDepths', label = 'All depths & Aboveground', value = TRUE)
@@ -182,16 +182,17 @@ ui <- navbarPage(
         )
       ),
       
-      hr(),
-      
-      # Set up row for text entry
-      fluidRow(
-        column(
-          12,
-          align = "center",
-          textOutput(outputId = "text_description")
-        )
-      ),
+      # # For now, we aren't using this row for mad-lib text description.      
+      # hr(),
+      # 
+      # # Set up row for text entry
+      # fluidRow(
+      #   column(
+      #     12,
+      #     align = "center",
+      #     textOutput(outputId = "text_description")
+      #   )
+      # ),
       
       hr(),
       

@@ -154,7 +154,7 @@ ui <- navbarPage(
         shinyjs::hidden(p(id = 'no_data', 'No Data! Please change your selection',
                           style = 'color: gray')),
         # map shows up underneath the sidebarPanel.
-        out = leafletOutput("map")
+        out = leafletOutput("map") %>% shinycssloaders::withSpinner()
       ),
     
     mainPanel(
@@ -178,7 +178,7 @@ ui <- navbarPage(
           12,
           #height of 750 to accomodate largest possible plot (cover crops, all outcomes selected.)
             # ideally, it'll be dynamic, but height = 'auto' doesn't work.
-          plotOutput(outputId = "forestplot", height = '750px')
+          plotOutput(outputId = "forestplot", height = '750px') %>% shinycssloaders::withSpinner()
         )
       ),
       

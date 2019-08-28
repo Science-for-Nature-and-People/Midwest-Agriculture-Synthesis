@@ -16,7 +16,12 @@ library(cowplot)
 library(plotrix)
 library(forcats)
 
-# Main data sets
+####################
+
+### Read in data ###
+
+####################
+
 raw_data <- read_csv(here("www","data","ALL_raw.csv"), col_types = cols(Trt2_int = col_integer(),
                                                                     Trt1 = col_character(),
                                                                     Trt2 = col_character(),
@@ -32,18 +37,30 @@ raw_data <- read_csv(here("www","data","ALL_raw.csv"), col_types = cols(Trt2_int
                                                                     cc_group2 = col_character(),
                                                                     pm_group1 = col_character(),
                                                                     pm_group2 = col_character()
-)
+                                                                      )
                      )
 
+map.data <- read_csv(here("www","data", "mapping","site-data_with_counties.csv"))
+references <- read_csv(here("www", "data", "references-for-app.csv"), col_types = cols(Paper_id = col_integer())) %>%
+  #changing strings to be utf-8 encoded
+  mutate(citation = iconv(citation, 'latin1', 'UTF-8', sub = ''))
+
+#using built-in state data to add region to map.data
+data(state)
 
 
-#base summary data. this will be transformed later
+
+################################################################
+
+### Transform raw data to a summary we can use for the plot ###
+
+################################################################
+
+#base summary data. this will be transformed later to create rolling means for the soil depth
 summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
                                                fct_explicit_na,
                                                na_level = "NA") %>%
-  #the selection list below will need to be responsive to the user inputs
-  #select(Paper_id, Review, group_level1, group_level2, group_level3, Trt1_details, Trt2_details, trt_specifics, nutrient_groups, cc_group1, cc_group2, sample_depth, sample_year, Trt_1name, Trt_2name, Trt_compare, per_change, actual_diff) %>%
-  #adjust grouping order based on order of selections in webtool. these will vary by review.
+  # We group by all the possible variable inputs to have a consistent starting point for us to filter off of.
   group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, Trt_compare, Trt_1name, Trt_2name,
            #Trt1_details, Trt2_details, trt_specifics, nutrient_groups) %>%
            trt_specifics, nutrient_groups, cc_group1, cc_group2, pm_group1, pm_group2) %>%
@@ -57,12 +74,15 @@ summary_base <- raw_data %>% mutate_if(is.factor,  #converts blank cells in fact
   ungroup %>%
   #combining them makes sorting a bit easier (only have to do one column instead of 2)
   mutate(group_facet_level32 = paste(group_level3, group_level2, sep = "_")) %>%
-  #get rid of rows with not enough data (no standard error means ?)
+  #get rid of rows with not enough data
   #filter(num_comparisons > 4 & sem_per_change != 0 & sem_actual_diff != 0) %>%
-  #we don't care about comparing a treatment to itself for the app (as long as both aren't NA)
+  # We don't care about comparing a treatment to itself for the app (as long as both aren't NA)
   filter((Trt_1name != Trt_2name) | (is.na(Trt_1name) & is.na(Trt_2name)))
 
-sample_depth_ordered <- raw_data$sample_depth %>% unique %>% str_sort(numeric = T, na_last = NA)
+
+
+
+
 
 #' using summary_base, create new means/standard errors based on cumulative depth grouping
 #' this relies on both summary_data and sample_year_ordered (both created above)
@@ -82,6 +102,11 @@ cum_depth_avg <- function(depth_group){
     filter(sample_depth == depth_group)
 }
 
+# This is just a list of all the possible sample depths. It's used in the function cum_depth_avg to make the mean/se cumulative.
+sample_depth_ordered <- raw_data$sample_depth %>% 
+  unique %>% 
+  str_sort(numeric = T, na_last = NA)
+
 #this combines the result of cum_avg for ALL of the depth groups
 depth_cum_data <- purrr::map_df(sample_depth_ordered, ~cum_depth_avg(.x))
 
@@ -92,44 +117,24 @@ summary_data <- summary_base %>%
   bind_rows(depth_cum_data)
 
 
-#statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)
-#SEMS based on 1 value reuslt in NA <- this converts NA to Infinity to variability in the data  
+#statements to convert SEMs=0 to Inf (unnecessary if we have a filter statement to get rid of 0 sem/small number of comparisons)
+# SEMS based on 1 value reuslt in NA <- this converts NA to Infinity to variability in the data  
 summary_data$sem_per_change <- ifelse(is.na(summary_data$sem_per_change), Inf, summary_data$sem_per_change)
 summary_data$sem_actual_diff <- ifelse(is.na(summary_data$sem_actual_diff), Inf, summary_data$sem_actual_diff)
 
 
-# raw_data %>% mutate_if(is.factor,  #converts blank cells in factor cols to NAs
-#                            fct_explicit_na,
-#                            na_level = "NA") %>%
-#   #the selection list below will need to be responsive to the user inputs
-#   select(Paper_id, Review, group_level1, group_level2, group_level3, Trt1_details, Trt2_details, trt_specifics, nutrient_groups, sample_depth, sample_year, Trt_1name, Trt_2name, Trt_compare, per_change, actual_diff) %>%
-#   #adjust grouping order based on order of selections in webtool. these will vary by review.
-#   group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, Trt_compare, Trt_1name, Trt_2name,
-#            Trt1_details, Trt2_details, trt_specifics, nutrient_groups) %>%
-#   summarise(n = n())
 
+# Useful if we want region data for the map
 
-
-
-
-
-
-
-map.data <- read_csv(here("www","data", "mapping","site-data_with_counties.csv")) %>%
-  mutate()
-references <- read_csv(here("www", "data", "references-for-app.csv"), col_types = cols(Paper_id = col_integer())) %>%
-  #changing strings to be utf-8 encoded
-  mutate(citation = iconv(citation, 'latin1', 'UTF-8', sub = ''))
-
-#using built-in state data to add region to map.data
-data(state)
 state_region_lookup <- data.frame(State = state.abb, Region = state.region) %>%
   mutate(Region = fct_recode(Region, Midwest = 'North Central'))
 map.data <- map.data %>% 
   left_join(state_region_lookup, by = 'State')
 
 
-#turn the citations into html links using the doi
+#' Turn the citations into html links using the doi
+#' @param citation is a string doi
+#' @return HTML that makes the doi a hyperlink
 citation_with_hyperlink <- function(citation){
   doi <- citation %>% 
     #get everything after 'DOI: '

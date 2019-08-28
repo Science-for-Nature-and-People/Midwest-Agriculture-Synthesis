@@ -5,23 +5,22 @@
 
 server <- function(input, output, session) {
   
-  #lookup table for control descriptions
-  # control_lookup <- data.frame(review_name = summary_data$Review %>% as.factor() %>% levels(), 
-  #                              control_descrip = c("No Cover Crops", "No Pesticides", "Single Application", "Uniform Application", "Broadcast Application", "Applied to Surface", "Applied in Fall", "Applied Preplant"))
-  # 
   
+  ########################################
   
+  ### Reactive Data Filtering ###
   
+  ########################################
   
   # Reactive selection by management practice
     #we want this to update if user click a new practice
     
-    #we also add new columns to the data frame to help us filter the app
-    #need to deselect these columns before letting the user download the filtered data
+    #we also add new columns filter1, filter2, filter1_name, filter2_name to the data frame 
+    # This helps us filter the app using consistent column names
   df_practice <- eventReactive(c(input$MgmtPractice, input$summaryPractice), {
-    cat(file = stderr(), 'df_practice is updated \n ')
+    # # Cat statements are helpful debugging tools
+    #cat(file = stderr(), 'df_practice is updated \n ')
     # filter dataset to display selected review and response variables
-    
     filtered_by_practice <- summary_data %>%
       filter(Review %in% input$MgmtPractice)
     
@@ -57,13 +56,11 @@ server <- function(input, output, session) {
   
   
   
-  #
+  # React based on changes to the Practice or Filter1
   df_filter1 <- eventReactive(c(df_practice(), input$Filter1), {
-    # validate(
-    #   need(input$Filter1, 'no filter1')
-    # )
     req(input$Filter1)
-    cat(file = stderr(), 'df_filter1 is updated\n')
+    # # Cat statements are helpful debugging tools
+    # cat(file = stderr(), 'df_filter1 is updated\n')
     # write special case for cover crop, since filter1 can belong to either cc_group1 or cc_group2
     if((input$MgmtPractice == 'Cover crop') & (input$Filter1 %in% df_practice()$cc_group1)){
       new_df <- df_practice() %>%
@@ -91,7 +88,8 @@ server <- function(input, output, session) {
   
   #do the next filter
   df_filter2 <- eventReactive(c(df_filter1(), input$Filter2), {
-    cat(file = stderr(), input$Filter2, 'dftillage2 is updated\n')
+    # # Cat statements are helpful debugging tools
+    #cat(file = stderr(), input$Filter2, 'dftillage2 is updated\n')
     
     df_filter1() %>%
         filter(filter2 %in% input$Filter2)
@@ -103,7 +101,8 @@ server <- function(input, output, session) {
   # Next tier selection of reactive selection of outcome grouping
     # we want this to update if the user clicks the update button, if they click a new outcome, or if they click a new practice (since outcome depends on practice)
   df_outcome <- eventReactive(c(df_filter2(),input$RV), {
-    cat(file = stderr(), input$RV,'df_outcome is updated \n')
+    # # Cat statements are helpful debugging tools
+    #cat(file = stderr(), input$RV,'df_outcome is updated \n')
     df_filter2() %>%
       filter(group_level1 %in% input$RV) 
     
@@ -114,23 +113,12 @@ server <- function(input, output, session) {
     # also check that there's at least one non-NA value in sample_depth
   df_depth <- eventReactive(c(df_outcome(), input$SoilDepth),{
     if(input$RV %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation') & !all(is.na(df_outcome()$sample_depth))){
-      #sort the sample depths options NUMERICALLY
-      # sample_depth_options <- df_outcome()$sample_depth %>% 
-      #   unique %>% 
-      #   stringr::str_sort(numeric = T)
-      # 
-      # #this will pull out all the previous choices (eg if input$SoilDepth = '0-60 cm', we want to pull out c('0-25 cm', '0-30 cm', '0-60 cm'))
-      # cumulative_sample_depth_choices <- sample_depth_options[1:which(sample_depth_options == input$SoilDepth)]
-      # 
         df_outcome() %>%
-        #if NA is a selected choice, it shows up as a empty string in input$SoilDepth, so we gotta adjust
+        #if NA is a selected choice, it shows up as a empty string in input$SoilDepth, so we gotta expliticly account for NA
           filter(sample_depth %in% input$SoilDepth | (is.na(sample_depth) & "Soil Surface" %in% input$SoilDepth))
-          #filter(sample_depth %in% cumulative_sample_depth_choices)
-      
-      
-        
     }
-    else{
+    # else basically says "if there isn't any information on soil, skip this filter"
+    else{ 
       df_outcome()
     }
   })
@@ -139,26 +127,27 @@ server <- function(input, output, session) {
   # filter by year of implementation
   df_years <- eventReactive(c(df_depth(), input$years), {
     
-    
-    cat(file = stderr(), is.null(input$years), 'df_years is updated \n \n')
+    # # Cat statements are helpful debugging tools
+    #cat(file = stderr(), is.null(input$years), 'df_years is updated \n \n')
     
     # validate(
     #   need(input$years, 'no year selected'),
     #   need(nrow(df_depth())>0, 'df_depth is empty' )
     # )
-    #year is tillage specific, so ignore it if management practice isn't tillage
+    
+    # Year is tillage specific, so ignore it if management practice isn't tillage
     if(input$MgmtPractice == 'Tillage'){
       if(is.null(input$years)){
         #return an empty tibble, which will disable the update button
         return(tibble())
       }
-      # Check if there are checked years that don't exist in our data (include empty string for NA)
+      # Check if there are selected years that don't exist in our data (include empty string for NA)
       if(length(setdiff(input$years, c('', unique(df_depth()$sample_year)))) > 0){
         return(tibble())
       }
       # filter dataset to display selected review and response variables
       df_depth() %>%
-        #if NA is a selected choice, it shows up as a empty string in input$year, so we gotta check
+        #if NA is a selected choice, it shows up as a empty string in input$year, so we gotta check explicitly
         filter(sample_year %in% input$years | (is.na(sample_year) & input$years %in% "")) %>%
         group_by(sample_year) %>%
         mutate(group_facet_level32 = fct_reorder(group_facet_level32, mean_per_change)) %>%
@@ -172,15 +161,13 @@ server <- function(input, output, session) {
   })
   
   
-
-  
   # Filter by geography (separate dataset for the map, filtered by above)
   df_map <- eventReactive(input$update,  {
     
     
     #pick out all the paper ids in the filtered dataset df_outcome() is prefiltered for practice/outcome
       #the filter command in the line below filters the "grouping" seleciton
-    #paper_id_list is a string column, with comma delim lists of ints
+    #paper_id_list is a string column, with ; delim lists of ints
       #so on each element/list in the column, we split the list on commas, then turn the list into a vector, convert the vector to a numeric one.
         #So now we have a list of numeric vectors. We turn this list into one long vector, and then pull out unique values
     filtered_paper_id <- df_years()$paper_id_list %>%
@@ -191,6 +178,7 @@ server <- function(input, output, session) {
       unique
     
     #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
+    # The comments refer to use ditching region for now
     map.data %>%
       #state corresponds to the map selection
       #filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
@@ -207,8 +195,20 @@ server <- function(input, output, session) {
   
   
   
+  ############################################
   
+  ### Reactive (Hierarchical) Input/UI Updating ###
   
+  ############################################
+  ## It's hierarchical because there is an ordering to the updates.
+    # Filter1 changes whenever MgmtPractice changes, Filter2 changes when Filter1 changes, etc.
+    # The full chain in the Data tab is MgmtPractice -> Filter1 -> Filter2 -> Outcome -> soilDepth -> Years
+    # Caveats: The summary tab messes with this chain a bit by allowing the user to select MgmtPractice and Outcome.
+                  # whenever possible, we tried to set the Filter1/Filter2 defaults for each MgmtPractice such that all Outcomes are possible, to preserve the chain
+              # renderUI (which was necessary for Filter1/Filter2) also disturbs this chain, 
+                  # since I couldn't find a way to time the rendering, or make it react on an event (so it's more like an "observe" than an "observeEvent")
+                  # The workaround behind the scenes is pretty much to make everything run twice. Once to get the renderedUI up to speed, and another to actually process the data.
+          
   
   
   
@@ -235,8 +235,9 @@ server <- function(input, output, session) {
       selected = input$summaryRV
     )
     
-    # #change the filter1/2 options as well. this requires using the filter ordering review -> outcome -> filter1 -> filter2
-    #   #which is different from the regular order review -> filter1 -> filter2 -> outcome
+    # # The below chunk of code is used if we need the Summary Outcome to update Filter1 or Filter2 options
+    # # this requires using the filter ordering: review -> outcome -> filter1 -> filter2
+    #   #which is different from the regular order: review -> filter1 -> filter2 -> outcome
     # if(input$MgmtPractice %in% c('Tillage', 'Cover crop')){
     #   new_filter1 <- (df_practice() %>% filter(group_level1 == input$summaryRV))$Trt_1name %>% unique %>% sort
     # }
@@ -254,7 +255,8 @@ server <- function(input, output, session) {
   })
   
   
-  # Filter1 changes between a checkboxGroupInput or a radio butotn depending on practice
+  # Filter1 changes between a checkboxGroupInput (multiple inputs) or a radio button (single input) depending on practice, requiring renderUI
+  # We also make Year of Impelementation input show/hide here.
   output$filter_one <- renderUI({
     validate(
       need(input$MgmtPractice, "no management practice")
@@ -265,8 +267,6 @@ server <- function(input, output, session) {
     } else{
       shinyjs::hide('years')
     }
-    
-    
     
     
     # write special case for cover crop, where the first selection can filter on two different columns
@@ -298,7 +298,7 @@ server <- function(input, output, session) {
   
   
   
-  #update summary outcome choices and tillage type based on practice
+  # Update summary outcome choices and tillage type based on practice
   observeEvent(input$MgmtPractice,{
     
     # Update the summary page outcome based on the chosen practice
@@ -309,7 +309,8 @@ server <- function(input, output, session) {
                       selected = ifelse(input$summaryRV %in% new_summaryrv, input$summaryRV, new_summaryrv[1])
     )
     
-    cat(file = stderr(), 'tillage type should update\n\n')
+    # Cat statements are helpful debugging tools
+    #cat(file = stderr(), 'tillage type should update\n\n')
     
     validate(
       need(df_practice()$filter1, 'no filter1'),
@@ -344,12 +345,15 @@ server <- function(input, output, session) {
   
   
   
-  # Filter2 changes between a checkboxGroupInput or a radioButton depending on the practice
+  # Filter2 changes between a checkboxGroupInput (multiple inputs) or a radioButton (single input) depending on the practice, requiring renderUI
   output$filter_two <- renderUI({
     new_filter2 <- sort(unique(as.character(df_filter1()$filter2)))
-    cat(stderr(), 'filter2 init selected is ', new_filter2[1], ". \n")
+    # # Cat statements are helpful debugging tools
+    # cat(file = stderr(), 'filter2 init selected is ', new_filter2[1], ". \n")
     if(input$MgmtPractice == 'Cover crop'){
       list(
+        #pickerInput is a special input that's like a selectInput, but with the option to select multiple
+          # We use it instead of a checkboxGroupInput since there are so many different Cover Crop Species, we didn't want it to crowd the sidebarPanel.
         shinyWidgets::pickerInput('Filter2', label = 'Cover Crop Species',
                            choices = new_filter2,
                            #as.character is needed when we have the filter2 is a factor (tillage)
@@ -369,27 +373,26 @@ server <- function(input, output, session) {
       list(
         checkboxGroupInput('Filter2', unique(df_filter1()$filter2_name),
                    choices = new_filter2,
-                   #as.character is needed when we have the filter2 is a factor (tillage)
                    selected = new_filter2),
+        
+        # Separate Checkbox needed for the "All" option
        checkboxInput('AllPesticideSites', 'All Sites',
                      value = TRUE) 
       )
     } else {
       radioButtons('Filter2', unique(df_filter1()$filter2_name),
                    choices = new_filter2,
-                   #as.character is needed when we have the filter2 is a factor (tillage)
                    selected = new_filter2[1]
       )
     }
   })
 
-  #update 2nd tillage type based on first
+  # Update 2nd tillage type based on first
   observeEvent(c(input$MgmtPractice, input$Filter1),{
 
-    # new_filter2 <- ifelse(input$MgmtPractice %in% 'Cover crop', c(sort(unique(df_filter1()$filter2)), 'All'), sort(unique(df_filter1()$filter2)))
     new_filter2 <- sort(unique(as.character(df_filter1()$filter2)))
 
-    # Cover crop is a group checkbox input, so we gotta account for that
+    # We account for the different Input styles of Filter1/Filter2 based on Practice
     if(input$MgmtPractice == 'Cover crop'){
       updatePickerInput(session, 'Filter2', unique(df_filter1()$filter2_name),
                                choices =  new_filter2,
@@ -407,34 +410,35 @@ server <- function(input, output, session) {
                          )
     }
 
-    cat(file = stderr(), 'newfilter2 is ', paste(new_filter2, collapse = ','), '. \n')
+    # debugging tool
+    #cat(file = stderr(), 'newfilter2 is ', paste(new_filter2, collapse = ','), '. \n')
 
 
   })
 
 
-  #update outcome on practices
+  # Update outcome on practices
     #if the old RV isn't an option in the new practice, this changes RV, which triggers change in df_outcome -> df_years
-  observeEvent(#df_practice(),
-    c(input$MgmtPractice, input$Filter1, input$Filter2),{
+  observeEvent(c(input$MgmtPractice, input$Filter1, input$Filter2),{
+      # cat statement is a debugging tool
       #cat(file = stderr(), 'outcome should be updated \n')
     new_outcomes <- unique(df_filter2()$group_level1) %>% sort
     updateRadioButtons(session, "RV", "Outcome",
                              choices = new_outcomes,
-                             #selected = unique(df_practice()$group_level1)
+                              # ifelse below tries to keep the same inputs in the app wherever possible
                              selected = ifelse(input$RV %in% new_outcomes, input$RV, new_outcomes[1])
     )
   })
 
 
 
-#update year legend based on previous buttons
-  #if  the old selected legend isn't an option in thew new practice/outcomes, then this changes sample_year, triggeirng change in df_years
+# Update year legend based on previous buttons
+  #if  the old selected legend isn't an option in the new practice/outcomes, then this changes sample_year, triggeirng change in df_years
   observeEvent({
     df_depth()
-    #input$update
     }, {
 
+    # Cat statementes are debugging tools
     #cat(file = stderr(), input$RV, '\n')
     #cat(file = stderr(), unique(input$years), ': legend \n')
 
@@ -444,7 +448,6 @@ server <- function(input, output, session) {
       need(new_choices, 'There are no available years of implementation')
     )
     updateCheckboxGroupInput(session, "years", "Years of Implementation",
-      #choices = unique(df_depth()$sample_year),
       choices = new_choices,
       #if groupings are the same as last groupings (old groupings are input$years + empty string for NA)
         #then keep the old groupings. if the groupings are new, just pick the first one
@@ -454,6 +457,7 @@ server <- function(input, output, session) {
       #cat(file = stderr(), unique(df_depth()$sample_year), ':df_depth$legend \n')
   })
 
+  # We decided to drop this Region selection on the map for now, because we're in the Midwest always.
   # observeEvent(df_map(), {
   #   updateSelectInput(session, "Region", "Location",
   #                            choices = unique(df_map()$Region),
@@ -462,11 +466,14 @@ server <- function(input, output, session) {
   # })
 
 
-  #df_years() is what shows up in the forest plot
+  # df_years() is what shows up in the forest plot
   observeEvent(c(input$Filter2,df_years()),{
 
-    # otherwise we hide the error message
     #cat(file = stderr(), 'nrow df_years = ', nrow(df_years()), '\n')
+    
+    
+    # If there's no data in this final dataframe, then there's some kind of error in the selections.
+      # We disable the update button and show an error message in this case.
     if(nrow(df_years()) == 0 | is.null(input$Filter2)){
       shinyjs::disable('update')
       shinyjs::show('no_data')
@@ -487,8 +494,14 @@ server <- function(input, output, session) {
       validate(
         need(df_outcome()$sample_depth, 'no sample depth')
       )
-      new_depths <- df_outcome()$sample_depth %>% unique %>% str_sort(na_last = TRUE, numeric = TRUE) %>% tidyr::replace_na('Soil Surface')
-      cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
+      new_depths <- df_outcome()$sample_depth %>% 
+        unique %>% 
+        str_sort(na_last = TRUE, numeric = TRUE) %>% 
+        tidyr::replace_na('Soil Surface')
+      
+      # # Cat statements are debugging messages
+      # cat(file = stderr(), paste(new_depths, collapse = ','), '\n')
+      
       updateCheckboxGroupInput(session, inputId = 'SoilDepth',
                                choices = c(new_depths),
                                selected = ifelse(input$SoilDepth %in% new_depths, input$SoilDepth, new_depths))
@@ -532,6 +545,7 @@ server <- function(input, output, session) {
 
   
   
+  # Adds labels to the map
   observe({
 
     # Function to define multi-line labels
@@ -566,11 +580,13 @@ server <- function(input, output, session) {
   #this shows all the data in the current plot, and is NOT sensitive to changes in the radio/select inputs
     #ie df_years() changes whenever an input changes (eg input$RV). But the plot doesn't change when input$RV changes.
     #df_plot will reflect the data in the plot, not the current df_years()
-  #maybe isolate() is a more elegant way to do this?
+  #maybe isolate() is a more elegant way to do this, but I couldn't figure out how to use it on a reactive.
   df_plot <- eventReactive(input$update,{
-    cat(stderr(), "years has dim", dim(df_years()))
-    cat(stderr(), 'filter2 looks like ', unique(df_years()$filter2))
-    #can pick any element of Review, since it was already filtered by input$MgmtPratice.
+    # # Cat statements are helpful debugging tools
+    # cat(file = stderr(), "years has dim", dim(df_years()))
+    # cat(file = stderr(), 'filter2 looks like ', unique(df_years()$filter2))
+    
+    # #can pick any element of Review, since it was already filtered by input$MgmtPratice.
       # I do it this way just to keep the dependency only on df_years
     practice <- df_years()$Review[1]
     filter1_selections <- df_years()$filter1 %>% unique
@@ -605,22 +621,30 @@ server <- function(input, output, session) {
                     Trt_2name = paste(Trt_2name, collapse = ","),
                     filter2 = paste(unique(filter2), collapse = ","))
         
-    } else {
+    } else { # Cover Crop and Early season pest management are weird. If it isn't one of those two, just keep df_years the same.
       df_years()
     }
     
     
   })
   
-  ## let's try to do the same "isolate" mimicry with filter1. need this to get the choices for the title text in plot
+  ## let's do the same "isolate" on a reactive with filter1. need this to get the choices for the title text in plot
   df_filter1_for_plot <- eventReactive(input$update, {
     df_filter1()
   })
+  
+  
+  ##########################
+  
+  ### Forest Plot ###
+  
+  ##########################
 
   #forestplot will change whenever df_plot changes (so whenever the update button is pressed)
   # to achieve this, we need no calls to input$* in this function
   output$forestplot <- renderPlot({
-    #control_text <- control_lookup[which(control_lookup$review_name == df_plot()$Review[1]),2]
+    
+    # Control text replaces the 0 point in our plot.
     control_text <- paste(unique(df_plot()$Trt_1name), collapse = 'and')
 
     #we use this dataframe to make sure that we only plot the control text on the bottom facet (not all the facets)
@@ -631,21 +655,23 @@ server <- function(input, output, session) {
                                  sem_per_change = 0)                                       #this is just needed because the ggplot below uses this to calculate the error bars. number doesn't matter I think
 
     
-    # we only want to make the plot react on the title, so we gotta isolate all the inputs to kill reactivity
+    # we only want to make the plot react on the update button, so we gotta isolate all the inputs to kill reactivity
     practice <- isolate(input$MgmtPractice)
     filter1 <- isolate(input$Filter1)
-  
+    filter2_selected <- isolate(input$Filter2)
+    # we change some text if ALL the possible pm1_choices are selected. 
+      # filter2_selected gives us the ones that are selected. pm1_all_choices gives us all the options. Note we need to start all the way back with summary_data for this..
     pm1_all_choices <- summary_data %>%
       filter(Review == practice) %>%
       select(pm_group1) %>%
       unique %>%
       deframe
     filter2_all_choices <- unique(df_filter1_for_plot()$Trt_2name) %>% sort 
-    #isolate makes sure we don't have reactivity
-    filter2_selected <- isolate(input$Filter2)
+    
     #cat(stderr(), "\n pm1_all_chocies:", pm1_all_choices, "\n filter1:", isolate(input$Filter1))
     
-    # Write special cases for cover crop and Early Season Pest Management, where the user can select multiple Trt_2names
+    # This ugly control sequence write special cases for cover crop and Early Season Pest Management, where the user can select multiple Trt_2names
+      # Maybe it could look a little better in a case_when, but I thought this was clearer
     if(practice %in% 'Cover crop'){
       if(length(filter2_all_choices) == length(filter2_selected)){
         title_text <- paste0('Effects of All Species compared to ', paste(unique(df_plot()$Trt_1name), collapse = 'and'))
@@ -670,6 +696,7 @@ server <- function(input, output, session) {
     
     # Write special case for plot color variable (should be sample year for tillage, and pesticide type for early season pest management)
       # The others don't have color, but I'll make em sample_year to check that there aren't any rogue years in the rest of the data
+         # this exploits the fact that if sample_year is totally NA, the all the points will be black.
       # We also don't want to color if all pesticide types are selected (since in this case, we consolidate all the different types into 1 mean)
     if(practice == "Early Season Pest Management" & length(pm1_all_choices) != length(isolate(input$Filter1))){
       color_var <- sym('filter1')
@@ -717,7 +744,9 @@ server <- function(input, output, session) {
     #the control_labels dataframe specifies which facet to put the text, puts the text at the x axis (y=0), so vjust moves it down a little
     })
 
-  #the text description at the bottom only depends on managementPractice
+  
+  
+  # Text Description right below the forest plot
   output$text_description <- renderText({
     if (input$MgmtPractice == "Cover crop") {
       "Cover crops in all areas, on average, are positively related to soil properties, but insignificantly related to crop yield."
@@ -734,9 +763,14 @@ server <- function(input, output, session) {
     }
   })
 
-
+  #############################
+  
+  ### Tables (Reference tab / debugging tool) ###
+  
+  ##############################
 
   output$reference_table <- renderTable({
+    # Get all the paper id's from the dataframe used to generate the plot
     plot_filtered_paper_id <- df_plot()$paper_id_list %>%
       lapply(function(x) strsplit(x, split = ";") %>%
                unlist %>%
@@ -744,19 +778,27 @@ server <- function(input, output, session) {
       unlist %>%
       unique
 
+    # Filter the references dataframe (defined in global.R) by the Paper id's in the plot,
+      # and replace the paper_id's with an enumeration.
     references %>%
       select(-citation_short) %>%
       filter(Paper_id %in% plot_filtered_paper_id) %>%
       mutate(Paper_id = 1:nrow(.))
+    # sanatize.text lets us render HTML, so that the doi's show up as a link.
   },sanitize.text.function = function(x) x)
   
-  
+
+  # Debugging tool to see current table used to generate plot. Might be commented out in ui.R
   output$current_table <- renderTable({
     df_plot()
   })
   
   
+  ########################################
   
+  ### Download Buttons ###
+  
+  ########################################
 
   # picks out the filtered data for download as a csv
   output$downloadData <- downloadHandler(
@@ -784,6 +826,12 @@ server <- function(input, output, session) {
     }
   )
 
+  
+  #######################
+  
+  ### Update Button ###
+  
+  #######################
   # Updates when the user clicks the go button in the landing page
   observeEvent(input$go,{
     updateNavbarPage(session, 'navbar', select = 'Data')

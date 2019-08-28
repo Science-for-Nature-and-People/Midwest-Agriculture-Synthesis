@@ -33,11 +33,16 @@ sidebarPanel2 <- function (..., out = NULL, width = 4)
   )
 }
 
+# navbarPage is what allows those tabs at the top
 ui <- navbarPage(
   "Midwest Soil Health Evidence",
   id = 'navbar',
+  
+  # snapp logo in the bottom right
   footer = a(href = 'https://snappartnership.net/teams/managing-soil-organic-carbon/',
              img(src='pics/snapp-logo.png', align = 'right', height = 50)),
+  
+  ### First tab: Summary tab / landing page =======================================================================
   tabPanel(
     'Summary',
     style = 'background-color:#F5FAFE;',
@@ -72,17 +77,19 @@ ui <- navbarPage(
              actionButton(inputId = "go", label = "Go", 
                           style = 'padding:5px; font-size: 200%; width: 500px; color: white; background-color: green; margin-top:100px' ))
     ),
-    #use the line below if you want to change ALL selectInputs. 
-      # I don't do much with it because there is a selectInput in two tabs, and they need different formatting
+    
+    # Change the formatting of all select inputs using HTML
     tags$head(tags$style(HTML(".selectize-input {padding: 15px} 
                               .selectize-dropdown { font-size: 15px; line-height: 20px;}")))
     
   ),
 
+  
+  ### Second tab: Main tab with all the inputs and plots =======================================================================
   tabPanel(
     "Data",
 
-    # shinyjs required for the update button to initialize a plot
+    # shinyjs required for the update button / hide / show functionality
     useShinyjs(),
 
 
@@ -96,20 +103,12 @@ ui <- navbarPage(
         ),
         fluidRow(
           column(6,
+                 # This is reactive on the practice, so see the generating code in server.R
                  uiOutput("filter_one")
-          # radioButtons(
-          #   inputId = 'Filter1', label = 'Tillage Type #1',
-          #   choices = unique(summary_data$Trt_1name) %>% sort(),
-          #   selected = 'Conventional tillage'
-          # )
           ),
           column(6,
+                 # This is reactive on the practice, so see the generating code in server.R
                  uiOutput('filter_two')
-          # radioButtons(
-          #   inputId = 'Filter2', label = 'Tillage Type #2',
-          #   choices = unique(summary_data$Trt_2name) %>% sort(),
-          #   selected = 'No tillage'
-          # ))
           )
           ),
         fluidRow(
@@ -141,7 +140,7 @@ ui <- navbarPage(
         )
         ),
 
-        
+        # We decided to remove the Region select input, since everything's in the Midwest.
         # div(style = 'font-size:15px ',
         #     selectInput(
         #       inputId = "Region", label = "Location",
@@ -154,46 +153,10 @@ ui <- navbarPage(
         #create hidden text that only shows up if there isn't enough data. should be used in conjunction with disabled update button
         shinyjs::hidden(p(id = 'no_data', 'No Data! Please change your selection',
                           style = 'color: gray')),
+        # map shows up underneath the sidebarPanel.
         out = leafletOutput("map")
       ),
-    # fluidRow(
-    #   column(
-    #     4,
-    #     align = "center",
-    #     selectInput(
-    #       inputId = "MgmtPractice", label = "Practice",
-    #       choices = unique(summary_data$Review) %>% sort(),
-    #       selected = "Cover Crops"
-    #     )
-    #   ),
-    #   column(
-    #     4,
-    #     align = "center",
-    #     selectInput(
-    #       inputId = "RV", label = "Outcome",
-    #       choices = unique(summary_data$group_level1) %>% sort(), multiple = T,
-    #       selected = "Soil"
-    #     )
-    #   ),
-    #   column(
-    #     4,
-    #     align = "center",
-    #     selectInput(
-    #       inputId = "Legend_1", label = "Grouping",
-    #       choices = unique(summary_data$Legend_1) %>% sort(), multiple = T,
-    #       selected = "Single species"
-    #     )
-    #   )
-    # ),
-    # fluidRow(
-    #   column(
-    #     12,
-    #     align = "center",
-    #     actionButton(inputId = "update", label = "Update data", style = "padding:4px; font-size:80%")
-    #   )
-    # ),
-    # 
-    # hr(),
+    
     mainPanel(
       # Set up row with plots of map and forest plot
       fluidRow(
@@ -232,10 +195,11 @@ ui <- navbarPage(
       
       hr(),
       
-      fluidRow(
-        column(12,
-               tableOutput(outputId = 'current_table'))
-      ),
+      # # Debugging tool to see the data used to generated current plot
+      # fluidRow(
+      #   column(12,
+      #          tableOutput(outputId = 'current_table'))
+      # ),
       
       fluidRow(
         column(
@@ -254,8 +218,13 @@ ui <- navbarPage(
   )
   ),
 
-  tabPanel("References", tableOutput(outputId = "reference_table")),
-  tabPanel("Methods")#,
+  ### Third tab: References based on selected data in second tab =======================================================================
+  
+  tabPanel("References", tableOutput(outputId = "reference_table"))#,
+  
+  ### Optional additional tabs: Methods and the leaflet map ====================================================================
+  
+  #tabPanel("Methods")#,
   #tabPanel("Map", leafletOutput('map'))
   
 )
@@ -263,4 +232,5 @@ ui <- navbarPage(
 # #### RUN THE APP ####
 # shinyApp(ui = ui, server = server)
 
+# # Using this display mode is a cool little debugging tool.
 #runApp('www', display.mode = 'showcase')

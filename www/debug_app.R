@@ -1,21 +1,10 @@
-practice <- 'Cover crop'
-filter_1 <- 'Single species'
-filter_2 <- c("winter rye", "winter rye + oat", "forage radish", "hairy vetch", 
-              "Italian ryegrass", "winter rye + hairy vetch", "oat", "alfalfa", 
-              "clover", "forage radish + buckwheat", "forage radish + hairy vetch + winter rye", 
-              "forage rape", "perennial ryegrass", "winter rye (corn), hairy vetch (soybean)", 
-              "winter triticale", "winter wheat", "barley", "Canada bluegrass", 
-              "canola", "chickweed", "downy brome", "forage radish + hairy vetch", 
-              "forage radish + winter triticale", "hairy vetch (corn) / winter rye (soybean)", 
-              "hairy vetch + winter rye (corn) / winter rye (soybean)", "mustard", 
-              "oat (corn), clover (soybean)", "rapeseed", "winter rye + forage radish", 
-              "wheatgrass", "winter rye + Austrian winter pea", "oat, Italian ryegrass, or forage radish", 
-              "Austrian winter pea", "slender wheatgrass (corn), winter lentils (soybean)"
-)
+practice <- 'Tillage'
+filter_1 <- 'Conventional tillage'
+filter_2 <- c("Conservation tillage")
 rv <- 'Climate Mitigation'
 depth <- c('0-30 cm', '0-60 cm', '0-150 cm', '0-100 cm', NA)
-#yrs <- c('Year 1-5', 'Years 1-10','Years 1-20', 'Years 1-30', 'Years 1-40', 'Years 1-50')
-yrs <- ''
+yrs <- c('Year 1-5', 'Years 1-10','Years 1-20', 'Years 1-30', 'Years 1-40', 'Years 1-50')
+#yrs <- ''
 
 #df_practice
 df_practice <- function(MgmtPractice){
@@ -116,7 +105,7 @@ df_years <- function(years){
     
     # filter dataset to display selected review and response variables
     df %>%
-      filter(sample_year %in% years| (is.na(sample_year) & years %in% "")) %>%
+      filter(sample_year %in% years | (is.na(sample_year) && years %in% "")) %>%
       group_by(sample_year) %>%
       mutate(group_facet_level32 = fct_reorder(group_facet_level32, mean_per_change)) %>%
       ungroup()
@@ -125,6 +114,30 @@ df_years <- function(years){
     df
   }
 }
+
+df_map <- function() {
+  
+  #pick out all the paper ids in the filtered dataset df_outcome() is prefiltered for practice/outcome
+  #the filter command in the line below filters the "grouping" seleciton
+  #paper_id_list is a string column, with comma delim lists of ints
+  #so on each element/list in the column, we split the list on commas, then turn the list into a vector, convert the vector to a numeric one.
+  #So now we have a list of numeric vectors. We turn this list into one long vector, and then pull out unique values
+  filtered_paper_id <- df_years(yrs)$paper_id_list %>%
+    lapply(function(x) strsplit(x, split = ";") %>%
+             unlist %>%
+             as.integer) %>% 
+    unlist %>% 
+    unique
+  
+  #now we filter map.data where paper_id matches any of the numbers inside filtered_paper_id
+  map.data %>%
+    #state corresponds to the map selection
+    #filter((State %in% input$State) & (Paper_id %in% filtered_paper_id))
+    #region corresponds to the region selection in the sidebar
+    #filter((Region %in% input$Region) & (Paper_id %in% filtered_paper_id))
+    filter(Paper_id %in% filtered_paper_id)
+}
+
 
 df_plot <- function(){
   df <- df_years(yrs)
@@ -139,6 +152,16 @@ df_plot <- function(){
                 Trt_2name = paste(Trt_2name, collapse = ","),
                 filter1 = paste(unique(filter1), collapse = ','),
                 filter2 = paste(unique(filter2), collapse = ","))
+  } else if (df$Review[1] == "Early Season Pest Management"){
+    df %>% 
+      group_by(Review, group_level1, group_level2, group_level3, sample_depth, sample_year, filter1) %>% 
+      summarize(mean_per_change = mean(mean_per_change), 
+                sem_per_change = mean(sem_per_change), 
+                paper_id_list = paste(paper_id_list, collapse = ";"), 
+                Trt_1name = Trt_1name[1], 
+                group_facet_level32 = group_facet_level32[1], 
+                Trt_2name = paste(Trt_2name, collapse = ","),
+                filter2 = paste(unique(filter2), collapse = ","))
   } else {
     df
   }
@@ -152,9 +175,30 @@ dff2<- df_filter2(filter_2)
 dfo <- df_outcome(rv)
 dfd <- df_depth(depth)
 dfy <- df_years(yrs)
+dfm <- df_map()
 dfplot <- df_plot()
 
 
+
+labs <- lapply(seq(nrow(dfm)), function(i) {
+  paste0(
+    "State: ", dfm[i, "State"], "<p>", #"County: ", df_map()[i, "NAME"],
+    "<p>", "Treatment: ", dfm[i, "Review"], "<p>", "DOI: ", dfm[i, "DOI"]
+  )
+})
+
+
+
+plot_filtered_paper_id <- dfplot$paper_id_list %>%
+  lapply(function(x) strsplit(x, split = ";") %>%
+           unlist %>%
+           as.integer) %>%
+  unlist %>%
+  unique
+
+references %>%
+  select(-citation_short) %>%
+  filter(Paper_id %in% plot_filtered_paper_id)
 
 #### Quick check that cum_depth_avg() works =======================
 

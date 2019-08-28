@@ -746,7 +746,8 @@ server <- function(input, output, session) {
 
     references %>%
       select(-citation_short) %>%
-      filter(Paper_id %in% plot_filtered_paper_id)
+      filter(Paper_id %in% plot_filtered_paper_id) %>%
+      mutate(Paper_id = 1:nrow(.))
   },sanitize.text.function = function(x) x)
   
   

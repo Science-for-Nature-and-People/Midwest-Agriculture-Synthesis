@@ -17,9 +17,14 @@
 addResourcePath(prefix = 'pics', directoryPath = here('www'))
 
 
-# Cool method for getting something (the object "out") to show up underneath a sidebarPanel
-  # It basically makes a sidebar panel from scratch using HTML. See link below for details
-  # https://stackoverflow.com/questions/52544228/r-shiny-display-static-text-outside-sidebar-panel
+#' Cool method for getting something (the object "out") to show up underneath a sidebarPanel
+#' It basically makes a sidebar panel from scratch using HTML. See link below for details
+#' https://stackoverflow.com/questions/52544228/r-shiny-display-static-text-outside-sidebar-panel
+#' class = 'well' is what forms the gray box. 
+#' a form is the overarching object that contains all the inputs
+#' @param ... are whatever we want inside the sidebarPanel. same as the regular `sidebarPanel` function
+#' @param out is whatever you want underneat the sidebarPanel
+#' @param width is the width of the sidebarPanel, using fluidRow metrics (max 12)
 sidebarPanel2 <- function (..., out = NULL, width = 4) 
 {
   div(class = paste0("col-sm-", width), 

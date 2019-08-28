@@ -391,22 +391,29 @@ server <- function(input, output, session) {
   observeEvent(c(input$MgmtPractice, input$Filter1),{
 
     new_filter2 <- sort(unique(as.character(df_filter1()$filter2)))
+    # Only change the selected inputs if we have to
+    #&& is a hack to make sure null is evaluated correctly
+     if(input$Filter2 %in% new_filter2 && !is.null(input$Filter2)){
+       new_filter2_selected <- input$Filter2
+     } else {
+      new_filter2_selected <- new_filter2
+    }
 
     # We account for the different Input styles of Filter1/Filter2 based on Practice
     if(input$MgmtPractice == 'Cover crop'){
       updatePickerInput(session, 'Filter2', unique(df_filter1()$filter2_name),
                                choices =  new_filter2,
-                               selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2[1])))
+                               selected = new_filter2_selected)
     } else if(input$MgmtPractice == "Early Season Pest Management"){
       updateCheckboxGroupInput(session, 'Filter2', unique(df_filter1()$filter2_name),
                                choices = new_filter2,
                                #as.character is needed when we have the filter2 is a factor (tillage)
-                               selected = ifelse(input$Filter2 %in% new_filter2, input$Filter2, as.character(new_filter2)))
+                               selected = new_filter2_selected)
     } else {
       updateRadioButtons(session, 'Filter2', unique(df_filter1()$filter2_name),
                          choices = new_filter2,
                          #&& is a hack to make sure null is evaluated correctly
-                         selected = ifelse((input$Filter2 %in% new_filter2) && (!is.null(input$Filter2)), as.character(input$Filter2), new_filter2[1])
+                         selected = new_filter2_selected[1]
                          )
     }
 
@@ -700,6 +707,8 @@ server <- function(input, output, session) {
       # We also don't want to color if all pesticide types are selected (since in this case, we consolidate all the different types into 1 mean)
     if(practice == "Early Season Pest Management" & length(pm1_all_choices) != length(isolate(input$Filter1))){
       color_var <- sym('filter1')
+    } else if (practice == "Cover crop") {
+      color_var <- sym("sample_depth")
     } else {
       color_var <- sym('sample_year')
     }

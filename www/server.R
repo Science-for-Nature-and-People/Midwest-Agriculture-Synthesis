@@ -670,6 +670,7 @@ server <- function(input, output, session) {
     practice <- isolate(input$MgmtPractice)
     filter1 <- isolate(input$Filter1)
     filter2_selected <- isolate(input$Filter2)
+    outcome_selected <- isolate(input$RV)
     # we change some text if ALL the possible pm1_choices are selected. 
       # filter2_selected gives us the ones that are selected. pm1_all_choices gives us all the options. Note we need to start all the way back with summary_data for this..
     pm1_all_choices <- summary_data %>%
@@ -711,8 +712,10 @@ server <- function(input, output, session) {
       # We also don't want to color if all pesticide types are selected (since in this case, we consolidate all the different types into 1 mean)
     if(practice == "Early Season Pest Management" & length(pm1_all_choices) != length(isolate(input$Filter1))){
       color_var <- sym('filter1')
-    } else {
+    } else if(outcome_selected %in% c('Soil Nutrients', 'Other Soil Properties', 'Climate Mitigation')){
       color_var <- sym('sample_depth')
+    } else{
+      color_var <- NULL
     }
 
     # Write special case for tillage, where we want two legends (one for year, one for sample depth)

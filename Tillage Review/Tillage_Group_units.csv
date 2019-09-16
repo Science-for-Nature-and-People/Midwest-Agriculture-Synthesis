@@ -1,4 +1,4 @@
-"Review_id","group_level1","group_level2","group_level3","unit_list"
+"review","group_level1","group_level2","group_level3","unit_list"
 "Tillage","Other Soil Properties","Physical Properties","Compaction","MPa; kPa; penetration ratio; proctor density ratio"
 "Tillage","Other Soil Properties","Abiotic Factors","Moisture content","cm water/cm soil; g water/100 g soil; Celcius; ; mg/kg; cm; %v/v; g water/g soil; %; g/100 g; % by weight; g/kg; theta; moisture ratio; g/g; mm; cm^3/cm^3; cm^3/cm^3/min; index; m^3/m^3; kg water/ kg soil; g H2O/ g soil"
 "Tillage","Other Soil Properties","Physical Properties","Bulk density","Mg/m^3; Mg/M^3; Mg/ha; g/cm^3; Mg/m; g/kg; g.cm^3; g soil/cm^3; kg/m^2"
@@ -49,6 +49,7 @@
 "Tillage","Pests","Pest Natural Enemies","Natural enemy (activity)","%"
 "Tillage","Pests","Pest Natural Enemies","Natural enemy (#)","#/100 plants; #; # insects/50 sweps; #/sq m; #/sample"
 "Tillage","Crop Yields","Crop Growth","Corn root (biomass)","cm/cm^3; Mg/ha/yr; mm; m/g; g/m^2/0.25m"
+"Tillage",NA,NA,NA,NA
 "Tillage","Crop Yields","Grain Quality","Corn","%; Mg/ha; g/kg; in"
 "Tillage","Water Quality","Nutrient Runoff","Nitrate","kg/ha; mg/L; kg-N/ha; kg N/ha; mg/kg"
 "Tillage","Pests","Weeds","Broadleafs","ranking scale (1 = low cover, 2 = 5-25% cover, 3 = 25-50% cover, 4 = 50-75%; # weeds/ sq m; # seeds/sq m"
@@ -59,7 +60,7 @@
 "Tillage","Other Soil Properties","Biotic Factors","Respiration","kg C/ha/day; g CO2-C/sq m/day; mg/kg/d; ug/mg/d; mg CO2-C/kg/d"
 "Tillage","Other Soil Properties","Biotic Factors","Microbial biomass","kg/ha; microgram/g dry soil; g/100 g; ug/mg/d; mg/kg; kg C/ha; ug/g; ug/g soil"
 "Tillage","Pests","Invertebrate Pests","Seedcorn maggot (#)","#; # insects/50 sweps"
-"Tillage","Climate Mitigation","Carbon Mitigation","Carbon dioxide (CO2)","micromol CO2/sq m/sec; kg/ha; Mg/ha/yr; g/m^2/h; g CO2-C/m^2/day; Mg/ha; CO2 Mg/ha; mg CO2/m^2/hr; kg C2O/ha/day; kg C/ha/yr"
+"Tillage","Climate Mitigation","Carbon Mitigation","Carbon dioxide (CO2)","micromol CO2/sq m/sec; kg/ha; Mg/ha/yr; g CO2/m^2/h; mL/L; g/m^2/h; g CO2-C/m^2/day; Mg/ha; CO2 Mg/ha; mg CO2/m^2/hr; kg C2O/ha/day; kg C/ha/yr"
 "Tillage","Pests","Pathogens","Soybean infections","% with brown stem rot"
 "Tillage","Pests","Nematodes","Soybean cyst nematode (#)","# H. glycines eggs/100 cm^3 soil; # (log10(x+1)); % fields with H. glycines; egg density at harvest in the year/egg density at harvest in the preceding year; eggs/100 cm^3 of soil; #/100 cm^3 of soil; J2/100 cm^3 soil; distance to west (m); dispersion index; eggs/100/cm^3 soil; ; kg/ha"
 "Tillage","Pests","Weeds","Grasses","# weeds/ sq m; # seeds/sq m"

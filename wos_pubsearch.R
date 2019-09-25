@@ -1,9 +1,14 @@
 #devtools::install_github("juba/rwos")
 library(rwos)
 library(tidyverse)
+library(stringdist)
+library(janitor)
 
 # read in existing references for comparison
 handmade_refs <- read_csv('www/data/references-for-app.csv')
+
+handmade_refs_expanded <- read_csv('www/data/refs_all_expanded.csv')
+
 
 # API requires a session key
 session_id <- wos_authenticate()
@@ -36,11 +41,12 @@ get_results <- function(practice_query, sid, year_start = 1980, year_end = 2017)
 
 ### Write out the practice specific queries (taken from google doc)
 cover_crop_query <- '"cover crop" OR cover-crop* OR covercrop*'
-tillage_query <- 'conservation till* OR "conventional till" OR "no-till" OR "no till*" OR "reduced till*" OR "minimum till*"'
-pest_query <- 'pesticide seed treatment* OR "seed treatment*" OR "systemic insect*" OR neonic* OR pyrethr* OR (foliar AND insecticide*)'
+tillage_query <- '"conservation till*" OR "conventional till" OR "no-till" OR "no till*" OR "reduced till*" OR "minimum till*"'
+pest_query <- '"pesticide seed treatment"* OR "seed treatment*" OR "systemic insect*" OR neonic* OR pyrethr* OR (foliar AND insecticide*)'
 nutrient_mgmt_query <- '(precision AND (fert* OR agr* OR nitrogen OR phosphorous)) OR "variable rate" OR "band* fert*" OR 4R OR ((enhance* OR efficien*) AND (nitrogen OR phosphorous))'
 
-
+test_query <-  '(precision AND (fert* OR agr* OR nitrogen OR phosphorous)) OR "variable rate" OR "band* fert*" OR 4R OR ((enhance* OR efficien*) AND (nitrogen OR phosphorous)) OR fertilizer'
+a <- test_query %>% get_results(sid = session_id, year_start = 1980, year_end = 2017)
 ############################################
 
 ### Create a dataframe with all the hits ###
@@ -114,8 +120,95 @@ handmade_refs_separated %>%
   distinct(title, first_author_last_name, year)
 
 
+####################################
+
+## Instead of trying to get title through the citation, we can use this new csv that we got from lesley
+  # now we can just try directly matching titles (lower cased)
+
+# Formatting the original, hand-matched titles to be lower case
+formatted_handmade_refs_expanded <- handmade_refs_expanded %>%
+  remove_empty('rows') %>%
+  mutate(title = str_to_lower(title) %>% str_trim)
+
+formatted_results_df <- results_df %>%
+  mutate(title = str_to_lower(title) %>% str_trim)
+# formatting the titles in the results dataframe to also be lower case
+query_titles <- formatted_results_df$title %>%
+  unique
 
 
+
+
+# First, let???s match by doi. that???s most certain --------------------------
+
+unmatched_by_doi <- formatted_handmade_refs_expanded %>%
+  filter(!doi %in% results_df$doi)
+
+
+# Next, let???s match by the rest of the title and see if we get a hit --------
+unmatched_by_doi_title <- unmatched_by_doi %>%
+  filter(!title %in% query_titles)
+
+  
+
+
+
+# Next, let???s see if we can find a fuzzy-match ----------------------------
+
+# create string distance matrix using levenshtein distance (number of deltetions/insertions/substitutions)
+title_dist_matrix <- stringdist::stringdistmatrix(unmatched_by_doi_title$title, query_titles, method = "lv")
+
+# Zeroes are exact matches, but we are looking for fuzzy matches, so we remove exact matches
+# We'll say there's definely no match if the lv distance is greater than 30
+title_dist_matrix[title_dist_matrix == 0 | title_dist_matrix > 30] <- NA
+
+
+# pull out the row indices where there is at least one non-NA value
+nonzero_index <- rowSums(title_dist_matrix, na.rm = TRUE) > 0
+
+# pull out the rows where there is at least one non-NA value
+title_dist_with_match <- title_dist_matrix[nonzero_index,]
+
+
+# create a dataframe to compare the two titles side by side
+title_match_check <- unmatched_by_doi_title %>%
+  slice(which(nonzero_index)) %>%
+  mutate(matched_title = query_titles[apply(title_dist_with_match, 1, which.min)]) %>%
+  select(title, matched_title)
+
+
+
+
+
+# All the fuzzy matches look like real matches! let???s remove them from the table  --------
+
+unmatched_by_doi_title_fuzzy <- unmatched_by_doi_title %>%
+  filter(!title %in% title_match_check$title)
+
+questionable_match <- unmatched_by_doi_title_fuzzy$title %>% stringdistmatrix(query_titles, method = "lv")
+
+questionable_match_lookup <- unmatched_by_doi_title_fuzzy %>%
+  mutate(matched_title = query_titles[apply(questionable_match, 1, which.min)]) %>%
+  select(title, matched_title) 
+
+
+# some of these are inconclusive, so let's look at the rest of the data (publication year, authors, ect.)
+
+questionable_match_with_metadata <- questionable_match_lookup %>%
+  left_join(unmatched_by_doi_title_fuzzy, by = "title") %>%
+  left_join(formatted_results_df, by = c("matched_title" = "title"))
+
+
+
+# just to make sure there's no match for these 3 observations, we'll look at year and author in the query data
+
+  # this paper is not in the 4 editions we have access to (SCI, ISTP, ISSHP, IC)
+    # confirmed by searching the web of science site
+results_df %>% filter(str_detect(str_to_lower(authors), 'grebliunas'))
+
+  # this paper IS in the 4 editions we have access to.. i'm not sure why we aren't picking it up
+results_df %>% filter(str_detect(str_to_lower(authors), 'osborne'), year == 2014)
+results_df %>% filter(str_detect(str_to_lower(authors), 'ferguson'), year == 2002)
 
 
 

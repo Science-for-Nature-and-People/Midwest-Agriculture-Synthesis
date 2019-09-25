@@ -45,8 +45,6 @@ tillage_query <- '"conservation till*" OR "conventional till" OR "no-till" OR "n
 pest_query <- '"pesticide seed treatment"* OR "seed treatment*" OR "systemic insect*" OR neonic* OR pyrethr* OR (foliar AND insecticide*)'
 nutrient_mgmt_query <- '(precision AND (fert* OR agr* OR nitrogen OR phosphorous)) OR "variable rate" OR "band* fert*" OR 4R OR ((enhance* OR efficien*) AND (nitrogen OR phosphorous))'
 
-test_query <-  '(precision AND (fert* OR agr* OR nitrogen OR phosphorous)) OR "variable rate" OR "band* fert*" OR 4R OR ((enhance* OR efficien*) AND (nitrogen OR phosphorous)) OR fertilizer'
-a <- test_query %>% get_results(sid = session_id, year_start = 1980, year_end = 2017)
 ############################################
 
 ### Create a dataframe with all the hits ###
@@ -128,13 +126,16 @@ handmade_refs_separated %>%
 # Formatting the original, hand-matched titles to be lower case
 formatted_handmade_refs_expanded <- handmade_refs_expanded %>%
   remove_empty('rows') %>%
-  mutate(title = str_to_lower(title) %>% str_trim)
+  mutate(title_lower = str_to_lower(title) %>% str_trim)
 
-formatted_results_df <- results_df %>%
-  mutate(title = str_to_lower(title) %>% str_trim)
 # formatting the titles in the results dataframe to also be lower case
-query_titles <- formatted_results_df$title %>%
-  unique
+formatted_results_df <- results_df %>%
+  mutate(title_lower = str_to_lower(title) %>% str_trim)
+
+query_titles_lookup <- formatted_results_df %>%
+  select(title, title_lower) %>%
+  distinct(title_lower, .keep_all = TRUE)
+  
 
 
 
@@ -147,7 +148,7 @@ unmatched_by_doi <- formatted_handmade_refs_expanded %>%
 
 # Next, let???s match by the rest of the title and see if we get a hit --------
 unmatched_by_doi_title <- unmatched_by_doi %>%
-  filter(!title %in% query_titles)
+  filter(!title_lower %in% query_titles_lookup$title_lower)
 
   
 
@@ -156,7 +157,7 @@ unmatched_by_doi_title <- unmatched_by_doi %>%
 # Next, let???s see if we can find a fuzzy-match ----------------------------
 
 # create string distance matrix using levenshtein distance (number of deltetions/insertions/substitutions)
-title_dist_matrix <- stringdist::stringdistmatrix(unmatched_by_doi_title$title, query_titles, method = "lv")
+title_dist_matrix <- stringdist::stringdistmatrix(unmatched_by_doi_title$title_lower, query_titles_lookup$title_lower, method = "lv")
 
 # Zeroes are exact matches, but we are looking for fuzzy matches, so we remove exact matches
 # We'll say there's definely no match if the lv distance is greater than 30
@@ -173,8 +174,11 @@ title_dist_with_match <- title_dist_matrix[nonzero_index,]
 # create a dataframe to compare the two titles side by side
 title_match_check <- unmatched_by_doi_title %>%
   slice(which(nonzero_index)) %>%
-  mutate(matched_title = query_titles[apply(title_dist_with_match, 1, which.min)]) %>%
-  select(title, matched_title)
+  mutate(matched_title = query_titles_lookup$title_lower[apply(title_dist_with_match, 1, which.min)]) %>%
+  select("original_title" = title, matched_title) %>%
+  left_join(formatted_handmade_refs_expanded, by = c("original_title" = "title")) %>%
+  left_join(query_titles_lookup, by = c("matched_title" = "title_lower")) %>%
+  select(original_title, "matched_title" = title, "original_title_lower" = title_lower, "matched_title_lower" = matched_title)
 
 
 

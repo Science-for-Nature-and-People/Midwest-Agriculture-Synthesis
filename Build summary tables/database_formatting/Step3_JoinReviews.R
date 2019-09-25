@@ -14,6 +14,21 @@ units <- full_join(units, nutrient)
 
 write.csv(units, file = "/Users/LWA/Desktop/github/midwesternag_synthesis/units.csv", row.names = FALSE)
 
+
+##join references####
+tillage <- read_csv(file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Protocols/Files for protocol/Tillage_Refs.csv")
+pest <- read_csv(file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Protocols/Files for protocol/PestMgmt_Refs.csv")
+covercrop <- read_csv(file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Protocols/Files for protocol/Covercrop_Refs.csv")
+nutrient <- read_csv(file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Protocols/Files for protocol/Nutrient_Refs.csv")
+
+refs <- full_join(tillage, pest)
+refs <- full_join(refs, covercrop)
+refs <- full_join(refs, nutrient)
+
+write.csv(refs, file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Protocols/Files for protocol/refs_all_expanded.csv", row.names = FALSE)
+
+
+
 # Main data sets
 tillage_data <- read_csv(file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Files for protocol/Tillage_raw.csv",
                      col_types = cols(    loc_multi_results = col_character(),
@@ -135,3 +150,7 @@ all_data2 <- all_data %>%
 
 
 write.csv(all_data2, file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Files for protocol/ALL_raw.csv", row.names = FALSE)
+
+
+
+

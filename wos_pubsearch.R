@@ -192,6 +192,7 @@ results_df <- results_list %>%
   bind_rows()
 
 
+
 ##################################################
 
 ### Compare results with what was done by hand ###
@@ -403,7 +404,7 @@ no_doi_any_title_match <- bind_rows(no_doi_exact_title_match, no_doi_fuzzy_title
 
 #taking function from the biblio-analysis repo in the LTER org! (see the `source_url` code at the top)
   # NOTE: this takes a while to run!
-
+#' i don't have a lot of faith in the score (score is what threshold is for). I think it refers to the "relevance score" in the crossref api, which is a tf-idf?
 scrape_doi_title <- function(title, threshold = 20){
   scrape <- getdoi(title, threshold = threshold)
   
@@ -413,10 +414,14 @@ scrape_doi_title <- function(title, threshold = 20){
          "match_score" = scrape$match_score)
 }
 
-doi_scraping <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x))
+#add distance between the titles. can set a cutoff like ~10
+doi_scraping <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x)) %>%
+  mutate(title_dist = stringdist::stringdist(matched_title_lower, str_to_lower(title_scraped), method = "lv"))
 
-doi_scraping60 <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x, threshold = 60))
-doi_scraping30 <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x, threshold = 30))
+# playing with the threshold (eg tf-idf) I don't think this is the way to go. I prefer using something like "lv" distance between titles
+doi_scraping60 <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x, threshold = 60)) %>%
+  mutate(title_dist = stringdist::stringdist(matched_title_lower, str_to_lower(title_scraped), method = "lv"))
+
 
 #doi_scraping_testlist <- seq(30,60,10) %>% map(function(x) map_df(no_doi_any_title_match$matched_title_lower, function(y) scrape_doi_title(y, threshold = x)))
 
@@ -435,7 +440,7 @@ doi_scraping30 <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi
 check_doi_scrape <- function(table_without_doi_match, doi_scrape_result){
   compare_dois <- doi_scrape_result %>%
     left_join(table_without_doi_match, by = "matched_title_lower") %>%
-    select(matched_title_lower, handmade_title, title_scraped, query_doi, handmade_doi, doi_scraped, match_score) %>%
+    select(matched_title_lower, handmade_title, title_scraped, query_doi, handmade_doi, doi_scraped, match_score, title_dist) %>%
     rowwise() %>%
     mutate(correct = identical(str_to_lower(doi_scraped), str_to_lower(handmade_doi))) %>%
     ungroup %>%
@@ -446,6 +451,7 @@ check_doi_scrape <- function(table_without_doi_match, doi_scrape_result){
 }
 
 
+
 check_doi20 <-check_doi_scrape(no_doi_any_title_match, doi_scraping) 
 
 #start clicking some links
@@ -453,10 +459,6 @@ check_doi20 %>%
   mutate_at(vars(contains("doi")), function(x) str_replace_all(x, x, paste0("https://doi.org/", x))) %>% View
 
 
-check_doi30 <- check_doi_scrape(no_doi_any_title_match, doi_scraping30)
-
-check_doi30 %>%
-  mutate_at(vars(contains("doi")), function(x) str_replace_all(x, x, paste0("https://doi.org/", x))) %>% View
 
 
 check_doi60 <- check_doi_scrape(no_doi_any_title_match, doi_scraping60)
@@ -477,6 +479,49 @@ doi_existance_check <- check_doi20 %>%
   rowwise() %>%
   mutate(valid_doi = url.exists(handmade_doi_url))
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#############################
+
+## TEST: a couple of the multi-word terms on the google doc are unquoted
+## The queries above in the code have quotes in them. The below code checked the the original versions to make sure we aren't missing anything
+
+##############################
+
+# the original tillage query doesn't have the first term quoted
+tillage_query_og <- 'conservation till* OR "conventional till" OR "no-till" OR "no till*" OR "reduced till*" OR "minimum till*"'
+tillage_results_og <- get_results(tillage_query_og, sid = session_id)
+
+tillage_results_new <- get_results(tillage_query, sid = session_id)
+
+# Check out the rows the new one misses to see if any of them are important
+tillage_results_diff <- anti_join(tillage_results_og, tillage_results_new, by = names(tillage_results_og))
+tillage_results_diff %>% 
+  filter(title %in% formatted_handmade_refs_expanded$title)
+
+# do the same for pesticide
+pest_query_og <- 'pesticide seed treatment* OR "seed treatment*" OR "systemic insect*" OR neonic* OR pyrethr* OR (foliar AND insecticide*)'
+pest_results_og <- get_results(pest_query_og, sid = session_id)
+pest_results_new <- get_results(pest_query, sid = session_id)
+
+pest_results_diff <- anti_join(pest_results_og, pest_results_new, by = names(pest_results_og))
+pest_results_diff %>%
+  filter(title %in% formatted_handmade_refs_expanded$title)
 
 
 

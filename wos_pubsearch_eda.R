@@ -254,7 +254,7 @@ handmade_refs_separated %>%
 ####################################
 
 ## Instead of trying to get title through the citation, we can use this new csv that we got from lesley
-  # now we can just try directly matching titles (lower cased)
+# now we can just try directly matching titles (lower cased)
 
 # Formatting the original, hand-matched titles to be lower case
 # also get rid of all spcaes in doi
@@ -272,7 +272,7 @@ formatted_results_df <- results_df %>%
 query_titles_lookup <- formatted_results_df %>%
   select(title, title_lower) %>%
   distinct(title_lower, .keep_all = TRUE)
-  
+
 
 
 
@@ -287,7 +287,7 @@ unmatched_by_doi <- formatted_handmade_refs_expanded %>%
 unmatched_by_doi_title <- unmatched_by_doi %>%
   filter(!title_lower %in% query_titles_lookup$title_lower)
 
-  
+
 
 
 
@@ -329,7 +329,7 @@ unmatched_by_doi_title_fuzzy <- unmatched_by_doi_title %>%
 questionable_match <- unmatched_by_doi_title_fuzzy$title_lower %>% stringdistmatrix(query_titles_lookup$title_lower, method = "lv")
 
 questionable_match_lookup <- unmatched_by_doi_title_fuzzy %>%
-  mutate(matched_title = query_titles[apply(questionable_match, 1, which.min)]) %>%
+  mutate(matched_title = query_titles_lookup$title_lower[apply(questionable_match, 1, which.min)]) %>%
   select(title, matched_title) 
 
 
@@ -343,11 +343,11 @@ questionable_match_with_metadata <- questionable_match_lookup %>%
 
 # just to make sure there's no match for these 3 observations, we'll look at year and author in the query data
 
-  # this paper is not in the 4 editions we have access to (SCI, ISTP, ISSHP, IC)
-    # confirmed by searching the web of science site
+# this paper is not in the 4 editions we have access to (SCI, ISTP, ISSHP, IC)
+# confirmed by searching the web of science site
 results_df %>% filter(str_detect(str_to_lower(authors), 'grebliunas'))
 
-  # this paper IS in the 4 editions we have access to.. i'm not sure why we aren't picking it up
+# this paper IS in the 4 editions we have access to.. i'm not sure why we aren't picking it up
 results_df %>% filter(str_detect(str_to_lower(authors), 'osborne'), year == 2014)
 results_df %>% filter(str_detect(str_to_lower(authors), 'ferguson'), year == 2002)
 
@@ -376,7 +376,7 @@ results_df %>% filter(str_detect(str_to_lower(authors), 'ferguson'), year == 200
 ############################
 
 ## we want to isolate the files that we found matches for using titles (either exact or fuzzy),
-  ## excluding the papers where we either found match through doi, or found no match
+## excluding the papers where we either found match through doi, or found no match
 
 # papers matched exactly
 no_doi_exact_title_match <- unmatched_by_doi %>%
@@ -386,7 +386,7 @@ no_doi_exact_title_match <- unmatched_by_doi %>%
 # papers matched fuzzy
 no_doi_fuzzy_title_match <- unmatched_by_doi_title %>%
   inner_join(title_match_check, by = c("title_lower" = "original_title_lower"))
-  
+
 
 # combine these two dataframe, and only keep doi, original title, and matched title (lowered)
 # then use matched_title_lower to join with the query dataframe
@@ -403,7 +403,7 @@ no_doi_any_title_match <- bind_rows(no_doi_exact_title_match, no_doi_fuzzy_title
 
 
 #taking function from the biblio-analysis repo in the LTER org! (see the `source_url` code at the top)
-  # NOTE: this takes a while to run!
+# NOTE: this takes a while to run!
 #' i don't have a lot of faith in the score (score is what threshold is for). I think it refers to the "relevance score" in the crossref api, which is a tf-idf?
 scrape_doi_title <- function(title, threshold = 20){
   scrape <- getdoi(title, threshold = threshold)
@@ -411,16 +411,17 @@ scrape_doi_title <- function(title, threshold = 20){
   tibble("matched_title_lower"= title, 
          "doi_scraped" = scrape$doi, 
          "title_scraped" = scrape$title_api, 
-         "match_score" = scrape$match_score)
+         "match_score" = scrape$match_score,
+         "title_dist" = stringdist::stringdist(matched_title_lower, str_to_lower(title_scraped), method = "lv")) 
 }
 
 #add distance between the titles. can set a cutoff like ~10
-doi_scraping <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x)) %>%
-  mutate(title_dist = stringdist::stringdist(matched_title_lower, str_to_lower(title_scraped), method = "lv"))
+doi_scraping <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x))
 
-# playing with the threshold (eg tf-idf) I don't think this is the way to go. I prefer using something like "lv" distance between titles
-doi_scraping60 <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x, threshold = 60)) %>%
-  mutate(title_dist = stringdist::stringdist(matched_title_lower, str_to_lower(title_scraped), method = "lv"))
+
+# # playing with the threshold (eg tf-idf) I don't think this is the way to go. I prefer using something like "lv" distance between titles
+# doi_scraping60 <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi_title(.x, threshold = 60)) %>%
+#   mutate(title_dist = stringdist::stringdist(matched_title_lower, str_to_lower(title_scraped), method = "lv"))
 
 
 #doi_scraping_testlist <- seq(30,60,10) %>% map(function(x) map_df(no_doi_any_title_match$matched_title_lower, function(y) scrape_doi_title(y, threshold = x)))
@@ -434,9 +435,10 @@ doi_scraping60 <- map_df(no_doi_any_title_match$matched_title_lower, ~scrape_doi
 #          correct = identical(str_to_lower(scraped_doi), str_to_lower(handmade_doi)))
 
 
-#' check doi scraping results
+#' check doi scraping results by comparing DOIs / looking at title distance
 #' @param table_without_doi_match is a tibble where we were able to string match, but not able to doi match. see no_doi_any_title_match
 #' @param doi_scrape_result is the output of a map_df(~scrape_doi_title) (eg doi_scraping)
+#' @return A dataframe with the different title versions, different DOIs, title distance, where the DOI doesn't match
 check_doi_scrape <- function(table_without_doi_match, doi_scrape_result){
   compare_dois <- doi_scrape_result %>%
     left_join(table_without_doi_match, by = "matched_title_lower") %>%
@@ -461,11 +463,11 @@ check_doi20 %>%
 
 
 
-check_doi60 <- check_doi_scrape(no_doi_any_title_match, doi_scraping60)
-check_doi60 %>%
-  mutate_at(vars(contains("doi")), function(x) str_replace_all(x, x, paste0("https://doi.org/", x))) %>% View
-
-
+# check_doi60 <- check_doi_scrape(no_doi_any_title_match, doi_scraping60)
+# check_doi60 %>%
+#   mutate_at(vars(contains("doi")), function(x) str_replace_all(x, x, paste0("https://doi.org/", x))) %>% View
+# 
+# 
 
 
 

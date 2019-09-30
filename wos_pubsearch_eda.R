@@ -15,6 +15,8 @@ library(RCurl)
 
 
 
+# API requires a session key
+session_id <- wos_authenticate()
 
 
 
@@ -142,8 +144,55 @@ getdoi <- function(my_title, nattempts = 1, threshold = 20.0) {
 
 
 
-# API requires a session key
-session_id <- wos_authenticate()
+# custom function to check for list
+get_cr <- function(titleq) {
+  # q <- cr_works(q = titleq, flq = c(query.title = titleq), limit = 5, sort = "score")
+  print("querying the API")
+  tryCatch(q <- cr_works(q = trimws(titleq), limit = 5, sort = "score"),
+           error = function(err) {
+             print(err)
+             # return empty data frame
+             return(data.frame(doi=as.character(NA),
+                               title=as.character(NA),
+                               score=as.character(NA),
+                               stringsAsFactors = FALSE)
+             )
+           })
+  #Handle the strange case a function is returned from the call....
+  if (is.function(q)) {
+    # return empty data frame
+    return(data.frame(doi=as.character(NA), 
+                      title=as.character(NA),
+                      score=as.character(NA),
+                      stringsAsFactors = FALSE)
+    )
+  }
+  
+  # Check if any column is missing
+  if (is.null(q$data$doi)) {
+    q$data$doi <- as.character(NA)
+  }
+  if (is.null(q$data$title)) {
+    q$data$title <- as.character(NA)
+  }
+  if (is.null(q$data$score)) {
+    q$data$score <- as.character(NA)
+  }
+  if(is.list(q$data)) {
+    print(str(q$data))
+  }
+  
+  # Remove rows with any NA in those 3 fields (assuming it is wrong)
+  data_q <- q$data %>%
+    #as_tibble() %>%
+    select(doi,title, score) %>%
+    drop_na()
+  
+  # # Create the ouput dataframe
+  # query_df <- data.frame(doi=data_q$doi, title=data_q$title, score=as.numeric(data_q$score),
+  #                 stringsAsFactors = FALSE)
+}
+
 
 
 #' function to write this particular query, given the practice and the times (default is 1980 - 2017))
@@ -169,6 +218,13 @@ get_results <- function(practice_query, sid, year_start = 1980, year_end = 2017)
     wos_search(sid, .) %>%                          # Search the database to get a list of hits
     wos_retrieve_all()                              # Process that list as a dataframe
 }
+
+
+
+
+
+
+
 
 
 ### Write out the practice specific queries (taken from google doc)

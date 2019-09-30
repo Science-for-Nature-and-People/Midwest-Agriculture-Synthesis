@@ -149,8 +149,59 @@ check_crossref_match <- function(table_without_match, scrape_result){
 }
 
 
+get_cr <- function(titleq) {
+  # q <- cr_works(q = titleq, flq = c(query.title = titleq), limit = 5, sort = "score")
+  print("querying the API")
+  tryCatch(q <- cr_works(q = trimws(titleq), limit = 5, sort = "score"),
+           error = function(err) {
+             print(err)
+             # return empty data frame
+             return(data.frame(doi=as.character(NA),
+                               title=as.character(NA),
+                               score=as.character(NA),
+                               stringsAsFactors = FALSE)
+             )
+           })
+  #Handle the strange case a function is returned from the call....
+  if (is.function(q)) {
+    # return empty data frame
+    return(data.frame(doi=as.character(NA), 
+                      title=as.character(NA),
+                      score=as.character(NA),
+                      stringsAsFactors = FALSE)
+    )
+  }
+  
+  # Check if any column is missing
+  if (is.null(q$data$doi)) {
+    q$data$doi <- as.character(NA)
+  }
+  if (is.null(q$data$title)) {
+    q$data$title <- as.character(NA)
+  }
+  if (is.null(q$data$score)) {
+    q$data$score <- as.character(NA)
+  }
+  if(!is.tibble(q$data)) {
+    stop(str(q$data))
+  }
+  
+  # Remove rows with any NA in those 3 fields (assuming it is wrong)
+  data_q <- q$data %>%
+    #as_tibble() %>%
+    select(doi,title, score) %>%
+    drop_na()
+  
+  # # Create the ouput dataframe
+  # query_df <- data.frame(doi=data_q$doi, title=data_q$title, score=as.numeric(data_q$score),
+  #                 stringsAsFactors = FALSE)
+}
 
-## Step 1: Query =================================================================================
+
+
+
+
+## Step 1: Query. USER UPDATE year_start and year_end ================================================================================= 
 session_id <- wos_authenticate()
 
 ### Write out the practice specific queries (taken from google doc)
@@ -162,22 +213,29 @@ nutrient_mgmt_query <- '(precision AND (fert* OR agr* OR nitrogen OR phosphorous
 
 ### Create a dataframe with all the hits 
 results_list <- list(cover_crop_query, tillage_query, pest_query, nutrient_mgmt_query) %>%
-  map(~get_results(.x, sid = session_id, year_start = 1980, year_end = 2017)) %>%
+  map(~get_results(.x, sid = session_id, year_start = 2018, year_end = 2019)) %>%
   set_names(c("cc", "tillage", "pest", "nutrient"))
 
 # Combine the hits to generate a giant dataframe
+  # Make sure to remove duplicates that show up in multiple queries
 results_df <- results_list %>%
   bind_rows() %>%
-  mutate(title_lower = title %>% str_to_lower() %>% str_trim())
+  mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %>%
+  distinct(title_lower, .keep_all = T)
 
 
 
-## Step 2: Filter out these results ================================================================
+
+
+
+
+## Step 2: Filter out these results (?) Maybe we want to just scrape everything and filter later================================================================
 
 ####### THis is filler code since I don't know how to do the filtering!!!!!!! #############
 filtered_results_df <- results_df %>%
   slice(1:10)
 
+filtered_results_df <- results_df
 
 ## Step 3: Pass titles into rcrossref ==============================================================
 match_crossref <- map_df(filtered_results_df$title_lower, ~scrape_doi_title(.x))

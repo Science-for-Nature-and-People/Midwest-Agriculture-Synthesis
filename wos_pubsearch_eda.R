@@ -37,7 +37,7 @@ handmade_refs_expanded <- read_csv('www/data/refs_all_expanded.csv')
 
 
 # Julien's previous code for getting a doi from an article title. we have to modify one of the functions though (getdoi)
-devtools::source_url("https://raw.github.nceas.ucsb.edu/LTER/biblio-analysis/master/get_dois.R?token=AAAABGSW6KKEWWX7LGMNDHS5STRTW")
+devtools::source_url("https://raw.github.nceas.ucsb.edu/LTER/biblio-analysis/master/get_dois.R?token=AAAABGVWONEENFX2ISLFG5K5TY6ZY")
 
 #' Query the CrossRef API to find the DOI associated with a specific title; repeat several times the query if failed waiting 5sec between trials
 #'

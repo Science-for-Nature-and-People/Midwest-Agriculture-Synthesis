@@ -9,6 +9,7 @@
 
 library(rwos)
 library(tidyverse)
+library(magrittr)
 library(stringdist)
 library(janitor)
 library(rcrossref)
@@ -18,12 +19,13 @@ library(rcrossref)
 library(RCurl)
 library(here)
 
+todays_date <- Sys.Date() %>% str_replace_all("-", "")
 
 ## Step 0: pass in helper functions ==================================================================================
 
 
 # Julien's previous code for getting a doi from an article title. we have to modify one of the functions though (getdoi)
-devtools::source_url("https://raw.github.nceas.ucsb.edu/LTER/biblio-analysis/master/get_dois.R?token=AAAABGSW6KKEWWX7LGMNDHS5STRTW")
+devtools::source_url("https://raw.github.nceas.ucsb.edu/LTER/biblio-analysis/master/get_dois.R?token=AAAABGVWONEENFX2ISLFG5K5TY6ZY")
 
 #' Query the CrossRef API to find the DOI associated with a specific title; repeat several times the query if failed waiting 5sec between trials
 #'
@@ -182,7 +184,7 @@ get_cr <- function(titleq) {
   if (is.null(q$data$score)) {
     q$data$score <- as.character(NA)
   }
-  if(!is.tibble(q$data)) {
+  if(!is_tibble(q$data)) {
     stop(str(q$data))
   }
   
@@ -202,7 +204,7 @@ get_cr <- function(titleq) {
 
 
 ## Step 1: Query. USER UPDATE year_start and year_end ================================================================================= 
-session_id <- wos_authenticate()
+
 
 ### Write out the practice specific queries (taken from google doc)
 cover_crop_query <- '"cover crop" OR cover-crop* OR covercrop*'
@@ -212,30 +214,55 @@ nutrient_mgmt_query <- '(precision AND (fert* OR agr* OR nitrogen OR phosphorous
 
 
 ### Create a dataframe with all the hits 
-results_list <- list(cover_crop_query, tillage_query, pest_query, nutrient_mgmt_query) %>%
-  map(~get_results(.x, sid = session_id, year_start = 2018, year_end = 2019)) %>%
-  set_names(c("cc", "tillage", "pest", "nutrient"))
+
+# Sometimes the API limits us.. it seems random whether it decides to or not, so this code tries a few times
+i <- 0
+repeat({
+  session_id <- wos_authenticate()
+  results_list <- try({
+    list(cover_crop_query, tillage_query, pest_query, nutrient_mgmt_query) %>%
+    map(~get_results(.x, sid = session_id, year_start = 2018, year_end = 2019)) %>%
+    set_names(c("cc", "tillage", "pest", "nutrient"))
+  })
+  
+  if(!inherits(results_list, "try_error") | i > 3){
+    break
+  }
+  
+  i <- i + 1
+})
+
+
 
 # Combine the hits to generate a giant dataframe
   # Make sure to remove duplicates that show up in multiple queries
 results_df <- results_list %>%
   bind_rows() %>%
   mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %>%
-  distinct(title_lower, .keep_all = T)
-
-
-
+  distinct(title_lower, .keep_all = T) %T>%
+  write_csv(paste0("wos_query_", todays_date, ".csv"))
 
 
 
 
 ## Step 2: Filter out these results (?) Maybe we want to just scrape everything and filter later================================================================
 
-####### THis is filler code since I don't know how to do the filtering!!!!!!! #############
-filtered_results_df <- results_df %>%
-  slice(1:10)
+# First, we read in the old query, so that we can remove papers we've already looked at
+old_results_file <- list.files(here(), pattern = "wos_query_\\d+") %>%
+    str_sort(decreasing = T, numeric = T) %>%
+    first(1)
+old_results_df <- read_csv(old_results_file)
 
-filtered_results_df <- results_df
+# Now, we remove the results that showed up in a previous query
+unique_new_results_df <- results_df %>% 
+  anti_join(old_results_df, by = "title_lower")
+
+
+# ####### THis is filler code since I don't know how to do the filtering!!!!!!! #############
+# filtered_results_df <- results_df %>%
+#   slice(1:10)
+
+filtered_results_df <- unique_new_results_df
 
 ## Step 3: Pass titles into rcrossref ==============================================================
 match_crossref <- map_df(filtered_results_df$title_lower, ~scrape_doi_title(.x))
@@ -246,10 +273,10 @@ match_crossref <- map_df(filtered_results_df$title_lower, ~scrape_doi_title(.x))
 # all of the observations next to their matches
 check_crossref <- check_crossref_match(filtered_results_df, match_crossref) 
 
-# all of the matches where doi doesn't match
+# return all of the matches where doi doesn't match, and create a file for the end user to check
 check_crossref %>%
-  filter(correct == FALSE)
-
+  filter(correct == FALSE) %>%
+  arrange(title_dist) 
 
 
 # all of the actual crossref matches. THIS STEP MIGHT DEPEND ON WHAT WE SEE IN CORRECT == FALSE LINE ABOVE!!!!
@@ -257,16 +284,33 @@ final_matches <- check_crossref %>%
   filter(correct == TRUE | title_dist == 0 | !is.na(doi))
 
 
+# print out all the DOIs that weren't matched
+check_crossref %>% 
+  anti_join(final_matches, by = "matched_title_lower") %T>%
+  write_csv(paste0("wos_cr_nomatch_", todays_date, ".csv"))
+
 
 
 ## Step 5: Get citations from rcrossref ==========================================================================
 citations <- rcrossref::cr_cn(final_matches$doi_combined, format = "bibtex") 
 
 paste(citations, collapse = "\n") %>%
-  write_file("citation_test.bib")
+  write_file(paste0("citations_", todays_date, ".bib"))
+  
+write(".bib file sucessfully created!", stdout())
+
 
 ## Step 6: Bibscan using the citattions=============================================================================
 bibscan_pdfs <- BibScan::article_pdf_download(here(), here("BibScan_results"))
+
+
+
+
+
+
+
+
+
 
 
 

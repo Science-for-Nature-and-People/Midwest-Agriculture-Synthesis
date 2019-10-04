@@ -185,7 +185,7 @@ get_cr <- function(titleq) {
     q$data$score <- as.character(NA)
   }
   if(!is_tibble(q$data)) {
-    stop(str(q$data))
+    q$data <- as_tibble(q$data)
   }
   
   # Remove rows with any NA in those 3 fields (assuming it is wrong)
@@ -225,10 +225,12 @@ repeat({
     set_names(c("cc", "tillage", "pest", "nutrient"))
   })
   
-  if(!inherits(results_list, "try_error") | i > 3){
+  if(!inherits(results_list, "try-error") | i > 3){
+    write("Query success!", file = stdout())
     break
   }
   
+  write(paste0("Query failed. Trying again. i = ", i), file = stderr())
   i <- i + 1
 })
 
@@ -240,7 +242,7 @@ results_df <- results_list %>%
   bind_rows() %>%
   mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %>%
   distinct(title_lower, .keep_all = T) %T>%
-  write_csv(paste0("wos_query_", todays_date, ".csv"))
+  write_csv(here("auto_pubsearch", "wos_queries", paste0("wos_query_", todays_date, ".csv")))
 
 
 
@@ -248,7 +250,7 @@ results_df <- results_list %>%
 ## Step 2: Filter out these results (?) Maybe we want to just scrape everything and filter later================================================================
 
 # First, we read in the old query, so that we can remove papers we've already looked at
-old_results_file <- list.files(here(), pattern = "wos_query_\\d+") %>%
+old_results_file <- list.files(here("auto_pubsearch", "wos_queries"), pattern = "wos_query_\\d+", full.names = T) %>%
     str_sort(decreasing = T, numeric = T) %>%
     first(1)
 old_results_df <- read_csv(old_results_file)
@@ -258,50 +260,59 @@ unique_new_results_df <- results_df %>%
   anti_join(old_results_df, by = "title_lower")
 
 
-# ####### THis is filler code since I don't know how to do the filtering!!!!!!! #############
-# filtered_results_df <- results_df %>%
-#   slice(1:10)
 
-filtered_results_df <- unique_new_results_df
-
-## Step 3: Pass titles into rcrossref ==============================================================
-match_crossref <- map_df(filtered_results_df$title_lower, ~scrape_doi_title(.x))
+##### NOTE: if there are no new results, then unique_new_results_df will have 0 rows
+#####       We only want to execute the rest of the script if there are >20 new rows
+#####       Solution: wrap everything below this line in an if statement
+#####       Having such a large if statement doesn't look very nice though.. 
+#####       Maybe it could be improved by using quit(), or by functionizing everything
 
 
-
-## Step 4: Check non-exact matches ================================================================
-# all of the observations next to their matches
-check_crossref <- check_crossref_match(filtered_results_df, match_crossref) 
-
-# return all of the matches where doi doesn't match, and create a file for the end user to check
-check_crossref %>%
-  filter(correct == FALSE) %>%
-  arrange(title_dist) 
-
-
-# all of the actual crossref matches. THIS STEP MIGHT DEPEND ON WHAT WE SEE IN CORRECT == FALSE LINE ABOVE!!!!
-final_matches <- check_crossref %>%
-  filter(correct == TRUE | title_dist == 0 | !is.na(doi))
-
-
-# print out all the DOIs that weren't matched
-check_crossref %>% 
-  anti_join(final_matches, by = "matched_title_lower") %T>%
-  write_csv(paste0("wos_cr_nomatch_", todays_date, ".csv"))
-
-
-
-## Step 5: Get citations from rcrossref ==========================================================================
-citations <- rcrossref::cr_cn(final_matches$doi_combined, format = "bibtex") 
-
-paste(citations, collapse = "\n") %>%
-  write_file(paste0("citations_", todays_date, ".bib"))
+if(nrow(unique_new_results_df) >= 20){
+  ## Step 3: Pass titles into rcrossref ==============================================================
+  match_crossref <- map_df(unique_new_results_df$title_lower, ~scrape_doi_title(.x))
   
-write(".bib file sucessfully created!", stdout())
+  
+  
+  ## Step 4: Check non-exact matches ================================================================
+  # all of the observations next to their matches
+  check_crossref <- check_crossref_match(unique_new_results_df, match_crossref) 
+  
+  # return all of the matches where doi doesn't match, and create a file for the end user to check
+  check_crossref %>%
+    filter(correct == FALSE) %>%
+    arrange(title_dist) 
+  
+  
+  # all of the actual crossref matches. THIS STEP MIGHT DEPEND ON WHAT WE SEE IN CORRECT == FALSE LINE ABOVE!!!!
+  final_matches <- check_crossref %>%
+    filter(correct == TRUE | title_dist == 0 | !is.na(doi))
+  
+  
+  # print out all the DOIs that weren't matched
+  check_crossref %>% 
+    anti_join(final_matches, by = "matched_title_lower") %T>%
+    write_csv(here("auto_pubsearch", "failed_matches", paste0("wos_cr_nomatch_", todays_date, ".csv")))
+  
+  
+  
+  ## Step 5: Get citations from rcrossref ==========================================================================
+  citations <- rcrossref::cr_cn(final_matches$doi_combined, format = "bibtex") 
+  
+  paste(citations, collapse = "\n") %>%
+    write_file(here("auto_pubsearch", "Bibfiles", paste0("citations_", todays_date, ".bib")))
+  
+  write(".bib file sucessfully created!", stdout())
+  
+  
+  ## Step 6: Bibscan using the citations=============================================================================
+  bibscan_pdfs <- BibScan::article_pdf_download(here("auto_pubsearch", "Bibfiles"), here("auto_pubsearch", "latest_bibscan_results"))
+  
+  
+  
+  ## Step 7: Send an alert with the new information =================================================================
+}
 
-
-## Step 6: Bibscan using the citattions=============================================================================
-bibscan_pdfs <- BibScan::article_pdf_download(here(), here("BibScan_results"))
 
 
 

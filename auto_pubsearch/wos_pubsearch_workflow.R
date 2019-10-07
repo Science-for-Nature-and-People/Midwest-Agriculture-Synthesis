@@ -18,8 +18,19 @@ library(devtools)
 library(rcrossref)
 library(RCurl)
 library(here)
+library(lubridate)
 
 todays_date <- Sys.Date() %>% str_replace_all("-", "")
+# this will be the endpoint in our query
+current_year <- Sys.Date() %>% lubridate::year()
+
+# check the newsest old query for the start point in the query
+old_year <- list.files(here("auto_pubsearch", "wos_queries"), pattern = "wos_query_\\d+", full.names = F) %>%
+  str_sort(decreasing = T, numeric = T) %>%
+  first(1) %>%
+  str_match("\\d+") %>%
+  lubridate::parse_date_time(order = "ymd") %>%
+  lubridate::year()
 
 ## Step 0: pass in helper functions ==================================================================================
 
@@ -140,15 +151,29 @@ scrape_doi_title <- function(title, threshold = 20){
 #' @return A dataframe with the different title versions, different DOIs, title distance, whether the dois match, and a column 
 #' called `doi_combined` that is the original DOI if it is found, and the scraped DOI otherwise.
 check_crossref_match <- function(table_without_match, scrape_result){
-  compare_match <- scrape_result %>%
+  scrape_result %>%
     left_join(table_without_match, by = c("matched_title_lower" = "title_lower")) %>%
-    select(matched_title_lower, title_scraped, doi, doi_scraped, match_score, title_dist) %>%
+    select(matched_title_lower, title_scraped, doi, doi_scraped, match_score, title_dist, review) %>%
     rowwise() %>%
     mutate(correct = identical(str_to_lower(doi_scraped), str_to_lower(doi)),
            doi_combined = ifelse(!is.na(doi), doi, doi_scraped)) %>%
     ungroup %>%
     distinct(matched_title_lower, .keep_all = TRUE)
 }
+
+#' Quick function for going from final_matches to citation
+#' @param matchdf A dataframe of matches for a review
+#' @param date is the date you want to label as the file
+matchlist_to_citation <- function(matchdf, date){
+  # the review was the same for all rows of matchdf, so we can 
+  review <- matchdf$review[1]
+  rcrossref::cr_cn(matchdf$doi_combined, format = "bibtex") %>%
+    paste(collapse = "\n") %T>%
+    write_file(here("auto_pubsearch", "Bibfiles", paste0("citations_", review, "_", date, ".bib")))
+  
+  write(paste0(".bib file for ", review, " written!"), stdout())
+}
+
 
 
 get_cr <- function(titleq) {
@@ -221,13 +246,16 @@ repeat({
   session_id <- wos_authenticate()
   results_list <- try({
     list(cover_crop_query, tillage_query, pest_query, nutrient_mgmt_query) %>%
-    map(~get_results(.x, sid = session_id, year_start = 2018, year_end = 2019)) %>%
+    map(~get_results(.x, sid = session_id, year_start = old_year, year_end = current_year)) %>%
     set_names(c("cc", "tillage", "pest", "nutrient"))
   })
   
-  if(!inherits(results_list, "try-error") | i > 3){
+  if(!inherits(results_list, "try-error")){
     write("Query success!", file = stdout())
     break
+  }
+  if(i >3) {
+    write("Query failed 3 times..Giving up", file = stderr())
   }
   
   write(paste0("Query failed. Trying again. i = ", i), file = stderr())
@@ -237,11 +265,11 @@ repeat({
 
 
 # Combine the hits to generate a giant dataframe
-  # Make sure to remove duplicates that show up in multiple queries
+  # Don't remove duplicates, since we are splitting into separate reviews later!
 results_df <- results_list %>%
-  bind_rows() %>%
-  mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %>%
-  distinct(title_lower, .keep_all = T) %T>%
+  bind_rows(.id = "review") %>%
+  mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %T>%
+  #distinct(title_lower, .keep_all = T) %T>%
   write_csv(here("auto_pubsearch", "wos_queries", paste0("wos_query_", todays_date, ".csv")))
 
 
@@ -278,7 +306,7 @@ if(nrow(unique_new_results_df) >= 20){
   # all of the observations next to their matches
   check_crossref <- check_crossref_match(unique_new_results_df, match_crossref) 
   
-  # return all of the matches where doi doesn't match, and create a file for the end user to check
+  # look at all the cases where doi doesn't match. we notice a lot of shared titles though!
   check_crossref %>%
     filter(correct == FALSE) %>%
     arrange(title_dist) 
@@ -288,21 +316,26 @@ if(nrow(unique_new_results_df) >= 20){
   final_matches <- check_crossref %>%
     filter(correct == TRUE | title_dist == 0 | !is.na(doi))
   
+  # Load in the latest nomatch file, so that we aren't duplicating any results
+  old_nomatch_file <- list.files(here("auto_pubsearch", "failed_matches"), pattern = "wos_cr_nomatch_\\d+", full.names = T) %>%
+    str_sort(decreasing = T, numeric = T) %>%
+    first(1)
+  old_nomatch_df <- read_csv(old_nomatch_file)
   
-  # print out all the DOIs that weren't matched
+  # print out all the DOIs that weren't matched. also filter out DOIs that weren't matched previously 
+   # ie antijoin final matches AND old wos_cr_nomatch.
   check_crossref %>% 
-    anti_join(final_matches, by = "matched_title_lower") %T>%
+    anti_join(final_matches, by = "matched_title_lower") %>%
+    anti_join(old_nomatch_df, by = "matched_title_lower") %T>%
     write_csv(here("auto_pubsearch", "failed_matches", paste0("wos_cr_nomatch_", todays_date, ".csv")))
   
   
-  
-  ## Step 5: Get citations from rcrossref ==========================================================================
-  citations <- rcrossref::cr_cn(final_matches$doi_combined, format = "bibtex") 
-  
-  paste(citations, collapse = "\n") %>%
-    write_file(here("auto_pubsearch", "Bibfiles", paste0("citations_", todays_date, ".bib")))
-  
-  write(".bib file sucessfully created!", stdout())
+
+  ## Step 5: Get citations from rcrossref, split by review ==========================================================================
+  citations <- final_matches %>%
+    group_by(review) %>%
+    group_map(~matchlist_to_citation(.x, todays_date), keep = TRUE)
+
   
   
   ## Step 6: Bibscan using the citations=============================================================================

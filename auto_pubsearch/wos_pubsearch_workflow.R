@@ -4,9 +4,10 @@
 
 #########################################
 
+
 #devtools::install_github("juba/rwos")
 #devtools::install_github("Science-for-Nature-and-People/BibScan")
-
+#devtools::install_github("rich-iannone/blastula")
 library(rwos)
 library(tidyverse)
 library(magrittr)
@@ -17,8 +18,17 @@ library(BibScan)
 library(devtools)
 library(rcrossref)
 library(RCurl)
-library(here)
 library(lubridate)
+library(blastula)
+
+
+# one time: create credential file for email alert system:
+create_smtp_creds_file(
+  file = "nathanhwangbo_ucsbedu_cred",
+  user = "nathanhwangbo@ucsb.edu",
+  provider = "gmail"
+)
+
 
 todays_date <- Sys.Date() %>% str_replace_all("-", "")
 # this will be the endpoint in our query
@@ -153,9 +163,9 @@ scrape_doi_title <- function(title, threshold = 20){
 check_crossref_match <- function(table_without_match, scrape_result){
   scrape_result %>%
     left_join(table_without_match, by = c("matched_title_lower" = "title_lower")) %>%
-    select(matched_title_lower, title_scraped, doi, doi_scraped, match_score, title_dist, review) %>%
+    select(matched_title_lower, title_scraped, doi, doi_scraped, match_score, title_dist, review, uid, isi_id, issn) %>%
     rowwise() %>%
-    mutate(correct = identical(str_to_lower(doi_scraped), str_to_lower(doi)),
+    mutate(doi_match = identical(str_to_lower(doi_scraped), str_to_lower(doi)),
            doi_combined = ifelse(!is.na(doi), doi, doi_scraped)) %>%
     ungroup %>%
     distinct(matched_title_lower, .keep_all = TRUE)
@@ -165,9 +175,14 @@ check_crossref_match <- function(table_without_match, scrape_result){
 #' @param matchdf A dataframe of matches for a review
 #' @param date is the date you want to label as the file
 matchlist_to_citation <- function(matchdf, date){
-  # the review was the same for all rows of matchdf, so we can 
+  # the review was the same for all rows of matchdf, so we can pick any element
   review <- matchdf$review[1]
+  abstracts <- map(matchdf$doi_combined, ~tryCatch(cr_abstract(.x), error = function(x) x))
+  
+  
   rcrossref::cr_cn(matchdf$doi_combined, format = "bibtex") %>%
+    str_replace(pattern = "\\}$", replacement = "") %>%
+    map2(abstracts, ~paste0(.x, "\tabstract = {", .y, "}\n}")) %>%
     paste(collapse = "\n") %T>%
     write_file(here("auto_pubsearch", "Bibfiles", paste0("citations_", review, "_", date, ".bib")))
   
@@ -254,12 +269,14 @@ repeat({
     write("Query success!", file = stdout())
     break
   }
-  if(i >3) {
+  if(i > 3) {
     write("Query failed 3 times..Giving up", file = stderr())
+    break
   }
   
   write(paste0("Query failed. Trying again. i = ", i), file = stderr())
   i <- i + 1
+  Sys.sleep(5)
 })
 
 
@@ -308,19 +325,27 @@ if(nrow(unique_new_results_df) >= 20){
   
   # look at all the cases where doi doesn't match. we notice a lot of shared titles though!
   check_crossref %>%
-    filter(correct == FALSE) %>%
+    filter(doi_match == FALSE) %>%
     arrange(title_dist) 
   
   
-  # all of the actual crossref matches. THIS STEP MIGHT DEPEND ON WHAT WE SEE IN CORRECT == FALSE LINE ABOVE!!!!
+  # all of the actual crossref matches. THIS STEP MIGHT DEPEND ON WHAT WE SEE IN doi_match == FALSE LINE ABOVE!!!!
   final_matches <- check_crossref %>%
-    filter(correct == TRUE | title_dist == 0 | !is.na(doi))
+    filter(doi_match == TRUE | title_dist == 0 | !is.na(doi))
   
   # Load in the latest nomatch file, so that we aren't duplicating any results
   old_nomatch_file <- list.files(here("auto_pubsearch", "failed_matches"), pattern = "wos_cr_nomatch_\\d+", full.names = T) %>%
     str_sort(decreasing = T, numeric = T) %>%
     first(1)
   old_nomatch_df <- read_csv(old_nomatch_file)
+  
+  # Save the date of the last successful query
+  last_alert_date <- old_nomatch_file %>%
+    str_extract("\\d+") %>%
+    parse_date_time(orders = "ymd") 
+  
+  
+  
   
   # print out all the DOIs that weren't matched. also filter out DOIs that weren't matched previously 
    # ie antijoin final matches AND old wos_cr_nomatch.
@@ -344,6 +369,43 @@ if(nrow(unique_new_results_df) >= 20){
   
   
   ## Step 7: Send an alert with the new information =================================================================
+  more_than_twenty_alert <- 
+  "
+  Hello!
+  
+  There are at least 20 new papers for the Midwest Agriculture Reviews! This alert is counting papers from {last_alert_date} to {today()}.  
+  ****
+  The API returns:
+
+  Cover crops > {results_df %>% filter(review == 'cc') %>% nrow}  
+  Nutrient Management > {results_df %>% filter(review == 'nutrient') %>% nrow}  
+  Pest Management > {results_df %>% filter(review == 'pest') %>% nrow}  
+  Tillage > {results_df %>% filter(review == 'tillage') %>% nrow}  
+  ****
+
+  The queries used to generate these numbers are below:  
+
+  **Cover crops**: {cover_crop_query}  
+
+  **Nutrient Management**: {nutrient_mgmt_query}  
+
+  **Pest Management**: {pest_query}  
+
+  **Tillage**: {tillage_query}
+  ****************
+  
+
+  Happy reviewing!
+  "
+  
+  
+  alert_email <- compose_email(body = more_than_twenty_alert, footer = "Email sent on {add_readable_time()}")
+  
+  #send email
+  smtp_send(alert_email, to = "nathanhwangbo@gmail.com", from = "nathanhwangbo@ucsb.edu", 
+            credentials = creds_file("nathanhwangbo_ucsbedu_cred"),
+            subject = "Testing the alert system")
+  
 }
 
 

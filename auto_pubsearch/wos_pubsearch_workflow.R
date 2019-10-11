@@ -7,35 +7,34 @@
 
 #devtools::install_github("juba/rwos")
 #devtools::install_github("Science-for-Nature-and-People/BibScan")
-#devtools::install_github("rich-iannone/blastula")
 library(rwos)
 library(tidyverse)
 library(magrittr)
 library(stringdist)
 library(janitor)
-library(rcrossref)
-library(BibScan)
+#library(rcrossref)
+#library(BibScan)
 library(devtools)
-library(rcrossref)
+#library(rcrossref)
 library(RCurl)
 library(lubridate)
-library(blastula)
+library(here)
+library(jsonlite)
+library(httr)
 
+# link to github api issue that we want the bot to comment on.
+issues_url <- "https://api.github.com/repos/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis/issues/40/comments"
+# get the private issue token from local file
+issue_token <- readr::read_file(here("auto_pubsearch" , 'machine_git_token.txt'))
 
-# one time: create credential file for email alert system:
-create_smtp_creds_file(
-  file = "nathanhwangbo_ucsbedu_cred",
-  user = "nathanhwangbo@ucsb.edu",
-  provider = "gmail"
-)
-
-
+# this will be used to title files
 todays_date <- Sys.Date() %>% str_replace_all("-", "")
 # this will be the endpoint in our query
 current_year <- Sys.Date() %>% lubridate::year()
 
+
 # check the newsest old query for the start point in the query
-old_year <- list.files(here("auto_pubsearch", "wos_queries"), pattern = "wos_query_\\d+", full.names = F) %>%
+old_year <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = F) %>%
   str_sort(decreasing = T, numeric = T) %>%
   first(1) %>%
   str_match("\\d+") %>%
@@ -43,78 +42,6 @@ old_year <- list.files(here("auto_pubsearch", "wos_queries"), pattern = "wos_que
   lubridate::year()
 
 ## Step 0: pass in helper functions ==================================================================================
-
-
-# Julien's previous code for getting a doi from an article title. we have to modify one of the functions though (getdoi)
-devtools::source_url("https://raw.github.nceas.ucsb.edu/LTER/biblio-analysis/master/get_dois.R?token=AAAABGVWONEENFX2ISLFG5K5TY6ZY")
-
-#' Query the CrossRef API to find the DOI associated with a specific title; repeat several times the query if failed waiting 5sec between trials
-#'
-#' @param title A character.
-#' @param nattempts An integer
-#' @return A vector containing: DOI, Referenced Title, Full Citation
-#' @examples
-#' getdoi("Use of film for community conservation education in primate habitat countries")
-#' getdoi("Use of film for community conservation education in primate habitat countries", n=10)
-getdoi <- function(my_title, nattempts = 1, threshold = 20.0) {
-  #this function uses the crossref API to query the DOI database using titles entered by the reviewer
-  if (is.na(my_title)) {
-    print("the my_title is not availaible")
-    doi <- NA
-    title.new <- NA
-    # fullCitation <- NA
-    count_from_api <- NA
-  } else {
-    # Query the API
-    query <- get_cr(my_title)
-    print("Query returned successfully")
-    if (nrow(query) < 1){
-      j = 0
-      while (j <= nattempts) {
-        Sys.sleep(5)
-        query <- get_cr(my_title)
-        j = j+1
-      }
-    }
-    if (nrow(query) > 0 | is.null(query)){
-      #Keep information only if the matching score is over 2.0
-      if (query$score[1] > threshold){  ## THRESHOLD, might want to try other values based on the whole dataset
-        doi <- query$doi[1]
-        title.new <- query$title[1]
-        count_from_api <- NA
-        tryCatch(
-          count_from_api <- cr_citation_count(doi=doi)$count,
-          error = function(err) {
-            print(err)
-          },
-          finally = {
-            count_from_api <- NA
-          }
-        )
-        
-      } else {
-        doi <- NA
-        title.new <- NA
-        count_from_api <- NA
-        print("No doi was matched")
-      }
-    } else {
-      doi <- NA
-      title.new <- NA
-      count_from_api <- NA
-      print("No doi was matched")
-    }
-  }
-  
-  # Write the output data frame
-  final_df <- data.frame(title_zotero = my_title, 
-                         doi = as.character(doi), 
-                         title_api = as.character(title.new), 
-                         citation_count = count_from_api,
-                         match_score = query$score[1],
-                         stringsAsFactors = FALSE
-  )
-}
 
 
 #' function to write this particular query, given the practice and the times (default is 1980 - 2017))
@@ -135,111 +62,17 @@ write_full_query <- function(practice_query, year_start = 1980, year_end = 2017)
 #' @param sid is session id created by `rwos::wos_authenticate()`
 #' @references write_full_query()
 get_results <- function(practice_query, sid, year_start = 1980, year_end = 2017){
-  practice_query %>%
+  wos_result <- practice_query %>%
     write_full_query(year_start, year_end) %>%      # Write out the query
     wos_search(sid, .) %>%                          # Search the database to get a list of hits
     wos_retrieve_all()                              # Process that list as a dataframe
+  
+  # wait for a bit so that the api doesn't get mad
+  Sys.sleep(5)
+  
+  wos_result
+  
 }
-
-#taking function from the biblio-analysis repo in the LTER org! (see the `source_url` code at the top)
-# NOTE: this takes a while to run!
-#' i don't have a lot of faith in the score (score is what threshold is for). I think it refers to the "relevance score" in the crossref api, which is a tf-idf?
-scrape_doi_title <- function(title, threshold = 20){
-  scrape <- getdoi(title, threshold = threshold)
-  
-  tibble("matched_title_lower"= title, 
-         "doi_scraped" = scrape$doi, 
-         "title_scraped" = scrape$title_api, 
-         "match_score" = scrape$match_score,
-         "title_dist" = stringdist::stringdist(matched_title_lower, str_to_lower(title_scraped), method = "lv")) 
-}
-
-
-#' check doi scraping results by comparing DOIs / looking at title distance
-#' @param table_without_doi_match is a tibble where we were able to string match, but not able to doi match. see no_doi_any_title_match
-#' @param doi_scrape_result is the output of a map_df(~scrape_doi_title) (eg doi_scraping)
-#' @return A dataframe with the different title versions, different DOIs, title distance, whether the dois match, and a column 
-#' called `doi_combined` that is the original DOI if it is found, and the scraped DOI otherwise.
-check_crossref_match <- function(table_without_match, scrape_result){
-  scrape_result %>%
-    left_join(table_without_match, by = c("matched_title_lower" = "title_lower")) %>%
-    select(matched_title_lower, title_scraped, doi, doi_scraped, match_score, title_dist, review, uid, isi_id, issn) %>%
-    rowwise() %>%
-    mutate(doi_match = identical(str_to_lower(doi_scraped), str_to_lower(doi)),
-           doi_combined = ifelse(!is.na(doi), doi, doi_scraped)) %>%
-    ungroup %>%
-    distinct(matched_title_lower, .keep_all = TRUE)
-}
-
-#' Quick function for going from final_matches to citation
-#' @param matchdf A dataframe of matches for a review
-#' @param date is the date you want to label as the file
-matchlist_to_citation <- function(matchdf, date){
-  # the review was the same for all rows of matchdf, so we can pick any element
-  review <- matchdf$review[1]
-  abstracts <- map(matchdf$doi_combined, ~tryCatch(cr_abstract(.x), error = function(x) x))
-  
-  
-  rcrossref::cr_cn(matchdf$doi_combined, format = "bibtex") %>%
-    str_replace(pattern = "\\}$", replacement = "") %>%
-    map2(abstracts, ~paste0(.x, "\tabstract = {", .y, "}\n}")) %>%
-    paste(collapse = "\n") %T>%
-    write_file(here("auto_pubsearch", "Bibfiles", paste0("citations_", review, "_", date, ".bib")))
-  
-  write(paste0(".bib file for ", review, " written!"), stdout())
-}
-
-
-
-get_cr <- function(titleq) {
-  # q <- cr_works(q = titleq, flq = c(query.title = titleq), limit = 5, sort = "score")
-  print("querying the API")
-  tryCatch(q <- cr_works(q = trimws(titleq), limit = 5, sort = "score"),
-           error = function(err) {
-             print(err)
-             # return empty data frame
-             return(data.frame(doi=as.character(NA),
-                               title=as.character(NA),
-                               score=as.character(NA),
-                               stringsAsFactors = FALSE)
-             )
-           })
-  #Handle the strange case a function is returned from the call....
-  if (is.function(q)) {
-    # return empty data frame
-    return(data.frame(doi=as.character(NA), 
-                      title=as.character(NA),
-                      score=as.character(NA),
-                      stringsAsFactors = FALSE)
-    )
-  }
-  
-  # Check if any column is missing
-  if (is.null(q$data$doi)) {
-    q$data$doi <- as.character(NA)
-  }
-  if (is.null(q$data$title)) {
-    q$data$title <- as.character(NA)
-  }
-  if (is.null(q$data$score)) {
-    q$data$score <- as.character(NA)
-  }
-  if(!is_tibble(q$data)) {
-    q$data <- as_tibble(q$data)
-  }
-  
-  # Remove rows with any NA in those 3 fields (assuming it is wrong)
-  data_q <- q$data %>%
-    #as_tibble() %>%
-    select(doi,title, score) %>%
-    drop_na()
-  
-  # # Create the ouput dataframe
-  # query_df <- data.frame(doi=data_q$doi, title=data_q$title, score=as.numeric(data_q$score),
-  #                 stringsAsFactors = FALSE)
-}
-
-
 
 
 
@@ -276,140 +109,118 @@ repeat({
   
   write(paste0("Query failed. Trying again. i = ", i), file = stderr())
   i <- i + 1
-  Sys.sleep(5)
 })
 
 
 
-# Combine the hits to generate a giant dataframe
-  # Don't remove duplicates, since we are splitting into separate reviews later!
-results_df <- results_list %>%
-  bind_rows(.id = "review") %>%
-  mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %T>%
-  #distinct(title_lower, .keep_all = T) %T>%
-  write_csv(here("auto_pubsearch", "wos_queries", paste0("wos_query_", todays_date, ".csv")))
-
-
-
-
-## Step 2: Filter out these results (?) Maybe we want to just scrape everything and filter later================================================================
+## Step 2: Filter the results so we're only left with papers since the last alert. 
 
 # First, we read in the old query, so that we can remove papers we've already looked at
-old_results_file <- list.files(here("auto_pubsearch", "wos_queries"), pattern = "wos_query_\\d+", full.names = T) %>%
+old_results_file <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = T) %>%
     str_sort(decreasing = T, numeric = T) %>%
     first(1)
 old_results_df <- read_csv(old_results_file)
 
-# Now, we remove the results that showed up in a previous query
+
+# we use this to mark the time period between papers
+old_results_date <- old_results_file %>%
+    str_extract("\\d+") 
+
+
+# Combine the current hits to generate a giant dataframe
+# Don't remove duplicates, since we are splitting into separate reviews later!
+results_df <- results_list %>%
+  bind_rows(.id = "review") %>%
+  mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %T>%
+  #distinct(title_lower, .keep_all = T) %T>%
+  write_csv(here("auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
+
+
+
+# Now, we remove the results that showed up in a previous query.
+# This is necessary because the rwos query only allows a filter by YEAR. so this will help to remove within year papers
 unique_new_results_df <- results_df %>% 
-  anti_join(old_results_df, by = "title_lower")
+  anti_join(old_results_df, by = "title_lower") %T>%
+  write_csv(here("auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
 
-
-
-##### NOTE: if there are no new results, then unique_new_results_df will have 0 rows
-#####       We only want to execute the rest of the script if there are >20 new rows
-#####       Solution: wrap everything below this line in an if statement
-#####       Having such a large if statement doesn't look very nice though.. 
-#####       Maybe it could be improved by using quit(), or by functionizing everything
-
-
+  
+# Send an Alert (github comment) if there are >= 20 new papers ====================================
 if(nrow(unique_new_results_df) >= 20){
-  ## Step 3: Pass titles into rcrossref ==============================================================
-  match_crossref <- map_df(unique_new_results_df$title_lower, ~scrape_doi_title(.x))
+  
+  # First, look at the last date an alert was sent
+  alert_date_log <- read_csv(here("auto_pubsearch", "alert_date_log.csv"), col_types = list(col_character()))
+  last_alert_date <- alert_date_log$last_alert_date %>% tail(1)
+  
+  # write a new entry for the new alert we're currently making
+  alert_date_log %>%
+    rbind(as.character(today())) %>%
+    write_csv(path = here("auto_pubsearch", "alert_date_log.csv"))
   
   
+  ### Push to repo
   
-  ## Step 4: Check non-exact matches ================================================================
-  # all of the observations next to their matches
-  check_crossref <- check_crossref_match(unique_new_results_df, match_crossref) 
+  # give path to repo
+  midwest_repo <- repository(here())
   
-  # look at all the cases where doi doesn't match. we notice a lot of shared titles though!
-  check_crossref %>%
-    filter(doi_match == FALSE) %>%
-    arrange(title_dist) 
+  # add files
+  add(midwest_repo, here("auto_pubsearch","alert_date_log.csv"))
+  add(midwest_repo, here("auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
+  add(midwest_repo, here("auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
   
-  
-  # all of the actual crossref matches. THIS STEP MIGHT DEPEND ON WHAT WE SEE IN doi_match == FALSE LINE ABOVE!!!!
-  final_matches <- check_crossref %>%
-    filter(doi_match == TRUE | title_dist == 0 | !is.na(doi))
-  
-  # Load in the latest nomatch file, so that we aren't duplicating any results
-  old_nomatch_file <- list.files(here("auto_pubsearch", "failed_matches"), pattern = "wos_cr_nomatch_\\d+", full.names = T) %>%
-    str_sort(decreasing = T, numeric = T) %>%
-    first(1)
-  old_nomatch_df <- read_csv(old_nomatch_file)
-  
-  # Save the date of the last successful query
-  last_alert_date <- old_nomatch_file %>%
-    str_extract("\\d+") %>%
-    parse_date_time(orders = "ymd") 
+  commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
+  push(midwest_repo)
   
   
+  # Alert text!
+  more_than_twenty_alert <- str_glue(
+  "Hello!    ",
   
-  
-  # print out all the DOIs that weren't matched. also filter out DOIs that weren't matched previously 
-   # ie antijoin final matches AND old wos_cr_nomatch.
-  check_crossref %>% 
-    anti_join(final_matches, by = "matched_title_lower") %>%
-    anti_join(old_nomatch_df, by = "matched_title_lower") %T>%
-    write_csv(here("auto_pubsearch", "failed_matches", paste0("wos_cr_nomatch_", todays_date, ".csv")))
-  
-  
+  "There are at least {nrow(unique_new_results_df)} new papers for the Midwest Agriculture Reviews! This alert is counting papers from {last_alert_date} to {today()}.",  
+  "******",
+  "The API returns:  ",
 
-  ## Step 5: Get citations from rcrossref, split by review ==========================================================================
-  citations <- final_matches %>%
-    group_by(review) %>%
-    group_map(~matchlist_to_citation(.x, todays_date), keep = TRUE)
+  "Cover crops > {unique_new_results_df %>% filter(review == 'cc') %>% nrow}",
+  "Nutrient Management > {unique_new_results_df %>% filter(review == 'nutrient') %>% nrow}",
+  "Pest Management > {unique_new_results_df %>% filter(review == 'pest') %>% nrow}",
+  "Tillage > {unique_new_results_df %>% filter(review == 'tillage') %>% nrow}",
+  "******",
 
-  
-  
-  ## Step 6: Bibscan using the citations=============================================================================
-  bibscan_pdfs <- BibScan::article_pdf_download(here("auto_pubsearch", "Bibfiles"), here("auto_pubsearch", "latest_bibscan_results"))
-  
-  
-  
-  ## Step 7: Send an alert with the new information =================================================================
-  more_than_twenty_alert <- 
-  "
-  Hello!
-  
-  There are at least 20 new papers for the Midwest Agriculture Reviews! This alert is counting papers from {last_alert_date} to {today()}.  
-  ****
-  The API returns:
+  "The queries used to generate these numbers are below:  ",
 
-  Cover crops > {results_df %>% filter(review == 'cc') %>% nrow}  
-  Nutrient Management > {results_df %>% filter(review == 'nutrient') %>% nrow}  
-  Pest Management > {results_df %>% filter(review == 'pest') %>% nrow}  
-  Tillage > {results_df %>% filter(review == 'tillage') %>% nrow}  
-  ****
+  "**Cover crops**: {cover_crop_query}  ",
 
-  The queries used to generate these numbers are below:  
+  "**Nutrient Management**: {nutrient_mgmt_query}   ",
 
-  **Cover crops**: {cover_crop_query}  
+  "**Pest Management**: {pest_query}  ",
 
-  **Nutrient Management**: {nutrient_mgmt_query}  
-
-  **Pest Management**: {pest_query}  
-
-  **Tillage**: {tillage_query}
-  ****************
+  "**Tillage**: {tillage_query}  ",
+  "******  ",
   
-
-  Happy reviewing!
-  "
+  "Happy reviewing!",
+  
+  "(this alert was generated at {lubridate::now()}), and corresponds to {commits(midwest_repo)[[1]] %>% sha}",
+  .sep = '  '
+  )
   
   
-  alert_email <- compose_email(body = more_than_twenty_alert, footer = "Email sent on {add_readable_time()}")
+  # Generate the issue text as json
+  json_text <- toJSON(
+    list(
+      body = unbox(more_than_twenty_alert)
+      )
+    )
   
-  #send email
-  smtp_send(alert_email, to = "nathanhwangbo@gmail.com", from = "nathanhwangbo@ucsb.edu", 
-            credentials = creds_file("nathanhwangbo_ucsbedu_cred"),
-            subject = "Testing the alert system")
+  # send the issue to github. (user doesn't show up anywhere, but the parameter can't be NULL)
+  issue <- httr::POST(issues_url, 
+                      body = json_text, 
+                      config = authenticate(user = 'user', password = issue_token))
+  
+  # show some confirmation text if the issue went through
+  if(status_code(issue) == 201){
+    write("issue successfully written!", stdout())
+  } 
   
 }
-
-
-
 
 
 

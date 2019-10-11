@@ -21,11 +21,13 @@ library(lubridate)
 library(here)
 library(jsonlite)
 library(httr)
+library(git2r)
 
 # link to github api issue that we want the bot to comment on.
 issues_url <- "https://api.github.com/repos/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis/issues/40/comments"
 # get the private issue token from local file
 issue_token <- readr::read_file(here("auto_pubsearch" , 'machine_git_token.txt'))
+
 
 # this will be used to title files
 todays_date <- Sys.Date() %>% str_replace_all("-", "")
@@ -113,7 +115,7 @@ repeat({
 
 
 
-## Step 2: Filter the results so we're only left with papers since the last alert. 
+## Step 2: Filter the results so we're only left with papers since the last alert. =======================
 
 # First, we read in the old query, so that we can remove papers we've already looked at
 old_results_file <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = T) %>%
@@ -144,7 +146,7 @@ unique_new_results_df <- results_df %>%
   write_csv(here("auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
 
   
-# Send an Alert (github comment) if there are >= 20 new papers ====================================
+# Step 3: Write files and send an Alert (github comment) if there are >= 20 new papers ====================================
 if(nrow(unique_new_results_df) >= 20){
   
   # First, look at the last date an alert was sent
@@ -167,8 +169,8 @@ if(nrow(unique_new_results_df) >= 20){
   add(midwest_repo, here("auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
   add(midwest_repo, here("auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
   
-  commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
-  push(midwest_repo)
+  new_commit <- commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
+  push(midwest_repo, credentials = cred_token(token = "GITHUB_TOKEN"))
   
   
   # Alert text!
@@ -198,7 +200,7 @@ if(nrow(unique_new_results_df) >= 20){
   
   "Happy reviewing!",
   
-  "(this alert was generated at {lubridate::now()}), and corresponds to {commits(midwest_repo)[[1]] %>% sha}",
+  "(this alert was generated at {lubridate::now()}), and corresponds to {sha(new_commit)}",
   .sep = '  '
   )
   

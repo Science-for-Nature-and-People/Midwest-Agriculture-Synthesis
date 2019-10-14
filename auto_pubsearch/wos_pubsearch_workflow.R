@@ -52,7 +52,6 @@ write_full_query <- function(practice_query, year_start = 1980, year_end = 2017)
   #
   geography_terms <- 'Illinois OR Indiana OR Iowa OR Kansas OR Michigan OR Minnesota OR Missouri OR "North Dakota" OR "South Dakota" OR Nebraska OR Ohio OR Wisconsin OR ((Midwest* AND U.S.) OR (Midwest* AND US) OR (Midwest* AND "United States"))'
   cropping_system_terms <- 'corn OR maize OR soybean OR "Zea mays" OR "Glycine max" OR agricultur* OR agro-ecosystem* OR agroecosystem* OR crop OR "field crop*" OR "cropping system" OR farm* OR "conservation agricult*"'
-  year_terms <- "1980-2017"
   
   str_glue(
     "(TS = ({geography_terms}) AND TS = ({cropping_system_terms}) AND TS = ({practice_query})) AND PY = ({year_start}-{year_end}) "
@@ -163,6 +162,7 @@ if(nrow(unique_new_results_df) >= 20){
   
   # give path to repo
   midwest_repo <- repository(here())
+  config(midwest_repo, user.name = "shiny-som", user.email = "scicomp@nceas.ucsb.edu",remote.origin.url= "https://shiny-som@github.com/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis.git")
   
   # add files
   add(midwest_repo, here("auto_pubsearch","alert_date_log.csv"))
@@ -170,22 +170,20 @@ if(nrow(unique_new_results_df) >= 20){
   add(midwest_repo, here("auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
   
   new_commit <- commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
-  push(midwest_repo, credentials = cred_token(token = "GITHUB_TOKEN"))
-  
+  # pushing using the token. note: I wasn't able to get cred_token to work for whatever reason.
+  push(midwest_repo, name = "origin", refspec = "refs/heads/master", credentials = cred_user_pass(username = "shiny-som", password = issue_token))
   
   # Alert text!
   more_than_twenty_alert <- str_glue(
   "Hello!    ",
   
-  "There are at least {nrow(unique_new_results_df)} new papers for the Midwest Agriculture Reviews! This alert is counting papers from {last_alert_date} to {today()}.",  
-  "******",
+  "There are at least {nrow(unique_new_results_df)} new papers for the Midwest Agriculture Reviews! This alert is counting papers from {last_alert_date} to {today()}.<hr>",  
   "The API returns:  ",
 
   "Cover crops > {unique_new_results_df %>% filter(review == 'cc') %>% nrow}",
   "Nutrient Management > {unique_new_results_df %>% filter(review == 'nutrient') %>% nrow}",
   "Pest Management > {unique_new_results_df %>% filter(review == 'pest') %>% nrow}",
-  "Tillage > {unique_new_results_df %>% filter(review == 'tillage') %>% nrow}",
-  "******",
+  "Tillage > {unique_new_results_df %>% filter(review == 'tillage') %>% nrow}<hr>",
 
   "The queries used to generate these numbers are below:  ",
 
@@ -195,13 +193,12 @@ if(nrow(unique_new_results_df) >= 20){
 
   "**Pest Management**: {pest_query}  ",
 
-  "**Tillage**: {tillage_query}  ",
-  "******  ",
+  "**Tillage**: {tillage_query}  <hr>",
   
   "Happy reviewing!",
   
-  "(this alert was generated at {lubridate::now()}), and corresponds to {sha(new_commit)}",
-  .sep = '  '
+  "(this alert was generated at {lubridate::now()}, and corresponds to {sha(new_commit)})",
+  .sep = '<br>'
   )
   
   

@@ -112,6 +112,10 @@ repeat({
   i <- i + 1
 })
 
+# Test to make sure that the results_list wrote successfully
+if (!exists("results_list")){
+  write(file = stderr(), "Query Failed!")
+}
 
 
 ## Step 2: Filter the results so we're only left with papers since the last alert. =======================
@@ -129,7 +133,7 @@ old_results_date <- old_results_file %>%
 
 
 # Combine the current hits to generate a giant dataframe
-# Don't remove duplicates, since we are splitting into separate reviews later!
+# Don't remove duplicates, since we are splitting back into separate reviews later!
 results_df <- results_list %>%
   bind_rows(.id = "review") %>%
   mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %T>%
@@ -217,7 +221,9 @@ if(nrow(unique_new_results_df) >= 20){
   # show some confirmation text if the issue went through
   if(status_code(issue) == 201){
     write("issue successfully written!", stdout())
-  } 
+  } else{
+    write("issue failed to write", stderr())
+  }
   
 }
 

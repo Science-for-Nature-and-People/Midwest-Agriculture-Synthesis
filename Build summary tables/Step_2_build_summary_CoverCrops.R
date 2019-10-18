@@ -76,9 +76,6 @@ levels(df$group_level3)
 ###Apply treatment name groups to cc_group1 & cc_group2 columns#####
 
 levels(df$finelevel_group)
-
-##########################################Start HERRE##################################################################
-
 df <- df %>%
   mutate(
     ##Cover crop diversity####  

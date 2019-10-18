@@ -33,6 +33,10 @@ results <- df %>% mutate_if(is.factor,  #converts blank cells in factor cols to 
                       num_comparisons = length(Paper_id), #Number of comparisons for each summary
                       paper_id_list = paste(unique(Paper_id), collapse = ";")) #List of unique papers for each summry
 
+results2 <- results %>% filter(Trt_1name == "Moldboard plow", Trt_2name == "No tillage", 
+                               group_level1 == "Crop Yields", group_level2 == "Crop Yields", group_level3 == "Soybean" )
+
+
 #statements to convert SEMs=0 to Inf (maybe unnecessary because filter statement below removes all these)
 #SEMS based on 1 value reuslt in NA <- this converts NA to Infinity to variability in the data  
 results$sem_per_change <- if_else(is.na(results$sem_per_change), Inf, results$sem_per_change)

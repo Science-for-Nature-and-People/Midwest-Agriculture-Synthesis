@@ -2,21 +2,6 @@
 #Managing Soil Carbon Working Group - SNAPP, NCEAS ###############
 
 
-#This file:
-#Adds grouping variables to all response variables collected during the data extraction process
-#There are 4 key agro-environmental  groups:
-##1. Soil
-##2. Crop Production
-##3. Water (infield movement only)
-##4. Pest Regulation
-
-#Sub groups for each big order group vary by review.
-
-#Use 'Results' worksheet with this script.
-
-
-##Grain Production####                                                                          
-
 #libraries#####
 
 library("dplyr", lib.loc = "~/R/win-library/3.5")
@@ -28,11 +13,37 @@ setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/")
 
 ############Import dataframes######################################################################
 
-Results <-read.csv("PestMgmt Review/PestMgmt_Review_Results.csv", row.names = NULL)
+df <-read.csv("PestMgmt Review/PestMgmt_Review_Results.csv", row.names = NULL)
+
+
+#Remove unneeded columns
+df$Year_result <- NULL
+df$Effect <- NULL
+df$Authors_comments <- NULL
+df$Reviewers_results_short <- NULL
+df$Reviewers_results_long <- NULL
+df$Group_RV <- NULL
+df$Trt_id1name_org <- NULL
+df$Trt_id2name_org <- NULL
+df$review <- NULL
+
+#Rename column rows to be consistent###
+df <- rename(df, paper_id = Paper_id, duration = Duration, loc_multi_results = Loc_multi_results, 
+             rv = Response_var, rv_depth = RV_depth, rv_year = RV_year,
+             rv_units = Response_var_units, stat_test = Stat_test, stat_type = Stat_type,
+             finelevel_group = Group_finelevel, review = Review_id, 
+             trt1_name = Trt_id1name, trt1_value = Trt_id1value, trt1_details = Trt_id1description,
+             trt1 = Trt_id1, trt1_int = Trt1_interaction, trt1_int2 = Trt1_interaction2,
+             trt2_name = Trt_id2name, trt2_value = Trt_id2value,
+             trt2_details = Trt_id2description, 
+             trt2 = Trt_id2, trt2_int = Trt2_interaction, trt2_int2 = Trt2_interaction2,
+             significance = Sig_level, rv_depth = RV_depth, effect_norm = Effect_norm 
+)
+
 
 #add surrogate key to Results
-Results$Res_key = rownames(Results)
-
+df$review_key = rownames(df)
+df$review = paste("Early Season Pest Management")
 
 ########################Pest Management Review####################################################
 
@@ -182,7 +193,7 @@ preds_abundance_soybeans <- c("predator taxa abundance (Anthocoridae) in soybean
 
 ##Groups of Pesticide Type###
 
-unique(Results$Trt_id2name)
+unique(df$trt1_name)
 
 type_fungicide <- c("mefenoxam; fludioxonil (ApronMaxx)",                                                                                         
                     "azoxystrobin; metalaxyl",                                                                                                    
@@ -276,7 +287,7 @@ type_organo_pyrethroid <- c( "ethoprop; phorate (Holdem 20G)"
 )
 
 ##Groups of Pesticide Placement####
-unique(Results$Group_finelevel)
+unique(df$finelevel_group)
 
               placement_seed <- c(
                 "untreated_seedIF",
@@ -318,20 +329,20 @@ unique(Results$Group_finelevel)
                                     "seedIF_seedIFfoliari",      
                                     "seedI_seedI",    
                                     "foliarI_seedI")
-              Results <- Results %>% filter(!(Group_finelevel == "seedIF_seedIF"|
-                                                         Group_finelevel == "seedIF_seedF"|              
-                                                         Group_finelevel == "seedIF_foliarI"|
-                                                         Group_finelevel == "seedF_foliarI"|
-                                                         Group_finelevel == "seedF_seedIF"|
-                                                         Group_finelevel == "seedF_seedFfoliarI"|
-                                                         Group_finelevel == "seedIF_seedFfoliarI"|
-                                                         Group_finelevel == "seedF_seedIFfoliarI"|
-                                                         Group_finelevel == "seedIF_seedIFfoliarI"|
-                                                         Group_finelevel == "seedFfoliarI_seedIFfoliarI"|
-                                                         Group_finelevel == "seedf_seedFfoliarI"|
-                                                         Group_finelevel == "seedIF_seedIFfoliari"|      
-                                                         Group_finelevel == "seedI_seedI"|    
-                                                         Group_finelevel == "foliarI_seedI"))%>% 
+              df <- df %>% filter(!(finelevel_group == "seedIF_seedIF"|
+                                                         finelevel_group == "seedIF_seedF"|              
+                                                         finelevel_group == "seedIF_foliarI"|
+                                                         finelevel_group == "seedF_foliarI"|
+                                                         finelevel_group == "seedF_seedIF"|
+                                                         finelevel_group == "seedF_seedFfoliarI"|
+                                                         finelevel_group == "seedIF_seedFfoliarI"|
+                                                         finelevel_group == "seedF_seedIFfoliarI"|
+                                                         finelevel_group == "seedIF_seedIFfoliarI"|
+                                                         finelevel_group == "seedFfoliarI_seedIFfoliarI"|
+                                                         finelevel_group == "seedf_seedFfoliarI"|
+                                                         finelevel_group == "seedIF_seedIFfoliari"|      
+                                                         finelevel_group == "seedI_seedI"|    
+                                                         finelevel_group == "foliarI_seedI"))%>% 
                                               droplevels()
               
               
@@ -339,8 +350,8 @@ unique(Results$Group_finelevel)
 ###Apply grouping levels#####################################
 
 
-groups_added <- Results %>%
-  select(Group_finelevel, Response_var, Res_key, Trt_id2name) %>%
+groups_added <- df %>%
+  select(finelevel_group, rv, review_key, trt2_name) %>%
   
   
   #Group_level1####    
@@ -357,54 +368,54 @@ mutate(
     ####Crop Yields####
     
     ##Grain Production####  
-    Response_var %in%  yield_soybean  ~ "Crop Yields",
-    Response_var %in%  yield_maize  ~ "Crop Yields",
+    rv %in%  yield_soybean  ~ "Crop Yields",
+    rv %in%  yield_maize  ~ "Crop Yields",
     
     ##Grain Quality####
-    Response_var %in%  grain_quality_soybean  ~ "Crop Yields",
+    rv %in%  grain_quality_soybean  ~ "Crop Yields",
     
     ##Stand Count####
-    Response_var %in%  stand_count_soybean  ~ "Crop Yields",
-    Response_var %in%  stand_count_maize  ~ "Crop Yields",
+    rv %in%  stand_count_soybean  ~ "Crop Yields",
+    rv %in%  stand_count_maize  ~ "Crop Yields",
     
     ##Crop Damage####
-    Response_var %in%  lodging_soybean  ~ "Crop Yields",
-    Response_var %in%  lodging_maize  ~ "Crop Yields",
-    Response_var %in%  insect_damage_maize  ~ "Crop Yields",
+    rv %in%  lodging_soybean  ~ "Crop Yields",
+    rv %in%  lodging_maize  ~ "Crop Yields",
+    rv %in%  insect_damage_maize  ~ "Crop Yields",
      
     ##Crop Growth####
-    Response_var %in%  plant_growth_soybean  ~ "Crop Yields",
-    Response_var %in%  plant_height_soybean  ~ "Crop Yields",
-    Response_var %in%  seedling_development_soybean  ~ "Crop Yields",
-    Response_var %in%  plant_height_maize  ~ "Crop Yields",
-    Response_var %in%   vigor_reduction_maize  ~ "Crop Yields",
+    rv %in%  plant_growth_soybean  ~ "Crop Yields",
+    rv %in%  plant_height_soybean  ~ "Crop Yields",
+    rv %in%  seedling_development_soybean  ~ "Crop Yields",
+    rv %in%  plant_height_maize  ~ "Crop Yields",
+    rv %in%   vigor_reduction_maize  ~ "Crop Yields",
  
     #####Other Soil Properties####
     ##Biotic Factors####
-    Response_var %in%  biol_AMF  ~ "Other Soil Properties",
+    rv %in%  biol_AMF  ~ "Other Soil Properties",
     
     
     ############Pests####
     ## Pathogens ####
-    Response_var %in%  disease_root_maize  ~ "Pests",
-    Response_var %in%  disease_leaftissue_maize  ~ "Pests",
-    Response_var %in%  disease_soil_soybean  ~ "Pests", #Fusarium
-    Response_var %in%  disease_tissue_soybean  ~ "Pests",
-    Response_var %in%  disease_BPMV_soybean  ~ "Pests", #Bean pod mottle virus
+    rv %in%  disease_root_maize  ~ "Pests",
+    rv %in%  disease_leaftissue_maize  ~ "Pests",
+    rv %in%  disease_soil_soybean  ~ "Pests", #Fusarium
+    rv %in%  disease_tissue_soybean  ~ "Pests",
+    rv %in%  disease_BPMV_soybean  ~ "Pests", #Bean pod mottle virus
     
     ## Invertebrate Pests####
-    Response_var %in%  pests_aphids_soybean  ~ "Pests", #(number)
-    Response_var %in%  pests_aphiddays_soybean  ~ "Pests",
-    Response_var %in%  pests_thrips_soybean  ~ "Pests",
-    Response_var %in%  pests_mites_soybean  ~ "Pests",
-    Response_var %in%  pests_beanleafbeetles_soybean  ~ "Pests",
-    Response_var %in%  pests_SCM_maize  ~ "Pests",
-    Response_var %in%  pests_WCRW_maize  ~ "Pests",
-    Response_var %in%  pests_WCRWemergence_maize  ~ "Pests",
-    Response_var %in%  pests_NCRW_maize  ~ "Pests",
+    rv %in%  pests_aphids_soybean  ~ "Pests", #(number)
+    rv %in%  pests_aphiddays_soybean  ~ "Pests",
+    rv %in%  pests_thrips_soybean  ~ "Pests",
+    rv %in%  pests_mites_soybean  ~ "Pests",
+    rv %in%  pests_beanleafbeetles_soybean  ~ "Pests",
+    rv %in%  pests_SCM_maize  ~ "Pests",
+    rv %in%  pests_WCRW_maize  ~ "Pests",
+    rv %in%  pests_WCRWemergence_maize  ~ "Pests",
+    rv %in%  pests_NCRW_maize  ~ "Pests",
     
     ##Natural Enemies ####
-    Response_var %in%  preds_abundance_soybeans  ~ "Pests" )) %>%
+    rv %in%  preds_abundance_soybeans  ~ "Pests" )) %>%
 
     
 
@@ -423,54 +434,54 @@ mutate(
     ####Crop Yields####
     
     ##Grain Production####  
-    Response_var %in%  yield_soybean  ~ "Grain Production",
-    Response_var %in%  yield_maize  ~ "Grain Production",
+    rv %in%  yield_soybean  ~ "Grain Production",
+    rv %in%  yield_maize  ~ "Grain Production",
     
     ##Grain Quality####
-    Response_var %in%  grain_quality_soybean  ~ "Grain Quality",
+    rv %in%  grain_quality_soybean  ~ "Grain Quality",
     
     ##Stand Count####
-    Response_var %in%  stand_count_soybean  ~ "Stand Count",
-    Response_var %in%  stand_count_maize  ~ "Stand Count",
+    rv %in%  stand_count_soybean  ~ "Stand Count",
+    rv %in%  stand_count_maize  ~ "Stand Count",
     
     ##Crop Damage####
-    Response_var %in%  lodging_soybean  ~ "Crop Damage",
-    Response_var %in%  lodging_maize  ~ "Crop Damage",
-    Response_var %in%  insect_damage_maize  ~ "Crop Damage",
+    rv %in%  lodging_soybean  ~ "Crop Damage",
+    rv %in%  lodging_maize  ~ "Crop Damage",
+    rv %in%  insect_damage_maize  ~ "Crop Damage",
     
     ##Crop Growth####
-    Response_var %in%  plant_growth_soybean  ~ "Crop Growth",
-    Response_var %in%  plant_height_soybean  ~ "Crop Growth",
-    Response_var %in%  seedling_development_soybean  ~ "Crop Growth",
-    Response_var %in%  plant_height_maize  ~ "Crop Growth",
-    Response_var %in%   vigor_reduction_maize  ~ "Crop Growth",
+    rv %in%  plant_growth_soybean  ~ "Crop Growth",
+    rv %in%  plant_height_soybean  ~ "Crop Growth",
+    rv %in%  seedling_development_soybean  ~ "Crop Growth",
+    rv %in%  plant_height_maize  ~ "Crop Growth",
+    rv %in%   vigor_reduction_maize  ~ "Crop Growth",
     
     #####Other Soil Properties####
     ##Biotic Factors####
-    Response_var %in%  biol_AMF  ~ "Biotic Factors",
+    rv %in%  biol_AMF  ~ "Biotic Factors",
     
     
     ############Pests####
     ## Pathogens ####
-    Response_var %in%  disease_root_maize  ~ "Pathogens",
-    Response_var %in%  disease_leaftissue_maize  ~ "Pathogens",
-    Response_var %in%  disease_soil_soybean  ~ "Pathogens", #Fusarium
-    Response_var %in%  disease_tissue_soybean  ~ "Pathogens",
-    Response_var %in%  disease_BPMV_soybean  ~ "Pathogens", #Bean pod mottle virus
+    rv %in%  disease_root_maize  ~ "Pathogens",
+    rv %in%  disease_leaftissue_maize  ~ "Pathogens",
+    rv %in%  disease_soil_soybean  ~ "Pathogens", #Fusarium
+    rv %in%  disease_tissue_soybean  ~ "Pathogens",
+    rv %in%  disease_BPMV_soybean  ~ "Pathogens", #Bean pod mottle virus
     
     ## Invertebrate Pests####
-    Response_var %in%  pests_aphids_soybean  ~ "Invertebrate Pests", #(number)
-    Response_var %in%  pests_aphiddays_soybean  ~ "Invertebrate Pests",
-    Response_var %in%  pests_thrips_soybean  ~ "Invertebrate Pests",
-    Response_var %in%  pests_mites_soybean  ~ "Invertebrate Pests",
-    Response_var %in%  pests_beanleafbeetles_soybean  ~ "Invertebrate Pests",
-    Response_var %in%  pests_SCM_maize  ~ "Invertebrate Pests",
-    Response_var %in%  pests_WCRW_maize  ~ "Invertebrate Pests",
-    Response_var %in%  pests_WCRWemergence_maize  ~ "Invertebrate Pests",
-    Response_var %in%  pests_NCRW_maize  ~ "Invertebrate Pests",
+    rv %in%  pests_aphids_soybean  ~ "Invertebrate Pests", #(number)
+    rv %in%  pests_aphiddays_soybean  ~ "Invertebrate Pests",
+    rv %in%  pests_thrips_soybean  ~ "Invertebrate Pests",
+    rv %in%  pests_mites_soybean  ~ "Invertebrate Pests",
+    rv %in%  pests_beanleafbeetles_soybean  ~ "Invertebrate Pests",
+    rv %in%  pests_SCM_maize  ~ "Invertebrate Pests",
+    rv %in%  pests_WCRW_maize  ~ "Invertebrate Pests",
+    rv %in%  pests_WCRWemergence_maize  ~ "Invertebrate Pests",
+    rv %in%  pests_NCRW_maize  ~ "Invertebrate Pests",
     
     ##Natural Enemies ####
-    Response_var %in%  preds_abundance_soybeans  ~ "Natural Enemies" )) %>%
+    rv %in%  preds_abundance_soybeans  ~ "Natural Enemies" )) %>%
   
   #Group_level3####    
 mutate(
@@ -487,71 +498,71 @@ mutate(
     ####Crop Yields####
     
     ##Grain Production####  
-    Response_var %in%  yield_soybean  ~ "Soybean",
-    Response_var %in%  yield_maize  ~ "Corn",
+    rv %in%  yield_soybean  ~ "Soybean",
+    rv %in%  yield_maize  ~ "Corn",
     
     ##Grain Quality####
-    Response_var %in%  grain_quality_soybean  ~ "Soybean",
+    rv %in%  grain_quality_soybean  ~ "Soybean",
     
     ##Stand Count####
-    Response_var %in%  stand_count_soybean  ~ "Soybean",
-    Response_var %in%  stand_count_maize  ~ "Corn",
+    rv %in%  stand_count_soybean  ~ "Soybean",
+    rv %in%  stand_count_maize  ~ "Corn",
     
     ##Crop Damage####
-    Response_var %in%  lodging_soybean  ~ "Soybean (# lodged)",
-    Response_var %in%  lodging_maize  ~ "Corn (# lodged)",
-    Response_var %in%  insect_damage_maize  ~ "Invertebrate damage in corn",
+    rv %in%  lodging_soybean  ~ "Soybean (# lodged)",
+    rv %in%  lodging_maize  ~ "Corn (# lodged)",
+    rv %in%  insect_damage_maize  ~ "Invertebrate damage in corn",
     
     ##Crop Growth####
-    Response_var %in%  plant_growth_soybean  ~ "Soybean (greenness/chlorophyll content) ",
-    Response_var %in%  plant_height_soybean  ~ "Soybean (crop height)",
-    Response_var %in%  seedling_development_soybean  ~ "Soybean (seedling development)",
-    Response_var %in%  plant_height_maize  ~ "Corn (crop height)",
-    Response_var %in%   vigor_reduction_maize  ~ "Corn (reduction in vigor)",
+    rv %in%  plant_growth_soybean  ~ "Soybean (greenness/chlorophyll content) ",
+    rv %in%  plant_height_soybean  ~ "Soybean (crop height)",
+    rv %in%  seedling_development_soybean  ~ "Soybean (seedling development)",
+    rv %in%  plant_height_maize  ~ "Corn (crop height)",
+    rv %in%   vigor_reduction_maize  ~ "Corn (reduction in vigor)",
     
     #####Other Soil Properties####
     ##Biotic Factors####
-    Response_var %in%  biol_AMF  ~ "Soybean root mycorrhizal colonization",
+    rv %in%  biol_AMF  ~ "Soybean root mycorrhizal colonization",
     
     
     ############Pests####
     ## Pathogens ####
-    Response_var %in%  disease_root_maize  ~ "Corn (infection of roots)",
-    Response_var %in%  disease_leaftissue_maize  ~ "Corn (infection of leaf tissue)",
-    Response_var %in%  disease_soil_soybean  ~ "Soybeans (pathogens in soil)", #Fusarium
-    Response_var %in%  disease_tissue_soybean  ~ "Soybean (infection of leaf tissue)",
-    Response_var %in%  disease_BPMV_soybean  ~ "Bean pod mottle virus", #Bean pod mottle virus
+    rv %in%  disease_root_maize  ~ "Corn (infection of roots)",
+    rv %in%  disease_leaftissue_maize  ~ "Corn (infection of leaf tissue)",
+    rv %in%  disease_soil_soybean  ~ "Soybeans (pathogens in soil)", #Fusarium
+    rv %in%  disease_tissue_soybean  ~ "Soybean (infection of leaf tissue)",
+    rv %in%  disease_BPMV_soybean  ~ "Bean pod mottle virus", #Bean pod mottle virus
     
     ## Invertebrate Pests####
-    Response_var %in%  pests_aphids_soybean  ~ "Soybean aphids (#)", #(number)
-    Response_var %in%  pests_aphiddays_soybean  ~ "Soybean aphids (cumulative aphid days)",
-    Response_var %in%  pests_thrips_soybean  ~ "Thrips on soybeans (#)",
-    Response_var %in%  pests_mites_soybean  ~ "Mites on soybeans (#)",
-    Response_var %in%  pests_beanleafbeetles_soybean  ~ "Bean leaf beetles on soybeans (#)",
-    Response_var %in%  pests_SCM_maize  ~ "Seed corn maggot (#)",
-    Response_var %in%  pests_WCRW_maize  ~ "Western corn rootworm (#)",
-    Response_var %in%  pests_WCRWemergence_maize  ~ "Western corn rootworm (# days for 50% emergence)",
-    Response_var %in%  pests_NCRW_maize  ~ "Northern corn rootworm (#)",
+    rv %in%  pests_aphids_soybean  ~ "Soybean aphids (#)", #(number)
+    rv %in%  pests_aphiddays_soybean  ~ "Soybean aphids (cumulative aphid days)",
+    rv %in%  pests_thrips_soybean  ~ "Thrips on soybeans (#)",
+    rv %in%  pests_mites_soybean  ~ "Mites on soybeans (#)",
+    rv %in%  pests_beanleafbeetles_soybean  ~ "Bean leaf beetles on soybeans (#)",
+    rv %in%  pests_SCM_maize  ~ "Seed corn maggot (#)",
+    rv %in%  pests_WCRW_maize  ~ "Western corn rootworm (#)",
+    rv %in%  pests_WCRWemergence_maize  ~ "Western corn rootworm (# days for 50% emergence)",
+    rv %in%  pests_NCRW_maize  ~ "Northern corn rootworm (#)",
     
     ##Natural Enemies ####
-    Response_var %in%  preds_abundance_soybeans  ~ "Invertebrate predators in soyban (#)" )) %>%
+    rv %in%  preds_abundance_soybeans  ~ "Invertebrate predators in soyban (#)" )) %>%
                 
                 
                 #pm_group1####    
               mutate(
                 pm_group1 = case_when( 
                   ##Insecticides####
-                  Trt_id2name %in%  type_neonicotinoid  ~ "Neonicotinoid (Insecticide)",
-                  Trt_id2name %in%  type_pyrethroid  ~ "Pyrethroid (Insecticide)",
-                  Trt_id2name %in%  type_organophosphate  ~ "Organophosphate (Insecticide)",
-                  Trt_id2name %in%  type_otherinsecticide  ~ "Other Insecticides",
+                  trt2_name %in%  type_neonicotinoid  ~ "Neonicotinoid (Insecticide)",
+                  trt2_name %in%  type_pyrethroid  ~ "Pyrethroid (Insecticide)",
+                  trt2_name %in%  type_organophosphate  ~ "Organophosphate (Insecticide)",
+                  trt2_name %in%  type_otherinsecticide  ~ "Other Insecticides",
                   ##Fungicides####
-                  Trt_id2name %in%  type_fungicide  ~ "Fungicide",
+                  trt2_name %in%  type_fungicide  ~ "Fungicide",
                   ###Insecticide-Fungicide Mixture####
-                  Trt_id2name %in%  type_organo_pyrethroid  ~ "Organophosphate & Pyrethroid (Insecticide)",
-                  Trt_id2name %in%  type_neonic_pyrethroid  ~ "Neonicotinoid & Pyrethroid (Insecticide)",
-                  Trt_id2name %in%  type_neonic_fungi  ~ "Neonicotinoid & Fungicide",
-                  Trt_id2name %in%  type_organo_pyrethroid_fungi  ~ "Organophosphate, Pyrethroid, & Fungicide"
+                  trt2_name %in%  type_organo_pyrethroid  ~ "Organophosphate & Pyrethroid (Insecticide)",
+                  trt2_name %in%  type_neonic_pyrethroid  ~ "Neonicotinoid & Pyrethroid (Insecticide)",
+                  trt2_name %in%  type_neonic_fungi  ~ "Neonicotinoid & Fungicide",
+                  trt2_name %in%  type_organo_pyrethroid_fungi  ~ "Organophosphate, Pyrethroid, & Fungicide"
                   
                   
                 )) %>%
@@ -560,76 +571,70 @@ mutate(
               mutate(
                 pm_group2 = case_when( 
                   ##Seed####
-                  Group_finelevel %in%  placement_seed  ~ "Seed",
+                  finelevel_group %in%  placement_seed  ~ "Seed",
                   ##Soil####
-                  Group_finelevel %in%  placement_soil  ~ "Soil",
+                  finelevel_group %in%  placement_soil  ~ "Soil",
                   ##Foliar####
-                  Group_finelevel %in%  placement_foliar  ~ "Foliar",
+                  finelevel_group %in%  placement_foliar  ~ "Foliar",
                   ##Seed & Foliar####
-                  Group_finelevel %in%  placement_seedfoliar  ~ "Seed & Foliar"
+                  finelevel_group %in%  placement_seedfoliar  ~ "Seed & Foliar"
                 ))
-  
+              
+#####soil depth groupings#####
+#These will display such that it is always displying the results from more shallow sampling depths + deepest depth
+#Organized by means of sampling depth
+
+######Organize soil sampling depth and year variables########
+
+unique(levels(df$rv_depth))
+              
+              
+##No soil depths included in this dataset thus far.####
+
+depth_0_30 <- c()
+depth_0_60 <- c()
+depth_0_100 <- c()
+depth_0_150 <- c()
+
+#####Apply soil depth groupings####
+
+df$sample_depth <- NA
+
+##Use the following code for soil depths####
+#df <- df %>%
+#mutate(
+#sample_depth = case_when(
+
+# RV_depth %in% depth_0_30 ~ "0-30 cm",
+#  RV_depth %in% depth_0_60 ~ "0-60 cm",
+# RV_depth %in% depth_0_100 ~ "0-100 cm",
+#  RV_depth %in% depth_0_150 ~ "0-150 cm"))
+
+
+  colnames(df2)
     
 ##############################################################################################
 
 #Attach column to Results######
-Results <-
-  left_join(Results, groups_added) 
+df2 <-
+  left_join(df, groups_added) 
 
-Results <- Results %>% select(Res_key,
-                              Paper_id,
-                              Duration,
-                              Loc_multi_results,
-                              Response_var,
-                              #RV_trtspecifics,
-                              RV_depth,
-                              RV_year,
-                              Response_var_units,
-                              Stat_test,
-                              Stat_type,
-                              Trt_id1, Trt1_interaction, Trt1_interaction2,Trt_id1value,
-                              Trt_id2, Trt2_interaction, Trt2_interaction2,Trt_id2value,
-                              Sig_level,
-                              Group_finelevel,
-                              Trt_id1name, Trt_id1description,
-                              Trt_id2name, Trt_id2description,
-                              group_level1,
-                              group_level2,
-                              group_level3,
-                              #trt_specific,
-                              pm_group1,
-                              pm_group2
-) %>%
-  mutate(Review = "Early Season Pest Management")
+df2 <- select(df2, review, paper_id, duration, rv_year, loc_multi_results,
+              group_level1, group_level2, group_level3, rv, rv_depth, sample_depth,
+              rv_units, stat_test, stat_type, trt1, trt1_int, trt1_int2, trt1_value,        
+              trt2, trt2_int, trt2_int2, trt2_value,
+              significance, effect_norm, finelevel_group, trt1_name, trt1_details, trt2_name,
+              trt2_details, pm_group1, pm_group2)
+              
 
-#rename columns for consitency among reviews
+missing <- df2[is.na(df2$group_level1),] #check to see if all rows have an assigned group_level1
+missing <- df2[is.na(df2$group_level2),] #check to see if all rows have an assigned group_level2
+missing <- df2[is.na(df2$group_level3),] #check to see if all rows have an assigned group_level3
+missing <- df2[is.na(df2$pm_group1),] #check to see if all rows have an assigned pm_group1
+missing <- df2[is.na(df2$pm_group2),] #check to see if all rows have an assigned pm_group2
 
-Results <- rename(Results,
-                  Trt1 = Trt_id1,
-                  Trt1_int = Trt1_interaction, 
-                  Trt1_int2 = Trt1_interaction2,
-                  Trt1_value = Trt_id1value,
-                  Trt2 = Trt_id2,
-                  Trt2_int = Trt2_interaction, 
-                  Trt2_int2 = Trt2_interaction2,
-                  Trt2_value = Trt_id2value,
-                  significance = Sig_level,
-                  finelevel_group = Group_finelevel,
-                  Trt_1name = Trt_id1name,
-                  Trt1_details = Trt_id1description,
-                  Trt_2name = Trt_id2name,
-                  Trt2_details = Trt_id2description)
-
-
-
-missing <- Results[is.na(Results$group_level1),] #check to see if all rows have an assigned group_level1
-missing <- Results[is.na(Results$group_level2),] #check to see if all rows have an assigned group_level2
-missing <- Results[is.na(Results$group_level3),] #check to see if all rows have an assigned group_level3
-missing <- Results[is.na(Results$pm_group1),] #check to see if all rows have an assigned pm_group1
-missing <- Results[is.na(Results$pm_group2),] #check to see if all rows have an assigned pm_group2
-
-Results <- Results %>% filter(Trt2_name  != "growth hormones; nutrient mixture (Addamax)") %>% droplevels()
+df2 <- df2 %>% filter(trt2_name  != "growth hormones; nutrient mixture (Addamax)") %>% droplevels()
 
 
 ###Export CSV####################
-write.csv(Results, file = "C:/Users/LWA/Desktop/github/midwesternag_synthesis/PestMgmt Review/PestMgmt_ResultsGrouped.csv", row.names = FALSE)
+write.csv(df2, file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Files for protocol/PestMgmt_ResultsGrouped.csv", row.names = FALSE)

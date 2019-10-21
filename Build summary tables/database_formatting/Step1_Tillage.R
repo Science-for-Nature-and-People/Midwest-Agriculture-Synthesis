@@ -22,11 +22,11 @@ library("readxl", lib.loc = "~/R/win-library/3.5")
 library("tidyverse", lib.loc = "~/R/win-library/3.5")
 library("tibble", lib.loc = "~/R/win-library/3.5")
 
-setwd("C:/Users/LWA/Desktop/github/midwesternag_synthesis/")
-
 ############Import dataframes######################################################################
 
-df <- read.csv("Tillage Review/Tillage_Results.csv", row.names = NULL)
+df <- read.csv("C:/Users/LWA/Desktop/github/midwesternag_synthesis/Tillage Review/Tillage_Results.csv", row.names = NULL)
+
+
 
 df <- df[df$Paper_id != 209, ] #paper was not peer reviewed
 
@@ -40,6 +40,7 @@ df$Reviewers_results_long <- NULL
 df$Group_RV <- NULL
 df$Response_var_org <- NULL
 
+
 #Rename column rows to be consistent###
 df <- rename(df, paper_id = Paper_id, duration = Duration, loc_multi_results = Loc_multi_results, 
              rv = Response_var, rv_depth = RV_depth, rv_year = RV_year,
@@ -52,7 +53,6 @@ df <- rename(df, paper_id = Paper_id, duration = Duration, loc_multi_results = L
              trt2 = Trt_id2, trt2_int = Trt2_interaction, trt2_int2 = Trt2_interaction2,
              significance = Sig_level, rv_depth = RV_depth, effect_norm = Effect_norm 
 )
-
 
 #add surrogate key to df
 df$review_key = rownames(df)
@@ -2189,6 +2189,8 @@ df$trt1_name <- as.character(as.factor(df$trt1_name))
 df$trt2_name <- as.character(as.factor(df$trt2_name))
 df$trt1_details <- as.character(as.factor(df$trt1_details))
 df$trt2_details <- as.character(as.factor(df$trt2_details))
+df$trt1_value <- as.numeric(df$trt1_value)
+df$trt2_value <- as.numeric(df$trt2_value)
 
 
 df2 <- df %>%
@@ -2197,13 +2199,13 @@ df2 <- df %>%
                           tilltype_1 == tilltype_2 ~ trt1)) %>%
   mutate(trt1_int_new = case_when(tilltype_1 < tilltype_2 ~ trt1_int,
                               tilltype_1 > tilltype_2 ~ trt2_int,
-                              tilltype_1 == tilltype_2 ~ trt2)) %>%
+                              tilltype_1 == tilltype_2 ~ trt1_int)) %>%
   mutate(trt1_int2_new = case_when(tilltype_1 < tilltype_2 ~ trt1_int2,
                                tilltype_1 > tilltype_2 ~ trt2_int2,
                                tilltype_1 == tilltype_2 ~ trt1_int2)) %>%
-  mutate(trt1_value_new = case_when(tilltype_1 < tilltype_2 ~ trt1,
-                                tilltype_1 > tilltype_2 ~ trt2,
-                                tilltype_1 == tilltype_2 ~ trt1)) %>%
+  mutate(trt1_value_new = case_when(tilltype_1 < tilltype_2 ~ trt1_value,
+                                tilltype_1 > tilltype_2 ~ trt2_value,
+                                tilltype_1 == tilltype_2 ~ trt1_value)) %>%
   mutate(trt2_new = case_when(tilltype_1 < tilltype_2 ~ trt2,
                           tilltype_1 > tilltype_2 ~ trt1,
                           tilltype_1 == tilltype_2 ~ trt2)) %>%
@@ -2215,7 +2217,7 @@ df2 <- df %>%
                                tilltype_1 == tilltype_2 ~ trt2_int2)) %>%
   mutate(trt2_value_new = case_when(tilltype_1 < tilltype_2 ~ trt2_value,
                                 tilltype_1 > tilltype_2 ~ trt1_value,
-                                tilltype_1 == tilltype_2 ~ trt2_value)) %>%
+                                tilltype_1 == tilltype_2 ~ trt2_value))%>%
   
   #dropping Normative effect - having difficulties coercing it into the opposite value based on criteria below
   #mutate(norm_effect = if_else(tilltype_1 < tilltype_2, Effect_norm,
@@ -2503,7 +2505,5 @@ df2 <- select(df, review, paper_id, duration, rv_year, loc_multi_results,
               trt2_details, tillage_1, tillage_2, trt_compare 
 )
 
-
 ###Export CSV####################
-write.csv(df2, file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Files for protocol/Tillage_ResultsGrouped.csv", row.names = FALSE)
-
+write.csv(df2, file = "Tillage_ResultsGrouped_move.csv", row.names = FALSE)

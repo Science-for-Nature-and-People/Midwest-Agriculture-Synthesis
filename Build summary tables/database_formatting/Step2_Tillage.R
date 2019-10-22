@@ -18,6 +18,7 @@ library(splitstackshape) #expanding results by # of years the data recorded repr
 #import data
 df <- read.csv(file = "C:/Users/LWA/Desktop/SNAPP_Wood_2017/Files for protocol/Tillage_ResultsGrouped.csv", row.names = NULL)
 
+
 df$stat_type <- as.character(df$stat_type)
 #remove rows with no group metric, blank values, and something other than mean values
 

@@ -1,0 +1,206 @@
+"Review_id","group_level1","group_level2","group_level3","unit_list","Review"
+"Tillage","Other Soil Properties","Physical Properties","Compaction","MPa; kPa; penetration ratio; proctor density ratio",NA
+"Tillage","Other Soil Properties","Abiotic Factors","Moisture content","cm water/cm soil; g water/100 g soil; Celcius; ; mg/kg; cm; %v/v; g water/g soil; %; g/100 g; % by weight; g/kg; theta; moisture ratio; g/g; mm; cm^3/cm^3; cm^3/cm^3/min; index; m^3/m^3; kg water/ kg soil; g H2O/ g soil",NA
+"Tillage","Other Soil Properties","Physical Properties","Bulk density","Mg/m^3; Mg/M^3; Mg/ha; g/cm^3; Mg/m; g/kg; g.cm^3; g soil/cm^3; kg/m^2",NA
+"Tillage","Other Soil Properties","Physical Properties","Aggregate stability","Mg/m^3; %; kg/kg; J; mm; rating; % > 0.25 mm; g/kg; g/cm^3; kPa; Mg/ha; kg C/ha",NA
+"Tillage","Other Soil Properties","Physical Properties","Air-filled pore space","%; micrograms/m sq/sec; cm^3/cm^3; ; m^3/m^3; Dp/Do(x10^3)",NA
+"Tillage","Other Soil Properties","Abiotic Factors","Water-filled pore space","%",NA
+"Tillage","Crop Yields","Grain Yields","Soybean","kg/ha; Mg/ha; bu/acre; kg/sq m; Mg/ha/yr; kg dry grain/ha; t/ha",NA
+"Tillage","Crop Yields","Grain Yields","Corn","kg/ha; Mg/ha; mg/L; bu/acre; kg/sq m; kg-N/ha; Mg/ha/yr; LSD; index; kg dry grain/ha; t/ha; kg N/ha; kg dyr matter/ha grain yield/kg total aboveground dry matter/ha; DM/ha; L/ha; ; Mg DM/ha",NA
+"Tillage","Climate Mitigation","Carbon Mitigation","Soil organic carbon","g/100 g; g C/kg soil; %; kg C/ soil layer; Mt/ha; Mg C/ha in depth; mg C in fraction/kg soil; Mg/ha; Mg/m; g/kg; kg/sq m; 0/00; Cmax, kg/ha; t/ha; Mg/kg; g/kg soil; o/oo; Mg C/ha; g C/kg; kg C/ha; SOC flux; kg/ha; C/N; passive carbon/active carbon; mg C/kg; kg/m^2; g soil/cm^2; g C/ kg soil",NA
+"Tillage","Soil Nutrients","N","Ammonium (NH4)","mg/kg; kg/ha; mg N/kg; mg N/kg soil",NA
+"Tillage","Soil Nutrients","P & K","Phosphorus","mg/kg; mmol/kg; ppm; kg/ha; mg/L; ug/g; g/m^2",NA
+"Tillage","Soil Nutrients","N","Nitrate (NO3)","mg/kg; ; kg/ha; ppm; C/N; g/kg soil; mg N/kg; g N/kg day; mg N/kg soil",NA
+"Tillage","Other Soil Properties","Chemical Properties","pH","; pH; g/kg",NA
+"Tillage","Other Soil Properties","Chemical Properties","CEC","meq/100 g; cmole/kg; CEC; cmol/kg; ; cmolc/kg; dS/m; Cmol/kg; microsec/cm; us/cm; uS/m; uS/cm",NA
+"Tillage","Soil Nutrients","P & K","Potassium","mg/kg; mmol/kg; ppm; cmolc/kg; %; kg/ha; ug/g; g/kg; g/m^2",NA
+"Tillage","Soil Nutrients","Micro-nutrients","Magnesium","mg/kg; mmol/kg; cmol/kg; cmolc/kg; %; g/kg",NA
+"Tillage","Soil Nutrients","Micro-nutrients","Calcium","mg/kg; mmol/kg; cmol/kg; cmolc/kg; %; g/kg",NA
+"Tillage","Other Soil Properties","Physical Properties","Surface residue coverage","%; kg/sq m",NA
+"Tillage","Other Soil Properties","Physical Properties","Erosion","Mt/ha; Mg/ha; kg/m^2",NA
+"Tillage","Other Soil Properties","Physical Properties","Total pore space","%; m/d; v/v; ; cm^3/cm^3; cm/h; cm/g; micrometers; m^3/m^3; mm/h^0.5; m^2/s/m^2/s; m/m",NA
+"Tillage","Crop Yields","Stand Count","Corn","plants/ha; % emergence/day; # x 1000/ha; # plants/acre; plants/ha x 10^3; 10^3 plants/acre; 10^3 plants/hectare; # plants/ha x 10^3; %; ERI",NA
+"Tillage","Crop Yields","Stand Count","Soybean","plants/ha; bu/acre; plants/sq m; 1000 plants/acre; %; # plants/ha x 10^3; rating of 1-5",NA
+"Tillage","Other Soil Properties","Physical Properties","Aggregate size","mm; %; micro-m",NA
+"Tillage","Crop Yields","Crop Growth","Soybean (height)","m; bu/acre; cm",NA
+"Tillage","Crop Yields","Crop Growth","Corn (height)","m; # days; in; cm; %",NA
+"Tillage","Other Soil Properties","Abiotic Factors","Temperature","degrees Celcius; Celcius; C; degrees C",NA
+"Tillage","Crop Yields","Corn Nutrient Content","Stover nitrogen","g/kg; g N/kg; %; kg/ha; kg N/ha; kg N/ha/yr; Mg/ha; index; g N/plant; kg/kg; NDVI",NA
+"Tillage","Crop Yields","Soybean Nutrient Content","Tissue nitrogen","g/kg",NA
+"Tillage","Soil Nutrients","N","N content of soil organic matter","g C/kg soil; %; Mg/ha; C/N; C:N; g/kg; g/kg soil; g N/kg; g N/ kg soil",NA
+"Tillage","Soil Nutrients","N","Total N","g C/kg soil; Mg/ha; g/kg; kg/ha; C/N; kg N/ha; t/ha; Mg/kg; g N/kg day; mg/kg; mg/g; Mg N/ha; mg N/kg soil; g N/kg; kg/m^2; ug N/cm^2/37 days; g N/ kg soil",NA
+"Tillage","Soil Nutrients","N","C to N ratio","; C:N; C/N ratio; C/N of humic acid",NA
+"Tillage","Other Soil Properties","Physical Properties","Clay content","cmole/kg; g/kg; %",NA
+"Tillage","Other Soil Properties","Physical Properties","Soil organic matter content","delta 13-C; mg C in fraction/kg soil; %; g/kg; Mg/ha; g/kg soil; mg/kg; Mg N/ha; Mg C/ha; g soil/cm^2; g C/ kg soil",NA
+"Tillage","Other Soil Properties","Abiotic Factors","Water infiltration","cm/hr; minutes; mm; mm/h; cm/h; cm h^-0.5; cm; s; cm/min; cm/h^1/2",NA
+"Tillage","Pests","Invertebrate Pests","Corn borer (#)","# larvae/100 plants; # larvae/injured plant; # larvae/10 plants; #/100 plants; %",NA
+"Tillage","Crop Yields","Crop Damage","Corn (stand count)","#; %",NA
+"Tillage","Pests","Weeds","Amaranthus (#)","#/m^2; ranking scale (1 = low cover, 2 = 5-25% cover, 3 = 25-50% cover, 4 = 50-75%; # seeds/sq m; plants/m^2",NA
+"Tillage","Pests","Weeds","Fall Panicum (#)","#/m^2; ranking scale (1 = low cover, 2 = 5-25% cover, 3 = 25-50% cover, 4 = 50-75%",NA
+"Tillage","Pests","Weeds","Velvetleaf (#)","#/m^2",NA
+"Tillage","Pests","Weeds","Lambsquarters (#)","#/m^2; ranking scale (1 = low cover, 2 = 5-25% cover, 3 = 25-50% cover, 4 = 50-75%; # seeds/sq m",NA
+"Tillage","Pests","Weeds","Weed community (diversity)","D; H; # of species",NA
+"Tillage","Pests","Weeds","Weed community (#)","%; #/m^2; # weeds/ sq m; # seeds/sq m; # weeds/m^2",NA
+"Tillage","Pests","Pathogens","Corn infections","%; % of leaf discs colonized; % occurrence; # (arcsine); % fields with P. sojae; % fields with BSR",NA
+"Tillage","Crop Yields","Crop Growth","Corn stover (biomass)","Mg/ha; Mg/ha/yr; DM/ha; Mg DM/ha",NA
+"Tillage","Crop Yields","Corn Nutrient Content","Grain nitrogen","g N/kg; kg/ha; Mg/ha",NA
+"Tillage","Crop Yields","Crop Damage","Invertebrate damage","# damaged plants/20 plants; # damaged plants/ row meter; root damage scale (0=low, 5 = high)",NA
+"Tillage","Pests","Invertebrate Pests","Corn rootworm (#)","# beetles/plant",NA
+"Tillage","Pests","Pest Natural Enemies","Natural enemy (activity)","%",NA
+"Tillage","Pests","Pest Natural Enemies","Natural enemy (#)","#/100 plants; #; # insects/50 sweps; #/sq m; #/sample",NA
+"Tillage","Crop Yields","Crop Growth","Corn root (biomass)","cm/cm^3; Mg/ha/yr; mm; m/g; g/m^2/0.25m",NA
+"Tillage","Crop Yields","Grain Quality","Corn","%; Mg/ha; g/kg; in",NA
+"Tillage","Water Quality","Nutrient Runoff","Nitrate","kg/ha; mg/L; kg-N/ha; kg N/ha; mg/kg",NA
+"Tillage","Pests","Weeds","Broadleafs","ranking scale (1 = low cover, 2 = 5-25% cover, 3 = 25-50% cover, 4 = 50-75%; # weeds/ sq m; # seeds/sq m",NA
+"Tillage","Pests","Invertebrate Pests","General pests (#)","#; # insects/50 sweps",NA
+"Tillage","Water Quality","Flow Quantity","Water","mm; cm of water; m^3; s",NA
+"Tillage","Pests","Non-Predators & Pests","Earthworms (#)","# worms/m^2",NA
+"Tillage","Water Quality","Sediment Runoff","Sediment Runoff","t/ha; ppm x 10^3; g/L; mg/L",NA
+"Tillage","Other Soil Properties","Biotic Factors","Respiration","kg C/ha/day; g CO2-C/sq m/day; mg/kg/d; ug/mg/d; mg CO2-C/kg/d",NA
+"Tillage","Other Soil Properties","Biotic Factors","Microbial biomass","kg/ha; microgram/g dry soil; g/100 g; ug/mg/d; mg/kg; kg C/ha; ug/g; ug/g soil",NA
+"Tillage","Pests","Invertebrate Pests","Seedcorn maggot (#)","#; # insects/50 sweps",NA
+"Tillage","Climate Mitigation","Carbon Mitigation","Carbon dioxide (CO2)","micromol CO2/sq m/sec; kg/ha; Mg/ha/yr; g/m^2/h; g CO2-C/m^2/day; Mg/ha; CO2 Mg/ha; mg CO2/m^2/hr; kg C2O/ha/day; kg C/ha/yr",NA
+"Tillage","Pests","Pathogens","Soybean infections","% with brown stem rot",NA
+"Tillage","Pests","Nematodes","Soybean cyst nematode (#)","# H. glycines eggs/100 cm^3 soil; # (log10(x+1)); % fields with H. glycines; egg density at harvest in the year/egg density at harvest in the preceding year; eggs/100 cm^3 of soil; #/100 cm^3 of soil; J2/100 cm^3 soil; distance to west (m); dispersion index; eggs/100/cm^3 soil; ; kg/ha",NA
+"Tillage","Pests","Weeds","Grasses","# weeds/ sq m; # seeds/sq m",NA
+"Tillage","Pests","Non-Predators & Pests","Invertebrates (#)","#",NA
+"Tillage","Climate Mitigation","Carbon Mitigation","Soil organic carbon derived from corn","Mg/ha; Mg/ha/yr; g/kg; kg C/ha; Mg C/ha",NA
+"Tillage","Water Quality","Agrochemical Runoff","Pesticides","g/ha; micrograms/L; mg/ha",NA
+"Tillage","Crop Yields","Water Use","Corn","mm; Mg/ha-mm",NA
+"Tillage","Crop Yields","Water Use","Soybean","mm",NA
+"Tillage","Other Soil Properties","Biotic Factors","Enzyme activity","microgram p-nitrophenol released/g/soil/hr; mg NH4-N / kg soil/ hr; mg beta-naphthylamine /kg soil/hr; mg NH4-N/ kg soil/ 24 hr; BIOLOG",NA
+"Tillage","Crop Yields","Corn Nutrient Content","Root nitrogen","kg N/ha/yr",NA
+"Tillage","Water Quality","Nutrient Runoff","Phosphorus","mg/L; kg/ha",NA
+"Tillage","Water Quality","Nutrient Runoff","Manure","mm",NA
+"Tillage","Crop Yields","Grain Quality","Soybean","g/kg; kg/ha",NA
+"Tillage","Other Soil Properties","Physical Properties","Sand content","g/kg; %",NA
+"Tillage","Other Soil Properties","Physical Properties","Silt content","g/kg; %",NA
+"Tillage","Water Quality","Nutrient Runoff","Micro-nutrients","kg/ha; mg/L; g/ha",NA
+"Tillage","Water Quality","Nutrient Runoff","Carbon","mg/L; kg/ha; mg/kg",NA
+"Tillage","Soil Nutrients","N","Crop derived N","kg/ha/yr",NA
+"Tillage","Crop Yields","Crop Growth","Corn and soybean tissue (biomass)","Mg/ha/yr",NA
+"Tillage","Crop Yields","Crop Growth","Soybean tissue (biomass)","Mg/ha/yr; g/m^2; Mg DM/ha",NA
+"Tillage","Pests","Non-Predators & Pests","Nematodes (#)","# nematodes/kg soil",NA
+"Tillage","Pests","Nematodes","Herbivores","# nematodes/kg soil",NA
+"Tillage","Pests","Nematodes","Nematode (#)","# nematodes/kg soil",NA
+"Tillage","Climate Mitigation","Nitrogen Mitigation","Nitrous oxide (N2O)","kg N2O-N / ha; mg N/m^2/d; mg/m^2/d; kg N/ha; m^3/m^3; g N/kg N; g/ha; kg/ha/yr; mg N2O/m^2/hr; kg N2O/ha/day; kg N/ha/yr",NA
+"Tillage","Pests","Invertebrate Pests","Soybean aphid (#)","#/cage; #/plant; #/sample",NA
+"Tillage","Crop Yields","Grain Yields","Corn and soybean","Mg/ha",NA
+"Tillage","Crop Yields","Corn Nutrient Content","Stover phosphorus","kg/ha; %",NA
+"Tillage","Other Soil Properties","Biotic Factors","Corn mycorrhizal colonization","mmol/g root",NA
+"Tillage","Crop Yields","Soybean Nutrient Content","Tissue phosphorus","kg/ha",NA
+"Tillage","Other Soil Properties","Biotic Factors","Soybean mycorrhizal colonization","mmol/g root",NA
+"Tillage","Climate Mitigation","Carbon Mitigation","Methane (CH4)","mg/m^2/h; mg C/m^2/d; mg/m^2/d; kg/ha; g/ha; ug CH4-C/kg/d; kg/ha/yr; kg CH4/ha/day; kg C/ha/yr",NA
+"Tillage","Other Soil Properties","Biotic Factors","Fungal abundance","#; g/kg",NA
+"Tillage","Soil Nutrients","Micro-nutrients","Misc. micro-nutrients","mg/kg; g/kg",NA
+"Tillage","Other Soil Properties","Physical Properties","Decomposition rate of surface residue","per day",NA
+"Tillage","Crop Yields","Corn Nutrient Content","Stover micro-nutrients","ug/kg; g/kg",NA
+"Tillage","Climate Mitigation","Global Warming Potential","Methane and carbon dioxide (CH4 + CO2)","Mg/ha/yr; Mg CO2/ha/day; kg N2O/Mg DM grain",NA
+NA,"Crop Yields","Crop Damage","Invertebrate damage in corn","#","Early Season Pest Management"
+NA,"Crop Yields","Stand Count","Soybean","plants/ha; plants/sq m; #; # plants/ha; # plants/m","Early Season Pest Management"
+NA,"Crop Yields","Grain Production","Soybean","kg/ha; q/ha (quintal/hectare); g / 1.5 m; Mg/ha; plot yield / highest plot yield for the site; T/ha","Early Season Pest Management"
+NA,"Pests","Pathogens","Corn (infection of leaf tissue)","index (0-5); %; #","Early Season Pest Management"
+NA,"Pests","Pathogens","Corn (infection of roots)","index (0-5); rating; node injury rating","Early Season Pest Management"
+NA,"Pests","Pathogens","Soybeans (pathogens in soil)","CFU x 10^2","Early Season Pest Management"
+NA,"Crop Yields","Crop Growth","Soybean (greenness/chlorophyll content)","index; MJ/ sq. m","Early Season Pest Management"
+NA,"Crop Yields","Crop Growth","Soybean (crop height)","cm","Early Season Pest Management"
+NA,"Pests","Pathogens","Soybean (infection of leaf tissue)","scale of 1 (no disease) to 9 (dead plant); %","Early Season Pest Management"
+NA,"Crop Yields","Stand Count","Corn","# plants / ha; #","Early Season Pest Management"
+NA,"Crop Yields","Grain Production","Corn","mg / ha; 100 kg/ha; ton/ha; kg / ha; kg/ha","Early Season Pest Management"
+NA,"Crop Yields","Crop Growth","Soybean (seedling development)","mmol CO2 per meter square per second; mmol H2O per meter square per second; mmol H2O per centimeter square per second; %","Early Season Pest Management"
+NA,"Crop Yields","Crop Growth","Corn (reduction in vigor)","%","Early Season Pest Management"
+NA,"Crop Yields","Crop Growth","Corn (crop height)","cm","Early Season Pest Management"
+NA,"Crop Yields","Crop Damage","Corn (# lodged)","%","Early Season Pest Management"
+NA,"Pests","Invertebrate Pests","Bean leaf beetles on soybeans (#)","number","Early Season Pest Management"
+NA,"Pests","Pathogens","Bean pod mottle virus","number; proportion of virus present in 20 samples per treatment","Early Season Pest Management"
+NA,"Pests","Invertebrate Pests","Seed corn maggot (#)","#","Early Season Pest Management"
+NA,"Other Soil Properties","Biotic Factors","Soybean root mycorrhizal colonization","%","Early Season Pest Management"
+NA,"Crop Yields","Crop Damage","Soybean (# lodged)","score (1-5)","Early Season Pest Management"
+NA,"Crop Yields","Grain Quality","Soybean","g/kg; g/100 seed; # seeds/g","Early Season Pest Management"
+NA,"Pests","Invertebrate Pests","Soybean aphids (cumulative aphid days)","# days; days","Early Season Pest Management"
+NA,"Pests","Invertebrate Pests","Western corn rootworm (#)","#","Early Season Pest Management"
+NA,"Pests","Invertebrate Pests","Western corn rootworm (# days for 50% emergence)","Julian date","Early Season Pest Management"
+NA,"Pests","Invertebrate Pests","Northern corn rootworm (#)","#","Early Season Pest Management"
+NA,"Pests","Natural Enemies","Invertebrate predators in soyban (#)","#","Early Season Pest Management"
+NA,"Other Soil Properties","Physical Properties","Erosion","Mt/ha/yr; g / m2 / s1; g/ sq. m","Cover crop"
+NA,"Climate Mitigation","Carbon Mitigation","Soil organic carbon","Mt/ha/yr; Mt/ha/1m/1m; mg / L; Mg/ha; g / kg; Mg / ha; kg / m3; g carbon / g soil; g / kg soil; g/kg","Cover crop"
+NA,"Crop Yields","Stand Count","Soybean","# plants/ha; # plants / ha; plants/m","Cover crop"
+NA,"Crop Yields","Stand Count","Corn","# plants/ha; plants/ha x 10^3","Cover crop"
+NA,"Crop Yields","Grain Production","Soybean","Mg/ha; Mg / ha; kg/ha; yield; kg / ha; Mg /ha; kg dry grain / ha; bu/ac","Cover crop"
+NA,"Crop Yields","Grain Production","Corn","Mg/ha; Mg / ha; kg/ha; yield; ; g / plant; kg dry grain / ha; kg / ha; g/kg; %; lb/acre","Cover crop"
+NA,"Water Quality","Flow Quantity","Drainage","mm; g / m2 / s","Cover crop"
+NA,"Crop Yields","Crop Nitrogen Content","Corn stalk nitrogen content","mg N / kg ; kg / ha; kg N / ha; kg N/ha; lb/acre","Cover crop"
+NA,"Water Quality","Nutrient Runoff","Nitrate","kg N/ha; mg N/L; mg / L; kg / ha; NO3-Nconc; NO3-Nyield; NO3-Nyield per N-fertilizer applied; kg N / ha; kg N loss / 100 kg N applied; L/ sq. m; min","Cover crop"
+NA,"Soil Nutrients","Nitrogen","Total nitrogen","<U+00B5>g N2O/ g of soil / hr; kg N / ha; Mg / ha; kg / ha / yr; g / kg soil; mg / kg; mg / g soil; g N / kg soil organic nitrogen; ppm","Cover crop"
+NA,"Soil Nutrients","Nitrogen","Ammonium (NH4)","mg/kg; kg N / ha; mg N / kg soil; mg / kg; g / kg soil; kg N/ha","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Soil bulk density","Mg/m^3; Mg m3; g / cm3; Mg/ m3; Mg / m3","Cover crop"
+NA,"Other Soil Properties","Chemical Properties","pH","pH","Cover crop"
+NA,"Soil Nutrients","P & K","Phosphorus","mg/kg; mg / kg; kg / ha / yr; kg / ha","Cover crop"
+NA,"Soil Nutrients","Nitrogen","Nitrate (NO3)","mg/kg; kg /ha; kg N / ha; kg N/ ha; mg / kg; kg / ha; mg N / kg soil; g / kg soil; kg N/ha; kg/ha","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Compaction","kPa","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Aggregate size","%; mm","Cover crop"
+NA,"Pests","Weeds","Weeed community (biomass)","g/m^2; g / sq m","Cover crop"
+NA,"Pests","Weeds","Weed community (#)","plants/m^2; # / m^2; number / sq m; # / m2","Cover crop"
+NA,"Pests","Weeds","Waterhemp (#)","%; # / m2","Cover crop"
+NA,"Pests","Weeds","Pigweed (#)","%; plants/m^2","Cover crop"
+NA,"Pests","Weeds","Cocklebur (#)","%","Cover crop"
+NA,"Pests","Weeds","Foxtail (#)","%","Cover crop"
+NA,"Climate Mitigation","Nitrogen Mitigation","Nitrous oxide (N2O)","kg N2O-N / ha; kg N2O-NA / ha; mg / m2  / hr","Cover crop"
+NA,"Pests","Weeds","Dead nettle (#)","# / m^2","Cover crop"
+NA,"Pests","Nematodes","Soybean cyst nematode (#)","# / m^2; eggs / 100 cm3 soil; # eggs/100 ml soil","Cover crop"
+NA,"Pests","Invertebrate Pests","Seedcorn maggot (#)","# / trap","Cover crop"
+NA,"Pests","Crop Damage","Damage caused by seed corn maggot","%","Cover crop"
+NA,"Water Quality","Flow Quantity","Water discharge","g / m2 / s; mm","Cover crop"
+NA,"Other Soil Properties","Abiotic Factors","Soil moisture","m3 / m3; mm;  cm3  water / cm3 soil; cm; g  water / g soil; cm3 water / cm3 soil; %; mm3 / mm3","Cover crop"
+NA,"Pests","Pest Natural Enemies","Invertebrate soil community (diversity)","J; H","Cover crop"
+NA,"Pests","Crop Damage","Damage caused by corn rootworm","root rating (1-6)","Cover crop"
+NA,"Pests","Invertebrate Pests","Corn rootworm (#)","#","Cover crop"
+NA,"Pests","Pest Natural Enemies","Invertebrate soil community (#)","number; #","Cover crop"
+NA,"Crop Yields","Crop Nitrogen Content","Soybean stalk nitrogen content","kg / ha","Cover crop"
+NA,"Pests","Invertebrate Pests","Soybean aphid (#)","infestation rating (0-4); number infested plants / number plants per field; cumulative aphid-days (CAD); cumulative predator-days per aphid (CPDPA)","Cover crop"
+NA,"Crop Yields","Crop Growth","Corn stalk biomass","Mg / ha; kg / ha; g / plant; cm; Mg/ha; lb/acre","Cover crop"
+NA,"Soil Nutrients","P & K","Potassium","kg / ha / yr; mg / kg","Cover crop"
+NA,"Crop Yields","Crop Growth","Corn root biomass","Mg / ha","Cover crop"
+NA,"Other Soil Properties","Biotic Factors","Microbial biomass","kg CO2-C / m3; kg N / ha","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Air-filled pores","%; m / m; m2 / s / m2 s; cm3 air / cm3 soil","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Total pore space","cm3 / cm3","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Water-filled pores","%","Cover crop"
+NA,"Crop Yields","Grain Quality","Corn nitrogen content","kg N / ha; kg N/ha; lb/acre","Cover crop"
+NA,"Pests","Pest Natural Enemies","Invertebrate foliar community (#)","cumulative predator-days (CPD); number","Cover crop"
+NA,"Water Quality","Nutrient Runoff","Phosphorus","TRPconc; TRPyield; mg/ sq. m","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Soil organic matter content","kg N / ha; %; ; g/kg","Cover crop"
+NA,"Pests","Pest Natural Enemies","Invertebrate predator (activity)","Index","Cover crop"
+NA,"Pests","Pest Natural Enemies","Invertebrate foliar community (diversity)","Index","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Aggregate stability","mm; g/kg","Cover crop"
+NA,"Pests","Pest Natural Enemies","Invertebrate non-predator & pests (#)","#","Cover crop"
+NA,"Pests","Pest Natural Enemies","Invertebrate predator (#)","#","Cover crop"
+NA,"Climate Mitigation","Carbon Mitigation","Carbon dioxide (CO2)","mg / m2  / hr","Cover crop"
+NA,"Other Soil Properties","Abiotic Factors","Soil temperature","oC","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Sand content","%","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Silt content","%","Cover crop"
+NA,"Other Soil Properties","Physical Properties","Clay content","%","Cover crop"
+NA,"Pests","Pathogens","Pathogens","scale (1-5 where 1 = roots with 0 to 20% discoloration, 2 = 21 to 40% discoloration, 3 = 41 to 60% discoloration, 4 = 61 to 80% discoloration, and 5 = roots with 81 to 100% discoloration)","Cover crop"
+NA,"Other Soil Properties","Biotic Factors","Enzyme activity","mg FDA min-1 g-1 dry soil)","Cover crop"
+NA,"Crop Yields","Crop Nutrient Content","Corn nitrogen content of aboveground biomass","mg/kg; kg N/ha; g N/kg; kg N/kg; kg/ha; %; lb N/acre","Nutrient Management"
+NA,"Crop Yields","Grain Yields","Corn","Mg/kg; bu/ac; Mg/ha; bu/acre; kg/ha","Nutrient Management"
+NA,"Crop Yields","Grain Quality","Corn nitrogen uptake","kg/ha; g N/kg; kg N/kg; kg N/ha; %; lb/acre","Nutrient Management"
+NA,"Soil Nutrients","Nitrate","Late season (crop stages: harvest & post harvest)","kg/ha; kg N/ha; Mg/ha; kg NO3-N/ha; g N/kg; mg N/kg soil; lb N/acre","Nutrient Management"
+NA,"Crop Yields","Crop Nutrient Content","Crop nitrogen use efficiency","bu/lb N; ; kg/kg; %; kg grain yield/kg N applied","Nutrient Management"
+NA,"Crop Yields","Crop Growth","Corn aboveground biomass","Mg/ha; kg/ha","Nutrient Management"
+NA,"Climate Mitigation","Nitrogen Emissions","Nitrous oxide (N20)","; kg N/ha; %","Nutrient Management"
+NA,"Soil Nutrients","Ammonium","Late season (crop stages: harvest & post harvest)","kg N/ha; log kg N/ha; g N/kg","Nutrient Management"
+NA,"Soil Nutrients","Nitrogen","Total soil nitrogen","kg N/ha; g N/kg","Nutrient Management"
+NA,"Climate Mitigation","Nitrogen Emissions","Nitric oxide (NO)","kg N/ha","Nutrient Management"
+NA,"Crop Yields","Grain Yields","Soybean","kg/ha; Mg/ha","Nutrient Management"
+NA,"Crop Yields","Grain Quality","Soybean oil, fiber, & protein","g/kg","Nutrient Management"
+NA,"Crop Yields","Crop Nutrient Content","Soybean nitrogen content of aboveground biomass","g/kg; kg/ha","Nutrient Management"
+NA,"Crop Yields","Grain Quality","Soybean nitrogen uptake","g/kg; kg/ha","Nutrient Management"
+NA,"Crop Yields","Crop Growth","Soybean aboveground biomass","kg/ha","Nutrient Management"
+NA,"Crop Yields","Crop Damage","Corn stand count damage","%","Nutrient Management"
+NA,"Crop Yields","Stand Count","Corn","1000 plants/ha; # x 10^-3/acre","Nutrient Management"
+NA,"Soil Nutrients","Ammonium","Early season (crop stages: preplanting to V6)","log kg N/ha","Nutrient Management"
+NA,"Soil Nutrients","Nitrate","Early season (crop stages: preplanting to V6)","log kg N/ha; kg NO3-N/ha","Nutrient Management"
+NA,"Soil Nutrients","Ammonium","Mid season (crop stages: V7 to R1)","log kg N/ha","Nutrient Management"
+NA,"Soil Nutrients","Nitrate","Mid season (crop stages: V7 to R1)","log kg N/ha","Nutrient Management"
+NA,"Water Quality","Infield Drainage","Discharge amount","mm/yr","Nutrient Management"
+NA,"Water Quality","Runoff from Field","Nitrate","mg N/L; kg N/Mg; mg N/L/Mg","Nutrient Management"

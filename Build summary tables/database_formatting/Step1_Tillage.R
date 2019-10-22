@@ -1,8 +1,17 @@
 #Synthesis of Midwestern Agriculture#######################
-#Managing Soil Carbon Working Group - SNAPP, NCEAS ###############
 
 
 #This file:
+  #1. Groups Response Variables 
+  #2. Organizes response variables into grouping levels: group_level1, group_level2, group_level3
+  #3. Applies Tillage Ranking groups based on Reicoisky 2015
+  #4. Rearranges order of Trt 1 and Trt 2 so that more conventional practices is always Trt 1 and Conservation practice = Trt 2
+  #5. Applies soil depth sampling groups
+  #6. Writes Tillage_compare (treatment comparison statement)
+  #7. Standardizes and rearranges column names so comparable to other result files
+
+
+
 #Adds grouping variables to all response variables collected during the data extraction process
 #There are 4 key agro-environmental  groups:
 ##1. Soil

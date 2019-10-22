@@ -1,5 +1,4 @@
-#Synthesis of Midwestern Agriculture#######################
-#Managing Soil Carbon Working Group - SNAPP, NCEAS ###############
+#
 
 library(dplyr)
 library(tidyverse)
@@ -9,6 +8,14 @@ library(splitstackshape) #expanding results by # of years the data recorded repr
 
 
 #This file:
+  #1. Filters data set to exclude data comparisons outside the AgEvidence framework
+  #2. Creates a list of units for groups of response variables
+  #3. Calculates percent change and actual difference for each row comparison - creates new columns for these results
+  #4. Expands data based on number of years experiments were conducted
+  #5. Groups results based on number of years tillage has been implemented at the site
+  #6. Plots data distribution for each group_level1 grouping for inspection
+
+
 #Summarizes all quantitative data to be used for the Shiny App and data display#####
 
 #######################################################################################################################

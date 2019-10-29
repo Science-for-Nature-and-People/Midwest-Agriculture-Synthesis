@@ -1,4 +1,5 @@
 #Synthesis of Midwestern Agriculture#######################
+#Step 2
 
 library(dplyr)
 library(tidyverse)

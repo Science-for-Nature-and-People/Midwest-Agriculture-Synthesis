@@ -47,12 +47,9 @@ old_year <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos
 
 
 #' function to write this particular query, given the practice and the times (default is 1980 - 2017))
-#' @param  practice_query is the query terms (with control statements) of 
+#' @param  practice_query is the query terms (with control statements) 
+#' Note: This function requires `geography_terms` and `cropping_system_terms` to be defined before use.
 write_full_query <- function(practice_query, year_start = 1980, year_end = 2017){
-  #
-  geography_terms <- 'Illinois OR Indiana OR Iowa OR Kansas OR Michigan OR Minnesota OR Missouri OR "North Dakota" OR "South Dakota" OR Nebraska OR Ohio OR Wisconsin OR ((Midwest* AND U.S.) OR (Midwest* AND US) OR (Midwest* AND "United States"))'
-  cropping_system_terms <- 'corn OR maize OR soybean OR "Zea mays" OR "Glycine max" OR agricultur* OR agro-ecosystem* OR agroecosystem* OR crop OR "field crop*" OR "cropping system" OR farm* OR "conservation agricult*"'
-  
   str_glue(
     "(TS = ({geography_terms}) AND TS = ({cropping_system_terms}) AND TS = ({practice_query})) AND PY = ({year_start}-{year_end}) "
   )
@@ -79,6 +76,9 @@ get_results <- function(practice_query, sid, year_start = 1980, year_end = 2017)
 
 ## Step 1: Query. USER UPDATE year_start and year_end ================================================================================= 
 
+### Write out general queries to be used for all practices (taken from google doc)
+geography_terms <- 'Illinois OR Indiana OR Iowa OR Kansas OR Michigan OR Minnesota OR Missouri OR "North Dakota" OR "South Dakota" OR Nebraska OR Ohio OR Wisconsin OR ((Midwest* AND U.S.) OR (Midwest* AND US) OR (Midwest* AND "United States"))'
+cropping_system_terms <- 'corn OR maize OR soybean OR "Zea mays" OR "Glycine max" OR agricultur* OR agro-ecosystem* OR agroecosystem* OR crop OR "field crop*" OR "cropping system" OR farm* OR "conservation agricult*"'
 
 ### Write out the practice specific queries (taken from google doc)
 cover_crop_query <- '"cover crop" OR cover-crop* OR covercrop*'
@@ -190,6 +190,10 @@ if(nrow(unique_new_results_df) >= 20){
   "Tillage > {unique_new_results_df %>% filter(review == 'tillage') %>% nrow}<hr>",
 
   "The queries used to generate these numbers are below:  ",
+  
+  "**Geography (applied to all practices)**: {geography_terms}",
+  
+  "**Cropping System (applied to all practices)**: {cropping_system_terms}",
 
   "**Cover crops**: {cover_crop_query}  ",
 

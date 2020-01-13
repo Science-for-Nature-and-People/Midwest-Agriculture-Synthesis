@@ -26,8 +26,7 @@ library(git2r)
 # link to github api issue that we want the bot to comment on.
 issues_url <- "https://api.github.com/repos/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis/issues/40/comments"
 # get the private issue token from local file
-issue_token <- readr::read_file(here("auto_pubsearch" , 'machine_git_token.txt'))
-
+issue_token <- readr::read_file(here("Midwest-Agriculture-Synthesis", "auto_pubsearch" , 'machine_git_token.txt'))
 
 # this will be used to title files
 todays_date <- Sys.Date() %>% str_replace_all("-", "")
@@ -36,7 +35,7 @@ current_year <- Sys.Date() %>% lubridate::year()
 
 
 # check the newsest old query for the start point in the query
-old_year <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = F) %>%
+old_year <- list.files(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = F) %>%
   str_sort(decreasing = T, numeric = T) %>%
   first(1) %>%
   str_match("\\d+") %>%
@@ -50,8 +49,7 @@ old_year <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos
 #' @param  practice_query is the query terms (with control statements) of 
 write_full_query <- function(practice_query, year_start = 1980, year_end = 2017){
   #
-  geography_terms <- 'Illinois OR Indiana OR Iowa OR Kansas OR Michigan OR Minnesota OR Missouri OR "North Dakota" OR "South Dakota" OR Nebraska OR Ohio OR Wisconsin OR ((Midwest* AND U.S.) OR (Midwest* AND US) OR (Midwest* AND "United States"))'
-  cropping_system_terms <- 'corn OR maize OR soybean OR "Zea mays" OR "Glycine max" OR agricultur* OR agro-ecosystem* OR agroecosystem* OR crop OR "field crop*" OR "cropping system" OR farm* OR "conservation agricult*"'
+  
   
   str_glue(
     "(TS = ({geography_terms}) AND TS = ({cropping_system_terms}) AND TS = ({practice_query})) AND PY = ({year_start}-{year_end}) "
@@ -79,6 +77,9 @@ get_results <- function(practice_query, sid, year_start = 1980, year_end = 2017)
 
 ## Step 1: Query. USER UPDATE year_start and year_end ================================================================================= 
 
+### General terms used for all queries
+geography_terms <- 'Illinois OR Indiana OR Iowa OR Kansas OR Michigan OR Minnesota OR Missouri OR "North Dakota" OR "South Dakota" OR Nebraska OR Ohio OR Wisconsin OR ((Midwest* AND U.S.) OR (Midwest* AND US) OR (Midwest* AND "United States"))'
+cropping_system_terms <- 'corn OR maize OR soybean OR "Zea mays" OR "Glycine max" OR agricultur* OR agro-ecosystem* OR agroecosystem* OR crop OR "field crop*" OR "cropping system" OR farm* OR "conservation agricult*"'
 
 ### Write out the practice specific queries (taken from google doc)
 cover_crop_query <- '"cover crop" OR cover-crop* OR covercrop*'
@@ -121,10 +122,10 @@ if (!exists("results_list")){
 ## Step 2: Filter the results so we're only left with papers since the last alert. =======================
 
 # First, we read in the old query, so that we can remove papers we've already looked at
-old_results_file <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = T) %>%
+old_results_file <- list.files(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = T) %>%
     str_sort(decreasing = T, numeric = T) %>%
     first(1)
-old_results_df <- read_csv(old_results_file)
+old_results_df <- read_csv(old_results_file, col_types = cols())
 
 
 # we use this to mark the time period between papers
@@ -138,7 +139,7 @@ results_df <- results_list %>%
   bind_rows(.id = "review") %>%
   mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %T>%
   #distinct(title_lower, .keep_all = T) %T>%
-  write_csv(here("auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
+  write_csv(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
 
 
 
@@ -146,32 +147,32 @@ results_df <- results_list %>%
 # This is necessary because the rwos query only allows a filter by YEAR. so this will help to remove within year papers
 unique_new_results_df <- results_df %>% 
   anti_join(old_results_df, by = "title_lower") %T>%
-  write_csv(here("auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
+  write_csv(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
 
   
 # Step 3: Write files and send an Alert (github comment) if there are >= 20 new papers ====================================
 if(nrow(unique_new_results_df) >= 20){
   
   # First, look at the last date an alert was sent
-  alert_date_log <- read_csv(here("auto_pubsearch", "alert_date_log.csv"), col_types = list(col_character()))
+  alert_date_log <- read_csv(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "alert_date_log.csv"), col_types = list(col_character()))
   last_alert_date <- alert_date_log$last_alert_date %>% tail(1)
   
   # write a new entry for the new alert we're currently making
   alert_date_log %>%
     rbind(as.character(today())) %>%
-    write_csv(path = here("auto_pubsearch", "alert_date_log.csv"))
+    write_csv(path = here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "alert_date_log.csv"))
   
   
   ### Push to repo
   
   # give path to repo
-  midwest_repo <- repository(here())
+  midwest_repo <- repository(here("Midwest-Agriculture-Synthesis"))
   config(midwest_repo, user.name = "shiny-som", user.email = "scicomp@nceas.ucsb.edu",remote.origin.url= "https://shiny-som@github.com/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis.git")
   
   # add files
-  add(midwest_repo, here("auto_pubsearch","alert_date_log.csv"))
-  add(midwest_repo, here("auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
-  add(midwest_repo, here("auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
+  add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch","alert_date_log.csv"))
+  add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
+  add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
   
   new_commit <- commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
   # pushing using the token. note: I wasn't able to get cred_token to work for whatever reason.
@@ -190,6 +191,10 @@ if(nrow(unique_new_results_df) >= 20){
   "Tillage > {unique_new_results_df %>% filter(review == 'tillage') %>% nrow}<hr>",
 
   "The queries used to generate these numbers are below:  ",
+  
+  "**Geography**: {geography_terms}    ",
+  
+  "**Cropping System**: {cropping_system_terms}    ",
 
   "**Cover crops**: {cover_crop_query}  ",
 
@@ -225,6 +230,8 @@ if(nrow(unique_new_results_df) >= 20){
     write("issue failed to write", stderr())
   }
   
+} else{
+  write("< 20 papers found. No issue written", stdout())
 }
 
 

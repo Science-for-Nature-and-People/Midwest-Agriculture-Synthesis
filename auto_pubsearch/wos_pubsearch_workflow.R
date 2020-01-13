@@ -150,89 +150,86 @@ unique_new_results_df <- results_df %>%
   write_csv(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
 
   
-# Step 3: Write files and send an Alert (github comment) if there are >= 20 new papers ====================================
-if(nrow(unique_new_results_df) >= 20){
-  
-  # First, look at the last date an alert was sent
-  alert_date_log <- read_csv(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "alert_date_log.csv"), col_types = list(col_character()))
-  last_alert_date <- alert_date_log$last_alert_date %>% tail(1)
-  
-  # write a new entry for the new alert we're currently making
-  alert_date_log %>%
-    rbind(as.character(today())) %>%
-    write_csv(path = here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "alert_date_log.csv"))
-  
-  
-  ### Push to repo
-  
-  # give path to repo
-  midwest_repo <- repository(here("Midwest-Agriculture-Synthesis"))
-  config(midwest_repo, user.name = "shiny-som", user.email = "scicomp@nceas.ucsb.edu",remote.origin.url= "https://shiny-som@github.com/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis.git")
-  
-  # add files
-  add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch","alert_date_log.csv"))
-  add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
-  add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
-  
-  new_commit <- commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
-  # pushing using the token. note: I wasn't able to get cred_token to work for whatever reason.
-  push(midwest_repo, name = "origin", refspec = "refs/heads/master", credentials = cred_user_pass(username = "shiny-som", password = issue_token))
-  
-  # Alert text!
-  more_than_twenty_alert <- str_glue(
+# Step 3: Write files and send an Alert (github comment) every month ====================================
+
+# First, look at the last date an alert was sent
+alert_date_log <- read_csv(here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "alert_date_log.csv"), col_types = list(col_character()))
+last_alert_date <- alert_date_log$last_alert_date %>% tail(1)
+
+# write a new entry for the new alert we're currently making
+alert_date_log %>%
+  rbind(as.character(today())) %>%
+  write_csv(path = here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "alert_date_log.csv"))
+
+
+### Push to repo
+
+# give path to repo
+midwest_repo <- repository(here("Midwest-Agriculture-Synthesis"))
+config(midwest_repo, user.name = "shiny-som", user.email = "scicomp@nceas.ucsb.edu",remote.origin.url= "https://shiny-som@github.com/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis.git")
+
+# add files
+add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch","alert_date_log.csv"))
+add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
+add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
+
+new_commit <- commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
+# pushing using the token. note: I wasn't able to get cred_token to work for whatever reason.
+push(midwest_repo, name = "origin", refspec = "refs/heads/master", credentials = cred_user_pass(username = "shiny-som", password = issue_token))
+
+# Alert text!
+more_than_twenty_alert <- str_glue(
   "Hello!    ",
   
   "There are at least {nrow(unique_new_results_df)} new papers for the Midwest Agriculture Reviews! This alert is counting papers from {last_alert_date} to {today()}.<hr>",  
   "The API returns:  ",
-
+  
   "Cover crops > {unique_new_results_df %>% filter(review == 'cc') %>% nrow}",
   "Nutrient Management > {unique_new_results_df %>% filter(review == 'nutrient') %>% nrow}",
   "Pest Management > {unique_new_results_df %>% filter(review == 'pest') %>% nrow}",
   "Tillage > {unique_new_results_df %>% filter(review == 'tillage') %>% nrow}<hr>",
-
+  
   "The queries used to generate these numbers are below:  ",
   
-  "**Geography**: {geography_terms}    ",
+  "**Geography (applied to all practices)**: {geography_terms}    ",
   
-  "**Cropping System**: {cropping_system_terms}    ",
-
+  "**Cropping System (applied to all practices)**: {cropping_system_terms}    ",
+  
   "**Cover crops**: {cover_crop_query}  ",
-
+  
   "**Nutrient Management**: {nutrient_mgmt_query}   ",
-
+  
   "**Pest Management**: {pest_query}  ",
-
+  
   "**Tillage**: {tillage_query}  <hr>",
   
   "Happy reviewing!",
   
   "(this alert was generated at {lubridate::now()}, and corresponds to {sha(new_commit)})",
   .sep = '<br>'
+)
+
+
+# Generate the issue text as json
+json_text <- toJSON(
+  list(
+    body = unbox(more_than_twenty_alert)
   )
-  
-  
-  # Generate the issue text as json
-  json_text <- toJSON(
-    list(
-      body = unbox(more_than_twenty_alert)
-      )
-    )
-  
-  # send the issue to github. (user doesn't show up anywhere, but the parameter can't be NULL)
-  issue <- httr::POST(issues_url, 
-                      body = json_text, 
-                      config = authenticate(user = 'user', password = issue_token))
-  
-  # show some confirmation text if the issue went through
-  if(status_code(issue) == 201){
-    write("issue successfully written!", stdout())
-  } else{
-    write("issue failed to write", stderr())
-  }
-  
+)
+
+# send the issue to github. (user doesn't show up anywhere, but the parameter can't be NULL)
+issue <- httr::POST(issues_url, 
+                    body = json_text, 
+                    config = authenticate(user = 'user', password = issue_token))
+
+# show some confirmation text if the issue went through
+if(status_code(issue) == 201){
+  write("issue successfully written!", stdout())
 } else{
-  write("< 20 papers found. No issue written", stdout())
+  write("issue failed to write", stderr())
 }
+
+
 
 
 

@@ -21,4 +21,4 @@
 # 
 # m h  dom mon dow   command
 MAILTO="nathanhwangbo@ucsb.edu"
-0 0 1 * * Rscript /home/hwangbo/Midwest-Agriculture-Synthesis/auto_pubsearch/wos_pubsearch_workflow.R
+0 0 1 * * /usr/local/bin/Rscript /home/hwangbo/Midwest-Agriculture-Synthesis/auto_pubsearch/wos_pubsearch_workflow.R

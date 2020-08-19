@@ -7,21 +7,23 @@
 
 #devtools::install_github("juba/rwos")
 #devtools::install_github("Science-for-Nature-and-People/BibScan")
-library(rwos)
-library(tidyverse)
-library(magrittr)
-library(stringdist)
-library(janitor)
-#library(rcrossref)
-#library(BibScan)
-library(devtools)
-#library(rcrossref)
-library(RCurl)
-library(lubridate)
-library(here)
-library(jsonlite)
-library(httr)
-library(git2r)
+suppressPackageStartupMessages({
+  library(rwos)
+  library(tidyverse)
+  library(magrittr)
+  library(stringdist)
+  library(janitor)
+  #library(rcrossref)
+  #library(BibScan)
+  library(devtools)
+  #library(rcrossref)
+  library(RCurl)
+  library(lubridate)
+  library(here)
+  library(jsonlite)
+  library(httr)
+  library(git2r)
+})
 
 # link to github api issue that we want the bot to comment on.
 issues_url <- "https://api.github.com/repos/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis/issues/40/comments"
@@ -167,6 +169,9 @@ alert_date_log %>%
 # give path to repo
 midwest_repo <- repository(here("Midwest-Agriculture-Synthesis"))
 config(midwest_repo, user.name = "shiny-som", user.email = "scicomp@nceas.ucsb.edu",remote.origin.url= "https://shiny-som@github.com/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis.git")
+
+# pull first
+pull(midwest_repo, credentials = cred_user_pass(username = "shiny-som", password = issue_token))
 
 # add files
 add(midwest_repo, here("Midwest-Agriculture-Synthesis", "auto_pubsearch","alert_date_log.csv"))

@@ -20,5 +20,5 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-MAILTO="nathanhwangbo@ucsb.edu"
-0 0 4 * * /home/hwangbo/Midwest-Agriculture-Synthesis/auto_pubsearch/wos_pubsearch_workflow.R
+MAILTO="scicomp@nceas.ucsb.edu"
+0 0 1 * * /usr/local/bin/Rscript /home/hwangbo/Midwest-Agriculture-Synthesis/auto_pubsearch/wos_pubsearch_workflow.R

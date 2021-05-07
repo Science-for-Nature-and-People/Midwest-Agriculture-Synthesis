@@ -30,7 +30,6 @@ issues_url <- "https://api.github.com/repos/Science-for-Nature-and-People/Midwes
 # get the private issue token from local file
 issue_token <- readr::read_file(here("auto_pubsearch" , "machine_git_token.txt"))
 
-
 # this will be used to title files
 todays_date <- Sys.Date() %>% str_replace_all("-", "")
 # this will be the endpoint in our query

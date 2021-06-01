@@ -28,7 +28,7 @@ suppressPackageStartupMessages({
 # link to github api issue that we want the bot to comment on.
 issues_url <- "https://api.github.com/repos/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis/issues/40/comments"
 # get the private issue token from local file
-issue_token <- readr::read_file(file.path("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesisauto_pubsearch" , "machine_git_token.txt"))
+issue_token <- readr::read_file(file.path("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch" , "machine_git_token.txt"))
 
 # this will be used to title files
 todays_date <- Sys.Date() %>% str_replace_all("-", "")

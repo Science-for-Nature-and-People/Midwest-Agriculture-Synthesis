@@ -19,7 +19,7 @@ suppressPackageStartupMessages({
   #library(rcrossref)
   library(RCurl)
   library(lubridate)
-  library(here)
+  # library(here)
   library(jsonlite)
   library(httr)
   library(git2r)
@@ -28,7 +28,7 @@ suppressPackageStartupMessages({
 # link to github api issue that we want the bot to comment on.
 issues_url <- "https://api.github.com/repos/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis/issues/40/comments"
 # get the private issue token from local file
-issue_token <- readr::read_file(file.path("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch" , "machine_git_token.txt"))
+issue_token <- readr::read_file("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/machine_git_token.txt")
 
 # this will be used to title files
 todays_date <- Sys.Date() %>% str_replace_all("-", "")
@@ -37,7 +37,7 @@ current_year <- Sys.Date() %>% lubridate::year()
 
 
 # check the newsest old query for the start point in the query
-old_year <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = F) %>%
+old_year <- list.files("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/wos_raw_queries", pattern = "wos_query_\\d+", full.names = F) %>%
   str_sort(decreasing = T, numeric = T) %>%
   first(1) %>%
   str_match("\\d+") %>%
@@ -124,7 +124,7 @@ if (!exists("results_list")){
 ## Step 2: Filter the results so we're only left with papers since the last alert. =======================
 
 # First, we read in the old query, so that we can remove papers we've already looked at
-old_results_file <- list.files(here("auto_pubsearch", "wos_raw_queries"), pattern = "wos_query_\\d+", full.names = T) %>%
+old_results_file <- list.files("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/wos_raw_queries", pattern = "wos_query_\\d+", full.names = T) %>%
     str_sort(decreasing = T, numeric = T) %>%
     first(1)
 old_results_df <- read_csv(old_results_file, col_types = cols())
@@ -141,7 +141,7 @@ results_df <- results_list %>%
   bind_rows(.id = "review") %>%
   mutate(title_lower = title %>% str_to_lower() %>% str_trim()) %T>%
   #distinct(title_lower, .keep_all = T) %T>%
-  write_csv(here( "auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
+  write_csv(file.path("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
 
 
 
@@ -149,36 +149,36 @@ results_df <- results_list %>%
 # This is necessary because the rwos query only allows a filter by YEAR. so this will help to remove within year papers
 unique_new_results_df <- results_df %>% 
   anti_join(old_results_df, by = "title_lower") %T>%
-  write_csv(here( "auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
+  write_csv(file.path("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
 
   
 # Step 3: Write files and send an Alert (github comment) every month ====================================
 
 # First, look at the last date an alert was sent
-alert_date_log <- read_csv(here( "auto_pubsearch", "alert_date_log.csv"), col_types = list(col_character()))
+alert_date_log <- read_csv("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/alert_date_log.csv", col_types = list(col_character()))
 last_alert_date <- alert_date_log$last_alert_date %>% tail(1)
 
 # write a new entry for the new alert we're currently making
 alert_date_log %>%
   rbind(as.character(today())) %>%
-  write_csv(path = here( "auto_pubsearch", "alert_date_log.csv"))
+  write_csv("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/alert_date_log.csv")
 
 
 ### Push to repo
 
 # give path to repo
-midwest_repo <- repository(here("."))
-config(midwest_repo, user.name = "shiny-som", user.email = "scicomp@nceas.ucsb.edu",remote.origin.url= "https://shiny-som@github.com/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis.git")
+midwest_repo <- repository("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis")
+config(midwest_repo, user.name = "shiny-som", user.email = "scicomp@nceas.ucsb.edu", remote.origin.url= "https://shiny-som@github.com/Science-for-Nature-and-People/Midwest-Agriculture-Synthesis.git")
 
 # pull first
 pull(midwest_repo, credentials = cred_user_pass(username = "shiny-som", password = issue_token))
 
 # add files
-add(midwest_repo, here( "auto_pubsearch","alert_date_log.csv"))
-add(midwest_repo, here( "auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
-add(midwest_repo, here( "auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
+git2r::add(midwest_repo, "/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch/alert_date_log.csv")
+git2r::add(midwest_repo, file.path("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch", "wos_raw_queries", paste0("wos_query_", todays_date, ".csv")))
+git2r::add(midwest_repo, file.path("/home/brun/github_com/SNAPP/Midwest-Agriculture-Synthesis/auto_pubsearch", "wos_new_refs", paste0("wos_query_between_", old_results_date, "_", todays_date, ".csv")))
 
-new_commit <- commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
+new_commit <- git2r::commit(midwest_repo, message = str_glue("auto-updated queries for {now()}"))
 # pushing using the token. note: I wasn't able to get cred_token to work for whatever reason.
 push(midwest_repo, name = "origin", refspec = "refs/heads/master", credentials = cred_user_pass(username = "shiny-som", password = issue_token))
 
